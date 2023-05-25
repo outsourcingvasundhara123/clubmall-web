@@ -15,8 +15,8 @@ import { Pagination, Navigation } from "swiper";
 import ProCard from '../components/ProCard';
 import { data } from "../page/Data"
 import ProductSlider from '../components/ProductSlider';
-import { cartListData,colors } from '../helper/constants';
- 
+import { cartListData, colors } from '../helper/constants';
+
 
 const ProductInfo = () => {
 
@@ -29,6 +29,9 @@ const ProductInfo = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [sizeActive, setSizeActive] = useState()
+    const [productColorActive, setProductColorActive] = useState()
 
     return (
         <Layout>
@@ -271,19 +274,11 @@ const ProductInfo = () => {
 
                                 <div className='product-color mt-4'>
                                     <h5>Color:</h5>
-                                    {/* <div className='d-flex align-items-center gap-2 mt-2'>
-                                        <Button>
-                                            <img src='./img/product_def/sub-pro.png' alt='' />
-                                        </Button>
-                                        <Button>
-                                            <img src='./img/product_def/sub-pro2.png' alt='' />
-                                        </Button>
-                                    </div> */}
                                     <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                         {
                                             colors.map((e, i) => {
                                                 return (
-                                                    <Button className='color-btn'>
+                                                    <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.id)}>
                                                         <img src={e.img} alt='' />
                                                     </Button>
                                                 )
@@ -291,15 +286,14 @@ const ProductInfo = () => {
                                         }
                                     </div>
 
-
                                     <div className='size mt-4'>
                                         <h5>Size:</h5>
                                         <div className='d-flex align-items-center gap-2 mt-2'>
-                                            <Button>XS</Button>
-                                            <Button>S</Button>
-                                            <Button>M</Button>
-                                            <Button>L</Button>
-                                            <Button>XL</Button>
+                                            <Button className={`${sizeActive === "xs" ? "active" : ""}`} onClick={() => setSizeActive("xs")}>XS</Button>
+                                            <Button className={`${sizeActive === "s" ? "active" : ""}`} onClick={() => setSizeActive("s")}>S</Button>
+                                            <Button className={`${sizeActive === "m" ? "active" : ""}`} onClick={() => setSizeActive("m")}>M</Button>
+                                            <Button className={`${sizeActive === "l" ? "active" : ""}`} onClick={() => setSizeActive("l")}>L</Button>
+                                            <Button className={`${sizeActive === "xl" ? "active" : ""}`} onClick={() => setSizeActive("xl")}>XL</Button>
                                         </div>
                                     </div>
 

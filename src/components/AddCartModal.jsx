@@ -20,24 +20,27 @@ const AddCartModal = (props) => {
     const [modelProduct, setModelProduct] = useState({})
     const [show, setShow] = useState(false);
 
+    const [sizeActive, setSizeActive] = useState()
+    const [productColorActive, setProductColorActive] = useState()
+
     const handleClose = () => {
         setShow(false);
     }
-    
+
     const handleShow = () => setShow(true);
 
     const getCategory = async () => {
         try {
             if (props.show) {
-              const [productDetail] = await Promise.all([
-                api.get(`${serverURL + PRODUCTDETAIL + `?product_id=${props.product_id}`}`)
-              ]);
-              const productData = productDetail.data.data;
-              setModelProduct(productData);
+                const [productDetail] = await Promise.all([
+                    api.get(`${serverURL + PRODUCTDETAIL + `?product_id=${props.product_id}`}`)
+                ]);
+                const productData = productDetail.data.data;
+                setModelProduct(productData);
             }
-          } catch (error) {
+        } catch (error) {
             console.log(error);
-          }
+        }
     };
 
     useEffect(() => {
@@ -94,11 +97,11 @@ const AddCartModal = (props) => {
 
                                 <div className='product-color mt-4'>
                                     <h5>Color:</h5>
-                                    <div className='d-flex align-items-center flex-wrap mt-2 gap-3'>
+                                    <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                         {
                                             colors.map((e, i) => {
                                                 return (
-                                                    <Button className='color-btn'>
+                                                    <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.id)}>
                                                         <img src={e.img} alt='' />
                                                     </Button>
                                                 )
@@ -109,15 +112,15 @@ const AddCartModal = (props) => {
                                     <div className='size mt-4'>
                                         <h5>Size:</h5>
                                         <div className='d-flex align-items-center gap-2 mt-2'>
-                                        {
-                                            modelProduct.productList?.sku_attributes.size.map((e, i) => {
-                                                return (
-                                                    <Button className='color-btn'>
-                                                        {e.name} 
-                                                    </Button>
-                                                )
-                                            })
-                                        }
+                                            {
+                                                modelProduct.productList?.sku_attributes.size.map((e, i) => {
+                                                    return (
+                                                        <Button className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
+                                                            {e.name}
+                                                        </Button>
+                                                    )
+                                                })
+                                            }
 
                                         </div>
                                     </div>

@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Layout from '../layout/Layout'
 import SliderTwo from '../components/SliderTwo'
 import { Accordion, Button, Col, Row } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
-import { colors,categoriesSliderData } from '../helper/constants'
+import { colors, categoriesSliderData } from '../helper/constants'
 import { RangeSlider } from 'rsuite';
 
-
 const Categories = () => {
+
+
+    const [productColorActive, setProductColorActive] = useState()
 
     return (
         <Layout>
@@ -137,13 +139,13 @@ const Categories = () => {
                                                 </Accordion.Body>
                                             </Accordion.Item>
 
-                                            <div className='filter-box mt-20'>
+                                            <div className='filter-box mt-20 product-color'>
                                                 <h5>Color</h5>
-                                                <div className='d-flex align-items-center flex-wrap mt-4'>
+                                                <div className='d-flex align-items-center flex-wrap mt-4 gap-2'>
                                                     {
                                                         colors.map((e, i) => {
                                                             return (
-                                                                <Button className='color-btn' key={i}>
+                                                                <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.id)}>
                                                                     <img src={e.img} alt='' />
                                                                 </Button>
                                                             )

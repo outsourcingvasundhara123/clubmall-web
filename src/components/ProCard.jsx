@@ -10,21 +10,23 @@ const ProCard = (props) => {
     const [product_id, setProduct_id] = useState({});
     const [show, setShow] = useState(false);
     const handleClose = () => {
-        setProduct_id({})  
+        setProduct_id({})
         setShow(false)
-   }
-    const handleShow = (id) => {   
-    setProduct_id(id)    
-    setShow(true);
-  }
+    }
+    const handleShow = (id) => {
+        setProduct_id(id)
+        setShow(true);
+    }
+
+    const [productColorActive, setProductColorActive] = useState()
 
     return (
         <>
             <div className='cos-width'>
                 <div className='product-card explore-card  pointer'>
                     <div className='position-relative'>
-                        <img  src={props.path +  props.id + "/" +  props.img} alt='' className='img-fluid' onClick={() => navigate("/Product-info")} />
-                        <Button className='add-to-card-btn' onClick={ () => handleShow(props.id) }>Add to Cart</Button>
+                        <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => navigate("/Product-info")} />
+                        <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
                     </div>
                     <div className='py-3 px-3' onClick={() => navigate("/Product-info")}>
                         <h5>{props.name}</h5>
@@ -43,20 +45,20 @@ const ProCard = (props) => {
                     location.pathname === "/trending" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
-                                <Button className='active'>
-                                    <img alt='' src='./img/hero/color1.png' width="100%" />
+                                <Button className={`${productColorActive === "color1" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color1")}>
+                                    <img alt='' src='./img/selling/color6.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color2.png' width="100%" />
+                                <Button className={`${productColorActive === "color2" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color2")}>
+                                    <img alt='' src='./img/selling/color2.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color3.png' width="100%" />
+                                <Button className={`${productColorActive === "color3" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color3")}>
+                                    <img alt='' src='./img/selling/color3.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color4.png' width="100%" />
+                                <Button className={`${productColorActive === "color4" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color4")}>
+                                    <img alt='' src='./img/selling/color4.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color5.png' width="100%" />
+                                <Button className={`${productColorActive === "color5" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color5")}>
+                                    <img alt='' src='./img/selling/color5.png' width="20px" />
                                 </Button>
                             </div>
                         </> : ""
@@ -65,20 +67,20 @@ const ProCard = (props) => {
                     location.pathname === "/categories" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
-                                <Button className='active'>
-                                    <img alt='' src='./img/hero/color1.png' width="100%" />
+                                <Button className={`${productColorActive === "color6" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color6")}>
+                                    <img alt='' src='./img/selling/color6.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color2.png' width="100%" />
+                                <Button className={`${productColorActive === "color7" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color7")}>
+                                    <img alt='' src='./img/selling/color2.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color3.png' width="100%" />
+                                <Button className={`${productColorActive === "color8" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color8")}>
+                                    <img alt='' src='./img/selling/color3.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color4.png' width="100%" />
+                                <Button className={`${productColorActive === "color9" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color9")}>
+                                    <img alt='' src='./img/selling/color4.png' width="20px" />
                                 </Button>
-                                <Button >
-                                    <img alt='' src='./img/hero/color5.png' width="100%" />
+                                <Button className={`${productColorActive === "color10" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color10")}>
+                                    <img alt='' src='./img/selling/color5.png' width="20px" />
                                 </Button>
                             </div>
                         </> : ""
