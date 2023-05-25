@@ -1,0 +1,214 @@
+import React, { useState } from 'react'
+import Layout from '../../layout/Layout'
+import { Button, Col, Form, Modal, NavLink, Row } from 'react-bootstrap'
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/bootstrap.css";
+import SucessSnackBar from "../SnackBar/SnackBar";
+import ErrorSnackBar from "../SnackBar/SnackBar";
+import { getServerURL } from '../../helper/envConfig';
+import api from '../../helper/api';
+import { useNavigate } from 'react-router-dom'
+import { validate } from './LoginSchema';
+
+import {
+    MdOutlineClose
+} from "react-icons/md"
+import { Link } from 'react-router-dom';
+
+const LogIn = () => {
+
+    const navigate = useNavigate();
+
+    const initialValues = {
+        email: "",
+        password: "",
+        login_type: "4",
+        terms_and_condition: "",
+
+    };
+
+    const [showPass, setShowPass] = useState(true)
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+
+    const [values, setValues] = useState(initialValues);
+    const [errors, setErrors] = useState({});
+    const [Mymessage, setMyMessage] = useState("");
+    const [submitCount, setSubmitCount] = useState(0);
+    const serverURL = getServerURL();
+    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+
+
+    const handleChange = (e) => {
+        const { name, value, checked, type } = e.target;
+        let newValue = type === "checkbox" ? checked : value;
+      
+
+        if (submitCount > 0) {
+          const validationErrors = validate({ ...values, [name]: newValue });
+          setErrors(validationErrors);
+      
+          // Remove error message for the specific field if it is valid
+          if (Object.keys(validationErrors).length === 0) {
+            delete errors[name];
+          }
+        }
+      
+        setValues((prevValues) => ({
+          ...prevValues,
+          [name]: newValue,
+        }));
+      };
+
+    const [otpShow, SetOtpShow] = useState(false)
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const updatedValues = { ...values }; // Create a copy of the values object
+    
+        const validationErrors = validate(updatedValues);
+        setErrors(validationErrors);
+      
+       
+        // Perform additional actions if the form is valid
+        if (Object.keys(validationErrors).length === 0) {
+          
+          try {
+            api.post(`${serverURL}login`, updatedValues)
+              .then((res) => {
+                if (res.data.success == true) {
+                  setSucessSnackBarOpen(!sucessSnackBarOpen);
+                  setValues(initialValues);
+                  setMyMessage(res.data.message);
+                  sessionStorage.setItem("token", res.data.data.token);
+                  navigate("/");
+                } else if(res.data.success === false){
+                  setMyMessage(res.data.message);
+                  setWarningSnackBarOpen(!warningSnackBarOpen);
+                }
+              });
+          } catch (error) {
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+            console.error(error);
+          }
+        }
+      };
+
+    return (
+        <Layout>
+
+     <SucessSnackBar
+        open={sucessSnackBarOpen}
+        setOpen={setSucessSnackBarOpen}
+        text={Mymessage}
+        type="success"
+      />
+
+      <ErrorSnackBar
+        open={warningSnackBarOpen}
+        setOpen={setWarningSnackBarOpen}
+        text={Mymessage}
+        type="error"
+      />
+
+            <div className='login-register'>
+                <div className='spacing-cos'>
+                    <div className='login-box text-center'>
+                        <h3>Sign In</h3>
+                        <Form className='mt-4' onSubmit={handleSubmit} >
+                            <div className='login-input text-start'>
+                                <label>Email Address</label>
+                                <input placeholder='Enater your email' 
+                                
+                                        name="email"
+                                        onChange={handleChange}
+                                        value={values.email}
+                                        type='text'
+                                
+                                />
+                          <div className='error' >{errors?.email}</div>
+
+                            </div>
+                            <div className='login-input text-start mt-3 '>
+                                <label>Password</label>
+                                <div className='position-relative'>
+                                    <input placeholder='Enater your Password'
+                                    onChange={handleChange} name='password' value={values.password}
+                                    
+                                    type={showPass ? "password" : "text"} />
+                                    <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}><img src='./img/login/pass-show.png' alt='' /></Button>
+                                    <div className='error' >{errors?.password}</div>
+                                </div>
+                                <div className='d-flex justify-content-end'><Button className='reset-pass' onClick={handleShow}>Forgot your password?</Button></div>
+                            </div>
+                            <div className='d-flex align-items-start check-terms gap-2 mt-3'>
+                                <Form.Check
+                                      onChange={handleChange}
+                                      type="checkbox"
+                                      id="check_terms"
+                                      name="terms_and_condition"
+                                      checked={values.terms_and_condition}
+                                />
+                                <label htmlFor='check_terms' className='pointer'>I accept to the <NavLink>Privacy Policy</NavLink> & <NavLink>Terms & Condition</NavLink></label>
+                            </div>
+                            <div className='error d-flex align-items-start check-terms gap-2 mt-3' >{errors?.terms_and_condition}</div>
+  
+                            <Button  type="submit"
+                            onClick={() => setSubmitCount(1)}
+                             className='w-100 submit-btn'> Sign In </Button>
+                        </Form>
+
+                        <div className='footer-sec'>
+                            <span className='register-link d-flex align-items-center gap-2 justify-content-center mt-3'>Don't have an account?  <Link to='/register'> Register</Link></span>
+                            <div className='or-sec d-flex align-items-center gap-2 my-2'>
+                                <div className='line'></div>
+                                <span>Or</span>
+                                <div className='line'></div>
+                            </div>
+                            <div className='d-flex align-items-center justify-content-center gap-4 mt-3'>
+                                <NavLink><img src='./img/login/google.png' alt='' /></NavLink>
+                                <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <Modal show={show} onHide={handleClose} centered className='forgot-pass'>
+                <Modal.Body>
+                    <div className='pass-body position-relative p-3'>
+                        <Button className='close-modal-btn forgot-pass-close' onClick={handleClose}>
+                            <MdOutlineClose />
+                        </Button>
+                        <div className='pass-model-title text-center'>
+                            <h3>Forgot Password</h3>
+                            <p>No worries, we’ll send you reset instructions.</p>
+                        </div>
+                        <Form onSubmit={handleSubmit}>
+                            {
+                                otpShow ? <div className='otp d-flex align-items-center justify-content-center mt-4 mb-1 gap-3 w-100'>
+                                    <input type='number' max={1} />
+                                    <input type='number' max={1} />
+                                    <input type='number' max={1} />
+                                    <input type='number' max={1} />
+                                </div> :
+                                    <div className='login-input text-start mt-4'>
+                                        <label>Email Address</label>
+                                        <input placeholder='Rohan Vasundhara' type='text' />
+                                    </div>
+                            }
+
+                            <Button type='submit' className='w-100 mt-4 submit-btn' onClick={() => SetOtpShow(true)}> {otpShow ? "Submit" : "Send"} </Button>
+                        </Form>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </Layout>
+    )
+}
+
+export default LogIn
