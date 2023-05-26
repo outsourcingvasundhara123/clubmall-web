@@ -91,6 +91,9 @@ const CategoryList = () => {
         getCategory();
       }, []);
 
+
+      console.log(category,"category");
+
   return (
     <div className='categories-slider mt-5 position-relative'>
     <OwlCarousel
@@ -106,6 +109,8 @@ const CategoryList = () => {
                 <div className='item' key={i}>
                     <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
                         <img src={category.productsCategoryIconPath + e.icon} alt='' />
+                        {/* <img src={category.productsCategoryIconPath  + e._id + "/" + e.icon} alt='' /> */}
+
                         <h6 className='mt-3'>{e.name}</h6>
                         <p>{e.minPrice}</p>
                     </div>
