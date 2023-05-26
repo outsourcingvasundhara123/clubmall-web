@@ -100,6 +100,43 @@ p {
     }
 }
 
+.btn-scroll-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #E02E24 !important;
+    color: #fff;
+    border-radius: 50%;
+    border: none;
+    box-shadow: none;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.google-login span {
+    display: none;
+}
+
+.google-login .nsm7Bb-HzV7m-LgbsSe {
+    border: none;
+    padding: 0;
+}
+
+.google-login .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+    height: auto;
+    margin: 0;
+    width: auto;
+}
+
+.google-login svg {
+    width: 32px;
+}
+
 
 /* header start */
 .header-main {
@@ -216,6 +253,20 @@ p {
 .header .account button {
     background-color: transparent !important;
     border: none;
+}
+
+.header .account .login-btn {
+    font-weight: 500;
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #E02E24 !important;
+    border-radius: 5px;
+    padding: 5px 20px;
+    border: none;
+}
+
+.header .account .flag-selector {
+    padding: 0;
 }
 
 .header .dropdown-menu {
@@ -1232,9 +1283,20 @@ del {
     margin-top: 8px;
 }
 
-/* .stylist {
-    padding-top: 50px;
-} */
+.categories .categories-slider-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+    background-color: lightgray;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.categories .categories-slider-img img {
+    width: 68%;
+}
 
 .stylist-card {
     border-radius: 15px;
@@ -3446,8 +3508,8 @@ input[type='radio'] {
 
 /* For you start */
 .for-you {
-    min-height: 30vh;
-    padding: 50px 15px;
+    height: calc(100vh - 100px);
+    padding: 0px 15px;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -3492,7 +3554,10 @@ input[type='radio'] {
 }
 
 .for-you .reels-box {
-    max-width: 480px;
+    width: 430px;
+    height: calc(100vh - 150px);
+    background-color: #000000;
+    border-radius: 10px;
 }
 
 .for-you .items-box {
@@ -3656,6 +3721,30 @@ input[type='radio'] {
 
 .product-color-cos button.active {
     border: 1px solid #000;
+}
+
+.for-you .swiper {
+    width: 620px;
+    height: 100%;
+}
+
+.for-you .swiper-slide {
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.for-you .reels-box video {
+    border-radius: 10px;
+}
+
+@media (max-width: 676px) {
+    .for-you .swiper {
+        width: 100%;
+    }
 }
 
 /* For you end */

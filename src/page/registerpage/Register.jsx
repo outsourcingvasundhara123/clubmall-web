@@ -43,75 +43,75 @@ function Register() {
     const handleChange = (e) => {
         const { name, value, checked, type } = e.target;
         let newValue = type === "checkbox" ? checked : value;
-      
+
 
         if (name === "state_id") {
-          const selectedState = stateList.find((state) => state.name === newValue);
-          newValue = selectedState ? selectedState._id : "";
+            const selectedState = stateList.find((state) => state.name === newValue);
+            newValue = selectedState ? selectedState._id : "";
         }
-      
-      
+
+
         if (name === "country_id") {
             const selectedState = countryList.find((state) => state.name === newValue);
             newValue = selectedState ? selectedState._id : "";
-          }
+        }
 
         if (submitCount > 0) {
-          const validationErrors = validate({ ...values, [name]: newValue });
-          setErrors(validationErrors);
-      
-          // Remove error message for the specific field if it is valid
-          if (Object.keys(validationErrors).length === 0) {
-            delete errors[name];
-          }
-        }
-      
-        setValues((prevValues) => ({
-          ...prevValues,
-          [name]: newValue,
-        }));
-      };
+            const validationErrors = validate({ ...values, [name]: newValue });
+            setErrors(validationErrors);
 
-      const handleSubmit = (e) => {
+            // Remove error message for the specific field if it is valid
+            if (Object.keys(validationErrors).length === 0) {
+                delete errors[name];
+            }
+        }
+
+        setValues((prevValues) => ({
+            ...prevValues,
+            [name]: newValue,
+        }));
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
         const updatedValues = { ...values }; // Create a copy of the values object
-    
+
         const validationErrors = validate(updatedValues);
         setErrors(validationErrors);
-      
+
         if (updatedValues.contact_no) {
-          updatedValues.contact_no = "+" + updatedValues.contact_no;
+            updatedValues.contact_no = "+" + updatedValues.contact_no;
         }
-        
+
         if (updatedValues.first_name && updatedValues.last_name) {
-          updatedValues.name = updatedValues.first_name + " " + updatedValues.last_name;
+            updatedValues.name = updatedValues.first_name + " " + updatedValues.last_name;
         }
-      
+
         console.log(errors, "errors");
-        
+
         // Perform additional actions if the form is valid
         if (Object.keys(validationErrors).length === 0) {
-          updatedValues.user_type = "4";
-          
-          try {
-            api.post(`${serverURL}signup`, updatedValues)
-              .then((res) => {
-                if (res.data.status === 1) {
-                  setSucessSnackBarOpen(!sucessSnackBarOpen);
-                  setValues(initialValues);
-                  setMyMessage(res.data.message);
-                  navigate("/login");
-                } else {
-                  setMyMessage(res.data.message);
-                  setWarningSnackBarOpen(!warningSnackBarOpen);
-                }
-              });
-          } catch (error) {
-            setWarningSnackBarOpen(!warningSnackBarOpen);
-            console.error(error);
-          }
+            updatedValues.user_type = "4";
+
+            try {
+                api.post(`${serverURL}signup`, updatedValues)
+                    .then((res) => {
+                        if (res.data.status === 1) {
+                            setSucessSnackBarOpen(!sucessSnackBarOpen);
+                            setValues(initialValues);
+                            setMyMessage(res.data.message);
+                            navigate("/login");
+                        } else {
+                            setMyMessage(res.data.message);
+                            setWarningSnackBarOpen(!warningSnackBarOpen);
+                        }
+                    });
+            } catch (error) {
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+                console.error(error);
+            }
         }
-      };
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -140,19 +140,19 @@ function Register() {
 
         <Layout>
 
-       <SucessSnackBar
-        open={sucessSnackBarOpen}
-        setOpen={setSucessSnackBarOpen}
-        text={Mymessage}
-        type="success"
-      />
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
 
-      <ErrorSnackBar
-        open={warningSnackBarOpen}
-        setOpen={setWarningSnackBarOpen}
-        text={Mymessage}
-        type="error"
-      />
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
 
             <div className='register-main spacing-cos'>
                 <div className='register-box text-center'>
@@ -296,10 +296,12 @@ function Register() {
                             <div className='line'></div>
                         </div>
                         <div className='d-flex align-items-center justify-content-center gap-4 mt-3'>
-                            <NavLink>
-                            {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
+                            <div className='google-login'>
+                                <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+                            </div>
+                            {/* <NavLink>
                                 <img src='./img/login/google.png' alt='' />
-                            </NavLink>
+                            </NavLink> */}
                             <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink>
                         </div>
                     </div>

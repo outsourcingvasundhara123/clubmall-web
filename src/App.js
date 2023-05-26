@@ -4,6 +4,8 @@ import route from "./helper/route"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'swiper/css';
 import "./assets/css/App.css"
+import { Button } from 'react-bootstrap';
+import { MdOutlineKeyboardArrowUp } from 'react-icons/md'
 
 const ScrollToTop = () => {
 
@@ -15,16 +17,21 @@ const ScrollToTop = () => {
   return null;
 }
 
-
 const App = () => {
-
-
 
   return (
     <BrowserRouter>
+
+      <Button
+        className='btn-scroll-top'
+        onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+        <MdOutlineKeyboardArrowUp />
+      </Button>
+
       <ScrollToTop />
+
       <Routes>
-      {route.map((route, index) => {
+        {route.map((route, index) => {
           return (
             <Route
               key={index}
@@ -35,6 +42,7 @@ const App = () => {
           );
         })}
       </Routes>
+
     </BrowserRouter>
   )
 }
