@@ -16,52 +16,54 @@ const Selling = () => {
 
     const navigate = useNavigate();
     const [category, setcategory] = useState([]);
-    const [productList, setProductList] = useState([]);
-    const [trendingProductList, setTrendingProductList] = useState([]);
+    const [womanProductList, setWomanProductList] = useState([]);
+    const [manProductList, setManProductList] = useState([]);
+    const [kidsProductList, setkidsProductList] = useState([]);
+    const [womanpage, setWomanPage] = useState(1);
+    const [manpage, setManPage] = useState(1);
+    const [kidspage, setKidPage] = useState(1);
+
+
+
     const serverURL = getServerURL();
 
-    // product-list with these parameters
-    // {
-    // "product_list_type": "by-categories",
-    // "product_category_one_id": "6448e87e0dbc8210e287dc86",
-    // "product_category_two_id": "644921080dbc8210e287e88c",
-    // "page": 1
-    // }
+
 
     const getCategory = async () => {
         try {
-            const [categoryResponse, trendingproductListResponse, productListResponse , womenCategory , menCategory , kidCategory ] = await Promise.all([
+            const [categoryResponse, womenCategory, kidCategory, menCategory] = await Promise.all([
                 api.post(`${serverURL + PRODUCTCATEGORY}`),
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
                 api.post(`${serverURL + PRODUCTList}`, {
                     product_list_type: "by-categories",
-                    product_category_one_id: "6448e87e0dbc8210e287dc86",
-                    product_category_two_id: "644921080dbc8210e287e88c",
-                    page: 1
-                    }),
-                    api.post(`${serverURL + PRODUCTList}`, {
-                        product_list_type: "by-categories",
-                        product_category_one_id: "6448e87e0dbc8210e287dc86",
-                        product_category_two_id: "644921080dbc8210e287e88c",
-                        page: 1
-                        }),
-                        api.post(`${serverURL + PRODUCTList}`, {
-                            product_list_type: "by-categories",
-                            product_category_one_id: "6448e87e0dbc8210e287dc86",
-                            product_category_two_id: "644921080dbc8210e287e88c",
-                            page: 1
-                            })        
+                    product_category_one_id: "646b551364bc3ff6c805c0f7",
+                    product_category_two_id: "646b74cc64bc3ff6c805c437",
+                    page: womanpage
+                }),
+                api.post(`${serverURL + PRODUCTList}`, {
+                    product_list_type: "by-categories",
+                    product_category_one_id: "646b3ff09d6497250b8f17d4",
+                    product_category_two_id: "646bf84e64bc3ff6c805c8ae",
+                    page: kidspage
+                }),
+                api.post(`${serverURL + PRODUCTList}`, {
+                    product_list_type: "by-categories",
+                    product_category_one_id: "646b5b9464bc3ff6c805c282",
+                    product_category_two_id: "646c241564bc3ff6c805ca24",
+                    page: manpage
+                })
             ]);
-            
 
             const categoryData = categoryResponse.data.data;
-            const productListData = productListResponse.data.data;
-            const trendingproductData = trendingproductListResponse.data.data
+            const womanproductData = womenCategory.data.data;
+            const manproductData = menCategory.data.data;
+            const kidsproductData = kidCategory.data.data
 
             setcategory(categoryData);
-            setProductList(productListData);
-            setTrendingProductList(trendingproductData)
+            setWomanProductList(womanproductData);
+            setManProductList(manproductData);
+            setkidsProductList(kidsproductData);
+            
+
         } catch (error) {
             console.log(error);
         }
@@ -69,7 +71,9 @@ const Selling = () => {
 
     useEffect(() => {
         getCategory();
-    }, []);
+    }, [womanpage, manpage, kidspage]);
+
+
 
     return (
 
@@ -124,7 +128,7 @@ const Selling = () => {
                                 )
                             })
                         }
-                        
+
                     </Row>
                 </div>
             </section>
@@ -146,64 +150,82 @@ const Selling = () => {
                             <Tab eventKey="Women" title="Women">
                                 <div className='mb-0 mt-4 explore-main'>
                                     {
-                                        data.slice(0, 15).map((e) => {
+                                        womanProductList.productListArrObj && womanProductList.productListArrObj.map((e) => {
                                             return (
                                                 <ProCard
-                                                    img={e.img}
+                                                    id={e._id}
+                                                    img={e.product_images[0].file_name}
                                                     name={e.name}
-                                                    per={e.per}
-                                                    per2={e.per2}
-                                                    sold={e.sold}
+                                                    group_price={e.group_price}
+                                                    individual_price={e.individual_price}
+                                                    sold={e.total_order}
                                                     secper={e.secper}
-                                                    off={e.off}
+                                                    off={e.discount_percentage}
+                                                    path={womanProductList?.productImagePath && womanProductList.productImagePath}
                                                 />
                                             )
                                         })
                                     }
                                 </div>
+                                <div className='w-100 d-flex justify-content-center'>
+                                    <Button className='shop-btn' onClick={() => setWomanPage(womanpage + 1)} >View More (999+)  <MdKeyboardDoubleArrowRight /></Button>
+                                </div>
                             </Tab>
                             <Tab eventKey="Men" title="Men">
+
+
                                 <div className='mb-0 mt-4 explore-main'>
+
                                     {
-                                        data.slice(15, 28).map((e) => {
+                                        manProductList.productListArrObj && manProductList.productListArrObj.map((e) => {
                                             return (
                                                 <ProCard
-                                                    img={e.img}
+                                                    id={e._id}
+                                                    img={e.product_images[0].file_name}
                                                     name={e.name}
-                                                    per={e.per}
-                                                    per2={e.per2}
-                                                    sold={e.sold}
+                                                    group_price={e.group_price}
+                                                    individual_price={e.individual_price}
+                                                    sold={e.total_order}
                                                     secper={e.secper}
-                                                    off={e.off}
+                                                    off={e.discount_percentage}
+                                                    path={manProductList?.productImagePath && manProductList.productImagePath}
                                                 />
                                             )
                                         })
                                     }
+
+                                </div>
+                                <div className='w-100 d-flex justify-content-center'>
+                                    <Button className='shop-btn' onClick={() => setManPage(manpage + 1)}>View More (999+)  <MdKeyboardDoubleArrowRight /></Button>
+
                                 </div>
                             </Tab>
                             <Tab eventKey="Kids & Baby" title="Kids & Baby">
                                 <div className='mb-0 mt-4 explore-main'>
                                     {
-                                        data.slice(12, 20).map((e) => {
+                                        kidsProductList.productListArrObj && kidsProductList.productListArrObj.map((e) => {
                                             return (
                                                 <ProCard
-                                                    img={e.img}
+                                                    id={e._id}
+                                                    img={e.product_images[0].file_name}
                                                     name={e.name}
-                                                    per={e.per}
-                                                    per2={e.per2}
-                                                    sold={e.sold}
+                                                    group_price={e.group_price}
+                                                    individual_price={e.individual_price}
+                                                    sold={e.total_order}
                                                     secper={e.secper}
-                                                    off={e.off}
+                                                    off={e.discount_percentage}
+                                                    path={kidsProductList?.productImagePath && kidsProductList.productImagePath}
                                                 />
                                             )
                                         })
                                     }
                                 </div>
+                                <div className='w-100 d-flex justify-content-center'>
+                                    <Button className='shop-btn' onClick={() => setKidPage(kidspage + 1)} >View More (999+)  <MdKeyboardDoubleArrowRight /></Button>
+                                </div>
                             </Tab>
                         </Tabs>
-                        <div className='w-100 d-flex justify-content-center'>
-                            <Button className='shop-btn'>View More (999+ items) <MdKeyboardDoubleArrowRight /></Button>
-                        </div>
+
                     </div>
                 </div>
             </section>

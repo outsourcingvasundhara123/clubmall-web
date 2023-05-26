@@ -48,8 +48,6 @@ const AddCartModal = (props) => {
     }, [props.show]);
 
 
-    console.log(count, "count-2");
-
     return (
         <>
             <Modal
