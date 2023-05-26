@@ -11,7 +11,22 @@ import ProCard from '../components/ProCard'
 
 const Cart = () => {
 
-    const [selectAll, setSelectAll] = useState();
+    const [checkboxes, setCheckboxes] = useState({
+        checkbox1: false,
+        checkbox2: false,
+        checkbox3: false,
+    });
+
+    function handleSelectAll(event) {
+        const { checked } = event.target;
+
+        setCheckboxes(prevState => ({
+            ...prevState,
+            checkbox1: checked,
+            checkbox2: checked,
+            checkbox3: checked,
+        }));
+    }
 
     return (
         <Layout>
@@ -51,7 +66,11 @@ const Cart = () => {
 
                                 <div className='select-items mt-4'>
                                     <div className='select-all d-flex align-items-center'>
-                                        <input id='select-all' type='checkbox' onClick={() => setSelectAll(!selectAll)} />
+                                        <input
+                                            id='select-all'
+                                            type='checkbox'
+                                            onChange={handleSelectAll}
+                                        />
                                         <label htmlFor='select-all'>Select all</label>
                                     </div>
 
@@ -59,7 +78,17 @@ const Cart = () => {
 
                                         <div className='cart-items'>
                                             <div className='items-img select-all d-flex align-items-center'>
-                                                <input id='select-all' type='checkbox' checked={selectAll} />
+                                                <input
+                                                    id='select-all'
+                                                    type='checkbox'
+                                                    checked={checkboxes.checkbox1}
+                                                    onChange={event =>
+                                                        setCheckboxes(prevState => ({
+                                                            ...prevState,
+                                                            checkbox1: event.target.checked,
+                                                        }))
+                                                    }
+                                                />
                                                 <img src='./img/cart/cart1.png' alt='' style={{ marginLeft: "30px" }} width="150px" />
                                             </div>
                                             <div className='cart-items-def'>
@@ -98,7 +127,17 @@ const Cart = () => {
 
                                         <div className='cart-items'>
                                             <div className='items-img select-all d-flex align-items-center'>
-                                                <input id='select-all' type='checkbox' checked={selectAll} />
+                                                <input
+                                                    id='select-all'
+                                                    type='checkbox'
+                                                    checked={checkboxes.checkbox2}
+                                                    onChange={event =>
+                                                        setCheckboxes(prevState => ({
+                                                            ...prevState,
+                                                            checkbox2: event.target.checked,
+                                                        }))
+                                                    }
+                                                />
                                                 <img src='./img/cart/cart2.png' alt='' style={{ marginLeft: "30px" }} width="150px" />
                                             </div>
                                             <div className='cart-items-def'>
@@ -137,7 +176,17 @@ const Cart = () => {
 
                                         <div className='cart-items'>
                                             <div className='items-img select-all d-flex align-items-center'>
-                                                <input id='select-all' type='checkbox' checked={selectAll} />
+                                                <input
+                                                    id='select-all'
+                                                    type='checkbox'
+                                                    checked={checkboxes.checkbox3}
+                                                    onChange={event =>
+                                                        setCheckboxes(prevState => ({
+                                                            ...prevState,
+                                                            checkbox3: event.target.checked,
+                                                        }))
+                                                    }
+                                                />
                                                 <img src='./img/cart/cart3.png' alt='' style={{ marginLeft: "30px" }} width="150px" />
                                             </div>
                                             <div className='cart-items-def'>
