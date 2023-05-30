@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Layout from '../layout/Layout'
 import { Button } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
-
 import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
+
+import { PRODUCTList } from "../helper/endpoints";
+import { useNavigate } from 'react-router-dom'
+import api from "../helper/api";
+import { getServerURL } from '../helper/envConfig';
 
 const Trending = () => {
 
@@ -13,6 +17,29 @@ const Trending = () => {
     const handleClick = (event) => {
         setActive(event.target.id);
     }
+
+    const [postList, setPostList] = useState([]);
+    const serverURL = getServerURL();
+    const [page, setPage] = useState(1);
+  
+    const getCategory = async () => {
+        try {
+            const [postListResponse] = await Promise.all([
+            api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+            ]);
+
+            const postsData = postListResponse.data.data;
+            setPostList(postsData);
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getCategory();
+    }, []);
+
 
     return (
         <Layout>
@@ -29,21 +56,23 @@ const Trending = () => {
                     </div>
 
                     <div className='mb-0 mt-4 explore-main'>
-                        {
-                            data.map((e) => {
-                                return (
-                                    <ProCard
-                                        img={e.img}
-                                        name={e.name}
-                                        per={e.per}
-                                        per2={e.per2}
-                                        sold={e.sold}
-                                        secper={e.secper}
-                                        off={e.off}
-                                    />
-                                )
-                            })
-                        }
+                    {
+                                postList.productListArrObj?.map((e) => {
+                                    return (
+                                            <ProCard
+                                                id={e._id}
+                                                img={e.product_images[0].file_name}
+                                                name={e.name}
+                                                group_price={e.group_price}
+                                                individual_price={e.individual_price}
+                                                sold={e.total_order}
+                                                secper={e.secper}
+                                                off={e.discount_percentage}
+                                                path={postList?.productImagePath && postList.productImagePath}
+                                            />
+                                    )
+                                })
+                            }
                         <div className='w-100 d-flex justify-content-center'>
                             <Button className='shop-btn'>View More <MdKeyboardDoubleArrowRight /></Button>
                         </div>
