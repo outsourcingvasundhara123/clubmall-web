@@ -808,7 +808,10 @@ const Header = () => {
                         </div>
                     </div>
                     <div className='account d-flex align-items-center gap-2'>
-                        <Dropdown>
+
+                        <Link to="/login" className='login-btn'>Login</Link>
+
+                        {/* <Dropdown>
                             <Dropdown.Toggle id="dropdown-basic">
                                 <NavLink>
                                     <Button className='pre-label-btn user-account'>
@@ -879,12 +882,12 @@ const Header = () => {
                                     Sign out
                                 </Dropdown.Item>
                             </Dropdown.Menu>
-                        </Dropdown>
+                        </Dropdown> */}
 
                         <Dropdown>
                             <Dropdown.Toggle id="dropdown-basic">
-                                <NavLink>
-                                    <Button className='pre-label-btn user-account p-0'>
+                                <NavLink className='flag-selector'>
+                                    <Button className='pre-label-btn user-account p-0 '>
                                         <img src={selectedFlag} alt='' width="26px" height="26px" />
                                     </Button>
                                 </NavLink>
@@ -910,10 +913,10 @@ const Header = () => {
                             </Dropdown.Menu>
                         </Dropdown>
 
-                        <Link to="/cart" className='cart' >
+                        <Link to="/cart" className='cart flag-selector' >
                             <img src='./img/header/cart.png' alt='' />
                         </Link>
-                        <Button className='toggle' onClick={handleShow}>
+                        <Button className='toggle ' onClick={handleShow}>
                             <HiOutlineMenuAlt1 />
                         </Button>
                     </div>

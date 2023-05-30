@@ -25,7 +25,7 @@ const CategoryList = () => {
     const handleClick = (event) => {
         setActive(event.target.id);
     }
-     
+
     const carousel1Ref = useRef(null);
     const carousel2Ref = useRef(null);
 
@@ -50,102 +50,107 @@ const CategoryList = () => {
         768: {
             items: 3,
         },
-        991: {
-            items: 4,
+        1024: {
+            items: 3,
         },
         1200: {
-            items: 5,
+            items: 4,
         },
-        1600: {
-            items: 6,
+        1700: {
+            items: 5,
         },
     };
 
 
     const getCategory = async () => {
         try {
-          const [categoryResponse] = await Promise.all([
-            api.post(`${serverURL + PRODUCTCATEGORY}`)
-          ]);
-          const categoryData = categoryResponse.data.data;
-          
-          // Divide the category list into two parts
-          const halfwayIndex = Math.ceil(categoryData.productsCategory &&  categoryData.productsCategory.length / 2);
-      
-          const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
-          const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
-          
-          // Set the first half and second half of categories
-          setcategory({ firstHalf, secondHalf , productsCategoryIconPath : categoryData.productsCategoryIconPath  });
+            const [categoryResponse] = await Promise.all([
+                api.post(`${serverURL + PRODUCTCATEGORY}`)
+            ]);
+            const categoryData = categoryResponse.data.data;
+
+            // Divide the category list into two parts
+            const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData.productsCategory.length / 2);
+
+            const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
+            const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
+
+            // Set the first half and second half of categories
+            setcategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData.productsCategoryIconPath });
 
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
-      
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         getCategory();
-      }, []);
-      
-      useEffect(() => {
+    }, []);
+
+    useEffect(() => {
         getCategory();
-      }, []);
+    }, []);
 
-  return (
-    <div className='categories-slider mt-5 position-relative'>
-    <OwlCarousel
-        className="owl-theme"
-        loop
-        dots={false}
-        navText={['Prev', 'Next']}
-        responsive={CateResponsiveOptions}
-        ref={carousel1Ref}
-    >
-        {category && category.firstHalf && category.firstHalf.map((e, i) => {
-            return (
-                <div className='item' key={i}>
-                    <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
-                        <img src={category.productsCategoryIconPath + e.icon} alt='' />
-                        <h6 className='mt-3'>{e.name}</h6>
-                        <p>{e.minPrice}</p>
-                    </div>
-                </div>
-            );
-        })}
 
-    </OwlCarousel>
+    return (
+        <div className='categories-slider mt-5 position-relative'>
+            <OwlCarousel
+                className="owl-theme"
+                loop
+                dots={false}
+                navText={['Prev', 'Next']}
+                responsive={CateResponsiveOptions}
+                ref={carousel1Ref}
+            >
+                {category && category.firstHalf && category.firstHalf.map((e, i) => {
+                    return (
+                        <div className='item' key={i}>
+                            <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
+                                <div className='categories-slider-img' >
+                                    <img src={category.productsCategoryIconPath + e.icon} alt='' />
+                                </div>
+                                <h6 className='mt-3'>{e.name}</h6>
+                                <p>{e.minPrice}</p>
+                            </div>
+                        </div>
+                    );
+                })}
 
-    <OwlCarousel
-        className="owl-theme"
-        loop
-        dots={false}
-        navText={['Prev', 'Next']}
-        responsive={CateResponsiveOptions}
-        ref={carousel2Ref}
-    >
-        {category && category.secondHalf && category.secondHalf.map((e, i) => {
-            return (
-                <div className='item' key={i}>
-                    <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
-                        <img src={category.productsCategoryIconPath + e.icon} alt='' />
-                        <h6 className='mt-3'>{e.name}</h6>
-                        <p>{e.minPrice}</p>
-                    </div>
-                </div>
-            );
-        })}
-    </OwlCarousel>
+            </OwlCarousel>
 
-    <div className='slider-controls w-100 d-flex align-items-center justify-content-between'>
-        <button className="prev" onClick={handlePrev}>
-            <MdOutlineKeyboardArrowLeft />
-        </button>
-        <button className="next" onClick={handleNext}>
-            <MdOutlineKeyboardArrowRight />
-        </button>
-    </div>
-</div>
-  )
+            <OwlCarousel
+                className="owl-theme"
+                loop
+                dots={false}
+                navText={['Prev', 'Next']}
+                responsive={CateResponsiveOptions}
+                ref={carousel2Ref}
+            >
+                {category && category.secondHalf && category.secondHalf.map((e, i) => {
+                    return (
+                        <div className='item' key={i}>
+                            <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
+                                <div className='categories-slider-img' >
+                                    <img src={category.productsCategoryIconPath + e.icon} alt='' />
+                                </div>
+                                <h6 className='mt-3'>{e.name}</h6>
+                                <p>{e.minPrice}</p>
+                            </div>
+                        </div>
+                    );
+                })}
+            </OwlCarousel>
+
+            <div className='slider-controls w-100 d-flex align-items-center justify-content-between'>
+                <button className="prev" onClick={handlePrev}>
+                    <MdOutlineKeyboardArrowLeft />
+                </button>
+                <button className="next" onClick={handleNext}>
+                    <MdOutlineKeyboardArrowRight />
+                </button>
+            </div>
+        </div>
+    )
 }
 
 export default CategoryList
