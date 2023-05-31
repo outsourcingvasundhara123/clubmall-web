@@ -9,10 +9,9 @@ import { getServerURL } from '../../helper/envConfig';
 import api from '../../helper/api';
 import { useNavigate } from 'react-router-dom'
 import { validate } from './LoginSchema';
-
-import {
-  MdOutlineClose
-} from "react-icons/md"
+import { GoogleLogin } from '@react-oauth/google';
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import { MdOutlineClose } from "react-icons/md"
 import { Link } from 'react-router-dom';
 
 const LogIn = () => {
@@ -33,7 +32,6 @@ const LogIn = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [Mymessage, setMyMessage] = useState("");
@@ -52,7 +50,6 @@ const LogIn = () => {
       const validationErrors = validate({ ...values, [name]: newValue });
       setErrors(validationErrors);
 
-      // Remove error message for the specific field if it is valid
       if (Object.keys(validationErrors).length === 0) {
         delete errors[name];
       }
@@ -68,13 +65,11 @@ const LogIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedValues = { ...values }; // Create a copy of the values object
+    const updatedValues = { ...values };
 
     const validationErrors = validate(updatedValues);
     setErrors(validationErrors);
 
-
-    // Perform additional actions if the form is valid
     if (Object.keys(validationErrors).length === 0) {
 
       try {
@@ -84,7 +79,7 @@ const LogIn = () => {
               setSucessSnackBarOpen(!sucessSnackBarOpen);
               setValues(initialValues);
               setMyMessage(res.data.message);
-              console.log(res.data.data.token,"login");
+              console.log(res.data.data.token, "login");
               sessionStorage.setItem("token", res.data.data.token);
               navigate("/");
             } else if (res.data.success === false) {
@@ -98,6 +93,14 @@ const LogIn = () => {
       }
     }
   };
+
+  const responseMessage = (response) => {
+    console.log(response);
+  };
+  const errorMessage = (error) => {
+    console.log(error);
+  };
+
 
   return (
     <Layout>
@@ -171,8 +174,29 @@ const LogIn = () => {
                 <div className='line'></div>
               </div>
               <div className='d-flex align-items-center justify-content-center gap-4 mt-3'>
-                <NavLink><img src='./img/login/google.png' alt='' /></NavLink>
-                <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink>
+                <div className='google-login'>
+                  <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+                </div>
+                {/* <NavLink>
+                                <img src='./img/login/google.png' alt='' />
+                            </NavLink> */}
+                {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
+                <FacebookLogin
+                  appId="1088597931155576"
+                  style={{
+                    backgroundColor: '#fff',
+                    padding: "0px",
+                  }}
+                  onSuccess={(response) => {
+                    console.log('Login Success!', response);
+                  }}
+                  onFail={(error) => {
+                    console.log('Login Failed!', error);
+                  }}
+                  onProfileSuccess={(response) => {
+                    console.log('Get Profile Success!', response);
+                  }}
+                ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
               </div>
             </div>
           </div>
