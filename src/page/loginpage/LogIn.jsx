@@ -40,7 +40,6 @@ const LogIn = () => {
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
 
-
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
     let newValue = type === "checkbox" ? checked : value;

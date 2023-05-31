@@ -26,7 +26,7 @@ const ProductSlider = ({ productImagePath, productList, id }) => {
         {images && <ImageGallery
           items={images}
           thumbnailPosition="left"
-          showFullscreenButton={true}
+          showFullscreenButton={false}
           showPlayButton={false}
         // responsive={responsiveConfig}
 

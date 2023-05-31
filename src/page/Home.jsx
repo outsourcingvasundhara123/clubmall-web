@@ -26,12 +26,16 @@ const Home = () => {
 
     const navigate = useNavigate();
     const [category, setcategory] = useState([]);
+    const [currentUser, setCorrectUser] = useState("");
     const [productList, setProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
     const player = useRef();
+    
 
+
+    
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -89,6 +93,7 @@ const Home = () => {
 
     useEffect(() => {
         getCategory();
+        setCorrectUser(sessionStorage.getItem("token"))
     }, []);
 
     const [active, setActive] = useState("1");
@@ -97,6 +102,7 @@ const Home = () => {
         setActive(event.target.id);
     }
 
+    console.log(currentUser,"currentUser");
 
 
     return (

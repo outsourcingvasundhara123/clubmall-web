@@ -1,4 +1,19 @@
 
+export const errorResponse = (error) => {
+    if (error.response) {
+        const { status, data } = error.response;
+        if (status === 403) {
+            setTimeout(() => {
+                // window.location.href = "/";
+                sessionStorage.removeItem("token");
+            }, 5000);
+        }
+        return data;
+    } else {
+        return { status: 0, message: "try again" };
+    }
+};
+
 
 export const colors = [
     { id: 1, img: "./img/selling/color1.png" },

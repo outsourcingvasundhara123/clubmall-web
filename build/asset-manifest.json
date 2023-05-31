@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.e4fed563.css",
-    "main.js": "/static/js/main.d917d4f2.js",
+    "main.js": "/static/js/main.49123a46.js",
     "static/js/787.988e779e.chunk.js": "/static/js/787.988e779e.chunk.js",
     "static/media/banner2.png": "/static/media/banner2.320fd23b5a2a5f6ac310.png",
     "static/media/shop-banner.png": "/static/media/shop-banner.740414ed236607851c15.png",
@@ -25,11 +25,11 @@
     "static/media/Lato-Hairline.woff2": "/static/media/Lato-Hairline.4cf04805197605f0103e.woff2",
     "index.html": "/index.html",
     "main.e4fed563.css.map": "/static/css/main.e4fed563.css.map",
-    "main.d917d4f2.js.map": "/static/js/main.d917d4f2.js.map",
+    "main.49123a46.js.map": "/static/js/main.49123a46.js.map",
     "787.988e779e.chunk.js.map": "/static/js/787.988e779e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e4fed563.css",
-    "static/js/main.d917d4f2.js"
+    "static/js/main.49123a46.js"
   ]
 }

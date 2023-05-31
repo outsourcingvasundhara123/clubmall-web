@@ -56,23 +56,23 @@ const ForYou = () => {
     }
   };
 
-  function isVideo(url, i) {
-    return currentVideoIndex === i && /\.(mp4|webm|ogg)$/i.test(url && url);
+  function isVideo(url) {
+    return /\.(mp4|webm|ogg)$/i.test(url);
   }
 
   const handleSlideChange = (swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
   
     // Check if the last video is being rendered
-    if (swiper.activeIndex === postList.length - 1) {
-      if (page < totalPages) {
-        setIsFetching(true);
-        setPage((prevPage) => prevPage + 1);
-        setCurrentVideoIndex(0); // Redirect user to the first video on the new page
-      } else {
-        console.log("Last video on the last page");
-      }
-    }
+    // if (swiper.activeIndex === postList.length - 1) {
+    //   if (page < totalPages) {
+    //     setIsFetching(true);
+    //     setPage((prevPage) => prevPage + 1);
+    //     setCurrentVideoIndex(0); // Redirect user to the first video on the new page
+    //   } else {
+    //     console.log("Last video on the last page");
+    //   }
+    // }
     // Check if the first video is being rendered
     if (swiper.activeIndex === 0 && page > 1) {
       setCurrentVideoIndex(0); // Reset the current video index to 0
@@ -81,16 +81,16 @@ const ForYou = () => {
     }
 
     // Redirect user to the top of the video when page changes and new data is loaded
-    if (
-      swiperRef.current &&
-      swiper.activeIndex === 0 &&
-      page > 1 &&
-      swiper.isEnd
-    ) {
-      setTimeout(() => {
-        swiperRef.current.slideTo(0, 0);
-      }, 100);
-    }
+    // if (
+    //   swiperRef.current &&
+    //   swiper.activeIndex === 0 &&
+    //   page > 1 &&
+    //   swiper.isEnd
+    // ) {
+    //   setTimeout(() => {
+    //     swiperRef.current.slideTo(0, 0);
+    //   }, 100);
+    // }
   };
   
   const LikeDissliek = async(post_id) => {
@@ -125,14 +125,14 @@ loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation}
           followFinger={true}
           modules={[Mousewheel]}
           className="mySwiper"
-          // onSlideChange={handleSlideChange}
+          onSlideChange={handleSlideChange}
           ref={swiperRef}
           initialSlide={currentVideoIndex}
         >
           {postList && postList.map((e, i) => (
             <SwiperSlide key={i}>
               <div className='reels-box position-relative'>
-                {isVideo(e.post_video_link, i) ? (
+                { e.post_video_link &&  isVideo(e.post_video_link) ? (
                   <ReactPlayer
                     url={e.post_video_link}
                     width="100%"
