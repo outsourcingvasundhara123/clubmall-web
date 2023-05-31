@@ -20,7 +20,7 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import CategoryList from './CategoryList';
-
+import Loader from '../components/Loader';
 
 const Home = () => {
 
@@ -29,6 +29,17 @@ const Home = () => {
     const [productList, setProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
     const serverURL = getServerURL();
+    const [loading, setLoading] = useState(true);
+    const player = useRef();
+
+    const startAnimation = () => {
+        if (player.current) {
+          player.current.play(); // Check if player.current is not null before accessing play()
+        }
+      };
+    const stopAnimation = () => {
+        setLoading(false);
+    }; 
 
     const breakpoints = {
         0: {
@@ -54,13 +65,14 @@ const Home = () => {
     }
 
     const getCategory = async () => {
+
         try {
+            startAnimation()
             const [categoryResponse, trendingproductListResponse, productListResponse] = await Promise.all([
                 api.post(`${serverURL + PRODUCTCATEGORY}`),
                 api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
                 api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" })
             ]);
-
             const categoryData = categoryResponse.data.data;
             const productListData = productListResponse.data.data;
             const trendingproductData = trendingproductListResponse.data.data
@@ -68,6 +80,8 @@ const Home = () => {
             setcategory(categoryData);
             setProductList(productListData);
             setTrendingProductList(trendingproductData)
+              
+            stopAnimation()
         } catch (error) {
             console.log(error);
         }
@@ -84,8 +98,12 @@ const Home = () => {
     }
 
 
+
     return (
         <Layout>
+{
+loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> :(
+    <>
             <section className='home-first-image'>
                 <div className='container-cos'>
                     <div className='w-100  pointer ' onClick={() => navigate("/categories")}>
@@ -161,7 +179,6 @@ const Home = () => {
                             navigation={true}
                             modules={[Pagination, Navigation]}
                             className="mySwiper" >
-
                             {
                                 productList.productListArrObj && productList.productListArrObj.map((e) => {
                                     return (
@@ -386,7 +403,8 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
+            </>         
+)}
         </Layout>
     )
 }

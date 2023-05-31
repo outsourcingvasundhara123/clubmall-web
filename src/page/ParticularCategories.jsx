@@ -15,6 +15,7 @@ import { productData } from '../helper/constants';
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
+import Loader from '../components/Loader';
 
 
 const ParticularCategories = () => {
@@ -37,11 +38,24 @@ const ParticularCategories = () => {
     const [productList, setProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
     const [userProductList, setUserProductList] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const player = useRef();
+
+    const startAnimation = () => {
+        if (player.current) {
+          player.current.play(); // Check if player.current is not null before accessing play()
+        }
+      };
+    const stopAnimation = () => {
+        setLoading(false);
+    };
 
     const serverURL = getServerURL();
 
 
     const getCategory = async () => {
+        startAnimation()
+
         try {
             const [categoryResponse, trendingproductListResponse, productListResponse , userProductList] = await Promise.all([
                 api.post(`${serverURL + PRODUCTCATEGORY}`),
@@ -60,6 +74,7 @@ const ParticularCategories = () => {
             setProductList(productListData);
             setTrendingProductList(trendingproductData)
             setUserProductList(userproductData)
+            stopAnimation()
 
         } catch (error) {
             console.log(error);
@@ -72,6 +87,9 @@ const ParticularCategories = () => {
 
     return (
         <Layout>
+            {
+loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> :(
+    <>
             <section className='home-first-image mb-0'>
                 <div className='container-cos'>
                     <div className='w-100 position-relative pointer' onClick={() => navigate("/categories")}>
@@ -415,7 +433,8 @@ const ParticularCategories = () => {
                     </div>
                 </div>
             </section>
-
+            </>         
+)}
 
             <AddCartModal handleClose={handleClose} show={show} product_id={product_id} />
         </Layout>

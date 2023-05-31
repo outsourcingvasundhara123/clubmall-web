@@ -5,129 +5,303 @@ import { POSTSList } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-
+import ReactPlayer from 'react-player';
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import Loader from '../components/Loader';
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-
 // import required modules
 import { Mousewheel } from "swiper";
 
 const ForYou = () => {
+  const POST_URL = process.env.REACT_APP_POST_URL
+  const swiperRef = useRef(null);
+  const defaultProfile = 'http://backend.clubmall.com/uploads/profile-images/profile_image-1669788396576.png'
+  const navigate = useNavigate();
+  const [postList, setPostList] = useState([]);
+  const serverURL = getServerURL();
+  const [page, setPage] = useState(1);
+  const [profilUrl, setProfileUrl] = useState(" ");
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isFetching, setIsFetching] = useState(false);
+  const currentPageRef = useRef(page);
+  const [loading, setLoading] = useState(true);
+  const player = useRef();
+  var totalPages = 9
+  const startAnimation = () => {
+    if (player.current) {
+      player.current.play(); // Check if player.current is not null before accessing play()
+    }
+  };
+  const stopAnimation = () => {
+      setLoading(false);
+  };
 
-    const navigate = useNavigate();
-    const [postList, setPostList] = useState([]);
-    const serverURL = getServerURL();
-    const [page, setPage] = useState(1);
+  const getCategory = async () => {
+    startAnimation();
+    try {
+      const [postListResponse] = await Promise.all([
+        api.get(`${serverURL + POSTSList + `?action=list&page=${page}`}`),
+      ]);
+      setProfileUrl(postListResponse.data.data.productImagePath);
+      const postsData = postListResponse.data.data.postList;
+      totalPages = postsData.length
+      console.log(postsData.length,"length");
+      setPostList(postsData);
+      setIsFetching(false);
+      stopAnimation();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const videoRef = useRef(null);
+  function isVideo(url, i) {
+    return currentVideoIndex === i && /\.(mp4|webm|ogg)$/i.test(url && url);
+  }
+
+  const handleSlideChange = (swiper) => {
+    setCurrentVideoIndex(swiper.activeIndex);
   
-    useEffect(() => {
-      const videoElement = videoRef.current;
-  
-      const playVideo = () => {
-        if (videoElement && videoElement.readyState === 4) {
-          videoElement.play().catch((error) => {
-            console.error('Error playing video:', error);
-          });
-        }
-      };
-  
-      const pauseVideo = () => {
-        if (videoElement) {
-          videoElement.pause();
-        }
-      };
-  
-      const handleCanPlay = () => {
-        playVideo();
-      };
-  
-      if (videoElement) {
-        videoElement.addEventListener('canplay', handleCanPlay);
+    // Check if the last video is being rendered
+    if (swiper.activeIndex === postList.length - 1) {
+      if (page < totalPages) {
+        setIsFetching(true);
+        setPage((prevPage) => prevPage + 1);
+        setCurrentVideoIndex(0); // Redirect user to the first video on the new page
+      } else {
+        console.log("Last video on the last page");
       }
+    }
+    // Check if the first video is being rendered
+    if (swiper.activeIndex === 0 && page > 1) {
+      setCurrentVideoIndex(0); // Reset the current video index to 0
+      setIsFetching(true);
+      setPage((prevPage) => prevPage - 1);
+    }
+
+    // Redirect user to the top of the video when page changes and new data is loaded
+    if (
+      swiperRef.current &&
+      swiper.activeIndex === 0 &&
+      page > 1 &&
+      swiper.isEnd
+    ) {
+      setTimeout(() => {
+        swiperRef.current.slideTo(0, 0);
+      }, 100);
+    }
+  };
   
-      // Cleanup function
-      return () => {
-        pauseVideo();
-        if (videoElement) {
-          videoElement.removeEventListener('canplay', handleCanPlay);
-        }
-      };
-    }, []);
+  const LikeDissliek = async(post_id) => {
+    try {
+      const likeDislike = await api.postWithToken(`${serverURL + "post-like-dislike "}`,{post_id:post_id});
+      console.log(likeDislike);
+      getCategory();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  useEffect(() => {
+    getCategory();
+  }, [page]);
 
-    const getCategory = async () => {
-        try {
-            const [postListResponse] = await Promise.all([
-            api.get(`${serverURL + POSTSList + `?action=list&page=${page}` }`),
-            ]);
+  return (
 
-            const postsData = postListResponse.data.data.postList;
-            setPostList(postsData);
-
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        getCategory();
-    }, [page]);
-
-
-    return (
-
-                            <Layout>
-                            <div className='for-you'>
-                
-                                <Swiper
-                                    direction={"vertical"}
-                                    slidesPerView={1}
-                                    spaceBetween={30}
-                                    mousewheel={true}
-                                    releaseOnEdges={true}
-                                    followFinger={true}
-                                    modules={[Mousewheel]}
-                                    className="mySwiper"
-                                >
+    <Layout>
 
 {
-                                postList && postList?.slice(6, 10).map((e,i) => {
-                                    return (
-                                        
-<>
-        <SwiperSlide key={i}>
-          <div className='reels-box position-relative'>
-            <video
-              width="100%"
-              height="100%"
-              controlsList="nodownload"
-              id={i}
-              webkit-playsInline
-              loop
-              playsInline
-              preload="yes"
-              autoPlay // Enable autoplay
-            //   muted // Remove this line if you want sound
-              controls
-            >
-              <source src={e.post_video_link} type="video/mp4" />
-            </video>
-            {/* Rest of the code */}
-          </div>
-        </SwiperSlide>
-      </>
-                       )
-                    })
-                }
+loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> :(
+    <>
+      <div className='for-you'>
 
-                                </Swiper>
+        <Swiper
+          direction={"vertical"}
+          slidesPerView={1}
+          spaceBetween={30}
+          mousewheel={true}
+          releaseOnEdges={true}
+          followFinger={true}
+          modules={[Mousewheel]}
+          className="mySwiper"
+          // onSlideChange={handleSlideChange}
+          ref={swiperRef}
+          initialSlide={currentVideoIndex}
+        >
+          {postList && postList.map((e, i) => (
+            <SwiperSlide key={i}>
+              <div className='reels-box position-relative'>
+                {isVideo(e.post_video_link, i) ? (
+                  <ReactPlayer
+                    url={e.post_video_link}
+                    width="100%"
+                    height="100%"
+                    controls={true}
+                    playing={currentVideoIndex === i}
+                    muted={false}
+                    loop={true}
+                    config={{
+                      file: {
+                        attributes: {
+                          controlsList: 'nodownload',
+                          preload: 'auto',
+                          'webkit-playsinline': true,
+                        },
+                      },
+                    }}
+                  />
+                ) : (
+                  <img width="100%" height="100%" src={e.post_video_link} alt="Image" />
+                )}
+
+                <div className='user-name px-3'>
+                  <div className='d-flex align-items-center gap-2'>
+                    <img alt='profile' width="34px" height="34px" style={{ borderRadius: "50%" }} src={e.user_profile ? e.user_profile : defaultProfile} />
+                    <div>
+                      <p>Hello, {e.user_name}</p>
+                      {/* <span>
+                              <img alt='' src='./img/for_you/eye.png' className='me-1' />
+                              13K</span> */}
+                    </div>
+                  </div>
+                  <Button className='follow-btn'>+ Follow ({e.total_followers})</Button>
+                </div>
+                {/* <div className='price'>
+                    <Button>Individual Price <br />
+                      ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
+                    <Button>Group Price: <br />
+                      ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
+                  </div> */}
+                  {e.products_obj.length !== 0 &&  
+
+                    <div className='reel-items'>
+                        <p>{e.products_obj.length}+ More Products</p>
+                        <div className='items-box p-2 mt-2'>
+                            <img alt='' src={   POST_URL + e.products_obj[0]?.product_id._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
+                            <del>$299,43</del>
+                        </div>
+                    </div>}
+                <div className='additional-icon'>
+                  <div className='additional-box'>
+
+                    {e.products_obj.length !== 0 &&                 
+                     <Button>
+                      <img alt='' src='./img/for_you/doc.png' />
+                    </Button>
+                     }
+   
+                    <Button>
+                      <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' />
+                      <p>1</p>
+                    </Button>
+                    {/* <Button>
+                      <img alt='' src='./img/for_you/dlike.png' />
+                      <p>{e.total_like}</p>
+                    </Button> */}
+                    <Button>
+                      <img alt='' src='./img/for_you/msg.png' />
+                      <p>{e.total_comment}</p>
+                    </Button>
+                  </div>
+                  <div className='additional-box mt-2'>
+                    <Button>
+                      <img alt='' src='./img/for_you/tip.png' />
+                    </Button>
+                    <Button>
+                      <img alt='' src='./img/for_you/share.png' />
+                    </Button>
+                    <Button>
+                      <img alt='' src='./img/for_you/add.png' />
+                    </Button>
+                    <Button>
+                      <img alt='' src='./img/for_you/flag.png' />
+                    </Button>
+                  </div>
+                </div>
+                <div className='cart-btn-reels'>
+                  <Dropdown>
+                    <Dropdown.Toggle id="dropdown-basic">
+                      <img alt='' src='./img/for_you/cart.png' width="22px" />
+                      <img alt='' src='./img/for_you/up.png' width="10px" />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+              </div>
+               
+            </SwiperSlide>
+            
+          ))}
+        </Swiper>
+
+        {/* <div className='reels-box position-relative'>
+                    <img alt='' src='./img/for_you/reels.png' width="100%" />
+                    <div className='user-name px-3'>
+                        <div className='d-flex align-items-center gap-2'>
+                            <img alt='' src='./img/header/user-pic.png' />
+                            <div>
+                                <p>Hello, Ali</p>
+                                <span>
+                                    <img alt='' src='./img/for_you/eye.png' className='me-1' />
+                                    13K</span>
                             </div>
-                        </Layout>
+                        </div>
+                        <Button className='follow-btn'>+ Follow (12K)</Button>
+                    </div>
+                    <div className='reel-items'>
+                        <p>2+ More Products</p>
+                        <div className='items-box p-2 mt-2'>
+                            <img alt='' src='./img/for_you/item.png' width="100%" />
+                            <del>$299,43</del>
+                        </div>
+                    </div>
+                    <div className='additional-icon'>
+                        <div className='additional-box'>
+                            <Button>
+                                <img alt='' src='./img/for_you/doc.png' />
+                            </Button>
+                            <Button>
+                                <img alt='' src='./img/for_you/like.png' />
+                                <p>1</p>
+                            </Button>
+                            <Button>
+                                <img alt='' src='./img/for_you/dlike.png' />
+                                <p>1</p>
+                            </Button>
+                            <Button>
+                                <img alt='' src='./img/for_you/msg.png' />
+                                <p>5</p>
+                            </Button>
+                        </div>
+                        <div className='additional-box mt-2'>
+                            <Button>
+                                <img alt='' src='./img/for_you/tip.png' />
+                            </Button>
+                            <Button>
+                                <img alt='' src='./img/for_you/share.png' />
+                            </Button>
+                            <Button>
+                                <img alt='' src='./img/for_you/add.png' />
+                            </Button>
+                            <Button>
+                                <img alt='' src='./img/for_you/flag.png' />
+                            </Button>
+                        </div>
+                    </div>
+                </div> */}
 
-    )
+      </div>
+      </>         
+)}      
+    </Layout>
+
+  )
 }
 
 export default ForYou

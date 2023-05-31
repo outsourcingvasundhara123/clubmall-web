@@ -84,6 +84,7 @@ const LogIn = () => {
               setSucessSnackBarOpen(!sucessSnackBarOpen);
               setValues(initialValues);
               setMyMessage(res.data.message);
+              console.log(res.data.data.token,"login");
               sessionStorage.setItem("token", res.data.data.token);
               navigate("/");
             } else if (res.data.success === false) {
