@@ -11,9 +11,9 @@ import SucessSnackBar from "../SnackBar/SnackBar";
 import ErrorSnackBar from "../SnackBar/SnackBar";
 import { useNavigate } from 'react-router-dom'
 import { GoogleLogin } from '@react-oauth/google';
+import FacebookLogin from '@greatsumini/react-facebook-login';
 
 function Register() {
-
 
     const navigate = useNavigate();
 
@@ -89,7 +89,6 @@ function Register() {
 
         console.log(errors, "errors");
 
-        // Perform additional actions if the form is valid
         if (Object.keys(validationErrors).length === 0) {
             updatedValues.user_type = "4";
 
@@ -302,13 +301,29 @@ function Register() {
                             {/* <NavLink>
                                 <img src='./img/login/google.png' alt='' />
                             </NavLink> */}
-                            <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink>
+                            {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
+                            <FacebookLogin
+                                appId="1088597931155576"
+                                style={{
+                                    backgroundColor: '#fff',
+                                    padding: "0px",
+                                }}
+                                onSuccess={(response) => {
+                                    console.log('Login Success!', response);
+                                }}
+                                onFail={(error) => {
+                                    console.log('Login Failed!', error);
+                                }}
+                                onProfileSuccess={(response) => {
+                                    console.log('Get Profile Success!', response);
+                                }}
+                            ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </Layout>
+        </Layout >
     )
 }
 

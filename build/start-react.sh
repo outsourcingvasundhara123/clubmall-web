@@ -1,1 +1,1 @@
-serve -s -p 3010
+server -s -p 3010

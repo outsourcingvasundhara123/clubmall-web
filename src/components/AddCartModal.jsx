@@ -10,18 +10,24 @@ import {
 import ProductSlider from './ProductSlider'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-import { PRODUCTDETAIL } from "../helper/endpoints";
+import { PRODUCTDETAIL, ADDTOCART } from "../helper/endpoints";
+import SucessSnackBar from "../components/SnackBar";
+import ErrorSnackBar from "../components/SnackBar";
+import { useNavigate } from 'react-router-dom'
+import { errorResponse } from '../helper/constants'
 
 const AddCartModal = (props) => {
-
+    const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
     const serverURL = getServerURL();
     const [count, setCount] = useState(1)
     const [modelProduct, setModelProduct] = useState({})
     const [show, setShow] = useState(false);
-
-    const [sizeActive, setSizeActive] = useState()
+    const [sizeActive, setSizeActive] = useState("")
     const [productColorActive, setProductColorActive] = useState()
+    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [Mymessage, setMyMessage] = useState("");
 
     const handleClose = () => {
         setShow(false);
@@ -47,15 +53,78 @@ const AddCartModal = (props) => {
         getCategory();
     }, [props.show]);
 
+
+    const handleCart = async (e) => {
+        e.preventDefault();
+
+        try {
+
+            if (productColorActive && sizeActive && count) {
+
+                let data = {
+                    action: "add-to-cart-product",
+                    seller_id: modelProduct.productList.user_id._id,
+                    product_id: modelProduct.productList._id,
+                    product_price: modelProduct.productList.individual_price,
+                    product_price_type: 1,
+                    product_tax: 0,
+                    group_id: null,
+                    skuid: "",
+                }
+
+                const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
+
+                if (res.data.success == true) {
+                    setSucessSnackBarOpen(!sucessSnackBarOpen);
+                    setMyMessage(res.data.message);
+                    props.handleClose()
+                    setProductColorActive(" ")
+                    setSizeActive(" ")
+                } else if (res.data.success === false) {
+                    setMyMessage(res.data.message);
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                }
+            } else {
+                setMyMessage("select color and size  of the product");
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+            }
+        } catch (error) {
+            setMyMessage(error.response.data.message);
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+            if(error.response.status === 403){
+                props.handleClose()
+                navigate("/")
+            }
+        }
+    };
+
+
     return (
         <>
+
+
             <Modal
                 show={props.show}
                 onHide={props.handleClose}
                 centered
                 className='cart-modal product-info ps-0'
             >
+                <SucessSnackBar
+                    open={sucessSnackBarOpen}
+                    setOpen={setSucessSnackBarOpen}
+                    text={Mymessage}
+                    type="success"
+                />
+
+                <ErrorSnackBar
+                    open={warningSnackBarOpen}
+                    setOpen={setWarningSnackBarOpen}
+                    text={Mymessage}
+                    type="error"
+                />
                 <Modal.Body>
+
+
                     <div className='d-flex justify-content-end mb-2'>
                         <Button className='close-modal-btn' onClick={props.handleClose}>
                             <MdOutlineClose />
@@ -81,7 +150,7 @@ const AddCartModal = (props) => {
                                     <span>24% Off</span>
                                 </div>
 
-                                <div className='price Individual-per mt-3 gap-3 d-flex align-items-center'>
+                                <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
                                     <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
                                         ${modelProduct.productList?.individual_price}</Button>
                                     <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
@@ -91,15 +160,16 @@ const AddCartModal = (props) => {
                                     }}>Group Price: <br />
                                         ${modelProduct.productList?.group_price} </Button>
                                 </div>
-                               
+
+
                                 <div className='product-color mt-4'>
-                                    <h5>Color:</h5>
+                                    <h5>Color:   {productColorActive}</h5>
                                     <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                         {
-                                           modelProduct.productList?.sku_attributes.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
+                                            modelProduct?.productList?.sku_attributes?.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
                                                 return (
-                                                    <Button className={`${productColorActive === i ? "active" : ""} color-btn`} onClick={() => setProductColorActive(i)}>
-                                                        <img className='colors'   src={e.imgUrl} alt='' />
+                                                    <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                        <img className='colors' src={e.imgUrl} alt='' />
                                                     </Button>
                                                 )
                                             })
@@ -107,8 +177,8 @@ const AddCartModal = (props) => {
                                     </div>
 
                                     <div className='size mt-4'>
-                                        <h5>Size:</h5>
-                                        <div className='d-flex align-items-center gap-2 mt-2'>
+                                        <h5>Size:  {" " + sizeActive}</h5>
+                                        <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                             {
                                                 modelProduct.productList?.sku_attributes.size.map((e, i) => {
                                                     return (
@@ -119,23 +189,24 @@ const AddCartModal = (props) => {
                                                 })
                                             }
                                         </div>
-                                    </div>
+                               
 
-                                    <div className='qty mt-4 pt-2 d-flex align-items-center gap-3'>
+                                    {/* <div className='qty mt-4 pt-2 d-flex align-items-center gap-3'>
                                         <h5>Qty:</h5>
                                         <div className='count-product'>
                                             <Button onClick={(e) => setCount((e) => e - 1)}> <MdRemove /></Button>
                                             <span>{count}</span>
                                             <Button onClick={(e) => setCount((e) => e + 1)}><MdAdd /></Button>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
 
-                                <Button className='add-cart mt-4 w-75'>Add to cart</Button>
+                                <Button onClick={handleCart} type='button' className='add-cart mt-4 w-75'>Add to cart</Button>
 
                                 <div>
                                     <Button className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>
                                 </div>
+                            </div>
                             </div>
                         </Col>
                     </Row>
