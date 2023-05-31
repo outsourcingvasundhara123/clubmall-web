@@ -239,7 +239,7 @@ const ProductInfo = () => {
                                     <span>24% Off</span>
                                 </div>
 
-                                <div className='price Individual-per mt-3 gap-3 d-flex align-items-center'>
+                                <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
                                     <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
                                         $12.00</Button>
                                     <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
@@ -288,7 +288,7 @@ const ProductInfo = () => {
 
                                     <div className='size mt-4'>
                                         <h5>Size:</h5>
-                                        <div className='d-flex align-items-center gap-2 mt-2'>
+                                        <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                             <Button className={`${sizeActive === "xs" ? "active" : ""}`} onClick={() => setSizeActive("xs")}>XS</Button>
                                             <Button className={`${sizeActive === "s" ? "active" : ""}`} onClick={() => setSizeActive("s")}>S</Button>
                                             <Button className={`${sizeActive === "m" ? "active" : ""}`} onClick={() => setSizeActive("m")}>M</Button>
@@ -575,13 +575,13 @@ const ProductInfo = () => {
                             <h5 className='my-3'>Get the full experience on <br /> the app</h5>
                             <p>Follow you favoritevendor accounts,
                                 explore new product and message the <br /> vendor</p>
-                            <div className='d-flex align-items-center justify-content-center gap-2 mt-4'>
-                                <Button>
+                            <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
+                                <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
                                     <img src='./img/playstore.png' alt='' />
-                                </Button>
-                                <Button>
+                                </NavLink>
+                                <NavLink href='https://apps.apple.com/us/app/clubmall/id6444752184' target='_blank'>
                                     <img src='./img/app.png' alt='' />
-                                </Button>
+                                </NavLink>
                             </div>
                         </div>
                     </Modal.Body>

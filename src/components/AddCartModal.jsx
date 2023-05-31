@@ -81,7 +81,7 @@ const AddCartModal = (props) => {
                                     <span>24% Off</span>
                                 </div>
 
-                                <div className='price Individual-per mt-3 gap-3 d-flex align-items-center'>
+                                <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
                                     <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
                                         ${modelProduct.productList?.individual_price}</Button>
                                     <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
@@ -91,15 +91,15 @@ const AddCartModal = (props) => {
                                     }}>Group Price: <br />
                                         ${modelProduct.productList?.group_price} </Button>
                                 </div>
-                               
+
                                 <div className='product-color mt-4'>
                                     <h5>Color:</h5>
                                     <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                         {
-                                           modelProduct.productList?.sku_attributes.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
+                                            modelProduct.productList?.sku_attributes.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
                                                 return (
                                                     <Button className={`${productColorActive === i ? "active" : ""} color-btn`} onClick={() => setProductColorActive(i)}>
-                                                        <img className='colors'   src={e.imgUrl} alt='' />
+                                                        <img className='colors' src={e.imgUrl} alt='' />
                                                     </Button>
                                                 )
                                             })
@@ -108,7 +108,7 @@ const AddCartModal = (props) => {
 
                                     <div className='size mt-4'>
                                         <h5>Size:</h5>
-                                        <div className='d-flex align-items-center gap-2 mt-2'>
+                                        <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                             {
                                                 modelProduct.productList?.sku_attributes.size.map((e, i) => {
                                                     return (
