@@ -4,11 +4,11 @@ import { Button } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
-
 import { PRODUCTList } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
+import Loader from '../components/Loader';
 
 const Trending = () => {
 
@@ -21,8 +21,19 @@ const Trending = () => {
     const [postList, setPostList] = useState([]);
     const serverURL = getServerURL();
     const [page, setPage] = useState(1);
-  
+    const [loading, setLoading] = useState(true);
+    const player = useRef();
+    const startAnimation = () => {
+        if (player.current) {
+          player.current.play(); // Check if player.current is not null before accessing play()
+        }
+      };
+    const stopAnimation = () => {
+        setLoading(false);
+    };
+
     const getCategory = async () => {
+        startAnimation()
         try {
             const [postListResponse] = await Promise.all([
             api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
@@ -30,7 +41,7 @@ const Trending = () => {
 
             const postsData = postListResponse.data.data;
             setPostList(postsData);
-
+            stopAnimation()
         } catch (error) {
             console.log(error);
         }
@@ -43,7 +54,9 @@ const Trending = () => {
 
     return (
         <Layout>
-
+{
+loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> :(
+    <>
             <section className='explore'>
                 <div className='container-cos'>
                     <div className='btns mt-5'>
@@ -79,7 +92,8 @@ const Trending = () => {
                     </div>
                 </div>
             </section>
-
+            </>         
+)}
         </Layout>
     )
 }

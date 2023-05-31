@@ -19,7 +19,6 @@ const CategoryList = () => {
     const [trendingProductList, setTrendingProductList] = useState([]);
     const serverURL = getServerURL();
 
-
     const [active, setActive] = useState("1");
 
     const handleClick = (event) => {
@@ -38,7 +37,6 @@ const CategoryList = () => {
         carousel1Ref.current.next();
         carousel2Ref.current.next();
     };
-
 
     const CateResponsiveOptions = {
         0: {
@@ -61,11 +59,10 @@ const CategoryList = () => {
         },
     };
 
-
     const getCategory = async () => {
         try {
             const [categoryResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTCATEGORY}`)
+                api.post(`${serverURL + PRODUCTCATEGORY}`,{action:"web"})
             ]);
             const categoryData = categoryResponse.data.data;
 
@@ -110,7 +107,7 @@ const CategoryList = () => {
                                     <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                 </div>
                                 <h6 className='mt-3'>{e.name}</h6>
-                                <p>{e.minPrice}</p>
+                                <p>From ${e.minPrice}</p>
                             </div>
                         </div>
                     );
@@ -134,7 +131,7 @@ const CategoryList = () => {
                                     <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                 </div>
                                 <h6 className='mt-3'>{e.name}</h6>
-                                <p>{e.minPrice}</p>
+                                <p>From ${e.minPrice}</p>
                             </div>
                         </div>
                     );

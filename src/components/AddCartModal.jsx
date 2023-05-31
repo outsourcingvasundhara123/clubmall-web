@@ -47,7 +47,6 @@ const AddCartModal = (props) => {
         getCategory();
     }, [props.show]);
 
-
     return (
         <>
             <Modal
@@ -92,15 +91,15 @@ const AddCartModal = (props) => {
                                     }}>Group Price: <br />
                                         ${modelProduct.productList?.group_price} </Button>
                                 </div>
-
+                               
                                 <div className='product-color mt-4'>
                                     <h5>Color:</h5>
                                     <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                         {
-                                            colors.map((e, i) => {
+                                           modelProduct.productList?.sku_attributes.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
                                                 return (
-                                                    <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.id)}>
-                                                        <img src={e.img} alt='' />
+                                                    <Button className={`${productColorActive === i ? "active" : ""} color-btn`} onClick={() => setProductColorActive(i)}>
+                                                        <img className='colors'   src={e.imgUrl} alt='' />
                                                     </Button>
                                                 )
                                             })
@@ -119,7 +118,6 @@ const AddCartModal = (props) => {
                                                     )
                                                 })
                                             }
-
                                         </div>
                                     </div>
 

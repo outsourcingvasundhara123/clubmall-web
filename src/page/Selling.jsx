@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
-import CategoryList from './CategoryList';
+import Loader from '../components/Loader';
 
 
 const Selling = () => {
@@ -25,18 +25,27 @@ const Selling = () => {
     const [kidspage, setKidPage] = useState(1);
     const [favoritepage, setFavoritePage] = useState(1);
     const [productUrl, setProducUrl] = useState("");
-
-
-
-
     const serverURL = getServerURL();
-
-
+    const [loading, setLoading] = useState(true);
+    const player = useRef(null);
+    const [viewMoreLodr, setViewmoreLoder] = useState(false);
+    
+    const startAnimation = () => {
+        if (player.current) {
+          player.current.play(); // Check if player.current is not null before accessing play()
+        }
+      };
+    const stopAnimation = () => {
+        setLoading(false);
+    };
 
     const getCategory = async () => {
+
+        startAnimation()
+
         try {
           const [categoryResponse,trendingproductListResponse, womenCategory, kidCategory, menCategory , favorites ] = await Promise.all([
-            api.post(`${serverURL + PRODUCTCATEGORY}`),
+            api.post(`${serverURL + PRODUCTCATEGORY}`,{action:"web"}),
             api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
             api.post(`${serverURL + PRODUCTList}`, {
               product_list_type: "by-categories",
@@ -69,9 +78,7 @@ const Selling = () => {
           const manproductData = menCategory.data.data;
           const kidsproductData = kidCategory.data.data;
           const favoriteproductData = favorites.data.data;
-
-      
-          // Merge products without repetitions
+        // Merge products without repetitions
           const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
             .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
           const updatedManProductList = [...manProductList, ...manproductData.productListArrObj]
@@ -89,6 +96,8 @@ const Selling = () => {
           setkidsProductList(updatedKidsProductList);
           setFavoriteProductList(updatedfavoriteProductList)
           setTrendingProductList(trendingproductData)
+          setViewmoreLoder(false)
+          stopAnimation()
 
         } catch (error) {
           console.log(error);
@@ -98,12 +107,18 @@ const Selling = () => {
       useEffect(() => {
         getCategory();
       }, [womanpage, manpage, kidspage ,favoritepage]); 
-      
+    
 
+console.log(player,"");
 
     return (
 
         <Layout>
+
+{
+loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> :(
+    <>
+
             <section className='hero position-relative selling-banner pointer' onClick={() => navigate("/categories")}>
                 <div className='hero-text'>
                     <h1>Hop Into <br /> Hot Selling</h1>
@@ -194,7 +209,7 @@ const Selling = () => {
                                     }
                                 </div>
                                 <div className='w-100 d-flex justify-content-center'>
-                                    <Button className='shop-btn' onClick={() => setWomanPage(womanpage + 1)} >View More (999+)  <MdKeyboardDoubleArrowRight /></Button>
+                                    <Button className='shop-btn' onClick={() => (setWomanPage(womanpage + 1),setViewmoreLoder(true))} >  {viewMoreLodr ? "Loding..." : "View More"}   <MdKeyboardDoubleArrowRight /></Button>
                                 </div>
                             </Tab>
                             <Tab eventKey="Men" title="Men">
@@ -222,7 +237,8 @@ const Selling = () => {
 
                                 </div>
                                 <div className='w-100 d-flex justify-content-center'>
-                                    <Button className='shop-btn' onClick={() => setManPage(manpage + 1)}>View More (999+)  <MdKeyboardDoubleArrowRight /></Button>
+
+                                    <Button className='shop-btn' onClick={() => (setManPage(manpage + 1),setViewmoreLoder(true))}>{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
 
                                 </div>
                             </Tab>
@@ -247,7 +263,7 @@ const Selling = () => {
                                     }
                                 </div>
                                 <div className='w-100 d-flex justify-content-center'>
-                                    <Button className='shop-btn' onClick={() => setKidPage(kidspage + 1)} >View More (999+)  <MdKeyboardDoubleArrowRight /></Button>
+                                    <Button className='shop-btn' onClick={() =>( setKidPage(kidspage + 1),setViewmoreLoder(true))} >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
                                 </div>
                             </Tab>
                         </Tabs>
@@ -349,7 +365,7 @@ const Selling = () => {
                                     }
                         
                         <div className='w-100 d-flex justify-content-center'>
-                            <Button className='shop-btn'   onClick={() => setFavoritePage(favoritepage + 1)} >View More (999+) <MdKeyboardDoubleArrowRight /></Button>
+                            <Button className='shop-btn'   onClick={() => setFavoritePage(favoritepage + 1)} >View More <MdKeyboardDoubleArrowRight /></Button>
                         </div>
                     </div>
                 </div>
@@ -379,11 +395,13 @@ const Selling = () => {
                                 })
                             }
                         <div className='w-100 d-flex justify-content-center'>
-                            <Button className='shop-btn'>View More <MdKeyboardDoubleArrowRight /></Button>
+                            <Button className='shop-btn'>View More<MdKeyboardDoubleArrowRight /></Button>
                         </div>
                     </div>
                 </div>
             </section>
+            </>         
+)}
         </Layout>
     )
 }

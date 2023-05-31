@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import Layout from '../layout/Layout'
 import SliderTwo from '../components/SliderTwo'
 import { Accordion, Button, Col, Row } from 'react-bootstrap'
@@ -7,14 +7,55 @@ import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { colors, categoriesSliderData } from '../helper/constants'
 import { RangeSlider } from 'rsuite';
-
+import { PRODUCTList } from "../helper/endpoints";
+import { useNavigate } from 'react-router-dom'
+import api from "../helper/api";
+import { getServerURL } from '../helper/envConfig';
+import Loader from '../components/Loader';
 const Categories = () => {
 
-
     const [productColorActive, setProductColorActive] = useState()
+    const [postList, setPostList] = useState([]);
+    const serverURL = getServerURL();
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
+    const player = useRef();
+    const startAnimation = () => {
+        if (player.current) {
+          player.current.play(); // Check if player.current is not null before accessing play()
+        }
+      };
+    const stopAnimation = () => {
+        setLoading(false);
+    };
+
+    const getCategory = async () => {
+        startAnimation()
+        try {
+            const [postListResponse] = await Promise.all([
+            api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+            ]);
+
+            const postsData = postListResponse.data.data;
+            setPostList(postsData);
+            stopAnimation()
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getCategory();
+    }, []);
+
+console.log(postList,"postList");
 
     return (
         <Layout>
+{
+loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> :(
+    <>
+
             <div className='categories'>
                 <div className='container-cos'>
                     <div className='categories-slider'>
@@ -346,21 +387,23 @@ const Categories = () => {
                                     <h5>Trending Items</h5>
                                 </div>
                                 <div className='mb-0 explore-main'>
-                                    {
-                                        data.map((e) => {
-                                            return (
-                                                <ProCard
-                                                    img={e.img}
-                                                    name={e.name}
-                                                    per={e.per}
-                                                    per2={e.per2}
-                                                    sold={e.sold}
-                                                    secper={e.secper}
-                                                    off={e.off}
-                                                />
-                                            )
-                                        })
-                                    }
+                                {
+                                postList.productListArrObj?.map((e) => {
+                                    return (
+                                            <ProCard
+                                                id={e._id}
+                                                img={e.product_images[0].file_name}
+                                                name={e.name}
+                                                group_price={e.group_price}
+                                                individual_price={e.individual_price}
+                                                sold={e.total_order}
+                                                secper={e.secper}
+                                                off={e.discount_percentage}
+                                                path={postList?.productImagePath && postList.productImagePath}
+                                            />
+                                    )
+                                })
+                            }
                                     <div className='w-100 d-flex justify-content-center'>
                                         <Button className='shop-btn'>View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
@@ -370,6 +413,8 @@ const Categories = () => {
                     </div>
                 </div>
             </div>
+            </>         
+)}        
         </Layout>
     )
 }
