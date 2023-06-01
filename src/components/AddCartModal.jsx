@@ -91,7 +91,7 @@ const AddCartModal = (props) => {
         } catch (error) {
             setMyMessage(error.response.data.message);
             setWarningSnackBarOpen(!warningSnackBarOpen);
-            if(error.response.status === 403){
+            if (error.response.status === 403) {
                 props.handleClose()
                 navigate("/")
             }
@@ -163,7 +163,7 @@ const AddCartModal = (props) => {
 
 
                                 <div className='product-color mt-4'>
-                                    <h5>Color:   {productColorActive}</h5>
+                                    <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                     <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                         {
                                             modelProduct?.productList?.sku_attributes?.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
@@ -177,7 +177,7 @@ const AddCartModal = (props) => {
                                     </div>
 
                                     <div className='size mt-4'>
-                                        <h5>Size:  {" " + sizeActive}</h5>
+                                        <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
                                         <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                             {
                                                 modelProduct.productList?.sku_attributes.size.map((e, i) => {
@@ -189,9 +189,9 @@ const AddCartModal = (props) => {
                                                 })
                                             }
                                         </div>
-                               
 
-                                    {/* <div className='qty mt-4 pt-2 d-flex align-items-center gap-3'>
+
+                                        {/* <div className='qty mt-4 pt-2 d-flex align-items-center gap-3'>
                                         <h5>Qty:</h5>
                                         <div className='count-product'>
                                             <Button onClick={(e) => setCount((e) => e - 1)}> <MdRemove /></Button>
@@ -199,14 +199,14 @@ const AddCartModal = (props) => {
                                             <Button onClick={(e) => setCount((e) => e + 1)}><MdAdd /></Button>
                                         </div>
                                     </div> */}
-                                </div>
+                                    </div>
 
-                                <Button onClick={handleCart} type='button' className='add-cart mt-4 w-75'>Add to cart</Button>
+                                </div>
+                                <Button onClick={handleCart} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
 
                                 <div>
                                     <Button className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>
                                 </div>
-                            </div>
                             </div>
                         </Col>
                     </Row>

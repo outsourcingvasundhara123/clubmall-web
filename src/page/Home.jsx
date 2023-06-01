@@ -8,14 +8,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
 import { useNavigate } from 'react-router-dom'
 import ProCard from '../components/ProCard'
-import { data } from "./Data"
 import SaleCard from '../components/SaleCard'
-import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
-import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md"
-import { homeSliderData2 } from '../helper/constants';
-import { saleData } from '../helper/constants';
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
@@ -32,10 +27,10 @@ const Home = () => {
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
     const player = useRef();
-    
 
 
-    
+
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -102,7 +97,7 @@ const Home = () => {
         setActive(event.target.id);
     }
 
-    console.log(currentUser,"currentUser");
+    console.log(currentUser, "currentUser");
 
 
     return (

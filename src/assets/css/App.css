@@ -776,10 +776,6 @@ p {
     font-size: 20px;
 }
 
-.rotate-img svg {
-    transform: rotate(90deg);
-}
-
 .hero .shipping-time {
     position: absolute;
     top: 20px;
@@ -1128,6 +1124,7 @@ del {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    line-height: 30px;
 
 }
 
@@ -1289,7 +1286,7 @@ del {
     justify-content: center;
     margin: 0 auto;
     width: 100%;
-    background-color: lightgray;
+    background-color: #d3d3d35c;
     border-radius: 50%;
     overflow: hidden;
 }
@@ -1632,6 +1629,7 @@ del {
     font-weight: 700;
     font-size: 40px;
     color: #223263;
+    line-height: 40px;
 }
 
 .hot .hot-text h5 span {
@@ -1973,13 +1971,19 @@ del {
 }
 
 
-.product-info .add-cart {
+.add-cart-items {
     background: #E02E24 !important;
     border-radius: 5px;
     padding: 10px 20px;
     border: none;
     box-shadow: none;
     width: 200px;
+}
+
+@media (max-width: 512px) {
+    .add-cart-items {
+        width: 100% !important;
+    }
 }
 
 .product-info .stock span {
@@ -3875,6 +3879,7 @@ input[type='radio'] {
     transition: 0.5s;
     z-index: -1;
     opacity: 0;
+    box-shadow: 0 0 10px lightgray;
 }
 
 .overflow-hidden {

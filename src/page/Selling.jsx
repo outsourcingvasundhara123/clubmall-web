@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import Layout from '../layout/Layout'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import { Button, Col, Row, Tab, Tabs } from 'react-bootstrap'
-import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";

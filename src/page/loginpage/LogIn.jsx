@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Layout from '../../layout/Layout'
-import { Button, Col, Form, Modal, NavLink, Row } from 'react-bootstrap'
-import PhoneInput from "react-phone-input-2";
+import { Button, Form, Modal, NavLink, } from 'react-bootstrap'
 import "react-phone-input-2/lib/bootstrap.css";
 import SucessSnackBar from "../SnackBar/SnackBar";
 import ErrorSnackBar from "../SnackBar/SnackBar";
@@ -74,7 +73,7 @@ const LogIn = () => {
       try {
         api.post(`${serverURL}login`, updatedValues)
           .then((res) => {
-            if (res.data.success == true) {
+            if (res.data.success === true) {
               setSucessSnackBarOpen(!sucessSnackBarOpen);
               setValues(initialValues);
               setMyMessage(res.data.message);

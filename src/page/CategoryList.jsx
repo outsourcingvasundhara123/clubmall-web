@@ -62,7 +62,7 @@ const CategoryList = () => {
     const getCategory = async () => {
         try {
             const [categoryResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTCATEGORY}`,{action:"web"})
+                api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
             ]);
             const categoryData = categoryResponse.data.data;
 

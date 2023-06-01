@@ -309,7 +309,7 @@ const ProductInfo = () => {
                                     </div>
                                 </div>
 
-                                <Button className='add-cart mt-4'>Add to cart</Button>
+                                <Button className='add-cart-items mt-4'>Add to cart</Button>
 
                                 <div className='shipping-def mt-4'>
                                     <div className='stock d-flex align-items-center gap-2'>
