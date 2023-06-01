@@ -150,7 +150,7 @@ const ForYou = () => {
                           }}
                         />
                       ) : (
-                        <img width="100%" height="100%" src={e.post_video_link} alt="Image" />
+                        <img className='reels-img' src={e.post_video_link} alt="Image" />
                       )}
 
                       <div className='user-name px-3'>

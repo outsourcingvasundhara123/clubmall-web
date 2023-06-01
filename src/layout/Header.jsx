@@ -1,4 +1,4 @@
-import React, { Fragment, useState ,useEffect } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { Accordion, Button, Card, Col, Dropdown, Modal, NavLink, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { MdOutlineKeyboardArrowDown, MdOutlineClose } from "react-icons/md"
@@ -70,24 +70,24 @@ const Header = () => {
             <div className='header-main'>
                 <div className='header d-flex align-items-center gap-5 position-relative'>
                     <div className='logo'>
-                        <Link to="/"><img src='./img/logo.png' alt='' /></Link>
+                        <Link to="/home"><img src='./img/logo.png' alt='' /></Link>
                     </div>
                     <div className='menu-box h-100'>
                         <ul className='h-100'>
                             <li>
+                                <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
+                            </li>
+                            <li>
                                 <Button onClick={handleNewInShow}>New In</Button>
                             </li>
                             <li>
-                                <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/")}>Home</Link>
+                                <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
                             </li>
                             <li>
                                 <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/")}>Fashion</Link>
                             </li>
                             <li>
                                 <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => setActive("/selling")}>Hot Selling</Link>
-                            </li>
-                            <li>
-                                <Link to="/for-you" className={`${active === "/for-you" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
                             </li>
                             <li>
                                 <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => setActive("/trending")}>Trending</Link>
@@ -217,82 +217,82 @@ const Header = () => {
                     </div>
                     <div className='account d-flex align-items-center gap-2'>
 
-{
-    isLoggedIn ? 
+                        {
+                            isLoggedIn ?
 
-     <Dropdown>
-                 <Dropdown.Toggle id="dropdown-basic">
-                                <NavLink>
-                                    <Button className='pre-label-btn user-account'>
-                                        <div className='d-flex align-items-center gap-2'>
-                                            <img src='./img/header/user-pic.png' alt='' />
-                                            <div className='price-text text-start'>
-                                                <h6>Hello, Ali</h6>
-                                                <span>Orders & Account</span>
+                                <Dropdown>
+                                    <Dropdown.Toggle id="dropdown-basic">
+                                        <NavLink>
+                                            <Button className='pre-label-btn user-account'>
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <img src='./img/header/user-pic.png' alt='' />
+                                                    <div className='price-text text-start'>
+                                                        <h6>Hello, Ali</h6>
+                                                        <span>Orders & Account</span>
+                                                    </div>
+                                                </div>
+                                            </Button>
+                                        </NavLink>
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        <div className='drop-items'>
+                                            <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
+                                                <img src='./img/header/user-pic.png' alt='' />
+                                                <h6>Hello, Ali....</h6>
                                             </div>
                                         </div>
-                                    </Button>
-                                </NavLink>
-                            </Dropdown.Toggle>
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/list.png' alt='' />
+                                            Your orders
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/review.png' alt='' />
+                                            Your reviews
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <Link to="/profile" className='p-0'>
+                                                <img src='./img/header/user.png' alt='' />
+                                                Your profile
+                                            </Link>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/offer.png' alt='' />
+                                            Coupon & offers
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/balance.png' alt='' />
+                                            Credit balance
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/shop.png' alt='' />
+                                            Followed shops
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/location.png' alt='' />
+                                            Addresses
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/security.png' alt='' />
+                                            Account security
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1" className='pb-3'>
+                                            <img src='./img/header/notification.png' alt='' />
+                                            Notifications
+                                        </Dropdown.Item>
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/switch.png' alt='' />
+                                            Switch accounts
+                                        </Dropdown.Item>
+                                        <Dropdown.Item href="#/action-1">
+                                            <img src='./img/header/logout.png' alt='' />
+                                            Sign out
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown> : <Link to="/login" className='login-btn'>Login</Link>}
 
-                            <Dropdown.Menu>
-                                <div className='drop-items'>
-                                    <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
-                                        <img src='./img/header/user-pic.png' alt='' />
-                                        <h6>Hello, Ali....</h6>
-                                    </div>
-                                </div>
-                                <Dropdown.Divider />
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/list.png' alt='' />
-                                    Your orders
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/review.png' alt='' />
-                                    Your reviews
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <Link to="/profile" className='p-0'>
-                                        <img src='./img/header/user.png' alt='' />
-                                        Your profile
-                                    </Link>
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/offer.png' alt='' />
-                                    Coupon & offers
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/balance.png' alt='' />
-                                    Credit balance
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/shop.png' alt='' />
-                                    Followed shops
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/location.png' alt='' />
-                                    Addresses
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/security.png' alt='' />
-                                    Account security
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1" className='pb-3'>
-                                    <img src='./img/header/notification.png' alt='' />
-                                    Notifications
-                                </Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/switch.png' alt='' />
-                                    Switch accounts
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#/action-1">
-                                    <img src='./img/header/logout.png' alt='' />
-                                    Sign out
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown> :  <Link to="/login" className='login-btn'>Login</Link> }
-                    
                         <Dropdown>
                             <Dropdown.Toggle id="dropdown-basic">
                                 <NavLink className='flag-selector'>
@@ -341,22 +341,22 @@ const Header = () => {
                         <div className='menu-main'>
                             <ul className='h-100'>
                                 <li>
+                                    <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
+                                </li>
+                                <li>
                                     <Button onClick={() => {
                                         handleClose();
                                         handleNewInShow();
                                     }} className='new-in-btn'>New In</Button>
                                 </li>
                                 <li>
-                                    <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/")}>Home</Link>
+                                    <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
                                 </li>
                                 <li>
                                     <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/")}>Fashion</Link>
                                 </li>
                                 <li>
                                     <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => setActive("/selling")}>Hot Selling</Link>
-                                </li>
-                                <li>
-                                    <Link to="/for-you" className={`${active === "/for-you" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
                                 </li>
                                 <li>
                                     <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => setActive("/trending")}>Trending</Link>
