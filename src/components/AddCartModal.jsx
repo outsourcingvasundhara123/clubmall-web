@@ -15,8 +15,11 @@ import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
 import { errorResponse } from '../helper/constants'
+import Loader from '../components/Loader';
+import { Is_Login } from '../helper/IsLogin'
 
 const AddCartModal = (props) => {
+    const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
     const serverURL = getServerURL();
@@ -24,18 +27,32 @@ const AddCartModal = (props) => {
     const [modelProduct, setModelProduct] = useState({})
     const [show, setShow] = useState(false);
     const [sizeActive, setSizeActive] = useState("")
-    const [productColorActive, setProductColorActive] = useState()
+    const [productColorActive, setProductColorActive] = useState();
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
     const [Mymessage, setMyMessage] = useState("");
+    const [loading, setLoading] = useState(true);
+    const player = useRef();
 
     const handleClose = () => {
         setShow(false);
     }
 
     const handleShow = () => setShow(true);
+    // setProductColorActive()
+        const startAnimation = () => {
+        if (player.current) {
+            player.current.play(); 
+        }
+    };
+    const stopAnimation = () => {
+        setLoading(false);
+    };
+
 
     const getCategory = async () => {
+     startAnimation()
+
         try {
             if (props.show) {
                 const [productDetail] = await Promise.all([
@@ -43,7 +60,11 @@ const AddCartModal = (props) => {
                 ]);
                 const productData = productDetail.data.data;
                 setModelProduct(productData);
+                setProductColorActive(productDetail.data.data.productList?.sku_attributes.color[0].name && productDetail.data.data.productList?.sku_attributes.color[0].name)
+                stopAnimation()
+
             }
+            
         } catch (error) {
             console.log(error);
         }
@@ -53,14 +74,15 @@ const AddCartModal = (props) => {
         getCategory();
     }, [props.show]);
 
-
     const handleCart = async (e) => {
+
         e.preventDefault();
 
         try {
 
             if (productColorActive && sizeActive && count) {
 
+                if (isLoggedIn) {
                 let data = {
                     action: "add-to-cart-product",
                     seller_id: modelProduct.productList.user_id._id,
@@ -73,7 +95,7 @@ const AddCartModal = (props) => {
                 }
 
                 const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
-
+                
                 if (res.data.success == true) {
                     setSucessSnackBarOpen(!sucessSnackBarOpen);
                     setMyMessage(res.data.message);
@@ -85,11 +107,17 @@ const AddCartModal = (props) => {
                     setWarningSnackBarOpen(!warningSnackBarOpen);
                 }
             } else {
+                // User is not logged in, redirect to the login page
+                navigate('/login');
+              }
+            } else {
                 setMyMessage("select color and size  of the product");
                 setWarningSnackBarOpen(!warningSnackBarOpen);
             }
         } catch (error) {
-            setMyMessage(error.response.data.message);
+            setProductColorActive(" ")
+            setSizeActive(" ")
+            errorResponse(error,setMyMessage,props)
             setWarningSnackBarOpen(!warningSnackBarOpen);
             if (error.response.status === 403) {
                 props.handleClose()
@@ -99,16 +127,19 @@ const AddCartModal = (props) => {
     };
 
 
+console.log(productColorActive,"productColorActive");
     return (
         <>
-
-
             <Modal
                 show={props.show}
                 onHide={props.handleClose}
                 centered
                 className='cart-modal product-info ps-0'
             >
+
+{
+                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+ <>
                 <SucessSnackBar
                     open={sucessSnackBarOpen}
                     setOpen={setSucessSnackBarOpen}
@@ -168,6 +199,7 @@ const AddCartModal = (props) => {
                                         {
                                             modelProduct?.productList?.sku_attributes?.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
                                                 return (
+                                                    // <Button className={`color-btn ${productColorActive === e.name ? "active" : ""}`} onClick={() => setProductColorActive(e.name)}>
                                                     <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
                                                         <img className='colors' src={e.imgUrl} alt='' />
                                                     </Button>
@@ -211,7 +243,10 @@ const AddCartModal = (props) => {
                         </Col>
                     </Row>
                 </Modal.Body>
-            </Modal>
+          
+                 </>
+                )}
+          </Modal>
 
             <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
                 <Modal.Body>

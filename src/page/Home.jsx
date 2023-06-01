@@ -28,9 +28,6 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const player = useRef();
 
-
-
-
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
