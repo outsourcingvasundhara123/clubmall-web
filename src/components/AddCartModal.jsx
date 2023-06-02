@@ -33,6 +33,7 @@ const AddCartModal = (props) => {
     const [Mymessage, setMyMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const player = useRef();
+    const [colorProduct, setColorProduct] = useState()
 
     const handleClose = () => {
         setShow(false);
@@ -62,7 +63,13 @@ const AddCartModal = (props) => {
                 setModelProduct(productData);
                 setProductColorActive(productDetail.data.data.productList?.sku_attributes.color[0].name && productDetail.data.data.productList?.sku_attributes.color[0].name)
                 stopAnimation()
+                const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
+                const mergedImages = imageUrls && imageUrls?.map(url => ({
+                    thumbnail: url,
+                    original: url,
+                }));
 
+                setColorProduct(mergedImages)
             }
 
         } catch (error) {
@@ -126,6 +133,8 @@ const AddCartModal = (props) => {
         }
     };
 
+    console.log(colorProduct);
+
 
     console.log(productColorActive, "productColorActive");
     return (
@@ -164,7 +173,7 @@ const AddCartModal = (props) => {
                                 <Row>
                                     <Col lg={6} md={12}>
                                         <div>
-                                            <ProductSlider productImagePath={modelProduct.productImagePath} productList={modelProduct.productList?.product_images} id={props.product_id} />
+                                            <ProductSlider colorProduct={colorProduct} productImagePath={modelProduct.productImagePath} productList={modelProduct.productList?.product_images} id={props.product_id} />
                                         </div>
                                     </Col>
                                     <Col lg={6} md={12} className='mt-3 mt-lg-0'>

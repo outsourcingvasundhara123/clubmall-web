@@ -3735,6 +3735,12 @@ input[type='radio'] {
     align-items: center;
     justify-content: center;
     border: none;
+    overflow: hidden;
+}
+
+.product-color-cos button img {
+    object-fit: cover;
+    width: 100%;
 }
 
 .product-color-cos button.active {
