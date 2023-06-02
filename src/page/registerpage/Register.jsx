@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../../layout/Layout'
-import { Button, Col, Form, Modal, NavLink, Row } from 'react-bootstrap'
+import { Button, Col, Form, NavLink, Row } from 'react-bootstrap'
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import { Link } from 'react-router-dom';

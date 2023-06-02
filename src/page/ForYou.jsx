@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import Layout from '../layout/Layout'
 import { Button, Dropdown } from 'react-bootstrap'
 import { POSTSList } from "../helper/endpoints";
-import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import ReactPlayer from 'react-player';
@@ -18,7 +17,6 @@ const ForYou = () => {
   const POST_URL = process.env.REACT_APP_POST_URL
   const swiperRef = useRef(null);
   const defaultProfile = 'http://backend.clubmall.com/uploads/profile-images/profile_image-1669788396576.png'
-  const navigate = useNavigate();
   const [postList, setPostList] = useState([]);
   const serverURL = getServerURL();
   const [page, setPage] = useState(1);
@@ -35,7 +33,7 @@ const ForYou = () => {
     }
   };
   const stopAnimation = () => {
-      setLoading(false);
+    setLoading(false);
   };
 
   const getCategory = async () => {
@@ -47,7 +45,6 @@ const ForYou = () => {
       setProfileUrl(postListResponse.data.data.productImagePath);
       const postsData = postListResponse.data.data.postList;
       totalPages = postsData.length
-      console.log(postsData.length,"length");
       setPostList(postsData);
       setIsFetching(false);
       stopAnimation();
@@ -62,7 +59,7 @@ const ForYou = () => {
 
   const handleSlideChange = (swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
-  
+
     // Check if the last video is being rendered
     // if (swiper.activeIndex === postList.length - 1) {
     //   if (page < totalPages) {
@@ -92,17 +89,16 @@ const ForYou = () => {
     //   }, 100);
     // }
   };
-  
-  const LikeDissliek = async(post_id) => {
+
+  const LikeDissliek = async (post_id) => {
     try {
-      const likeDislike = await api.postWithToken(`${serverURL + "post-like-dislike "}`,{post_id:post_id});
-      console.log(likeDislike);
+      const likeDislike = await api.postWithToken(`${serverURL + "post-like-dislike "}`, { post_id: post_id });
       getCategory();
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   useEffect(() => {
     getCategory();
   }, [page]);
@@ -111,136 +107,136 @@ const ForYou = () => {
 
     <Layout>
 
-{
-loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> :(
-    <>
-      <div className='for-you'>
+      {
+        loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+          <>
+            <div className='for-you'>
 
-        <Swiper
-          direction={"vertical"}
-          slidesPerView={1}
-          spaceBetween={30}
-          mousewheel={true}
-          releaseOnEdges={true}
-          followFinger={true}
-          modules={[Mousewheel]}
-          className="mySwiper"
-          onSlideChange={handleSlideChange}
-          ref={swiperRef}
-          initialSlide={currentVideoIndex}
-        >
-          {postList && postList.map((e, i) => (
-            <SwiperSlide key={i}>
-              <div className='reels-box position-relative'>
-                { e.post_video_link &&  isVideo(e.post_video_link) ? (
-                  <ReactPlayer
-                    url={e.post_video_link}
-                    width="100%"
-                    height="100%"
-                    controls={true}
-                    playing={currentVideoIndex === i}
-                    muted={false}
-                    loop={true}
-                    config={{
-                      file: {
-                        attributes: {
-                          controlsList: 'nodownload',
-                          preload: 'auto',
-                          'webkit-playsinline': true,
-                        },
-                      },
-                    }}
-                  />
-                ) : (
-                  <img width="100%" height="100%" src={e.post_video_link} alt="Image" />
-                )}
+              <Swiper
+                direction={"vertical"}
+                slidesPerView={1}
+                spaceBetween={30}
+                mousewheel={true}
+                releaseOnEdges={true}
+                followFinger={true}
+                modules={[Mousewheel]}
+                className="mySwiper"
+                onSlideChange={handleSlideChange}
+                ref={swiperRef}
+                initialSlide={currentVideoIndex}
+              >
+                {postList && postList.map((e, i) => (
+                  <SwiperSlide key={i}>
+                    <div className='reels-box position-relative'>
+                      {e.post_video_link && isVideo(e.post_video_link) ? (
+                        <ReactPlayer
+                          url={e.post_video_link}
+                          width="100%"
+                          height="100%"
+                          controls={true}
+                          playing={currentVideoIndex === i}
+                          muted={false}
+                          loop={true}
+                          config={{
+                            file: {
+                              attributes: {
+                                controlsList: 'nodownload',
+                                preload: 'auto',
+                                'webkit-playsinline': true,
+                              },
+                            },
+                          }}
+                        />
+                      ) : (
+                        <img className='reels-img' src={e.post_video_link} alt="Image" />
+                      )}
 
-                <div className='user-name px-3'>
-                  <div className='d-flex align-items-center gap-2'>
-                    <img alt='profile' width="34px" height="34px" style={{ borderRadius: "50%" }} src={e.user_profile ? e.user_profile : defaultProfile} />
-                    <div>
-                      <p>Hello, {e.user_name}</p>
-                      {/* <span>
+                      <div className='user-name px-3'>
+                        <div className='d-flex align-items-center gap-2'>
+                          <img alt='profile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : defaultProfile} />
+                          <div>
+                            <p>{e.user_name}</p>
+                            {/* <span>
                               <img alt='' src='./img/for_you/eye.png' className='me-1' />
                               13K</span> */}
-                    </div>
-                  </div>
-                  <Button className='follow-btn'>+ Follow ({e.total_followers})</Button>
-                </div>
-                {/* <div className='price'>
+                          </div>
+                        </div>
+                        <Button className='follow-btn'>+ Follow ({e.total_followers})</Button>
+                      </div>
+                      {/* <div className='price'>
                     <Button>Individual Price <br />
                       ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
                     <Button>Group Price: <br />
                       ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
                   </div> */}
-                  {e.products_obj.length !== 0 &&  
+                      {e.products_obj.length !== 0 &&
 
-                    <div className='reel-items'>
-                        <p>{e.products_obj.length}+ More Products</p>
-                        <div className='items-box p-2 mt-2'>
-                            <img alt='' src={   POST_URL + e.products_obj[0]?.product_id._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
+                        <div className='reel-items'>
+                          <p>{e.products_obj.length}+ More Products</p>
+                          <div className='items-box p-2 mt-2'>
+                            <img alt='' src={POST_URL + e.products_obj[0]?.product_id._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
                             <del>$299,43</del>
-                        </div>
-                    </div>}
-                <div className='additional-icon'>
-                  <div className='additional-box'>
+                          </div>
+                        </div>}
+                      <div className='additional-icon'>
+                        <div className='additional-box'>
 
-                    {e.products_obj.length !== 0 &&                 
-                     <Button>
-                      <img alt='' src='./img/for_you/doc.png' />
-                    </Button>
-                     }
-   
-                    <Button>
-                      <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' />
-                      <p>1</p>
-                    </Button>
-                    {/* <Button>
+                          {e.products_obj.length !== 0 &&
+                            <Button>
+                              <img alt='' src='./img/for_you/doc.png' />
+                            </Button>
+                          }
+
+                          <Button>
+                            <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' />
+                            <p>1</p>
+                          </Button>
+                          {/* <Button>
                       <img alt='' src='./img/for_you/dlike.png' />
                       <p>{e.total_like}</p>
                     </Button> */}
-                    <Button>
-                      <img alt='' src='./img/for_you/msg.png' />
-                      <p>{e.total_comment}</p>
-                    </Button>
-                  </div>
-                  <div className='additional-box mt-2'>
-                    <Button>
-                      <img alt='' src='./img/for_you/tip.png' />
-                    </Button>
-                    <Button>
-                      <img alt='' src='./img/for_you/share.png' />
-                    </Button>
-                    <Button>
-                      <img alt='' src='./img/for_you/add.png' />
-                    </Button>
-                    <Button>
-                      <img alt='' src='./img/for_you/flag.png' />
-                    </Button>
-                  </div>
-                </div>
-                <div className='cart-btn-reels'>
-                  <Dropdown>
-                    <Dropdown.Toggle id="dropdown-basic">
-                      <img alt='' src='./img/for_you/cart.png' width="22px" />
-                      <img alt='' src='./img/for_you/up.png' width="10px" />
-                    </Dropdown.Toggle>
+                          <Button>
+                            <img alt='' src='./img/for_you/msg.png' />
+                            <p>{e.total_comment}</p>
+                          </Button>
+                        </div>
+                        <div className='additional-box mt-2'>
+                          <Button>
+                            <img alt='' src='./img/for_you/tip.png' />
+                          </Button>
+                          <Button>
+                            <img alt='' src='./img/for_you/share.png' />
+                          </Button>
+                          <Button>
+                            <img alt='' src='./img/for_you/add.png' />
+                          </Button>
+                          <Button>
+                            <img alt='' src='./img/for_you/flag.png' />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className='cart-btn-reels'>
+                        <Dropdown>
+                          <Dropdown.Toggle id="dropdown-basic">
+                            <img alt='' src='./img/for_you/cart.png' width="22px" />
+                            <img alt='' src='./img/for_you/up.png' width="10px" />
+                          </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                      <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                      <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-              </div>
-               
-            </SwiperSlide>
-            
-          ))}
-        </Swiper>
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </div>
 
-        {/* <div className='reels-box position-relative'>
+                  </SwiperSlide>
+
+                ))}
+              </Swiper>
+
+              {/* <div className='reels-box position-relative'>
                     <img alt='' src='./img/for_you/reels.png' width="100%" />
                     <div className='user-name px-3'>
                         <div className='d-flex align-items-center gap-2'>
@@ -296,9 +292,9 @@ loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation}
                     </div>
                 </div> */}
 
-      </div>
-      </>         
-)}      
+            </div>
+          </>
+        )}
     </Layout>
 
   )

@@ -12,9 +12,9 @@ import Register from '../page/registerpage/Register';
 
 
 export default [
-  
+
   {
-    path: "/",
+    path: "/home",
     element: <Home />,
   },
   {
@@ -41,19 +41,19 @@ export default [
     path: "/profile",
     element: <Profile />,
   },
-    {
+  {
     path: "/particular-categories",
     element: <ParticularCategories />,
   },
-    {
+  {
     path: "/new-in",
     element: <Home />,
   },
-    {
-    path: "/for-you",
+  {
+    path: "/",
     element: <ForYou />,
   },
-      {
+  {
     path: "/fashion",
     element: <ParticularCategories />,
   },

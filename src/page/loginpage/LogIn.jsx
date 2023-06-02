@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Layout from '../../layout/Layout'
-import { Button, Col, Form, Modal, NavLink, Row } from 'react-bootstrap'
-import PhoneInput from "react-phone-input-2";
+import { Button, Form, Modal, NavLink, } from 'react-bootstrap'
 import "react-phone-input-2/lib/bootstrap.css";
 import SucessSnackBar from "../SnackBar/SnackBar";
 import ErrorSnackBar from "../SnackBar/SnackBar";
@@ -13,6 +12,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import { Link } from 'react-router-dom';
+import { login  } from '../../helper/auth';
 
 const LogIn = () => {
 
@@ -74,12 +74,12 @@ const LogIn = () => {
       try {
         api.post(`${serverURL}login`, updatedValues)
           .then((res) => {
-            if (res.data.success == true) {
+            if (res.data.success === true) {
               setSucessSnackBarOpen(!sucessSnackBarOpen);
               setValues(initialValues);
               setMyMessage(res.data.message);
-              console.log(res.data.data.token, "login");
-              sessionStorage.setItem("token", res.data.data.token);
+              login(res.data.data.token);
+              // sessionStorage.setItem("token", res.data.data.token);
               navigate("/");
             } else if (res.data.success === false) {
               setMyMessage(res.data.message);

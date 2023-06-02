@@ -53,22 +53,22 @@ const Footer = () => {
                     <div className='info footer-box'>
                         <h5>Connect with Clubmall</h5>
                         <div className='mt-3 d-flex align-items-center gap-3'>
-                            <NavLink>
+                            <NavLink href='https://www.instagram.com/clubmallofficial/' target='_blank'>
                                 <img src='./img/insta.png' alt='' />
                             </NavLink>
-                            <NavLink>
+                            <NavLink href='https://www.facebook.com/people/Clubmall/100088814472280/' target='_blank'>
                                 <img src='./img/face.png' alt='' />
                             </NavLink>
-                            <NavLink>
+                            <NavLink href='https://twitter.com/Clubmall2' target='_blank'>
                                 <img src='./img/twitter.png' alt='' />
                             </NavLink>
-                            <NavLink>
+                            <NavLink href='https://www.tiktok.com/@clubmall_official?_t=8YIK4hDQ6IQ&_r=1' target='_blank'>
                                 <img src='./img/tiktok.png' alt='' />
                             </NavLink>
-                            <NavLink>
+                            <NavLink href='https://www.youtube.com/@clubmall633/about' target='_blank'>
                                 <img src='./img/youtub.png' alt='' />
                             </NavLink>
-                            <NavLink>
+                            <NavLink href='https://www.pinterest.com/clubmall/?invite_code=fbbd260f52c340579abd4030827a9bdb&sender=663718201242369602' target='_blank'>
                                 <img src='./img/pintrest.png' alt='' />
                             </NavLink>
                         </div>
