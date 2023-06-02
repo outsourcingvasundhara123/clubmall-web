@@ -13,7 +13,7 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
-
+import { handelProductDetail } from '../helper/constants';
 
 const ParticularCategories = () => {
 
@@ -48,7 +48,6 @@ const ParticularCategories = () => {
     };
 
     const serverURL = getServerURL();
-
 
     const getCategory = async () => {
         startAnimation()
@@ -408,10 +407,10 @@ const ParticularCategories = () => {
                                             return (
                                                 <div className='product-card explore-card  pointer' >
                                                     <div className='position-relative'>
-                                                        <img alt={e.name} src={productList?.productImagePath && productList.productImagePath + e._id + "/" + e.product_images[0].file_name} className='img-fluid' onClick={() => navigate("/product-info")} />
+                                                        <img alt={e.name} src={productList?.productImagePath && productList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} className='img-fluid' onClick={() => handelProductDetail(e._id)} />
                                                         <Button className='add-to-card-btn' onClick={() => handleShow(e._id)} >Add to Cart</Button>
                                                     </div>
-                                                    <div className='py-3 px-3' onClick={() => navigate("/product-info")}>
+                                                    <div className='py-3 px-3' onClick={() => handelProductDetail(e._id)}>
                                                         <h5>{e.name}</h5>
                                                         <div className='d-flex align-items-center justify-content-between'>
                                                             <div>

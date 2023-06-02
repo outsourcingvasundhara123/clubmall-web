@@ -48,8 +48,6 @@ const Categories = () => {
         getCategory();
     }, []);
 
-console.log(postList,"postList");
-
     return (
         <Layout>
 {
@@ -392,7 +390,7 @@ loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation}
                                     return (
                                             <ProCard
                                                 id={e._id}
-                                                img={e.product_images[0].file_name}
+                                                img={e.product_images[0]?.file_name}
                                                 name={e.name}
                                                 group_price={e.group_price}
                                                 individual_price={e.individual_price}

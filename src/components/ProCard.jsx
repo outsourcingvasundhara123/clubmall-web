@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import AddCartModal from './AddCartModal';
+import { handelProductDetail } from '../helper/constants';
 
 const ProCard = (props) => {
 
     const location = useLocation(window.location.pathname);
     const navigate = useNavigate();
     const [product_id, setProduct_id] = useState({});
+    const [productColorActive, setProductColorActive] = useState()
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setProduct_id({})
@@ -18,17 +20,22 @@ const ProCard = (props) => {
         setShow(true);
     }
 
-    const [productColorActive, setProductColorActive] = useState()
+    useEffect(() => {
+        // for not set the state after values come 
+        if (props?.color && props.color.length > 0) {
+          setProductColorActive(props.color[0]?.name);
+        }
+      }, []);
 
     return (
         <>
             <div className='cos-width'>
                 <div className='product-card explore-card  pointer'>
                     <div className='position-relative'>
-                        <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => navigate("/Product-info")} />
+                        <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
                     </div>
-                    <div className='py-3 px-3' onClick={() => navigate("/Product-info")}>
+                    <div className='py-3 px-3' onClick={() => handelProductDetail(props.id)} >
                         <h5>{props.name}</h5>
                         <div className='d-flex align-items-center justify-content-between'>
                             <div>
@@ -45,10 +52,17 @@ const ProCard = (props) => {
                     location.pathname === "/trending" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
-                                <Button className={`${productColorActive === "color1" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color1")}>
-                                    <img alt='' src='./img/selling/color6.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color2" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color2")}>
+                            
+                                        {props.color && props.color.map((e, i) => {
+                                                return ( 
+                                                    <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                    <img alt=''  src={e.imgUrl} width="20px" />
+                                                </Button>
+                                                   )
+                                            })
+                                        }
+
+                                {/* <Button className={`${productColorActive === "color2" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color2")}>
                                     <img alt='' src='./img/selling/color2.png' width="20px" />
                                 </Button>
                                 <Button className={`${productColorActive === "color3" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color3")}>
@@ -60,6 +74,8 @@ const ProCard = (props) => {
                                 <Button className={`${productColorActive === "color5" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color5")}>
                                     <img alt='' src='./img/selling/color5.png' width="20px" />
                                 </Button>
+                         */}
+                        
                             </div>
                         </> : ""
                 }

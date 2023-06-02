@@ -38,7 +38,7 @@ const Selling = () => {
         setLoading(false);
     };
 
-    const getCategory = async () => {
+    const getallProducts = async () => {
 
         startAnimation()
 
@@ -104,11 +104,9 @@ const Selling = () => {
     };
 
     useEffect(() => {
-        getCategory();
+        getallProducts();
     }, [womanpage, manpage, kidspage, favoritepage]);
 
-
-    console.log(player, "");
 
     return (
 
@@ -194,7 +192,7 @@ const Selling = () => {
                                                         return (
                                                             <ProCard
                                                                 id={e._id}
-                                                                img={e.product_images[0].file_name}
+                                                                img={e.product_images[0]?.file_name}
                                                                 name={e.name}
                                                                 group_price={e.group_price}
                                                                 individual_price={e.individual_price}
@@ -221,7 +219,7 @@ const Selling = () => {
                                                         return (
                                                             <ProCard
                                                                 id={e._id}
-                                                                img={e.product_images[0].file_name}
+                                                                img={e.product_images[0]?.file_name}
                                                                 name={e.name}
                                                                 group_price={e.group_price}
                                                                 individual_price={e.individual_price}
@@ -248,7 +246,7 @@ const Selling = () => {
                                                         return (
                                                             <ProCard
                                                                 id={e._id}
-                                                                img={e.product_images[0].file_name}
+                                                                img={e.product_images[0]?.file_name}
                                                                 name={e.name}
                                                                 group_price={e.group_price}
                                                                 individual_price={e.individual_price}
@@ -350,7 +348,7 @@ const Selling = () => {
                                             return (
                                                 <ProCard
                                                     id={e._id}
-                                                    img={e.product_images[0].file_name}
+                                                    img={e.product_images[0]?.file_name}
                                                     name={e.name}
                                                     group_price={e.group_price}
                                                     individual_price={e.individual_price}
@@ -381,7 +379,7 @@ const Selling = () => {
                                             return (
                                                 <ProCard
                                                     id={e._id}
-                                                    img={e.product_images[0].file_name}
+                                                    img={e.product_images[0]?.file_name}
                                                     name={e.name}
                                                     group_price={e.group_price}
                                                     individual_price={e.individual_price}

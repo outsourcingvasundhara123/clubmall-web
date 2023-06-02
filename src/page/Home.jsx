@@ -16,6 +16,7 @@ import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import CategoryList from './CategoryList';
 import Loader from '../components/Loader';
+import { handelProductDetail } from '../helper/constants';
 
 const Home = () => {
 
@@ -36,7 +37,6 @@ const Home = () => {
     const stopAnimation = () => {
         setLoading(false);
     };
-
     const breakpoints = {
         0: {
             slidesPerView: 1,
@@ -85,17 +85,13 @@ const Home = () => {
 
     useEffect(() => {
         getCategory();
-        setCorrectUser(sessionStorage.getItem("token"))
+        // setCorrectUser(sessionStorage.getItem("token"))
     }, []);
 
     const [active, setActive] = useState("1");
-
     const handleClick = (event) => {
         setActive(event.target.id);
     }
-
-    console.log(currentUser, "currentUser");
-
 
     return (
         <Layout>
@@ -295,7 +291,7 @@ const Home = () => {
                                                     <SwiperSlide>
                                                         <ProCard
                                                             id={e._id}
-                                                            img={e.product_images[0].file_name}
+                                                            img={e.product_images[0]?.file_name}
                                                             name={e.name}
                                                             group_price={e.group_price}
                                                             individual_price={e.individual_price}
@@ -374,8 +370,8 @@ const Home = () => {
 
                                                     <SwiperSlide>
                                                         <div className='product-card stylist-card1 position-relative p-0 position-relative shop-btn-up'>
-                                                            <img src={productList?.productImagePath && productList?.productImagePath + e._id + "/" + e.product_images[0].file_name} alt={e.name} className='w-100' />
-                                                            <Button className='shop-now' onClick={() => navigate("/product-info")}>Shop Now</Button>
+                                                            <img src={productList?.productImagePath && productList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt={e.name} className='w-100' />
+                                                            <Button className='shop-now' onClick={() => handelProductDetail(e._id)} >Shop Now</Button>
                                                         </div>
                                                     </SwiperSlide>
                                                 )

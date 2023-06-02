@@ -22,6 +22,14 @@ export const errorResponse = (error,setMyMessage,props) => {
 };
 
 
+export const handelProductDetail = (productId) => {
+    localStorage.setItem("selectedProductId", productId);
+    window.location.href = "/Product-info";
+  };
+
+
+
+
 export const colors = [
     { id: 1, img: "./img/selling/color1.png" },
     { id: 2, img: "./img/selling/color2.png" },

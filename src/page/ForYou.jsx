@@ -45,7 +45,6 @@ const ForYou = () => {
       setProfileUrl(postListResponse.data.data.productImagePath);
       const postsData = postListResponse.data.data.postList;
       totalPages = postsData.length
-      console.log(postsData.length, "length");
       setPostList(postsData);
       setIsFetching(false);
       stopAnimation();
@@ -94,7 +93,6 @@ const ForYou = () => {
   const LikeDissliek = async (post_id) => {
     try {
       const likeDislike = await api.postWithToken(`${serverURL + "post-like-dislike "}`, { post_id: post_id });
-      console.log(likeDislike);
       getCategory();
     } catch (error) {
       console.log(error);
@@ -157,7 +155,7 @@ const ForYou = () => {
                         <div className='d-flex align-items-center gap-2'>
                           <img alt='profile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : defaultProfile} />
                           <div>
-                            <p>Hello, {e.user_name}</p>
+                            <p>{e.user_name}</p>
                             {/* <span>
                               <img alt='' src='./img/for_you/eye.png' className='me-1' />
                               13K</span> */}

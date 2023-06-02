@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import AddCartModal from './AddCartModal'
 import { useNavigate } from 'react-router-dom';
+import { handelProductDetail } from '../helper/constants';
 
 const PinkCard = (props) => {
 
@@ -24,7 +25,7 @@ const PinkCard = (props) => {
         <>
             <div className='pink-card  pointer'>
                 <div className='pink-img position-relative'>
-                    <img alt='' src={ props.path + props.img._id + "/" + props.img.product_images[0].file_name} width="100%" onClick={() => navigate("/Product-info")} />
+                    <img alt='' src={ props.path + props.img._id + "/" + props.img?.product_images[0]?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} />
                     <Button className='add-to-card-btn'  onClick={ () => handleShow(props.img._id)}>Add to Cart</Button>
                 </div>
                 <div className='pink-card-text d-flex align-items-center justify-content-between px-3 py-2'>

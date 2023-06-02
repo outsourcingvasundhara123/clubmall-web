@@ -49,7 +49,7 @@ const Trending = () => {
         getCategory();
     }, []);
 
-
+console.log(postList.productListArrObj,"postList.productListArrObj");
     return (
         <Layout>
             {
@@ -72,7 +72,7 @@ const Trending = () => {
                                             return (
                                                 <ProCard
                                                     id={e._id}
-                                                    img={e.product_images[0].file_name}
+                                                    img={e.product_images[0]?.file_name}
                                                     name={e.name}
                                                     group_price={e.group_price}
                                                     individual_price={e.individual_price}
@@ -80,7 +80,8 @@ const Trending = () => {
                                                     secper={e.secper}
                                                     off={e.discount_percentage}
                                                     path={postList?.productImagePath && postList.productImagePath}
-                                                />
+                                                    color={e.sku_attributes.color}
+                                                    />
                                             )
                                         })
                                     }

@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Button, Col, Modal, Row } from 'react-bootstrap'
-import { colors } from "../helper/constants"
 import {
     MdOutlineKeyboardArrowRight,
     MdAdd,
@@ -17,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { errorResponse } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
+import { handelProductDetail } from '../helper/constants';
 
 const AddCartModal = (props) => {
     const isLoggedIn = Is_Login();
@@ -51,7 +51,7 @@ const AddCartModal = (props) => {
     };
 
 
-    const getCategory = async () => {
+    const getProductDetail = async () => {
         startAnimation()
 
         try {
@@ -61,7 +61,7 @@ const AddCartModal = (props) => {
                 ]);
                 const productData = productDetail.data.data;
                 setModelProduct(productData);
-                setProductColorActive(productDetail.data.data.productList?.sku_attributes.color[0].name && productDetail.data.data.productList?.sku_attributes.color[0].name)
+                setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
                 stopAnimation()
                 const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
                 const mergedImages = imageUrls && imageUrls?.map(url => ({
@@ -78,8 +78,18 @@ const AddCartModal = (props) => {
     };
 
     useEffect(() => {
-        getCategory();
+        getProductDetail();
     }, [props.show]);
+
+
+    const findSKUId = () => {
+        const sku = modelProduct.productList.sku_details.find((sku) => {
+          return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
+        });
+      
+        return sku ? sku.skuid : null;
+      };
+
 
     const handleCart = async (e) => {
 
@@ -87,7 +97,7 @@ const AddCartModal = (props) => {
 
         try {
 
-            if (productColorActive && sizeActive && count) {
+            if (productColorActive && sizeActive) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -98,7 +108,7 @@ const AddCartModal = (props) => {
                         product_price_type: 1,
                         product_tax: 0,
                         group_id: null,
-                        skuid: "",
+                        skuid: findSKUId(),
                     }
 
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
@@ -106,7 +116,9 @@ const AddCartModal = (props) => {
                     if (res.data.success == true) {
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
-                        props.handleClose()
+                        setTimeout(() => {
+                            props.handleClose()
+                        }, 1000);
                         setProductColorActive(" ")
                         setSizeActive(" ")
                     } else if (res.data.success === false) {
@@ -126,17 +138,12 @@ const AddCartModal = (props) => {
             setSizeActive(" ")
             errorResponse(error, setMyMessage, props)
             setWarningSnackBarOpen(!warningSnackBarOpen);
-            if (error.response.status === 403) {
-                props.handleClose()
-                navigate("/")
-            }
         }
     };
 
     console.log(colorProduct);
 
 
-    console.log(productColorActive, "productColorActive");
     return (
         <>
             <Modal
@@ -206,7 +213,7 @@ const AddCartModal = (props) => {
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                                     {
-                                                        modelProduct?.productList?.sku_attributes?.color && modelProduct.productList?.sku_attributes.color.map((e, i) => {
+                                                        modelProduct?.productList?.sku_attributes?.color && modelProduct.productList?.sku_attributes?.color?.map((e, i) => {
                                                             return (
                                                                 // <Button className={`color-btn ${productColorActive === e.name ? "active" : ""}`} onClick={() => setProductColorActive(e.name)}>
                                                                 <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
@@ -246,7 +253,7 @@ const AddCartModal = (props) => {
                                             <Button onClick={handleCart} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
 
                                             <div>
-                                                <Button className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>
+                                                <Button type='button' onClick={ () => handelProductDetail(modelProduct.productList._id)} className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>
                                             </div>
                                         </div>
                                     </Col>

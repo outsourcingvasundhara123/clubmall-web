@@ -7,7 +7,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct }) => {
 
   // Transform the data into the required format
   const images = productList && productList?.map((product) => ({
-    original: productImagePath + id + "/" + product.file_name,
+    original: productImagePath + id + "/" + product?.file_name ,
     thumbnail: productImagePath + id + "/" + product.thumbnail,
   }));
   let data = [...images, ...colorProduct]
