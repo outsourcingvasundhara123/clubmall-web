@@ -10,7 +10,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct }) => {
     original: productImagePath + id + "/" + product?.file_name ,
     thumbnail: productImagePath + id + "/" + product.thumbnail,
   }));
-  let data = [...images, ...colorProduct]
+  const data = [...images, ...(colorProduct || [])];
   console.log(data, "data");
 
   return (
