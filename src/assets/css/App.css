@@ -4070,6 +4070,10 @@ input[type='radio'] {
     margin-top: 30px;
 }
 
+.pass-error {
+    position: absolute;
+}
+
 .reset-pass {
     background: transparent !important;
     font-weight: 400;
@@ -4199,6 +4203,7 @@ input[type='radio'] {
 /*error message */
 .error {
     color: #E02E24;
+    font-size: 15px;
 }
 
 .truncate-after-words {

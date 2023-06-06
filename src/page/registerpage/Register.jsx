@@ -258,13 +258,13 @@ function Register() {
                                 </div>
                             </Col>
                             <Col lg={12} md={12} sm={12}>
-                                <div className='login-input text-start position-relative'>
+                                <div className='login-input text-start '>
                                     <label>Password</label>
-                                    <input placeholder='Enater your Password' onChange={handleChange} name='password' value={values.password} type={showPass ? "password" : "text"} />
-                                    <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}><img src='./img/login/pass-show.png' alt='' /></Button>
-
+                                    <div className='position-relative'>
+                                        <input placeholder='Enater your Password' onChange={handleChange} name='password' value={values.password} type={showPass ? "password" : "text"} />
+                                        <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}><img src='./img/login/pass-show.png' alt='' /></Button>
+                                    </div>
                                     <div className='error' >{errors?.password}</div>
-
                                 </div>
                             </Col>
                         </Row>
@@ -280,7 +280,7 @@ function Register() {
                             <label htmlFor='check_terms' className='pointer'>I accept to the <NavLink>Privacy Policy</NavLink> & <NavLink>Terms & Condition</NavLink></label>
 
                         </div>
-                        <div className='error d-flex align-items-start check-terms gap-2 mt-3' >{errors?.terms_and_condition}</div>
+                        <div className='error d-flex align-items-start check-terms gap-2' >{errors?.terms_and_condition}</div>
                         <Button
                             type="submit"
                             onClick={() => setSubmitCount(1)}

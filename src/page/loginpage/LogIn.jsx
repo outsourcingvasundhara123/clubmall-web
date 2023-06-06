@@ -12,7 +12,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import { Link } from 'react-router-dom';
-import { login  } from '../../helper/auth';
+import { login } from '../../helper/auth';
 
 const LogIn = () => {
 
@@ -130,12 +130,10 @@ const LogIn = () => {
                   onChange={handleChange}
                   value={values.email}
                   type='text'
-
                 />
                 <div className='error' >{errors?.email}</div>
-
               </div>
-              <div className='login-input text-start mt-3 '>
+              <div className='login-input text-start mt-3'>
                 <label>Password</label>
                 <div className='position-relative'>
                   <input placeholder='Enater your Password'
@@ -143,7 +141,7 @@ const LogIn = () => {
 
                     type={showPass ? "password" : "text"} />
                   <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}><img src='./img/login/pass-show.png' alt='' /></Button>
-                  <div className='error' >{errors?.password}</div>
+                  <div className='error pass-error' >{errors?.password}</div>
                 </div>
                 <div className='d-flex justify-content-end'><Button className='reset-pass' onClick={handleShow}>Forgot your password?</Button></div>
               </div>
@@ -157,7 +155,7 @@ const LogIn = () => {
                 />
                 <label htmlFor='check_terms' className='pointer'>I accept to the <NavLink>Privacy Policy</NavLink> & <NavLink>Terms & Condition</NavLink></label>
               </div>
-              <div className='error d-flex align-items-start check-terms gap-2 mt-3' >{errors?.terms_and_condition}</div>
+              <div className='error d-flex align-items-start check-terms gap-2 mt-1' >{errors?.terms_and_condition}</div>
 
               <Button type="submit"
                 onClick={() => setSubmitCount(1)}
