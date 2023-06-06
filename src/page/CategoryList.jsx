@@ -10,7 +10,7 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
-
+import { handelCategorydata } from '../helper/constants';
 
 const CategoryList = () => {
 
@@ -33,7 +33,7 @@ const CategoryList = () => {
     const [active, setActive] = useState("1");
 
     const handleClick = (event) => {
-        setActive(event.target.id);
+        // setActive(event.target.id);
     }
 
     const carousel1Ref = useRef(null);
@@ -78,16 +78,13 @@ const CategoryList = () => {
             ]);
             const categoryData = categoryResponse.data.data;
 
-            console.log(categoryData,"categoryData");
-
-
             // Divide the category list into two parts
             const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
 
             const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
             const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
             // Set the first half and second half of categories
-            setcategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productsCategoryIconPath });
+            setcategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath });
             stopAnimation()
         } catch (error) {
             console.log(error);
@@ -114,8 +111,8 @@ const CategoryList = () => {
                             {category && category.firstHalf && category.firstHalf.map((e, i) => {
                                 return (
                                     <div className='item' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
-                                            <div className='categories-slider-img' >
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i}   onClick={() => handelCategorydata(e.name)}>
+                                            <div className='categories-slider-img '>   {/* "active-catagories" use this class to active catagories */}
                                                 <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
@@ -137,10 +134,10 @@ const CategoryList = () => {
                         >
                             {category && category.secondHalf && category.secondHalf.map((e, i) => {
                                 return (
-                                    <div className='item' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
-                                            <div className='categories-slider-img' >
-                                                <img src={category.productsCategoryIconPath + e.icon} alt='' />
+                                    <div className='item ' key={i} onClick={() => handelCategorydata(e.name)} >
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer'  >
+                                            <div className='categories-slider-img'  >
+                                                <img   src={category.productsCategoryIconPath + e.icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
                                             <p>From ${e.minPrice}</p>

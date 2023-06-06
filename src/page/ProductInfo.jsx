@@ -22,9 +22,10 @@ import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse } from '../helper/constants'
+import { errorResponse,afterLogin,handelCategorydata } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
+import { BsThreeDots } from 'react-icons/bs'
 
 const ProductInfo = () => {
     const isLoggedIn = Is_Login();
@@ -121,7 +122,7 @@ const ProductInfo = () => {
 
         try {
 
-            if (productColorActive && sizeActive) {
+            if (productColorActive && (sizeActive || Product.productList?.sku_attributes.size == undefined)) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -148,7 +149,8 @@ const ProductInfo = () => {
                     }
                 } else {
                     // User is not logged in, redirect to the login page
-                    navigate('/login');
+                    afterLogin(setMyMessage)
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
                 }
             } else {
                 setMyMessage("select color and size  of the product");
@@ -162,7 +164,20 @@ const ProductInfo = () => {
         }
     };
 
-    // console.log(trendingProductList,"trendingProductList");
+
+    const textRef = useRef(null);
+
+    const handleCopy = () => {
+        if (textRef.current) {
+            const range = document.createRange();
+            range.selectNode(textRef.current);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+        }
+    };
+
     return (
         <Layout>
 
@@ -211,7 +226,7 @@ const ProductInfo = () => {
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
                                             <div className='d-flex align-items-center gap-3'>
 
-                                                <h5 className='info-title border-right-cos cos-title'> {Product.productList.rating_count} shop reviews</h5>
+                                                <h5 className='info-title border-right-cos cos-title'> {Product.productList?.rating_count} shop reviews</h5>
                                                 <div className='rate d-flex align-items-center gap-2'>
                                                     <span className='cos-title'>{Product.productList.rating}</span>
                                                     <div className='d-flex align-items-center gap-1'>
@@ -230,7 +245,7 @@ const ProductInfo = () => {
                                         </div>
 
 
-                                        {Product.productList.rating_count == 0 &&
+                                        {Product.productList?.rating_count == 0 &&
                                             <div className='no-review py-4'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
                                                 <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p>
@@ -238,9 +253,9 @@ const ProductInfo = () => {
                                         }
 
                                         <div className='together'>
-                                            <div className='no-review frequently py-4 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
+                                            <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
-                                                <Button > <Link style={{ color: 'black', textDecoration: 'underline' }} to="/categories" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
+                                                <Button > <Link to="/categories" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
                                             </div>
                                             <div>
                                                 <Swiper
@@ -283,7 +298,7 @@ const ProductInfo = () => {
                                                                 {
 
                                                                     favoriteProductList.productListArrObj
-                                                                    && favoriteProductList.productListArrObj.slice(0, 5).map((e) => {
+                                                                    && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
                                                                         return (
                                                                             <SwiperSlide>
                                                                                 <div className='slide-box'>
@@ -325,7 +340,7 @@ const ProductInfo = () => {
                                                 <p><span>By</span> <img src='./img/product_def/uppack.png' alt='' />  {Product.stockData?.recent_bought_name} ({Product.stockData?.order_count}K + sold)</p>
                                             </div> */}
 
-                                            <div className='per-pro d-flex align-items-end gap-2'>
+                                            <div className='per-pro d-flex align-items-end gap-2 mt-2'>
                                                 <h3> ${Product.productList?.individual_price}</h3>
                                                 <del>${Product.productList?.group_price}</del>
                                                 <span>{Math.round(Product.productList?.group_price * 100 / Product.productList?.individual_price)}% Off</span>
@@ -368,7 +383,7 @@ const ProductInfo = () => {
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                                     {
-                                                        Product?.productList?.sku_attributes?.color && Product.productList?.sku_attributes.color.map((e, i) => {
+                                                        Product?.productList?.sku_attributes?.color && Product.productList?.sku_attributes.color?.map((e, i) => {
                                                             return (
                                                                 // <Button className={`color-btn ${productColorActive === e.name ? "active" : ""}`} onClick={() => setProductColorActive(e.name)}>
                                                                 <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
@@ -380,10 +395,10 @@ const ProductInfo = () => {
                                                 </div>
 
                                                 <div className='size mt-4'>
-                                                    <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                                                    {Product.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
-                                                            Product.productList?.sku_attributes.size.map((e, i) => {
+                                                            Product.productList?.sku_attributes.size?.map((e, i) => {
                                                                 return (
                                                                     <Button className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
                                                                         {e.name}
@@ -406,16 +421,16 @@ const ProductInfo = () => {
 
                                             <Button onClick={handleCart} className='add-cart-items mt-4'>Add to cart</Button>
 
-                                            <div className='shipping-def mt-4'>
-                                                <div className='stock d-flex align-items-center gap-2'>
+                                            {/* <div className='shipping-def mt-4'> */}
+                                            {/* <div className='stock d-flex align-items-center gap-2'>
                                                     <span className='d-flex align-items-center gap-2'>
                                                         <img src='./img/product_def/stok-limit.png' alt='' />
                                                         Selling fast!
                                                     </span>
                                                     <p>Only  {Product.stockData?.stocks_left > 0 ? Product.stockData?.stocks_left : 1} left in stock</p>
-                                                </div>
-                                                {/* <h5 className='info-title my-4'>Shipping & Return</h5> */}
-                                                {/* <div className='shipping-order'>
+                                                </div> */}
+                                            {/* <h5 className='info-title my-4'>Shipping & Return</h5> */}
+                                            {/* <div className='shipping-order'>
                                                     <div className='sub-title-info d-flex align-items-center gap-2'>
                                                         <img src='./img/product_def/shipping.png' alt='' />
                                                         <span>Shipping <MdOutlineKeyboardArrowRight /></span>
@@ -509,15 +524,15 @@ const ProductInfo = () => {
                                                         </Swiper>
                                                     </div>
                                                 </div> */}
-                                                {/* <div className='sub-title-info d-flex align-items-center gap-2 mt-4'>
+                                            {/* <div className='sub-title-info d-flex align-items-center gap-2 mt-4'>
                                                     <img src='./img/product_def/return.png' alt='' />
                                                     <span className='d-flex align-items-center gap-1'>Free returns <p>•</p> Price adjustment <MdOutlineKeyboardArrowRight /></span>
                                                 </div> */}
-                                                <div className='sub-title-info d-flex align-items-center gap-2 mt-3'>
+                                            {/* <div className='sub-title-info d-flex align-items-center gap-2 mt-3'>
                                                     <img src='./img/product_def/commited.png' alt='' />
                                                     <span className='d-flex align-items-center gap-1'>Clubmall is commited to environmental sustainability</span>
-                                                </div>
-                                            </div>
+                                                </div> */}
+                                            {/* </div> */}
 
                                             <div className='shipping-def mt-4'>
                                                 <h5 className='info-title mt-4 mb-2'>Shop with confidence</h5>
@@ -541,13 +556,12 @@ const ProductInfo = () => {
                                                     <span>Item ID: {Product.productList?.attributes["Product ID"][0]} </span>
                                                     <Button className='copy-btn'>Copy</Button>
                                                 </div> */}
-
-                                                {Object.entries(Product.productList?.attributes || {}).map(([key, value], index) => (
+                                                {Object.entries(Product.productList?.attributes || {})?.map(([key, value], index) => (
                                                     <div key={index}>
                                                         {key === "Product ID" ? (
                                                             <div className='d-flex align-items-center copy-div gap-3'>
-                                                                <span>Item ID: {value[0]}</span>
-                                                                <Button className='copy-btn'>Copy</Button>
+                                                                <span className='d-flex align-items-center'>Item ID: <p ref={textRef} className='ms-1'>{value[0]}</p></span>
+                                                                <Button className='copy-btn' onClick={handleCopy}>Copy</Button>
                                                             </div>
                                                         ) : (
                                                             <span>{key}: {Array.isArray(value) ? value.join(", ") : value}</span>
@@ -560,26 +574,92 @@ const ProductInfo = () => {
                                     </Col>
                                 </Row>
 
+                                <div className='review mt-5'>
+                                    <h4 className='info-title'>All Reviews (6)</h4>
+                                    <div className=''>
+                                        <div className='d-flex align-items-start review-box gap-3 mt-4'>
+                                            <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' />
+                                            <div className='review-items-def w-100 d-flex align-items-start justify-content-between'>
+                                                <div className='review-text'>
+                                                    <h5>Me ha gustado mucho Fresquita parecido a la bambula Uso S pero me pido M para que cuelgue un poco</h5>
+                                                    <span>16 May, 2023</span>
+                                                    <div className='d-flex align-items-center gap-1'>
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/nonrate.png' alt='' />
+                                                    </div>
+                                                    <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
+                                                        <p><b>Overall Fit:</b> True to Size</p>
+                                                        <p><b>Color:</b> Olive Green</p>
+                                                        <p><b>Size:</b> M</p>
+                                                    </div>
+                                                </div>
+                                                <div className='d-flex align-items-center gap-3 review-like'>
+                                                    <Button>
+                                                        <img src='./img/for_you/like.png' alt='' />
+                                                    </Button>
+                                                    <Button>
+                                                        <BsThreeDots />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='d-flex align-items-start review-box gap-3 mt-4'>
+                                            <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' />
+                                            <div className='review-items-def w-100 d-flex align-items-start justify-content-between'>
+                                                <div className='review-text'>
+                                                    <h5>Me ha gustado mucho Fresquita parecido a la bambula Uso S pero me pido M para que cuelgue un poco</h5>
+                                                    <span>16 May, 2023</span>
+                                                    <div className='d-flex align-items-center gap-1'>
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/rate.png' alt='' />
+                                                        <img src='./img/product_def/nonrate.png' alt='' />
+                                                    </div>
+                                                    <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
+                                                        <p><b>Overall Fit:</b> True to Size</p>
+                                                        <p><b>Color:</b> Olive Green</p>
+                                                        <p><b>Size:</b> M</p>
+                                                    </div>
+                                                </div>
+                                                <div className='d-flex align-items-center gap-3 review-like'>
+                                                    <Button>
+                                                        <img src='./img/for_you/like.png' alt='' />
+                                                    </Button>
+                                                    <Button>
+                                                        <BsThreeDots />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div className='recent-view'>
                                     <h4>Items you may want to add</h4>
                                     <div className='mb-0 explore-main'>
                                         {
-                                            data.map((e) => {
+                                            trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <ProCard
-                                                        img={e.img}
+                                                        id={e._id}
+                                                        img={e.product_images[0]?.file_name}
                                                         name={e.name}
-                                                        per={e.per}
-                                                        per2={e.per2}
-                                                        sold={e.sold}
+                                                        group_price={e.group_price}
+                                                        individual_price={e.individual_price}
+                                                        sold={e.total_order}
                                                         secper={e.secper}
-                                                        off={e.off}
+                                                        off={e.discount_percentage}
+                                                        path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
                                                     />
                                                 )
                                             })
                                         }
                                         <div className='w-100 d-flex justify-content-center'>
-                                            <Button className='shop-btn rotate-img'>View More <MdKeyboardDoubleArrowRight /></Button>
+                                            <Button className='shop-btn rotate-img' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
                                     </div>
                                 </div>
@@ -621,7 +701,7 @@ const ProductInfo = () => {
 
                                         <div className='cart-list border-bottom-cos mt-4 pb-4'>
                                             {
-                                                cartListData.slice(0, 3).map((e, i) => {
+                                                cartListData.slice(0, 3)?.map((e, i) => {
                                                     return (
                                                         <div className='cart-items d-flex align-items-start gap-3 mt-4' >
                                                             <img src={e.img} alt='' width="90px" />
@@ -697,8 +777,9 @@ const ProductInfo = () => {
 
                         </div>
                     </>
-                )}
-        </Layout>
+                )
+            }
+        </Layout >
     )
 }
 

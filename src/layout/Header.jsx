@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { useRef, Fragment, useState, useEffect } from 'react'
 import { Accordion, Button, Card, Col, Dropdown, Modal, NavLink, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { MdOutlineKeyboardArrowDown, MdOutlineClose } from "react-icons/md"
@@ -6,6 +6,12 @@ import { HiOutlineMenuAlt1 } from 'react-icons/hi'
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { product_data } from '../helper/constants'
 import { Is_Login } from '../helper/IsLogin'
+import api from "../helper/api";
+import { getServerURL } from '../helper/envConfig';
+import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
+import Loader from '../components/Loader';
+import { handelCategorydata } from '../helper/constants';
+
 const countryData = [
     {
         id: "india",
@@ -36,6 +42,23 @@ const Header = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [category, setcategory] = useState([]);
+    const UserName = sessionStorage.getItem("name") ? sessionStorage.getItem("name") : "undefail"
+
+
+    const serverURL = getServerURL();
+    const [loading, setLoading] = useState(true);
+    const player = useRef();
+
+    const startAnimation = () => {
+        if (player.current) {
+            player.current.play(); // Check if player.current is not null before accessing play()
+        }
+    };
+    const stopAnimation = () => {
+        setLoading(false);
+    };
+
 
     const [newIn, setNewIn] = useState(false);
     const handleNewInClose = () => setNewIn(false);
@@ -47,6 +70,27 @@ const Header = () => {
     const HandelShowData = (name) => {
         setCateData(product_data[name])
     }
+
+    const getCategory = async () => {
+        startAnimation()
+        try {
+            const [categoryResponse] = await Promise.all([
+                api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+            ]);
+            const categoryData = categoryResponse.data.data;
+            // Set the first half and second half of categories
+            setcategory(categoryData);
+            stopAnimation()
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getCategory();
+    }, []);
+
+    //   console.log(category,"category");
 
     function CustomToggle({ children, eventKey }) {
         const decoratedOnClick = useAccordionButton(eventKey, () =>
@@ -77,12 +121,15 @@ const Header = () => {
                             <li>
                                 <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
                             </li>
-                            <li>
-                                <Button onClick={handleNewInShow}>New In</Button>
-                            </li>
+
                             <li>
                                 <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
                             </li>
+
+                            <li>
+                                <Button onClick={handleNewInShow}>New In</Button>
+                            </li>
+
                             <li>
                                 <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/")}>Fashion</Link>
                             </li>
@@ -96,89 +143,38 @@ const Header = () => {
                                 <Link to="/categories" className={`${active === "/categories" ? "active" : ""} `} onClick={() => setActive("/categories")}>Categories <MdOutlineKeyboardArrowDown /></Link>
                                 <div className='mega-menu'>
                                     <Row>
+                                        {/* names of the main categorys */}
                                         <Col lg={3} md={6}>
                                             <div className='border-right-cos pe-4 h-100'>
                                                 <ul>
-                                                    <li onMouseOver={() => HandelShowData("FeaturedData")}>
-                                                        <p>Featured</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("WomenData")}>
-                                                        <p>Women’s Clothing</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("HomeKitchen")}>
-                                                        <p>Home & Kitchen</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("WomenCurve")}>
-                                                        <p>Women’s Curve + Plus</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("KidFashion")}>
-                                                        <p>Kid’s Fashion</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("MenClothing")}>
-                                                        <p>Men’s Clothing</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("BeautyHealth")}>
-                                                        <p>Beauty & Health</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("WomenShoes")}>
-                                                        <p>Women’s Shoes</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("JewelaryAccessories")}>
-                                                        <p>Jewelary & Accessories</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("ToysGames")}>
-                                                        <p>Toys & Games</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("Electronics")}>
-                                                        <p>Electronics</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("ArtsCraftsSewing")}>
-                                                        <p>Arts, Crafts & Sewing</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("PatioLawnGarden")}>
-                                                        <p>Patio, Lawn & Garden</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("Automotive")}>
-                                                        <p>Automotive</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("BagsLuggage")}>
-                                                        <p>Bags & Luggage</p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
-                                                    <li onMouseOver={() => HandelShowData("WomenUnderwearSleep")}>
-                                                        <p>
-                                                            Women’s Underwear & Sleep
-                                                        </p>
-                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                    </li>
+
+                                                    {category && category?.productsCategory?.map((e, i) => {
+                                                        return (
+                                                            <li key={i} onMouseOver={() => HandelShowData(e.name)}>
+                                                                <p>{e.name}</p>
+                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                            </li>
+                                                        );
+                                                    })}
+
                                                 </ul>
                                             </div>
                                         </Col>
+
                                         <Col lg={9} md={6}>
                                             <div className='mega-product'>
-                                                {
-                                                    CateData?.map((e, i) => {
-                                                        return (
-                                                            <div className='product-box' key={i}>
-                                                                <img src={e.img} alt='' />
-                                                                <h6>{e.name}</h6>
+                                                {category && category?.productsCategory?.map((e, i) => {
+                                                    return (
+                                                        <div className='product_image' key={i}>
+
+                                                            <div className='product-box'>
+                                                                <img width="100%" src={category.productImagePath + e.icon} alt='' />
                                                             </div>
-                                                        )
-                                                    })
+                                                            <h6>{e.name}</h6>
+                                                        </div>
+
+                                                    )
+                                                })
                                                 }
                                             </div>
                                         </Col>
@@ -215,116 +211,121 @@ const Header = () => {
                             <input type='text' placeholder='Search Product' className='w-100' />
                         </div>
                     </div>
-                    <div className='account d-flex align-items-center gap-2'>
+                    <div className='account d-flex align-items-center gap-3'>
 
                         {
                             isLoggedIn ?
-
-                                <Dropdown>
-                                    <Dropdown.Toggle id="dropdown-basic">
-                                        <NavLink>
-                                            <Button className='pre-label-btn user-account'>
-                                                <div className='d-flex align-items-center gap-2'>
-                                                    <img src='./img/header/user-pic.png' alt='' />
-                                                    <div className='price-text text-start'>
-                                                        <h6>Hello, Ali</h6>
-                                                        <span>Orders & Account</span>
+                                <>
+                                    <Dropdown>
+                                        <Dropdown.Toggle id="dropdown-basic">
+                                            <NavLink>
+                                                <Button className='pre-label-btn user-account'>
+                                                    <div className='d-flex align-items-center gap-2'>
+                                                        <img src='./img/header/user-pic.png' alt='' />
+                                                        <div className='price-text text-start'>
+                                                            <h6>Hello, {UserName}</h6>
+                                                            <span>Orders & Account</span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </Button>
-                                        </NavLink>
-                                    </Dropdown.Toggle>
+                                                </Button>
+                                            </NavLink>
+                                        </Dropdown.Toggle>
 
-                                    <Dropdown.Menu>
-                                        <div className='drop-items'>
-                                            <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
-                                                <img src='./img/header/user-pic.png' alt='' />
-                                                <h6>Hello, Ali....</h6>
+                                        <Dropdown.Menu>
+                                            <div className='drop-items'>
+                                                <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
+                                                    <img src='./img/header/user-pic.png' alt='' />
+                                                    <h6>Hello, Ali....</h6>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <Dropdown.Divider />
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/list.png' alt='' />
-                                            Your orders
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/review.png' alt='' />
-                                            Your reviews
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <Link to="/profile" className='p-0'>
-                                                <img src='./img/header/user.png' alt='' />
-                                                Your profile
-                                            </Link>
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/offer.png' alt='' />
-                                            Coupon & offers
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/balance.png' alt='' />
-                                            Credit balance
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/shop.png' alt='' />
-                                            Followed shops
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/location.png' alt='' />
-                                            Addresses
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/security.png' alt='' />
-                                            Account security
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1" className='pb-3'>
-                                            <img src='./img/header/notification.png' alt='' />
-                                            Notifications
-                                        </Dropdown.Item>
-                                        <Dropdown.Divider />
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/switch.png' alt='' />
-                                            Switch accounts
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/logout.png' alt='' />
-                                            Sign out
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown> : <Link to="/login" className='login-btn'>Login</Link>}
-
-                        <Dropdown>
-                            <Dropdown.Toggle id="dropdown-basic">
-                                <NavLink className='flag-selector'>
-                                    <Button className='pre-label-btn user-account p-0 '>
-                                        <img src={selectedFlag} alt='' width="26px" height="26px" />
-                                    </Button>
-                                </NavLink>
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu className='select-country'>
-                                <h5>Change country / region</h5>
-
-                                {
-                                    countryData.map((event, i) => {
-                                        return (
-                                            <Dropdown.Item href="#/action-1" className='mt-2'>
-                                                <div className='d-flex align-items-center justify-content-between w-100'>
-                                                    <label htmlFor={event.id} className='d-flex align-items-center gap-3' onClick={() => setSelectedFlag(event.flag)}>
-                                                        <img src={event.flag} alt='' width="20px" height="20px" />
-                                                        {event.name}</label>
-                                                    <input type='radio' id={event.id} name='country' />
-                                                </div>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/list.png' alt='' />
+                                                Your orders
                                             </Dropdown.Item>
-                                        )
-                                    })
-                                }
-                            </Dropdown.Menu>
-                        </Dropdown>
+                                            {/* <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/review.png' alt='' />
+                                                Your reviews
+                                            </Dropdown.Item> */}
+                                            <Dropdown.Item href="#/action-1">
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/user.png' alt='' />
+                                                    Your profile
+                                                </Link>
+                                            </Dropdown.Item>
+                                            {/* <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/offer.png' alt='' />
+                                                Coupon & offers
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/balance.png' alt='' />
+                                                Credit balance
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/shop.png' alt='' />
+                                                Followed shops
+                                            </Dropdown.Item> */}
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/location.png' alt='' />
+                                                Addresses
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/security.png' alt='' />
+                                                Account security
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1" className='pb-3'>
+                                                <img src='./img/header/notification.png' alt='' />
+                                                Notifications
+                                            </Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/switch.png' alt='' />
+                                                Switch accounts
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/logout.png' alt='' />
+                                                Sign out
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
 
-                        <Link to="/cart" className='cart flag-selector' >
-                            <img src='./img/header/cart.png' alt='' />
-                        </Link>
+                                    {/* <Dropdown>
+                                        <Dropdown.Toggle id="dropdown-basic">
+                                            <NavLink className='flag-selector'>
+                                                <Button className='pre-label-btn user-account p-0 '>
+                                                    <img src={selectedFlag} alt='' width="26px" height="26px" />
+                                                </Button>
+                                            </NavLink>
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu className='select-country'>
+                                            <h5>Change country / region</h5>
+
+                                            {
+                                                countryData.map((event, i) => {
+                                                    return (
+                                                        <Dropdown.Item href="#/action-1" className='mt-2'>
+                                                            <div className='d-flex align-items-center justify-content-between w-100'>
+                                                                <label htmlFor={event.id} className='d-flex align-items-center gap-3' onClick={() => setSelectedFlag(event.flag)}>
+                                                                    <img src={event.flag} alt='' width="20px" height="20px" />
+                                                                    {event.name}</label>
+                                                                <input type='radio' id={event.id} name='country' />
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                    )
+                                                })
+                                            }
+                                        </Dropdown.Menu>
+                                    </Dropdown> */}
+
+                                    <Link to="/cart" className='cart flag-selector'>
+                                        <img src='./img/header/cart.png' alt='' />
+                                    </Link>
+                                </>
+                                : <Link to="/login" className='login-btn'>Login</Link>
+                        }
+
+
                         <Button className='toggle ' onClick={handleShow}>
                             <HiOutlineMenuAlt1 />
                         </Button>

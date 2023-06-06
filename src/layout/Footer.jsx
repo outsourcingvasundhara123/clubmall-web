@@ -42,10 +42,10 @@ const Footer = () => {
                     <div className='info footer-box'>
                         <h5>Download the Clubmall App</h5>
                         <div className='mt-3'>
-                            <NavLink>
+                            <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
                                 <img src='./img/play.png' alt='' />
                             </NavLink>
-                            <NavLink>
+                            <NavLink href='https://apps.apple.com/us/app/clubmall/id6444752184' target='_blank'>
                                 <img src='./img/store.png' alt='' />
                             </NavLink>
                         </div>

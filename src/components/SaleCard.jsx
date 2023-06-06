@@ -27,7 +27,7 @@ const SaleCard = (props) => {
         <>
             <div className='product-card pointer  stylist-card position-relative p-0'>
                 <div className='position-relative'>
-                    <img src={ props.path + props.img._id + "/" + props.img.product_images[0]?.file_name} alt={props.img.name} className='w-100' onClick={() => handelProductDetail(props.img._id)} />
+                    <img src={ props.path + props.img._id + "/" +  props.img?.product_images[0]?.file_name} alt={props.img.name} className='w-100' onClick={() => handelProductDetail(props.img._id)} />
                     <Button className='add-to-card-btn' onClick={ () => handleShow(props.img._id)}>Add to Cart</Button>
                 </div>
                 <Button className='discount'><RiFlashlightFill /><p style={{ fontSize: "13px", fontWeight: "600" }}> -{Math.round(props.img.group_price * 100 / props.img.individual_price)}%</p></Button>

@@ -1,6 +1,4 @@
 @import "react-image-gallery/styles/css/image-gallery.css";
-@import "rsuite/dist/rsuite.css";
-
 
 @font-face {
     font-family: 'Lato';
@@ -425,6 +423,10 @@ p {
     width: 100px;
     text-align: center;
     margin-top: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+    height: 100px;
+
 }
 
 .multy-slider .product-box {
@@ -432,12 +434,13 @@ p {
     margin: 0 auto;
 }
 
-.product-box h6 {
+.product_image h6 {
     font-weight: 600;
     font-size: 15px;
     color: #223263;
     line-height: 150%;
     margin-top: 10px;
+    text-align: center;
 }
 
 .border-right-cos {
@@ -2125,15 +2128,17 @@ del {
     color: #223263;
 }
 
-.product-info .no-review p {
-    font-weight: 500;
+.product-info .no-review a {
+    font-weight: 600;
     font-size: 15px;
     color: #223263;
     margin-top: 5px;
+    text-decoration: none;
 }
 
-.product-info .no-review p svg {
+.product-info .no-review a svg {
     font-size: 20px;
+    margin-top: -2px;
 }
 
 .product-info .frequently button {
@@ -3540,13 +3545,9 @@ input[type='radio'] {
     color: #223263;
 }
 
-.for-you .items-box {
-    width: 160px;
-}
-
 .reel-items {
     position: absolute;
-    bottom: 20px;
+    bottom: 160px;
     right: 20px;
 }
 
@@ -3554,6 +3555,10 @@ input[type='radio'] {
     font-weight: 700;
     font-size: 13px;
     color: #FFFFFF;
+    background-color: #FFD43E;
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
 .for-you del {
@@ -3579,8 +3584,13 @@ input[type='radio'] {
 }
 
 .for-you .items-box {
-    border: 2px solid #EBF0FF;
+    background-color: #EBF0FF;
     border-radius: 6px;
+    width: 130px;
+}
+
+.for-you .items-box img {
+    width: 100%;
 }
 
 .for-you .user-name {
@@ -3594,7 +3604,7 @@ input[type='radio'] {
 
 .for-you .price {
     position: absolute;
-    bottom: 10px;
+    bottom: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3700,16 +3710,18 @@ input[type='radio'] {
 
 @media (max-width: 676px) {
     .for-you .additional-icon {
-        bottom: 12px;
+        bottom: 90px;
         right: 12px;
     }
 
     .for-you .price {
-        display: none;
+        bottom: 10px;
     }
 
     .reel-items {
         left: 20px;
+        bottom: 90px;
+        right: auto;
     }
 
     .for-you .cart-btn-reels {
@@ -3728,8 +3740,8 @@ input[type='radio'] {
 .product-color-cos button {
     background-color: transparent !important;
     padding: 0;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -3952,6 +3964,10 @@ input[type='radio'] {
     background-color: rgb(224, 46, 36, 1) !important;
 }
 
+.active-catagories {
+    border: 2px solid #223263;
+}
+
 .cate-slider-box img {
     width: 100%;
 }
@@ -4057,6 +4073,10 @@ input[type='radio'] {
     border: none;
     box-shadow: none;
     margin-top: 30px;
+}
+
+.pass-error {
+    position: absolute;
 }
 
 .reset-pass {
@@ -4188,6 +4208,7 @@ input[type='radio'] {
 /*error message */
 .error {
     color: #E02E24;
+    font-size: 15px;
 }
 
 .truncate-after-words {
@@ -4258,3 +4279,60 @@ input[type='radio'] {
         width: 120px;
     }
 }
+
+/* review start */
+.review .review-box h5 {
+    font-weight: 600;
+    font-size: 18px;
+    color: #223263;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.review .review-box span {
+    font-weight: 400;
+    font-size: 15px;
+    margin: 8px 0;
+    display: block;
+    color: #9098B1;
+}
+
+.review .review-items-def {
+    border-bottom: 1px solid #E0E0E0;
+    min-height: 150px;
+}
+
+.review .review-box p {
+    font-weight: 600;
+    font-size: 15px;
+    color: #223263;
+}
+
+.review .review-like button {
+    background-color: transparent !important;
+    padding: 0 !important;
+    color: #071234 !important;
+    border: none;
+    font-size: 20px;
+    box-shadow: none !important;
+}
+
+.review .color-def {
+    row-gap: 5px;
+    column-gap: 25px;
+}
+
+@media (max-width: 512px) {
+    .review-box {
+        flex-direction: column;
+    }
+
+    .review-img {
+        width: 100%;
+    }
+}
+
+/* review end */

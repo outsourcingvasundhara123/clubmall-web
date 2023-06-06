@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
+import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdAdd,
@@ -13,7 +13,7 @@ import { PRODUCTDETAIL, ADDTOCART } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse } from '../helper/constants'
+import { errorResponse, afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants';
@@ -84,11 +84,11 @@ const AddCartModal = (props) => {
 
     const findSKUId = () => {
         const sku = modelProduct.productList.sku_details.find((sku) => {
-          return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
+            return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
         });
-      
+
         return sku ? sku.skuid : null;
-      };
+    };
 
 
     const handleCart = async (e) => {
@@ -116,18 +116,19 @@ const AddCartModal = (props) => {
                     if (res.data.success == true) {
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
+                        setProductColorActive(" ")
+                        setSizeActive(" ")
                         setTimeout(() => {
                             props.handleClose()
                         }, 1000);
-                        setProductColorActive(" ")
-                        setSizeActive(" ")
                     } else if (res.data.success === false) {
                         setMyMessage(res.data.message);
                         setWarningSnackBarOpen(!warningSnackBarOpen);
                     }
                 } else {
                     // User is not logged in, redirect to the login page
-                    navigate('/login');
+                    afterLogin(setMyMessage)
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
                 }
             } else {
                 setMyMessage("select color and size  of the product");
@@ -140,8 +141,6 @@ const AddCartModal = (props) => {
             setWarningSnackBarOpen(!warningSnackBarOpen);
         }
     };
-
-    console.log(colorProduct);
 
 
     return (
@@ -253,7 +252,7 @@ const AddCartModal = (props) => {
                                             <Button onClick={handleCart} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
 
                                             <div>
-                                                <Button type='button' onClick={ () => handelProductDetail(modelProduct.productList._id)} className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>
+                                                <Button type='button' onClick={() => handelProductDetail(modelProduct.productList._id)} className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>
                                             </div>
                                         </div>
                                     </Col>
@@ -271,13 +270,13 @@ const AddCartModal = (props) => {
                         <h5 className='my-3'>Get the full experience on <br /> the app</h5>
                         <p>Follow you favoritevendor accounts,
                             explore new product and message the <br /> vendor</p>
-                        <div className='d-flex align-items-center justify-content-center gap-2 mt-4'>
-                            <Button>
+                        <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
+                            <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
                                 <img src='./img/playstore.png' alt='' />
-                            </Button>
-                            <Button>
+                            </NavLink>
+                            <NavLink href="https://apps.apple.com/us/app/clubmall/id6444752184" target='_blank'>
                                 <img src='./img/app.png' alt='' />
-                            </Button>
+                            </NavLink>
                         </div>
                     </div>
                 </Modal.Body>
