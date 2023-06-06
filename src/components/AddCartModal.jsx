@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
+import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdAdd,
@@ -13,7 +13,7 @@ import { PRODUCTDETAIL, ADDTOCART } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse,afterLogin } from '../helper/constants'
+import { errorResponse, afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants';
@@ -120,7 +120,7 @@ const AddCartModal = (props) => {
                         setSizeActive(" ")
                         setTimeout(() => {
                             props.handleClose()
-                        }, 1000); 
+                        }, 1000);
                     } else if (res.data.success === false) {
                         setMyMessage(res.data.message);
                         setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -270,13 +270,13 @@ const AddCartModal = (props) => {
                         <h5 className='my-3'>Get the full experience on <br /> the app</h5>
                         <p>Follow you favoritevendor accounts,
                             explore new product and message the <br /> vendor</p>
-                        <div className='d-flex align-items-center justify-content-center gap-2 mt-4'>
-                            <Button>
+                        <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
+                            <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
                                 <img src='./img/playstore.png' alt='' />
-                            </Button>
-                            <Button>
+                            </NavLink>
+                            <NavLink href="https://apps.apple.com/us/app/clubmall/id6444752184" target='_blank'>
                                 <img src='./img/app.png' alt='' />
-                            </Button>
+                            </NavLink>
                         </div>
                     </div>
                 </Modal.Body>

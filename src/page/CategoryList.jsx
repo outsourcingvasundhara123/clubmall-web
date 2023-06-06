@@ -78,7 +78,7 @@ const CategoryList = () => {
             ]);
             const categoryData = categoryResponse.data.data;
 
-            console.log(categoryData,"categoryData");
+            console.log(categoryData, "categoryData");
 
 
             // Divide the category list into two parts
@@ -113,9 +113,9 @@ const CategoryList = () => {
                         >
                             {category && category.firstHalf && category.firstHalf.map((e, i) => {
                                 return (
-                                    <div className='item pointer' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
-                                            <div className='categories-slider-img' >
+                                    <div className='item' key={i}>
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i}>
+                                            <div className='categories-slider-img '>   {/* "active-catagories" use this class to active catagories */}
                                                 <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
@@ -138,7 +138,7 @@ const CategoryList = () => {
                             {category && category.secondHalf && category.secondHalf.map((e, i) => {
                                 return (
                                     <div className='item' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i}>
                                             <div className='categories-slider-img' >
                                                 <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                             </div>

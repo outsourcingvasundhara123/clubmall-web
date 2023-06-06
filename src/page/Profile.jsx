@@ -38,19 +38,19 @@ const Profile = () => {
                                                 Your orders
                                             </Nav.Link>
                                         </Nav.Item>
-                                        <Nav.Item>
+                                        {/* <Nav.Item>
                                             <Nav.Link eventKey="review" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/review.png' alt='' />
                                                 Your reviews
                                             </Nav.Link>
-                                        </Nav.Item>
+                                        </Nav.Item> */}
                                         <Nav.Item>
                                             <Nav.Link eventKey="user" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/user.png' alt='' />
                                                 Your profile
                                             </Nav.Link>
                                         </Nav.Item>
-                                        <Nav.Item>
+                                        {/* <Nav.Item>
                                             <Nav.Link eventKey="offer" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/offer.png' alt='' />
                                                 Coupon & offers
@@ -73,19 +73,19 @@ const Profile = () => {
                                                 <img src='./img/header/time.png' alt='' />
                                                 Browsing history
                                             </Nav.Link>
-                                        </Nav.Item>
+                                        </Nav.Item> */}
                                         <Nav.Item>
                                             <Nav.Link eventKey="location" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/location.png' alt='' />
                                                 Addresses
                                             </Nav.Link>
                                         </Nav.Item>
-                                        <Nav.Item>
+                                        {/* <Nav.Item>
                                             <Nav.Link eventKey="network" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/network.png' alt='' />
                                                 Country/Region & Language
                                             </Nav.Link>
-                                        </Nav.Item>
+                                        </Nav.Item> */}
                                         <Nav.Item>
                                             <Nav.Link eventKey="wallet" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/wallet.png' alt='' />
@@ -184,7 +184,7 @@ const Profile = () => {
 
                                         </Tab.Pane>
 
-                                        <Tab.Pane eventKey="review">
+                                        {/* <Tab.Pane eventKey="review">
                                             <div className='d-flex align-items-center justify-content-center w-100 h-400'>
                                                 <div className='text-center found'>
                                                     <img src='./img/profile/review.png' alt='' />
@@ -192,7 +192,7 @@ const Profile = () => {
                                                     <span>You have no completed reviews or the reviews have been deleted</span>
                                                 </div>
                                             </div>
-                                        </Tab.Pane>
+                                        </Tab.Pane> */}
 
                                         <Tab.Pane eventKey="user">
                                             <div className='user-main'>
@@ -241,7 +241,7 @@ const Profile = () => {
                                             </div>
                                         </Tab.Pane>
 
-                                        <Tab.Pane eventKey="shop">
+                                        {/* <Tab.Pane eventKey="shop">
                                             <div className='d-flex align-items-center justify-content-center w-100 h-400'>
                                                 <div className='text-center found'>
                                                     <img src='./img/not-found.png' alt='' />
@@ -339,7 +339,7 @@ const Profile = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </Tab.Pane>
+                                        </Tab.Pane> */}
 
                                         <Tab.Pane eventKey="location">
                                             <div className='location-main'>

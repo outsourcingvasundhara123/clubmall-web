@@ -218,7 +218,7 @@ const Header = () => {
                             <input type='text' placeholder='Search Product' className='w-100' />
                         </div>
                     </div>
-                    <div className='account d-flex align-items-center gap-2'>
+                    <div className='account d-flex align-items-center gap-3'>
 
                         {
                             isLoggedIn ?
@@ -250,17 +250,17 @@ const Header = () => {
                                                 <img src='./img/header/list.png' alt='' />
                                                 Your orders
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1">
+                                            {/* <Dropdown.Item href="#/action-1">
                                                 <img src='./img/header/review.png' alt='' />
                                                 Your reviews
-                                            </Dropdown.Item>
+                                            </Dropdown.Item> */}
                                             <Dropdown.Item href="#/action-1">
                                                 <Link to="/profile" className='p-0'>
                                                     <img src='./img/header/user.png' alt='' />
                                                     Your profile
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1">
+                                            {/* <Dropdown.Item href="#/action-1">
                                                 <img src='./img/header/offer.png' alt='' />
                                                 Coupon & offers
                                             </Dropdown.Item>
@@ -271,7 +271,7 @@ const Header = () => {
                                             <Dropdown.Item href="#/action-1">
                                                 <img src='./img/header/shop.png' alt='' />
                                                 Followed shops
-                                            </Dropdown.Item>
+                                            </Dropdown.Item> */}
                                             <Dropdown.Item href="#/action-1">
                                                 <img src='./img/header/location.png' alt='' />
                                                 Addresses
@@ -296,16 +296,16 @@ const Header = () => {
                                         </Dropdown.Menu>
                                     </Dropdown>
 
-                                    <Dropdown>
-                                        {/* <Dropdown.Toggle id="dropdown-basic">
+                                    {/* <Dropdown>
+                                        <Dropdown.Toggle id="dropdown-basic">
                                             <NavLink className='flag-selector'>
                                                 <Button className='pre-label-btn user-account p-0 '>
                                                     <img src={selectedFlag} alt='' width="26px" height="26px" />
                                                 </Button>
                                             </NavLink>
-                                        </Dropdown.Toggle> */}
+                                        </Dropdown.Toggle>
 
-                                        {/* <Dropdown.Menu className='select-country'>
+                                        <Dropdown.Menu className='select-country'>
                                             <h5>Change country / region</h5>
 
                                             {
@@ -322,20 +322,20 @@ const Header = () => {
                                                     )
                                                 })
                                             }
-                                        </Dropdown.Menu> */}
-                                    </Dropdown>
+                                        </Dropdown.Menu>
+                                    </Dropdown> */}
 
-                                    <Link to="/cart" className='cart flag-selector' >
-                                        <img src='./img/header/cart.png' alt='' />
-                                    </Link>
-                                    <Button className='toggle ' onClick={handleShow}>
-                                        <HiOutlineMenuAlt1 />
-                                    </Button>
+
                                 </>
                                 : <Link to="/login" className='login-btn'>Login</Link>
                         }
 
-
+                        <Link to="/cart" className='cart flag-selector'>
+                            <img src='./img/header/cart.png' alt='' />
+                        </Link>
+                        <Button className='toggle ' onClick={handleShow}>
+                            <HiOutlineMenuAlt1 />
+                        </Button>
                     </div>
                 </div>
             </div>
