@@ -78,7 +78,7 @@ const LogIn = () => {
               setSucessSnackBarOpen(!sucessSnackBarOpen);
               setValues(initialValues);
               setMyMessage(res.data.message);
-              login(res.data.data.token);
+              login(res.data.data.user);
               navigate("/");
             } else if (res.data.success === false) {
               setMyMessage(res.data.message);

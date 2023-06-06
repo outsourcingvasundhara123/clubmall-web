@@ -7,7 +7,7 @@ import { PRODUCTList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
-
+import { handelCategorydata } from '../helper/constants'
 const Trending = () => {
 
     const [active, setActive] = useState("1");
@@ -85,7 +85,7 @@ const Trending = () => {
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn'>View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>

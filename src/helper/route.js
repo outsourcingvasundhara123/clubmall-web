@@ -4,7 +4,7 @@ import Categories from '../page/Categories';
 import ProductInfo from '../page/ProductInfo';
 import Cart from '../page/Cart';
 import Profile from '../page/Profile';
-import ParticularCategories from '../page/ParticularCategories';
+import Fashion from '../page/Fashion';
 import Home from '../page/Home';
 import ForYou from '../page/ForYou';
 import LogIn from '../page/loginpage/LogIn';
@@ -43,7 +43,7 @@ export default [
   },
   {
     path: "/particular-categories",
-    element: <ParticularCategories />,
+    element: <Fashion />,
   },
   {
     path: "/new-in",
@@ -55,7 +55,7 @@ export default [
   },
   {
     path: "/fashion",
-    element: <ParticularCategories />,
+    element: <Fashion />,
   },
   {
     path: "/login",

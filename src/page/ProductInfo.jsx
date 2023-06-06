@@ -22,7 +22,7 @@ import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse, afterLogin } from '../helper/constants'
+import { errorResponse,afterLogin,handelCategorydata } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
@@ -226,7 +226,7 @@ const ProductInfo = () => {
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
                                             <div className='d-flex align-items-center gap-3'>
 
-                                                <h5 className='info-title border-right-cos cos-title'> {Product.productList.rating_count} shop reviews</h5>
+                                                <h5 className='info-title border-right-cos cos-title'> {Product.productList?.rating_count} shop reviews</h5>
                                                 <div className='rate d-flex align-items-center gap-2'>
                                                     <span className='cos-title'>{Product.productList.rating}</span>
                                                     <div className='d-flex align-items-center gap-1'>
@@ -245,7 +245,7 @@ const ProductInfo = () => {
                                         </div>
 
 
-                                        {Product.productList.rating_count == 0 &&
+                                        {Product.productList?.rating_count == 0 &&
                                             <div className='no-review py-4'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
                                                 <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p>
@@ -659,7 +659,7 @@ const ProductInfo = () => {
                                             })
                                         }
                                         <div className='w-100 d-flex justify-content-center'>
-                                            <Button className='shop-btn rotate-img'>View More <MdKeyboardDoubleArrowRight /></Button>
+                                            <Button className='shop-btn rotate-img' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
                                     </div>
                                 </div>

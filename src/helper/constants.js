@@ -33,14 +33,19 @@ export const afterLogin = (setMyMessage) => {
       }
   };
   
-
-
 export const handelProductDetail = (productId) => {
     localStorage.setItem("selectedProductId", productId);
     window.location.href = "/Product-info";
   };
 
-
+  export const handelCategorydata = (categorie) => {
+    if(categorie == undefined ){
+        localStorage.setItem("selectedcategories", "Women Apparel");
+    }else{
+        localStorage.setItem("selectedcategories", categorie);
+    }
+    window.location.href = "/categories";
+  };
 
 
 export const colors = [

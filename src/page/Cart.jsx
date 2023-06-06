@@ -117,8 +117,6 @@ const Cart = () => {
         getCartData();
     }, []);
 
- console.log(productList,"productList");
-
 
     return (
         <Layout>

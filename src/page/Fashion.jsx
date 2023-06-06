@@ -13,9 +13,9 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
-import { handelProductDetail } from '../helper/constants';
+import { handelProductDetail ,handelCategorydata } from '../helper/constants';
 
-const ParticularCategories = () => {
+const Fashion = () => {
 
     const navigate = useNavigate();
 
@@ -193,7 +193,7 @@ const ParticularCategories = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn' onClick={() => navigate("/categories")}>View All</Button>
+                                        <Button className='view-all-btn' onClick={() => handelCategorydata()}>View All</Button>
                                     </div>
                                 </div>
 
@@ -250,7 +250,7 @@ const ParticularCategories = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn view-btn-yellow' onClick={() => navigate("/categories")}>View All</Button>
+                                        <Button className='view-all-btn view-btn-yellow' onClick={() => handelCategorydata()}>View All</Button>
                                     </div>
                                 </div>
 
@@ -313,7 +313,7 @@ const ParticularCategories = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn' onClick={() => navigate("/categories")}>View All</Button>
+                                        <Button className='view-all-btn' onClick={() => handelCategorydata() }>View All</Button>
                                     </div>
                                 </div>
 
@@ -370,7 +370,7 @@ const ParticularCategories = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn view-btn-red' onClick={() => navigate("/categories")}>View All</Button>
+                                        <Button className='view-all-btn view-btn-red' onClick={() => handelCategorydata()}>View All</Button>
                                     </div>
                                 </div>
                             </div>
@@ -437,4 +437,4 @@ const ParticularCategories = () => {
     )
 }
 
-export default ParticularCategories
+export default Fashion

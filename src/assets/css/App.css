@@ -423,6 +423,10 @@ p {
     width: 100px;
     text-align: center;
     margin-top: 30px;
+    overflow: hidden;
+    border-radius: 50%;
+    height: 100px;
+
 }
 
 .multy-slider .product-box {
@@ -430,12 +434,13 @@ p {
     margin: 0 auto;
 }
 
-.product-box h6 {
+.product_image h6 {
     font-weight: 600;
     font-size: 15px;
     color: #223263;
     line-height: 150%;
     margin-top: 10px;
+    text-align: center;
 }
 
 .border-right-cos {

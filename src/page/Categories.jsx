@@ -7,12 +7,12 @@ import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { colors, categoriesSliderData } from '../helper/constants'
 import { RangeSlider } from 'rsuite';
-import 'rsuite/dist/rsuite-no-reset.min.css';
-import { PRODUCTList } from "../helper/endpoints";
+import { PRODUCTList,PRODUCTSEARCH } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
+
 const Categories = () => {
 
     const [productColorActive, setProductColorActive] = useState()
@@ -21,6 +21,7 @@ const Categories = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const player = useRef();
+    const CategorieName = localStorage.getItem("selectedcategories") ? localStorage.getItem("selectedcategories") : "Women Apparel"
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -36,8 +37,7 @@ const Categories = () => {
             const [postListResponse] = await Promise.all([
                 api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
             ]);
-
-            const postsData = postListResponse.data.data;
+            const postsData = postListResponse.data.data.data;
             setPostList(postsData);
             stopAnimation()
         } catch (error) {
@@ -369,52 +369,52 @@ const Categories = () => {
                                                             </Accordion.Body>
                                                         </Accordion.Item>
 
-                                                        <div className='filter-box mt-20 range'>
-                                                            <h5>Price Range</h5>
-                                                            <div class="price-range-slider mt-4 mb-3">
-                                                                <RangeSlider defaultValue={[0, 100]} />
-                                                            </div>
-                                                        </div>
+                                            {/* <div className='filter-box mt-20 range'>
+                                                <h5>Price Range</h5>
+                                                <div class="price-range-slider mt-4 mb-3">
+                                                    <RangeSlider defaultValue={[0, 100]} />
+                                                </div>
+                                            </div> */}
 
                                                     </Accordion>
                                                 </div>
 
-                                            </div>
-                                        </Col>
-                                        <Col xxl={9} xl={8} lg={7} sm={12} className='mt-5 mt-lg-0'>
-                                            <div className='fill-title'>
-                                                <h5>Trending Items</h5>
-                                            </div>
-                                            <div className='mb-0 explore-main'>
-                                                {
-                                                    postList.productListArrObj?.map((e) => {
-                                                        return (
-                                                            <ProCard
-                                                                id={e._id}
-                                                                img={e.product_images[0]?.file_name}
-                                                                name={e.name}
-                                                                group_price={e.group_price}
-                                                                individual_price={e.individual_price}
-                                                                sold={e.total_order}
-                                                                secper={e.secper}
-                                                                off={e.discount_percentage}
-                                                                path={postList?.productImagePath && postList.productImagePath}
-                                                                color={e.sku_attributes.color}
-                                                            />
-                                                        )
-                                                    })
-                                                }
-                                                <div className='w-100 d-flex justify-content-center'>
-                                                    <Button className='shop-btn'>View More <MdKeyboardDoubleArrowRight /></Button>
-                                                </div>
-                                            </div>
-                                        </Col>
-                                    </Row>
                                 </div>
-                            </div>
-                        </div>
-                    </>
-                )}
+                            </Col>
+                            <Col xxl={9} xl={8} lg={7} sm={12} className='mt-5 mt-lg-0'>
+                                <div className='fill-title'>
+                                    <h5>Trending Items</h5>
+                                </div>
+                                <div className='mb-0 explore-main'>
+                                {
+                                postList?.map((e) => {
+                                    return (
+                                            <ProCard
+                                                id={e._id}
+                                                img={e.product_images[0]?.file_name}
+                                                name={e.name}
+                                                group_price={e.group_price}
+                                                individual_price={e.individual_price}
+                                                sold={e.total_order}
+                                                secper={e.secper}
+                                                off={e.discount_percentage}
+                                                path={postList?.productImagePath && postList.productImagePath}
+                                                color={e.sku_attributes.color}
+                                                />
+                                    )
+                                })
+                            }
+                                    <div className='w-100 d-flex justify-content-center'>
+                                        <Button className='shop-btn'>View More <MdKeyboardDoubleArrowRight /></Button>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
+            </div>
+            </>         
+)}        
         </Layout>
     )
 }

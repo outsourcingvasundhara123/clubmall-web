@@ -8,7 +8,7 @@ import {
 } from "react-icons/md"
 import ProCard from '../components/ProCard'
 import { data } from "../page/Data"
-
+import { handelCategorydata } from '../helper/constants'
 const Profile = () => {
 
     const [itemShow, setItemShow] = useState(false);
@@ -498,7 +498,7 @@ const Profile = () => {
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn rotate-img'>View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn rotate-img'  >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div> : <></>
