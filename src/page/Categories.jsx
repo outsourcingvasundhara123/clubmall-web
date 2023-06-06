@@ -398,7 +398,8 @@ loading ?  <Loader startAnimation={startAnimation} stopAnimation={stopAnimation}
                                                 secper={e.secper}
                                                 off={e.discount_percentage}
                                                 path={postList?.productImagePath && postList.productImagePath}
-                                            />
+                                                color={e.sku_attributes.color}
+                                                />
                                     )
                                 })
                             }

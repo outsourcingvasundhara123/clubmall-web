@@ -30,7 +30,7 @@ const Trending = () => {
         setLoading(false);
     };
 
-    const getCategory = async () => {
+    const getTrendingProduct = async () => {
         startAnimation()
         try {
             const [postListResponse] = await Promise.all([
@@ -46,10 +46,9 @@ const Trending = () => {
     };
 
     useEffect(() => {
-        getCategory();
+        getTrendingProduct();
     }, []);
 
-console.log(postList.productListArrObj,"postList.productListArrObj");
     return (
         <Layout>
             {

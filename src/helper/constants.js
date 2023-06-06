@@ -1,8 +1,6 @@
 
 export const errorResponse = (error,setMyMessage,props) => {
-  
-  console.log(error,"props");
-    if (error.response) {
+      if (error.response) {
         const { status, data } = error.response;
         if (status === 403) {
             setTimeout(() => {
@@ -11,15 +9,30 @@ export const errorResponse = (error,setMyMessage,props) => {
             }, 5000);
         }else{
             setMyMessage(data.message)
-            setTimeout(() => {
-                props.handleClose()
-
-            }, 1000);
+            if (props !== undefined ) {
+                setTimeout(() => {
+                    props.handleClose()
+                }, 1000);    
+            }
         }
     } else {
         return { status: 0, message: "try again" };
     }
 };
+
+export const afterLogin = (setMyMessage) => {
+       
+    if (setMyMessage) {
+        setMyMessage("login first for access this functionality")
+              setTimeout(() => {
+                  window.location.href = "/login";
+                  sessionStorage.removeItem("token");
+              }, 1000);
+      } else {
+          return { status: 0, message: "try again" };
+      }
+  };
+  
 
 
 export const handelProductDetail = (productId) => {

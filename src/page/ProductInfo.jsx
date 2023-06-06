@@ -22,7 +22,7 @@ import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse } from '../helper/constants'
+import { errorResponse,afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 
@@ -121,7 +121,7 @@ const ProductInfo = () => {
 
         try {
 
-            if (productColorActive && sizeActive) {
+            if (productColorActive && (sizeActive ||  Product.productList?.sku_attributes.size == undefined ) ) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -148,7 +148,8 @@ const ProductInfo = () => {
                     }
                 } else {
                     // User is not logged in, redirect to the login page
-                    navigate('/login');
+                    afterLogin(setMyMessage)
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
                 }
             } else {
                 setMyMessage("select color and size  of the product");
@@ -161,8 +162,7 @@ const ProductInfo = () => {
             setWarningSnackBarOpen(!warningSnackBarOpen);
         }
     };
-
-    // console.log(trendingProductList,"trendingProductList");
+    
     return (
         <Layout>
 
@@ -283,7 +283,7 @@ const ProductInfo = () => {
                                                                 {
 
                                                                     favoriteProductList.productListArrObj
-                                                                    && favoriteProductList.productListArrObj.slice(0, 5).map((e) => {
+                                                                    && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
                                                                         return (
                                                                             <SwiperSlide>
                                                                                 <div className='slide-box'>
@@ -368,7 +368,7 @@ const ProductInfo = () => {
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                                     {
-                                                        Product?.productList?.sku_attributes?.color && Product.productList?.sku_attributes.color.map((e, i) => {
+                                                        Product?.productList?.sku_attributes?.color && Product.productList?.sku_attributes.color?.map((e, i) => {
                                                             return (
                                                                 // <Button className={`color-btn ${productColorActive === e.name ? "active" : ""}`} onClick={() => setProductColorActive(e.name)}>
                                                                 <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
@@ -380,10 +380,10 @@ const ProductInfo = () => {
                                                 </div>
 
                                                 <div className='size mt-4'>
-                                                    <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                                                    {Product.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5> }  
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
-                                                            Product.productList?.sku_attributes.size.map((e, i) => {
+                                                            Product.productList?.sku_attributes.size?.map((e, i) => {
                                                                 return (
                                                                     <Button className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
                                                                         {e.name}
@@ -406,14 +406,14 @@ const ProductInfo = () => {
 
                                             <Button onClick={handleCart} className='add-cart-items mt-4'>Add to cart</Button>
 
-                                            <div className='shipping-def mt-4'>
-                                                <div className='stock d-flex align-items-center gap-2'>
+                                            {/* <div className='shipping-def mt-4'> */}
+                                                {/* <div className='stock d-flex align-items-center gap-2'>
                                                     <span className='d-flex align-items-center gap-2'>
                                                         <img src='./img/product_def/stok-limit.png' alt='' />
                                                         Selling fast!
                                                     </span>
                                                     <p>Only  {Product.stockData?.stocks_left > 0 ? Product.stockData?.stocks_left : 1} left in stock</p>
-                                                </div>
+                                                </div> */}
                                                 {/* <h5 className='info-title my-4'>Shipping & Return</h5> */}
                                                 {/* <div className='shipping-order'>
                                                     <div className='sub-title-info d-flex align-items-center gap-2'>
@@ -513,11 +513,11 @@ const ProductInfo = () => {
                                                     <img src='./img/product_def/return.png' alt='' />
                                                     <span className='d-flex align-items-center gap-1'>Free returns <p>•</p> Price adjustment <MdOutlineKeyboardArrowRight /></span>
                                                 </div> */}
-                                                <div className='sub-title-info d-flex align-items-center gap-2 mt-3'>
+                                                {/* <div className='sub-title-info d-flex align-items-center gap-2 mt-3'>
                                                     <img src='./img/product_def/commited.png' alt='' />
                                                     <span className='d-flex align-items-center gap-1'>Clubmall is commited to environmental sustainability</span>
-                                                </div>
-                                            </div>
+                                                </div> */}
+                                            {/* </div> */}
 
                                             <div className='shipping-def mt-4'>
                                                 <h5 className='info-title mt-4 mb-2'>Shop with confidence</h5>
@@ -541,8 +541,7 @@ const ProductInfo = () => {
                                                     <span>Item ID: {Product.productList?.attributes["Product ID"][0]} </span>
                                                     <Button className='copy-btn'>Copy</Button>
                                                 </div> */}
-
-                                                {Object.entries(Product.productList?.attributes || {}).map(([key, value], index) => (
+                                                {Object.entries(Product.productList?.attributes || {})?.map(([key, value], index) => (
                                                     <div key={index}>
                                                         {key === "Product ID" ? (
                                                             <div className='d-flex align-items-center copy-div gap-3'>
@@ -563,18 +562,20 @@ const ProductInfo = () => {
                                 <div className='recent-view'>
                                     <h4>Items you may want to add</h4>
                                     <div className='mb-0 explore-main'>
-                                        {
-                                            data.map((e) => {
+                                    {
+                                            trendingProductList.productListArrObj?.map((e) => {
                                                 return (
-                                                    <ProCard
-                                                        img={e.img}
-                                                        name={e.name}
-                                                        per={e.per}
-                                                        per2={e.per2}
-                                                        sold={e.sold}
-                                                        secper={e.secper}
-                                                        off={e.off}
-                                                    />
+                                                        <ProCard
+                                                            id={e._id}
+                                                            img={e.product_images[0]?.file_name}
+                                                            name={e.name}
+                                                            group_price={e.group_price}
+                                                            individual_price={e.individual_price}
+                                                            sold={e.total_order}
+                                                            secper={e.secper}
+                                                            off={e.discount_percentage}
+                                                            path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
+                                                        />
                                                 )
                                             })
                                         }
@@ -621,7 +622,7 @@ const ProductInfo = () => {
 
                                         <div className='cart-list border-bottom-cos mt-4 pb-4'>
                                             {
-                                                cartListData.slice(0, 3).map((e, i) => {
+                                                cartListData.slice(0, 3)?.map((e, i) => {
                                                     return (
                                                         <div className='cart-items d-flex align-items-start gap-3 mt-4' >
                                                             <img src={e.img} alt='' width="90px" />

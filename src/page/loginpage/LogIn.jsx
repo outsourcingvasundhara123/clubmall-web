@@ -79,7 +79,6 @@ const LogIn = () => {
               setValues(initialValues);
               setMyMessage(res.data.message);
               login(res.data.data.token);
-              // sessionStorage.setItem("token", res.data.data.token);
               navigate("/");
             } else if (res.data.success === false) {
               setMyMessage(res.data.message);

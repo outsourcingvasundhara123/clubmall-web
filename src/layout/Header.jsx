@@ -77,12 +77,15 @@ const Header = () => {
                             <li>
                                 <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
                             </li>
-                            <li>
-                                <Button onClick={handleNewInShow}>New In</Button>
-                            </li>
+
                             <li>
                                 <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
                             </li>
+
+                            <li>
+                                <Button onClick={handleNewInShow}>New In</Button>
+                            </li>
+
                             <li>
                                 <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/")}>Fashion</Link>
                             </li>
@@ -219,115 +222,120 @@ const Header = () => {
 
                         {
                             isLoggedIn ?
-
-                                <Dropdown>
-                                    <Dropdown.Toggle id="dropdown-basic">
-                                        <NavLink>
-                                            <Button className='pre-label-btn user-account'>
-                                                <div className='d-flex align-items-center gap-2'>
-                                                    <img src='./img/header/user-pic.png' alt='' />
-                                                    <div className='price-text text-start'>
-                                                        <h6>Hello, Ali</h6>
-                                                        <span>Orders & Account</span>
+                                <>
+                                    <Dropdown>
+                                        <Dropdown.Toggle id="dropdown-basic">
+                                            <NavLink>
+                                                <Button className='pre-label-btn user-account'>
+                                                    <div className='d-flex align-items-center gap-2'>
+                                                        <img src='./img/header/user-pic.png' alt='' />
+                                                        <div className='price-text text-start'>
+                                                            <h6>Hello, Ali</h6>
+                                                            <span>Orders & Account</span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </Button>
-                                        </NavLink>
-                                    </Dropdown.Toggle>
+                                                </Button>
+                                            </NavLink>
+                                        </Dropdown.Toggle>
 
-                                    <Dropdown.Menu>
-                                        <div className='drop-items'>
-                                            <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
-                                                <img src='./img/header/user-pic.png' alt='' />
-                                                <h6>Hello, Ali....</h6>
+                                        <Dropdown.Menu>
+                                            <div className='drop-items'>
+                                                <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
+                                                    <img src='./img/header/user-pic.png' alt='' />
+                                                    <h6>Hello, Ali....</h6>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <Dropdown.Divider />
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/list.png' alt='' />
-                                            Your orders
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/review.png' alt='' />
-                                            Your reviews
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <Link to="/profile" className='p-0'>
-                                                <img src='./img/header/user.png' alt='' />
-                                                Your profile
-                                            </Link>
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/offer.png' alt='' />
-                                            Coupon & offers
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/balance.png' alt='' />
-                                            Credit balance
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/shop.png' alt='' />
-                                            Followed shops
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/location.png' alt='' />
-                                            Addresses
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/security.png' alt='' />
-                                            Account security
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1" className='pb-3'>
-                                            <img src='./img/header/notification.png' alt='' />
-                                            Notifications
-                                        </Dropdown.Item>
-                                        <Dropdown.Divider />
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/switch.png' alt='' />
-                                            Switch accounts
-                                        </Dropdown.Item>
-                                        <Dropdown.Item href="#/action-1">
-                                            <img src='./img/header/logout.png' alt='' />
-                                            Sign out
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown> : <Link to="/login" className='login-btn'>Login</Link>}
-
-                        <Dropdown>
-                            <Dropdown.Toggle id="dropdown-basic">
-                                <NavLink className='flag-selector'>
-                                    <Button className='pre-label-btn user-account p-0 '>
-                                        <img src={selectedFlag} alt='' width="26px" height="26px" />
-                                    </Button>
-                                </NavLink>
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu className='select-country'>
-                                <h5>Change country / region</h5>
-
-                                {
-                                    countryData.map((event, i) => {
-                                        return (
-                                            <Dropdown.Item href="#/action-1" className='mt-2'>
-                                                <div className='d-flex align-items-center justify-content-between w-100'>
-                                                    <label htmlFor={event.id} className='d-flex align-items-center gap-3' onClick={() => setSelectedFlag(event.flag)}>
-                                                        <img src={event.flag} alt='' width="20px" height="20px" />
-                                                        {event.name}</label>
-                                                    <input type='radio' id={event.id} name='country' />
-                                                </div>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/list.png' alt='' />
+                                                Your orders
                                             </Dropdown.Item>
-                                        )
-                                    })
-                                }
-                            </Dropdown.Menu>
-                        </Dropdown>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/review.png' alt='' />
+                                                Your reviews
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/user.png' alt='' />
+                                                    Your profile
+                                                </Link>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/offer.png' alt='' />
+                                                Coupon & offers
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/balance.png' alt='' />
+                                                Credit balance
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/shop.png' alt='' />
+                                                Followed shops
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/location.png' alt='' />
+                                                Addresses
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/security.png' alt='' />
+                                                Account security
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1" className='pb-3'>
+                                                <img src='./img/header/notification.png' alt='' />
+                                                Notifications
+                                            </Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/switch.png' alt='' />
+                                                Switch accounts
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-1">
+                                                <img src='./img/header/logout.png' alt='' />
+                                                Sign out
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
 
-                        <Link to="/cart" className='cart flag-selector' >
-                            <img src='./img/header/cart.png' alt='' />
-                        </Link>
-                        <Button className='toggle ' onClick={handleShow}>
-                            <HiOutlineMenuAlt1 />
-                        </Button>
+                                    <Dropdown>
+                                        {/* <Dropdown.Toggle id="dropdown-basic">
+                                            <NavLink className='flag-selector'>
+                                                <Button className='pre-label-btn user-account p-0 '>
+                                                    <img src={selectedFlag} alt='' width="26px" height="26px" />
+                                                </Button>
+                                            </NavLink>
+                                        </Dropdown.Toggle> */}
+
+                                        {/* <Dropdown.Menu className='select-country'>
+                                            <h5>Change country / region</h5>
+
+                                            {
+                                                countryData.map((event, i) => {
+                                                    return (
+                                                        <Dropdown.Item href="#/action-1" className='mt-2'>
+                                                            <div className='d-flex align-items-center justify-content-between w-100'>
+                                                                <label htmlFor={event.id} className='d-flex align-items-center gap-3' onClick={() => setSelectedFlag(event.flag)}>
+                                                                    <img src={event.flag} alt='' width="20px" height="20px" />
+                                                                    {event.name}</label>
+                                                                <input type='radio' id={event.id} name='country' />
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                    )
+                                                })
+                                            }
+                                        </Dropdown.Menu> */}
+                                    </Dropdown>
+
+                                    <Link to="/cart" className='cart flag-selector' >
+                                        <img src='./img/header/cart.png' alt='' />
+                                    </Link>
+                                    <Button className='toggle ' onClick={handleShow}>
+                                        <HiOutlineMenuAlt1 />
+                                    </Button>
+                                </>
+                                : <Link to="/login" className='login-btn'>Login</Link>
+                        }
+
+
                     </div>
                 </div>
             </div>

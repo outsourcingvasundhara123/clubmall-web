@@ -12,21 +12,29 @@ import "swiper/css";
 import "swiper/css/pagination";
 // import required modules
 import { Mousewheel } from "swiper";
+import { Is_Login } from '../helper/IsLogin'
+import { errorResponse, afterLogin, handelProductDetail } from '../helper/constants'
+import SucessSnackBar from "../components/SnackBar";
+import ErrorSnackBar from "../components/SnackBar";
+import { useNavigate } from 'react-router-dom'
 
 const ForYou = () => {
-  const POST_URL = process.env.REACT_APP_POST_URL
+  const isLoggedIn = Is_Login();
   const swiperRef = useRef(null);
-  const defaultProfile = 'http://backend.clubmall.com/uploads/profile-images/profile_image-1669788396576.png'
+  const defaultProfile = `defailt`
   const [postList, setPostList] = useState([]);
+  const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+  const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const serverURL = getServerURL();
   const [page, setPage] = useState(1);
   const [profilUrl, setProfileUrl] = useState(" ");
+  const [postlUrl, setPostUrl] = useState(" ");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isFetching, setIsFetching] = useState(false);
   const currentPageRef = useRef(page);
   const [loading, setLoading] = useState(true);
+  const [Mymessage, setMyMessage] = useState("");
   const player = useRef();
-  var totalPages = 9
   const startAnimation = () => {
     if (player.current) {
       player.current.play(); // Check if player.current is not null before accessing play()
@@ -36,15 +44,15 @@ const ForYou = () => {
     setLoading(false);
   };
 
-  const getCategory = async () => {
+  const getPosts = async () => {
     startAnimation();
     try {
       const [postListResponse] = await Promise.all([
         api.get(`${serverURL + POSTSList + `?action=list&page=${page}`}`),
       ]);
-      setProfileUrl(postListResponse.data.data.productImagePath);
+      setPostUrl(postListResponse.data.data.productImagePath)
       const postsData = postListResponse.data.data.postList;
-      totalPages = postsData.length
+      // totalPages = postsData.length
       setPostList(postsData);
       setIsFetching(false);
       stopAnimation();
@@ -54,7 +62,7 @@ const ForYou = () => {
   };
 
   function isVideo(url) {
-    return /\.(mp4|webm|ogg)$/i.test(url);
+    return url && /\.(mp4|webm|ogg)$/i.test(url);
   }
 
   const handleSlideChange = (swiper) => {
@@ -91,16 +99,57 @@ const ForYou = () => {
   };
 
   const LikeDissliek = async (post_id) => {
+
     try {
-      const likeDislike = await api.postWithToken(`${serverURL + "post-like-dislike "}`, { post_id: post_id });
-      getCategory();
+      if (isLoggedIn) {
+
+        const res = await api.postWithToken(`${serverURL + "post-like-dislike "}`, { post_id: post_id });
+        getPosts();
+        if (res.data.success == true) {
+          setSucessSnackBarOpen(!sucessSnackBarOpen);
+          setMyMessage(res.data.message);
+        } else if (res.data.success === false) {
+          setMyMessage(res.data.message);
+          setWarningSnackBarOpen(!warningSnackBarOpen);
+        }
+      } else {
+        // User is not logged in, redirect to the login page
+        afterLogin(setMyMessage)
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
     } catch (error) {
-      console.log(error);
+      errorResponse(error, setMyMessage)
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  };
+
+  const followUnfollow = async (user_id) => {
+
+    try {
+      if (isLoggedIn) {
+
+        const res = await api.postWithToken(`${serverURL + "user-follow-unfollow"}`, { following: user_id });
+        getPosts();
+        if (res.data.success == true) {
+          setSucessSnackBarOpen(!sucessSnackBarOpen);
+          setMyMessage(res.data.message);
+        } else if (res.data.success === false) {
+          setMyMessage(res.data.message);
+          setWarningSnackBarOpen(!warningSnackBarOpen);
+        }
+      } else {
+        // User is not logged in, redirect to the login page
+        afterLogin(setMyMessage)
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
+    } catch (error) {
+      errorResponse(error, setMyMessage)
+      setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
   useEffect(() => {
-    getCategory();
+    getPosts();
   }, [page]);
 
   return (
@@ -111,7 +160,19 @@ const ForYou = () => {
         loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
           <>
             <div className='for-you'>
+              <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+              />
 
+              <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+              />
               <Swiper
                 direction={"vertical"}
                 slidesPerView={1}
@@ -161,35 +222,41 @@ const ForYou = () => {
                               13K</span> */}
                           </div>
                         </div>
-                        <Button className='follow-btn'>+ Follow ({e.total_followers})</Button>
+                        <Button className='follow-btn' onClick={() => followUnfollow(e.user_id)}  >+ Follow ({e.total_followers})</Button>
                       </div>
-                      {/* <div className='price'>
-                    <Button>Individual Price <br />
-                      ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
-                    <Button>Group Price: <br />
-                      ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
-                  </div> */}
-                      {e.products_obj.length !== 0 &&
 
-                        <div className='reel-items'>
-                          <p>{e.products_obj.length}+ More Products</p>
-                          <div className='items-box p-2 mt-2'>
-                            <img alt='' src={POST_URL + e.products_obj[0]?.product_id._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
-                            <del>$299,43</del>
+                      {e.products_obj.length !== 0 &&
+                        <>
+
+                          <div className='price'>
+                            <Button>Individual Price <br />
+                              ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
+                            <Button>Group Price: <br />
+                              ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
                           </div>
-                        </div>}
+
+                          <div className='reel-items'>
+                            <p>{e.products_obj.length}+ More Products</p>
+                            <div className='items-box p-2 mt-2'>
+                              <img alt='' src={postlUrl + e.products_obj[0]?.product_id._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
+                              <del>${e.products_obj[0]?.product_id?.group_price}</del>
+                            </div>
+                          </div>
+
+                        </>
+                      }
                       <div className='additional-icon'>
                         <div className='additional-box'>
 
                           {e.products_obj.length !== 0 &&
-                            <Button>
+                            <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)}  >
+                              {console.log(e.products_obj[0], "e.products_obj[0]?._id")}
                               <img alt='' src='./img/for_you/doc.png' />
                             </Button>
                           }
-
                           <Button>
                             <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' />
-                            <p>1</p>
+                            <p>{e.total_like}</p>
                           </Button>
                           {/* <Button>
                       <img alt='' src='./img/for_you/dlike.png' />
@@ -204,18 +271,18 @@ const ForYou = () => {
                           <Button>
                             <img alt='' src='./img/for_you/tip.png' />
                           </Button>
-                          <Button>
+                          {/* <Button>
                             <img alt='' src='./img/for_you/share.png' />
                           </Button>
                           <Button>
                             <img alt='' src='./img/for_you/add.png' />
-                          </Button>
+                          </Button> */}
                           <Button>
                             <img alt='' src='./img/for_you/flag.png' />
                           </Button>
                         </div>
                       </div>
-                      <div className='cart-btn-reels'>
+                      {/* <div className='cart-btn-reels'>
                         <Dropdown>
                           <Dropdown.Toggle id="dropdown-basic">
                             <img alt='' src='./img/for_you/cart.png' width="22px" />
@@ -228,7 +295,7 @@ const ForYou = () => {
                             <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
-                      </div>
+                      </div> */}
                     </div>
 
                   </SwiperSlide>

@@ -11,6 +11,7 @@ const ProCard = (props) => {
     const [product_id, setProduct_id] = useState({});
     const [productColorActive, setProductColorActive] = useState()
     const [show, setShow] = useState(false);
+
     const handleClose = () => {
         setProduct_id({})
         setShow(false)
@@ -83,21 +84,14 @@ const ProCard = (props) => {
                     location.pathname === "/categories" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
-                                <Button className={`${productColorActive === "color6" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color6")}>
-                                    <img alt='' src='./img/selling/color6.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color7" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color7")}>
-                                    <img alt='' src='./img/selling/color2.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color8" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color8")}>
-                                    <img alt='' src='./img/selling/color3.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color9" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color9")}>
-                                    <img alt='' src='./img/selling/color4.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color10" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color10")}>
-                                    <img alt='' src='./img/selling/color5.png' width="20px" />
-                                </Button>
+                                 {props.color && props.color.map((e, i) => {
+                                                return ( 
+                                                    <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                    <img alt=''  src={e.imgUrl} width="20px" />
+                                                </Button>
+                                                   )
+                                            })
+                                        }
                             </div>
                         </> : ""
                 }

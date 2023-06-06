@@ -87,7 +87,7 @@ const CategoryList = () => {
             const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
             const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
             // Set the first half and second half of categories
-            setcategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productsCategoryIconPath });
+            setcategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath });
             stopAnimation()
         } catch (error) {
             console.log(error);
@@ -113,7 +113,7 @@ const CategoryList = () => {
                         >
                             {category && category.firstHalf && category.firstHalf.map((e, i) => {
                                 return (
-                                    <div className='item' key={i}>
+                                    <div className='item pointer' key={i}>
                                         <div className='cate-slider-box text-center px-0 px-md-3' key={i}>
                                             <div className='categories-slider-img' >
                                                 <img src={category.productsCategoryIconPath + e.icon} alt='' />

@@ -1,6 +1,5 @@
 import React from 'react'
 import ImageGallery from 'react-image-gallery';
-import { images } from '../helper/constants';
 
 
 const ProductSlider = ({ productImagePath, productList, id, colorProduct }) => {
@@ -10,8 +9,8 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct }) => {
     original: productImagePath + id + "/" + product?.file_name ,
     thumbnail: productImagePath + id + "/" + product.thumbnail,
   }));
+  
   const data = [...images, ...(colorProduct || [])];
-  console.log(data, "data");
 
   return (
     <div className='product-img-slider-cos'>
