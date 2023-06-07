@@ -182,6 +182,7 @@ const LogIn = () => {
                   style={{
                     backgroundColor: '#fff',
                     padding: "0px",
+                    border: "none",
                   }}
                   onSuccess={(response) => {
                     console.log('Login Success!', response);

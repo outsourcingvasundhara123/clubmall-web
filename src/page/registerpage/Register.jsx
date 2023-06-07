@@ -307,6 +307,7 @@ function Register() {
                                 style={{
                                     backgroundColor: '#fff',
                                     padding: "0px",
+                                    border: "none",
                                 }}
                                 onSuccess={(response) => {
                                     console.log('Login Success!', response);
@@ -323,7 +324,7 @@ function Register() {
                 </div>
             </div>
 
-        </Layout >
+        </Layout>
     )
 }
 

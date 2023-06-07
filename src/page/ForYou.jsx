@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Layout from '../layout/Layout'
-import { Button, Dropdown } from 'react-bootstrap'
+import { Button, Dropdown, Form, Modal } from 'react-bootstrap'
 import { POSTSList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
@@ -17,6 +17,7 @@ import { errorResponse, afterLogin, handelProductDetail } from '../helper/consta
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
+import { RiSendPlaneFill } from "react-icons/ri"
 
 const ForYou = () => {
   const isLoggedIn = Is_Login();
@@ -38,6 +39,15 @@ const ForYou = () => {
   const [Mymessage, setMyMessage] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Declare totalPages state variable
   const player = useRef();
+
+  const [showComments, setShowComments] = useState(false);
+  const handleCommentsClose = () => setShowComments(false);
+  const handleCommentsShow = () => setShowComments(true)
+
+  const [showReport, setShowReport] = useState(false);
+  const handleReportClose = () => setShowReport(false);
+  const handleReportShow = () => setShowReport(true)
+
   const startAnimation = () => {
     if (player.current) {
       player.current.play(); // Check if player.current is not null before accessing play()
@@ -163,7 +173,7 @@ const ForYou = () => {
 
   useEffect(() => {
     getPosts();
-  }, [page, isLoggedIn ]);
+  }, [page, isLoggedIn]);
 
   return (
 
@@ -278,7 +288,7 @@ const ForYou = () => {
                       <p>{e.total_like}</p>
                     </Button> */}
 
-                    <Button>
+                    <Button onClick={handleCommentsShow}>
                       <img alt='' src='./img/for_you/msg.png' />
                       <p>{e.total_comment}</p>
                     </Button>
@@ -293,7 +303,7 @@ const ForYou = () => {
                           <Button>
                             <img alt='' src='./img/for_you/add.png' />
                           </Button> */}
-                    <Button>
+                    <Button onClick={handleReportShow}>
                       <img alt='' src='./img/for_you/flag.png' />
                     </Button>
                   </div>
@@ -375,6 +385,72 @@ const ForYou = () => {
                 </div> */}
 
       </div>
+
+      <Modal show={showComments} onHide={handleCommentsClose} centered className='for_you-modal'>
+        <Modal.Body>
+          <div className='comment-modal'>
+            <h5>Comments</h5>
+            {/* <div className='show-all-comments d-flex align-items-center justify-content-center'>
+              <p>No Comments yet</p>
+            </div> */}
+            <div className='show-all-comments'>
+              <ul className='mt-4'>
+                <li>
+                  <div className='d-flex align-items-center gap-3'>
+                    <div className='comment-user'>
+                      <img src='./img/header/user-pic.png' alt='' width="30px" />
+                    </div>
+                    <div className='comments-user-name'>
+                      <h6>Mercedes Amg GT</h6>
+                      <span>it's a super car</span>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div className='d-flex align-items-center gap-3'>
+                    <div className='comment-user'>
+                      <img src='./img/header/user-pic.png' alt='' width="30px" />
+                    </div>
+                    <div className='comments-user-name'>
+                      <h6>Mercedes Amg GT</h6>
+                      <span>it's a super car it's a super car it's a super car it's a super car</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div className='sent-comment d-flex align-items-center gap-3'>
+              <div className='comment-user'>
+                <img src='./img/header/user-pic.png' alt='' width="30px" />
+              </div>
+              <div className='position-relative w-100'>
+                <input type='text' placeholder='Your comment..' />
+                <Button className='sent-comment-icon'><RiSendPlaneFill /></Button>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showReport} onHide={handleReportClose} centered className='for_you-modal'>
+        <Modal.Body>
+          <div className='comment-modal'>
+            <h5>Report</h5>
+            <Form className='mt-3'>
+              <div className='login-input text-start'>
+                <label>Report Type</label>
+                <input placeholder='Content' type='text' />
+              </div>
+              <div className='login-input text-start mt-3'>
+                <label>Description</label>
+                <textarea placeholder='Describe your report here' rows={5} />
+              </div>
+              <Button className='submit-btn mt-3 w-100'>Send</Button>
+            </Form>
+          </div>
+        </Modal.Body>
+      </Modal>
+
     </Layout>
 
   )

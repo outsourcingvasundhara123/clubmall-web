@@ -240,6 +240,10 @@ p {
 .header .user-account h6 {
     font-size: 13px;
     font-weight: 800 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .header .user-account span {
@@ -565,6 +569,10 @@ p {
 .new-in-box6 .new-in-last {
     display: flex;
     flex-wrap: wrap;
+}
+
+.price-text {
+    width: 100px;
 }
 
 @media (max-width: 1700px) {
@@ -1975,6 +1983,21 @@ del {
 
 .product-info .size button.active {
     border: 1px solid #000;
+}
+
+.cart-items-count {
+    width: 18px;
+    height: 18px;
+    background-color: #E02E24;
+    border-radius: 50%;
+    position: absolute;
+    color: #fff;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: -7px;
+    right: -10px;
 }
 
 
@@ -3783,6 +3806,103 @@ input[type='radio'] {
     }
 }
 
+
+.for_you-modal .modal-dialog {
+    max-width: 445px;
+}
+
+.for_you-modal .modal-dialog .modal-content {
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 11px;
+}
+
+.for_you-modal h5 {
+    font-weight: 800;
+    font-size: 25px;
+    color: #223263;
+    text-align: center;
+}
+
+.for_you-modal .show-all-comments {
+    height: 300px;
+    overflow: auto;
+}
+
+.for_you-modal .show-all-comments p {
+    font-weight: 400;
+    font-size: 18px;
+    color: #223263;
+    opacity: 0.4;
+}
+
+.for_you-modal .show-all-comments ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.for_you-modal .show-all-comments ul li:first-child {
+    margin-top: 0;
+}
+
+.for_you-modal .show-all-comments ul li {
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 10px;
+    margin-top: 10px;
+}
+
+.for_you-modal .comment-user {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.for_you-modal .comment-user img {
+    object-fit: cover;
+}
+
+.for_you-modal .comments-user-name h6 {
+    font-weight: 700;
+    font-size: 16px;
+    color: #223263;
+}
+
+.for_you-modal .comments-user-name span {
+    color: #3b3b3bbd;
+    display: block;
+    line-height: 20px;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.for_you-modal .sent-comment input {
+    background: #EEEEEE;
+    border-radius: 5px;
+    width: 100%;
+    height: 40px;
+    border: none;
+    outline: none;
+    padding: 0 42px 0 15px;
+}
+
+.for_you-modal .sent-comment-icon {
+    position: absolute;
+    top: 4px;
+    right: 12px;
+    background-color: transparent !important;
+    border: none;
+    color: #0B1E1B !important;
+    font-size: 20px;
+    padding: 0;
+}
+
 /* For you end */
 
 .welcome-modal .modal-dialog {
@@ -4018,7 +4138,8 @@ input[type='radio'] {
 }
 
 .login-input input,
-.login-input select {
+.login-input select,
+.login-input textarea {
     border: 1px solid #D0D0D0;
     border-radius: 5px;
     padding: 10px 15px;
@@ -4035,7 +4156,8 @@ input[type='radio'] {
     background-position: calc(100% - 12px) 19px, calc(100% - 20px) 14px, 100% 0;
 }
 
-.login-input input::-webkit-input-placeholder {
+.login-input input::-webkit-input-placeholder,
+.login-input textarea::-webkit-input-placeholder {
     font-weight: 500;
     font-size: 14px;
     color: rgb(34, 50, 99, 0.8);

@@ -211,13 +211,13 @@ const Header = () => {
                             <input type='text' placeholder='Search Product' className='w-100' />
                         </div>
                     </div>
-                    <div className='account d-flex align-items-center gap-3'>
+                    <div className='account d-flex align-items-center gap-3 gap-sm-4'>
 
                         {
                             isLoggedIn ?
                                 <>
                                     <Dropdown>
-                                        <Dropdown.Toggle id="dropdown-basic">
+                                        <Dropdown.Toggle id="dropdown-basic" className='p-0'>
                                             <NavLink>
                                                 <Button className='pre-label-btn user-account'>
                                                     <div className='d-flex align-items-center gap-2'>
@@ -318,8 +318,9 @@ const Header = () => {
                                         </Dropdown.Menu>
                                     </Dropdown> */}
 
-                                    <Link to="/cart" className='cart flag-selector'>
+                                    <Link to="/cart" className='cart position-relative flag-selector'>
                                         <img src='./img/header/cart.png' alt='' />
+                                        <span className='cart-items-count'>1</span>
                                     </Link>
                                 </>
                                 : <Link to="/login" className='login-btn'>Login</Link>
