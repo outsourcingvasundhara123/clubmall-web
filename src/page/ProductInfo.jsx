@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect , useContext} from 'react'
 import Layout from '../layout/Layout'
 import { Button, Col, Modal, NavLink, Offcanvas, Row } from 'react-bootstrap'
 import {
@@ -26,8 +26,10 @@ import { errorResponse, afterLogin, handelCategorydata } from '../helper/constan
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
-
+import { CartContext } from '../context/CartContext'
+// import { useContext } from 'react'
 const ProductInfo = () => {
+    const { setCart , cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -147,6 +149,7 @@ const ProductInfo = () => {
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
 
                     if (res.data.success == true) {
+                        setCart(cart + 1)
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
                         setProductColorActive(" ")

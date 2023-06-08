@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect , useContext } from 'react'
 import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
@@ -18,8 +18,10 @@ import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants';
 import InstallApp from '../components/InstallApp';
+import { CartContext } from '../context/CartContext'
 
 const AddCartModal = (props) => {
+    const { setCart , cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -117,6 +119,7 @@ const AddCartModal = (props) => {
                     if (res.data.success == true) {
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
+                        setCart(cart + 1)
                         setProductColorActive(" ")
                         setSizeActive(" ")
                         setTimeout(() => {

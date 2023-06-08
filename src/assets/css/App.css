@@ -1971,7 +1971,7 @@ del {
     border: 1px solid #000;
 }
 
-.product-info .qty select {
+.qty select {
     border: 0.6px solid #C5C5C5;
     border-radius: 3px;
     width: 100px;
@@ -2309,25 +2309,29 @@ del {
     border-radius: 16px;
 }
 
-.cart-modal .count-product {
+.count-product {
     border: 0.6px solid #C5C5C5;
     border-radius: 3px;
     display: flex;
 }
 
-.cart-modal .count-product button,
-.cart-modal .count-product span {
+.count-product button,
+.count-product span {
     color: #0f1b3f !important;
     width: 30px;
     height: 30px;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    background-color: transparent !important;
+    border: none;
 }
 
-.cart-modal .count-product span {
+.count-product span {
     border-left: 1px solid #C5C5C5;
     border-right: 1px solid #C5C5C5;
+    margin: 0px !important;
 }
 
 .cart-modal .show-more {

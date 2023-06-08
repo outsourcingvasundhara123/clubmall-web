@@ -37,7 +37,7 @@ const Categories = () => {
             const [postListResponse] = await Promise.all([
                 api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
             ]);
-            const postsData = postListResponse.data.data.data;
+            const postsData = postListResponse.data.data;
             setPostList(postsData);
             stopAnimation()
         } catch (error) {
@@ -57,11 +57,11 @@ const Categories = () => {
 
                         <div className='categories'>
                             <div className='container-cos'>
-                                <div className='categories-slider'>
+                                {/* <div className='categories-slider'>
                                     <SliderTwo data={categoriesSliderData} />
-                                </div>
+                                </div> */}
 
-                                <div className='filter-product mt-5'>
+                                <div className='filter-product pt-4'>
                                     <Row>
                                         <Col xxl={3} xl={4} lg={5} sm={12}>
                                             <div className='fill-title'>
@@ -387,7 +387,7 @@ const Categories = () => {
                                 </div>
                                 <div className='mb-0 explore-main'>
                                 {
-                                postList?.map((e) => {
+                                postList.productListArrObj?.map((e) => {
                                     return (
                                             <ProCard
                                                 id={e._id}

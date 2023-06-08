@@ -305,7 +305,6 @@ const ForYou = () => {
                   </>
                 }
 
-
                 <div className='additional-icon'>
                   <div className='additional-box'>
 

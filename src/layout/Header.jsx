@@ -1,4 +1,4 @@
-import React, { useRef, Fragment, useState, useEffect } from 'react'
+import React, { useRef, Fragment, useState, useEffect, useContext } from 'react'
 import { Accordion, Button, Card, Col, Dropdown, Modal, NavLink, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { MdOutlineKeyboardArrowDown, MdOutlineClose } from "react-icons/md"
@@ -8,34 +8,19 @@ import { product_data } from '../helper/constants'
 import { Is_Login } from '../helper/IsLogin'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
+import { PRODUCTCATEGORY, ADDTOCART } from "../helper/endpoints";
 import Loader from '../components/Loader';
-import { handelCategorydata } from '../helper/constants';
+import { handelCategorydata, errorResponse } from '../helper/constants';
+import { CartContext } from '../context/CartContext'
+import SucessSnackBar from "../components/SnackBar";
+import ErrorSnackBar from "../components/SnackBar";
+import { logout } from '../helper/auth'
+import { useNavigate } from 'react-router-dom'
 
-const countryData = [
-    {
-        id: "india",
-        name: "india",
-        flag: "./img/header/ind.svg"
-    },
-    {
-        id: "Canada",
-        name: "Canada",
-        flag: "./img/header/knd.svg"
-    },
-    {
-        id: "NewZealand",
-        name: "New Zealand",
-        flag: "./img/header/nz.svg"
-    },
-    {
-        id: "UnitedStates",
-        name: "United States",
-        flag: "./img/header/us.svg"
-    },
-]
 
 const Header = () => {
+    const navigate = useNavigate();
+    const { cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -43,7 +28,11 @@ const Header = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [category, setcategory] = useState([]);
+    const [catrecount, setcarteCount] = useState(0);
     const UserName = sessionStorage.getItem("name") ? sessionStorage.getItem("name") : "undefail"
+    const [Mymessage, setMyMessage] = useState("");
+    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
 
 
     const serverURL = getServerURL();
@@ -74,15 +63,22 @@ const Header = () => {
     const getCategory = async () => {
         startAnimation()
         try {
-            const [categoryResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+            const [categoryResponse, cartListresponse] = await Promise.all([
+                api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" }),
+                api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
+
             ]);
+            console.log(categoryResponse,"category");
             const categoryData = categoryResponse.data.data;
+            const cartCountData = cartListresponse.data.data.list
+            setcarteCount(cartCountData?.length)
+            setCart(cartCountData?.length)
             // Set the first half and second half of categories
             setcategory(categoryData);
             stopAnimation()
         } catch (error) {
             console.log(error);
+            errorResponse(error, setMyMessage);
         }
     };
 
@@ -90,7 +86,10 @@ const Header = () => {
         getCategory();
     }, []);
 
-    //   console.log(category,"category");
+    // // Update the cart count whenever the "cartCountData" changes
+    // useEffect(() => {
+    //     setcarteCount(catrecount);
+    // }, [catrecount]);
 
     function CustomToggle({ children, eventKey }) {
         const decoratedOnClick = useAccordionButton(eventKey, () =>
@@ -108,9 +107,46 @@ const Header = () => {
         );
     }
 
+    const handleLogout = () => {
+        try {
+            api.postWithToken(`${serverURL}logout`)
+                .then((res) => {
+                    if (res.data.success === true) {
+
+                        console.log(res.data, "res.data");
+                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                        setMyMessage(res.data.message);
+                        logout();
+                        setTimeout(() => {
+                            navigate("/login");
+                        }, 1000);
+                    } else if (res.data.success === false) {
+                        setMyMessage(res.data.message);
+                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                    }
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
 
     return (
         <Fragment>
+
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
             <div className='header-main'>
                 <div className='header d-flex align-items-center gap-5 position-relative'>
                     <div className='logo'>
@@ -141,9 +177,11 @@ const Header = () => {
                             </li>
                             <li>
                                 <Link to="/categories" className={`${active === "/categories" ? "active" : ""} `} onClick={() => setActive("/categories")}>Categories <MdOutlineKeyboardArrowDown /></Link>
-                                <div className='mega-menu'>
-                                    <Row>
                                         {/* names of the main categorys */}
+                              {isLoggedIn && <div className='mega-menu'>
+                                    <Row>
+                                       
+                                       
                                         <Col lg={3} md={6}>
                                             <div className='border-right-cos pe-4 h-100'>
                                                 <ul>
@@ -179,7 +217,7 @@ const Header = () => {
                                             </div>
                                         </Col>
                                     </Row>
-                                </div>
+                                </div> }  
                             </li>
                         </ul>
                     </div>
@@ -235,7 +273,7 @@ const Header = () => {
                                             <div className='drop-items'>
                                                 <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
                                                     <img src='./img/header/user-pic.png' alt='' />
-                                                    <h6>Hello, Ali....</h6>
+                                                    <h6>Hello, {UserName}</h6>
                                                 </div>
                                             </div>
                                             <Dropdown.Divider />
@@ -282,7 +320,7 @@ const Header = () => {
                                                 <img src='./img/header/switch.png' alt='' />
                                                 Switch accounts
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1">
+                                            <Dropdown.Item href="#/action-1" onClick={handleLogout} >
                                                 <img src='./img/header/logout.png' alt='' />
                                                 Sign out
                                             </Dropdown.Item>
@@ -325,13 +363,11 @@ const Header = () => {
 
                                     <Link to="/cart" className='cart position-relative flag-selector'>
                                         <img src='./img/header/cart.png' alt='' width="25px" />
-                                        <span className='cart-items-count'>1</span>
+                                        <span className='cart-items-count'>{cart && cart}</span>
                                     </Link>
                                 </>
                                 : <Link to="/login" className='login-btn'>Login</Link>
                         }
-
-
                         <Button className='toggle ' onClick={handleShow}>
                             <HiOutlineMenuAlt1 />
                         </Button>
