@@ -218,19 +218,19 @@ p {
     white-space: nowrap;
 }
 
-.header .search-filed {
+.search-filed {
     border: 1px solid #EBF0FF;
     border-radius: 5px;
     padding: 10px 15px;
     flex: 1;
 }
 
-.header .search-filed input {
+.search-filed input {
     border: none;
     outline: none;
 }
 
-.header .search-filed input::-webkit-input-placeholder {
+.search-filed input::-webkit-input-placeholder {
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 0.5px;
@@ -4486,3 +4486,51 @@ input[type='radio'] {
     font-size: 20px;
     margin-top: -4px;
 }
+
+
+/* wishlist start */
+.wishlist .title-wishlist {
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.wishlist .title-wishlist h4 {
+    font-weight: 800;
+    font-size: 20px;
+    color: #223263;
+}
+
+.wishlist .wishlist-sell span {
+    font-weight: 500;
+    font-size: 16px;
+    color: #223263;
+    display: block;
+}
+
+.wishlist .share-del-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ffffffbe;
+    padding: 5px 8px;
+    border-radius: 5px;
+
+}
+
+.wishlist .share-del-btn button {
+    background-color: transparent !important;
+    border: none;
+    padding: 0;
+    font-size: 20px;
+    height: fit-content;
+    display: flex;
+}
+
+.wishlist .share-del-btn button:first-child {
+    color: #223263 !important;
+}
+
+.wishlist .share-del-btn button:last-child {
+    color: #E02E24 !important;
+}
+
+/* wishlist end */

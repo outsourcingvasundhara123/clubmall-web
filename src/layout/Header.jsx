@@ -318,8 +318,13 @@ const Header = () => {
                                         </Dropdown.Menu>
                                     </Dropdown> */}
 
+                                    <Link to="/wishlist" className='cart position-relative flag-selector'>
+                                        <img src='./img/header/wishlist.png' alt='' width="25px" />
+                                        <span className='cart-items-count'>1</span>
+                                    </Link>
+
                                     <Link to="/cart" className='cart position-relative flag-selector'>
-                                        <img src='./img/header/cart.png' alt='' />
+                                        <img src='./img/header/cart.png' alt='' width="25px" />
                                         <span className='cart-items-count'>1</span>
                                     </Link>
                                 </>
