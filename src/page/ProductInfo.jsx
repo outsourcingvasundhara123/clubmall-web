@@ -22,7 +22,7 @@ import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse,afterLogin,handelCategorydata } from '../helper/constants'
+import { errorResponse, afterLogin, handelCategorydata } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
@@ -49,6 +49,7 @@ const ProductInfo = () => {
     const [trendingProductList, setTrendingProductList] = useState([]);
     const [sizeActive, setSizeActive] = useState("")
     const [productColorActive, setProductColorActive] = useState()
+    const [colorProduct, setColorProduct] = useState()
     const product_id = localStorage.getItem("selectedProductId") ? localStorage.getItem("selectedProductId") : "646b6db53c9cae7c199c7740"
 
     const startAnimation = () => {
@@ -72,6 +73,13 @@ const ProductInfo = () => {
                 setProduct(productData);
                 setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
                 stopAnimation()
+                const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
+                const mergedImages = imageUrls && imageUrls?.map(url => ({
+                    thumbnail: url,
+                    original: url,
+                }));
+
+                setColorProduct(mergedImages)
             }
 
         } catch (error) {
@@ -221,7 +229,7 @@ const ProductInfo = () => {
                                 <Row className='mt-4'>
                                     <Col lg={6} md={12}>
                                         <div>
-                                            <ProductSlider productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
+                                            <ProductSlider colorProduct={colorProduct} productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
                                             <div className='d-flex align-items-center gap-3'>
