@@ -23,7 +23,6 @@ const LogIn = () => {
     password: "",
     login_type: "4",
     terms_and_condition: "",
-
   };
 
   const [showPass, setShowPass] = useState(true)
@@ -124,7 +123,7 @@ const LogIn = () => {
             <Form className='mt-4' onSubmit={handleSubmit} >
               <div className='login-input text-start'>
                 <label>Email Address</label>
-                <input placeholder='Enater your email'
+                <input placeholder='Enter your email'
 
                   name="email"
                   onChange={handleChange}
@@ -136,7 +135,7 @@ const LogIn = () => {
               <div className='login-input text-start mt-3'>
                 <label>Password</label>
                 <div className='position-relative'>
-                  <input placeholder='Enater your Password'
+                  <input placeholder='Enter your Password'
                     onChange={handleChange} name='password' value={values.password}
 
                     type={showPass ? "password" : "text"} />
@@ -171,13 +170,13 @@ const LogIn = () => {
               </div>
               <div className='d-flex align-items-center justify-content-center gap-4 mt-3'>
                 <div className='google-login'>
-                  <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+                  {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
                 </div>
                 {/* <NavLink>
                                 <img src='./img/login/google.png' alt='' />
                             </NavLink> */}
                 {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
-                <FacebookLogin
+                {/* <FacebookLogin
                   appId="1088597931155576"
                   style={{
                     backgroundColor: '#fff',
@@ -193,7 +192,7 @@ const LogIn = () => {
                   onProfileSuccess={(response) => {
                     console.log('Get Profile Success!', response);
                   }}
-                ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
+                ><img src='./img/login/facebook.png' alt='' /></FacebookLogin> */}
               </div>
             </div>
           </div>
@@ -212,7 +211,7 @@ const LogIn = () => {
             </div>
             <Form onSubmit={handleSubmit}>
               {
-                otpShow ? <div className='otp d-flex align-items-center justify-content-center mt-4 mb-1 gap-3 w-100'>
+                otpShow ? <div className='otp d-flex align-items-center justify-content-center flex-wrap mt-4 mb-1 gap-3 w-100'>
                   <input type='number' max={1} />
                   <input type='number' max={1} />
                   <input type='number' max={1} />

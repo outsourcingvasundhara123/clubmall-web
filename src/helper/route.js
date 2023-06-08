@@ -9,6 +9,7 @@ import Home from '../page/Home';
 import ForYou from '../page/ForYou';
 import LogIn from '../page/loginpage/LogIn';
 import Register from '../page/registerpage/Register';
+import Wishlist from '../page/Wishlist';
 
 
 export default [
@@ -64,5 +65,9 @@ export default [
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/wishlist",
+    element: <Wishlist />,
   },
 ];

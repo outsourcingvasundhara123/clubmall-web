@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect , useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button, Col, NavLink, Row } from 'react-bootstrap'
 import {
@@ -20,8 +20,13 @@ import { errorResponse } from '../helper/constants'
 import { loadStripe } from '@stripe/stripe-js';
 import StripeCheckout from 'react-stripe-checkout';
 import { AiFillCloseCircle } from 'react-icons/ai'
+import { handelCategorydata } from '../helper/constants'
+import { MdRemove, MdAdd } from 'react-icons/md'
+import { CartContext } from '../context/CartContext'
 
 const Cart = () => {
+
+    const { setCart , cart } = useContext(CartContext);
 
     // const stripePromise = loadStripe('pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr');
 
@@ -47,6 +52,7 @@ const Cart = () => {
     const [Mymessage, setMyMessage] = useState("");
     const [couponId, setCouponId] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [count, setCount] = useState(0);
     const player = useRef();
     const startAnimation = () => {
         if (player.current) {
@@ -97,7 +103,7 @@ const Cart = () => {
         // }
     };
 
-    const removeCartData = async (id, action, qty) => {
+    const removeCartData = async (id, action,qty) => {
         try {
             var data = {
                 action: action,
@@ -110,6 +116,7 @@ const Cart = () => {
 
             if (res.data.success == true) {
                 getCartData()
+                setCart(cart - 1)
                 setMyMessage(res.data.message);
                 setSucessSnackBarOpen(!sucessSnackBarOpen);
             } else {
@@ -121,7 +128,7 @@ const Cart = () => {
         }
     };
 
-  const getCartData = async () => {
+    const getCartData = async () => {
         startAnimation()
         try {
             const [poroductResponse, flashProduct] = await Promise.all([
@@ -134,7 +141,6 @@ const Cart = () => {
 
             const poroductData = poroductResponse.data.data;
             const flashProductproductListData = flashProduct.data.data;
-            console.log(poroductData, "poroductData");
             let ids = poroductData.list.map((e) => e._id)
             setCouponId(ids)
             setProductList(poroductData);
@@ -148,16 +154,14 @@ const Cart = () => {
     };
 
 
-    const handleCoupon = async (action,coupon) => {
+    const handleCoupon = async (action, coupon) => {
         try {
             var data = {
                 action: action,
-                cart_id: couponId  ,
-                coupon_title: coupon ? coupon  : couponCode
+                cart_id: couponId,
+                coupon_title: coupon ? coupon : couponCode
             }
 
-            console.log(data,"data");
-            
             const res = await api.postWithToken(`${serverURL + "coupon-code-manage"}`, data)
 
             if (res.data.success == true) {
@@ -165,12 +169,12 @@ const Cart = () => {
                 setMyMessage(res.data.message);
                 setSucessSnackBarOpen(!sucessSnackBarOpen);
                 setCouponCode("")
-            } else if(res.data.success == false) {
+            } else if (res.data.success == false) {
                 setMyMessage(res.data.message);
                 setWarningSnackBarOpen(!warningSnackBarOpen);
             }
         } catch (error) {
-            console.log(error,"error");
+            console.log(error, "error");
         }
     };
 
@@ -273,14 +277,13 @@ const Cart = () => {
                                                                                 }))
                                                                             }
                                                                         /> */}
-                                                                        <img src={e.product_images} alt='' style={{ marginLeft: "30px" }} width="150px" />
+                                                                        <img src={e.product_images} alt=''  width="150px" />
                                                                     </div>
                                                                     <div className='cart-items-def w-100'>
                                                                         <h5>{e.product_name}</h5>
-                                                                        <span className='d-flex align-items-center'>By <img src='./img/product_def/uppack.png' alt='' /> {e.seller_name}</span>
+                                                                        <span className='d-flex align-items-center'>By {e.seller_name}</span>
                                                                         <Button className='select-items-color mt-2 my-3'>
                                                                             {e.sku_attributes?.color[0]?.name}
-
                                                                             <MdOutlineKeyboardArrowRight />
                                                                         </Button>
                                                                         <p>Hot Deal</p>
@@ -293,9 +296,9 @@ const Cart = () => {
                                                                             </div>
 
                                                                             <div className='product-info d-flex align-items-center gap-3 marg-cos'>
-                                                                                <div className='qty d-flex align-items-center gap-2'>
-                                                                                    <h5>Qty:</h5>
-                                                                                    <select value={e.qty} onChange={(d) => removeCartData(e._id, "update-to-cart-qty", d.target.value)} >
+                                                                                {/* <div className='qty d-flex align-items-center gap-2'> */}
+                                                                                {/* <h5>Qty:</h5> */}
+                                                                                {/* <select value={e.qty} onChange={(d) => removeCartData(e._id, "update-to-cart-qty", d.target.value)} >
                                                                                         <option value="1">
                                                                                             1
                                                                                         </option>
@@ -309,9 +312,17 @@ const Cart = () => {
                                                                                             4
                                                                                         </option>
 
-                                                                                    </select>
+                                                                                    </select> */}
 
+                                                                                {/* </div> */}
+                                                                                <div className='qty d-flex align-items-center gap-3'>
+                                                                                <h5>Qty:</h5>
+                                                                                <div className='count-product'>
+                                                                                    <Button onClick ={(d) => (removeCartData(e._id, "update-to-cart-qty",e.qty - 1)) } > <MdRemove /></Button>
+                                                                                    <span>{e.qty}</span>
+                                                                                    <Button onClick ={(d) => (removeCartData(e._id, "update-to-cart-qty",e.qty + 1))}><MdAdd /></Button>
                                                                                 </div>
+                                                                            </div>
                                                                                 <Button onClick={() => removeCartData(e._id, "remove-to-cart-product")} className='delete-btn'>
                                                                                     <img src='./img/cart/delete.png' alt='' />
                                                                                 </Button>
@@ -412,13 +423,12 @@ const Cart = () => {
                                                                 <div>
                                                                     <div className='coupne-code d-flex align-items-center gap-2 mt-2'>
                                                                         <span>{productList.cartDiscount.coupon_id?.coupon_title}</span>
-                                                                        <Button  onClick={() => handleCoupon("remove",productList?.cartDiscount.coupon_id?.coupon_title)} ><AiFillCloseCircle /></Button>
+                                                                        <Button onClick={() => handleCoupon("remove", productList?.cartDiscount.coupon_id?.coupon_title)} ><AiFillCloseCircle /></Button>
                                                                     </div>
                                                                     <p>{productList.cartDiscount?.coupon_id?.coupon_description}</p>
                                                                 </div> :
                                                                 <div className='d-flex align-items-center gap-2'>
                                                                     <input className='mt-0' placeholder='Enter coupon code ' value={couponCode} onChange={(e) => setCouponCode(e.target.value)} type='text' />
-                                                                    {/* {console.log(productList,"productList")} */}
                                                                     <Button className='checkout px-4 '
                                                                         onClick={() => handleCoupon("apply")}
                                                                         style={{ width: "auto", whiteSpace: "nowrap" }} >Apply</Button>
@@ -501,7 +511,7 @@ token={handleCheckout}
                                             })
                                         }
                                         <div className='w-100 d-flex justify-content-center'>
-                                            <Button className='shop-btn rotate-img'>View More <MdKeyboardDoubleArrowRight /></Button>
+                                            <Button className='shop-btn rotate-img' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
                                     </div>
                                 </div>
@@ -511,8 +521,9 @@ token={handleCheckout}
 
                         </div>
                     </>
-                )}
-        </Layout>
+                )
+            }
+        </Layout >
     )
 }
 
