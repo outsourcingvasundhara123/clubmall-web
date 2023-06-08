@@ -438,6 +438,10 @@ p {
     margin: 0 auto;
 }
 
+.product_image {
+    width: 100px;
+}
+
 .product_image h6 {
     font-weight: 600;
     font-size: 15px;
@@ -4459,13 +4463,13 @@ input[type='radio'] {
 
 /* review end */
 
-.empty{
+.empty {
     color: #22326392;
     font-size: 18px;
     font-weight: 500;
 }
 
-.coupne-code{
+.coupne-code {
     background-color: #009806;
     padding: 5px 15px;
     font-size: 15px !important;
@@ -4474,7 +4478,7 @@ input[type='radio'] {
     width: fit-content;
 }
 
-.coupne-code button{
+.coupne-code button {
     background-color: transparent !important;
     padding: 0;
     border: none;

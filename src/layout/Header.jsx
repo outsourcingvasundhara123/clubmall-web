@@ -165,7 +165,7 @@ const Header = () => {
                                             <div className='mega-product'>
                                                 {category && category?.productsCategory?.map((e, i) => {
                                                     return (
-                                                        <div className='product_image' key={i}>
+                                                        <div className='product_image pointer' key={i}>
 
                                                             <div className='product-box'>
                                                                 <img width="100%" src={category.productImagePath + e.icon} alt='' />

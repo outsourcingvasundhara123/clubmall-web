@@ -24,9 +24,9 @@ const ProCard = (props) => {
     useEffect(() => {
         // for not set the state after values come 
         if (props?.color && props.color.length > 0) {
-          setProductColorActive(props.color[0]?.name);
+            setProductColorActive(props.color[0]?.name);
         }
-      }, []);
+    }, []);
 
     return (
         <>
@@ -36,7 +36,7 @@ const ProCard = (props) => {
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
                     </div>
-                    <div className='py-3 px-3' onClick={() => handelProductDetail(props.id)} >
+                    <div className='py-3 px-3'>
                         <h5>{props.name}</h5>
                         <div className='d-flex align-items-center justify-content-between'>
                             <div>
@@ -53,15 +53,15 @@ const ProCard = (props) => {
                     location.pathname === "/trending" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
-                            
-                                        {props.color && props.color.map((e, i) => {
-                                                return ( 
-                                                    <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
-                                                    <img alt=''  src={e.imgUrl} width="20px" />
-                                                </Button>
-                                                   )
-                                            })
-                                        }
+
+                                {props.color && props.color.map((e, i) => {
+                                    return (
+                                        <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                            <img alt='' src={e.imgUrl} width="20px" />
+                                        </Button>
+                                    )
+                                })
+                                }
 
                                 {/* <Button className={`${productColorActive === "color2" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color2")}>
                                     <img alt='' src='./img/selling/color2.png' width="20px" />
@@ -76,7 +76,7 @@ const ProCard = (props) => {
                                     <img alt='' src='./img/selling/color5.png' width="20px" />
                                 </Button>
                          */}
-                        
+
                             </div>
                         </> : ""
                 }
@@ -84,14 +84,14 @@ const ProCard = (props) => {
                     location.pathname === "/categories" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
-                                 {props.color && props.color.map((e, i) => {
-                                                return ( 
-                                                    <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
-                                                    <img alt=''  src={e.imgUrl} width="20px" />
-                                                </Button>
-                                                   )
-                                            })
-                                        }
+                                {props.color && props.color.map((e, i) => {
+                                    return (
+                                        <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                            <img alt='' src={e.imgUrl} width="20px" />
+                                        </Button>
+                                    )
+                                })
+                                }
                             </div>
                         </> : ""
                 }

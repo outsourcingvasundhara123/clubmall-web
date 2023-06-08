@@ -172,23 +172,23 @@ const ForYou = () => {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setMyMessage(res.data.message);
           // Find the index of the post within the postList array
- // Find the index of the post within the postList array
- const postIndex = postList.findIndex((post) => post._id === post_id );
- if (postIndex !== -1) {
-   // Toggle the like status and like count for the specific post
-   const updatedPost = {
-    ...postList[postIndex],
-    is_like: postList[postIndex].is_like === 0 ? 1 : 0,
-    total_like: postList[postIndex].is_like === 0 ? postList[postIndex].total_like + 1 : postList[postIndex].total_like - 1,
-  };
-   // Create a new array with the updated post
-   const updatedPostList = [...postList];
-   updatedPostList[postIndex] = updatedPost;
+          // Find the index of the post within the postList array
+          const postIndex = postList.findIndex((post) => post._id === post_id);
+          if (postIndex !== -1) {
+            // Toggle the like status and like count for the specific post
+            const updatedPost = {
+              ...postList[postIndex],
+              is_like: postList[postIndex].is_like === 0 ? 1 : 0,
+              total_like: postList[postIndex].is_like === 0 ? postList[postIndex].total_like + 1 : postList[postIndex].total_like - 1,
+            };
+            // Create a new array with the updated post
+            const updatedPostList = [...postList];
+            updatedPostList[postIndex] = updatedPost;
 
-   // Update the postList state with the updated data
-   setPostList(updatedPostList);
-          // getPosts(); // Move this line outside the if-else block
-        }
+            // Update the postList state with the updated data
+            setPostList(updatedPostList);
+            // getPosts(); // Move this line outside the if-else block
+          }
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -247,7 +247,7 @@ const ForYou = () => {
         >
           {postList && postList.map((e, i) => (
             <SwiperSlide key={i}>
-              <div className='reels-box position-relative'>
+              <div className='reels-box position-relative pointer'>
                 {e.post_video_link && isVideo(e.post_video_link) ? (
                   <ReactPlayer
                     url={e.post_video_link}
