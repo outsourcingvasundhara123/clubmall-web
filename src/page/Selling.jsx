@@ -133,7 +133,7 @@ const Selling = () => {
                                     {
                                         category.productsCategory && category.productsCategory?.slice(0, 5).map((e) => {
                                             return (
-                                                <div className='cate-box text-center'>
+                                                <div className='cate-box text-center pointer'>
                                                     <img src={category.productsCategoryIconPath + e.icon} alt='' width="100%" />
                                                     <h5 className='mt-4'>{e.name}</h5>
                                                 </div>

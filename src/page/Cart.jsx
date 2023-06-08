@@ -10,14 +10,20 @@ import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { handelProductDetail } from '../helper/constants';
-import { ADDTOCART , PRODUCTList} from "../helper/endpoints";
+import { ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
+import { errorResponse } from '../helper/constants'
+import { loadStripe } from '@stripe/stripe-js';
+import StripeCheckout from 'react-stripe-checkout';
+import { AiFillCloseCircle } from 'react-icons/ai'
 
 const Cart = () => {
+
+    // const stripePromise = loadStripe('pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr');
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -26,6 +32,7 @@ const Cart = () => {
     });
 
     const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
 
     const [productList, setProductList] = useState([]);
     const [fleshProductList, setFleshProductList] = useState([]);
@@ -36,7 +43,9 @@ const Cart = () => {
     const [show, setShow] = useState(false);
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [couponCode, setCouponCode] = useState("");
     const [Mymessage, setMyMessage] = useState("");
+    const [couponId, setCouponId] = useState([]);
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const startAnimation = () => {
@@ -69,33 +78,53 @@ const Cart = () => {
         setShow(true);
     }
 
-    const removeCartData = async (id) => {
+    const handleCheckout = (token) => {
+
+        // console.log(token, "stripe");
+        setIsOpen(!isOpen);
+
+        // const response = await fetch('YOUR_SERVER_ENDPOINT', {
+        //   method: 'POST',
+        //   // Include any necessary data for the server-side checkout process
+        // });
+        // const session = await response.json();
+        // const result = await stripe.redirectToCheckout({
+        //   sessionId: session.id,
+        // });
+        // if (result.error) {
+        //   // Handle any errors that occur during redirection to Stripe Checkout
+        //   console.error(result.error);
+        // }
+    };
+
+    const removeCartData = async (id, action, qty) => {
         try {
-
-
-            const res = await api.postWithToken(`${serverURL + ADDTOCART}`,
-                {
-                    action: "remove-to-cart-product",
-                    _id: id
-                }
-            )
+            var data = {
+                action: action,
+                _id: id
+            }
+            if (action !== "remove-to-cart-product") {
+                data.qty = qty
+            }
+            const res = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
 
             if (res.data.success == true) {
                 getCartData()
-                setSucessSnackBarOpen(!sucessSnackBarOpen);
                 setMyMessage(res.data.message);
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
+            } else {
+                setMyMessage(res.data.message);
+                setWarningSnackBarOpen(!warningSnackBarOpen);
             }
         } catch (error) {
             console.log(error);
         }
     };
 
-
-
-    const getCartData = async () => {
+  const getCartData = async () => {
         startAnimation()
         try {
-            const [poroductResponse,flashProduct] = await Promise.all([
+            const [poroductResponse, flashProduct] = await Promise.all([
                 api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
                 api.post(`${serverURL + PRODUCTList}`, {
                     product_list_type: "recommended-products",
@@ -105,11 +134,43 @@ const Cart = () => {
 
             const poroductData = poroductResponse.data.data;
             const flashProductproductListData = flashProduct.data.data;
+            console.log(poroductData, "poroductData");
+            let ids = poroductData.list.map((e) => e._id)
+            setCouponId(ids)
             setProductList(poroductData);
             setFleshProductList(flashProductproductListData)
             stopAnimation()
         } catch (error) {
             console.log(error);
+            errorResponse(error, setMyMessage);
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+        }
+    };
+
+
+    const handleCoupon = async (action,coupon) => {
+        try {
+            var data = {
+                action: action,
+                cart_id: couponId  ,
+                coupon_title: coupon ? coupon  : couponCode
+            }
+
+            console.log(data,"data");
+            
+            const res = await api.postWithToken(`${serverURL + "coupon-code-manage"}`, data)
+
+            if (res.data.success == true) {
+                getCartData()
+                setMyMessage(res.data.message);
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
+                setCouponCode("")
+            } else if(res.data.success == false) {
+                setMyMessage(res.data.message);
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+            }
+        } catch (error) {
+            console.log(error,"error");
         }
     };
 
@@ -147,11 +208,23 @@ const Cart = () => {
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
                                     <NavLink className='active'>cart</NavLink>
+
                                 </div>
 
                                 <Row className='mt-3'>
                                     <Col lg={7} md={12}>
+                                        {productList.list.length <= 0 &&
+                                            <div className='d-flex align-items-center justify-content-center h-100'>
+                                                <span className='empty'> the cart is empty  </span>
+                                            </div>
+                                        }
                                         <div className='cart-main-list'>
+
+                                            <div>
+
+
+
+                                            </div>
 
                                             {/* <div className='product-info'>
                                                 <div className='order-time d-flex align-items-center justify-content-between'>
@@ -206,11 +279,11 @@ const Cart = () => {
                                                                         <h5>{e.product_name}</h5>
                                                                         <span className='d-flex align-items-center'>By <img src='./img/product_def/uppack.png' alt='' /> {e.seller_name}</span>
                                                                         <Button className='select-items-color mt-2 my-3'>
-                                                                        {e.sku_attributes?.color[0]?.name}
-                                                                            
+                                                                            {e.sku_attributes?.color[0]?.name}
+
                                                                             <MdOutlineKeyboardArrowRight />
                                                                         </Button>
-                                                                        <p>Hot Deal  I   Ends in 04:23:58:15</p>
+                                                                        <p>Hot Deal</p>
 
                                                                         <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                                             <div className='items-per d-flex align-items-center gap-2 mt-2'>
@@ -222,14 +295,24 @@ const Cart = () => {
                                                                             <div className='product-info d-flex align-items-center gap-3 marg-cos'>
                                                                                 <div className='qty d-flex align-items-center gap-2'>
                                                                                     <h5>Qty:</h5>
-                                                                                    <select  >
-                                                                                        <option>1</option>
-                                                                                        <option>2</option>
-                                                                                        <option>3</option>
-                                                                                        <option>4</option>
+                                                                                    <select value={e.qty} onChange={(d) => removeCartData(e._id, "update-to-cart-qty", d.target.value)} >
+                                                                                        <option value="1">
+                                                                                            1
+                                                                                        </option>
+                                                                                        <option value="2">
+                                                                                            2
+                                                                                        </option>
+                                                                                        <option value="3">
+                                                                                            3
+                                                                                        </option>
+                                                                                        <option value="4">
+                                                                                            4
+                                                                                        </option>
+
                                                                                     </select>
+
                                                                                 </div>
-                                                                                <Button onClick={() => removeCartData(e._id)} className='delete-btn'>
+                                                                                <Button onClick={() => removeCartData(e._id, "remove-to-cart-product")} className='delete-btn'>
                                                                                     <img src='./img/cart/delete.png' alt='' />
                                                                                 </Button>
                                                                             </div>
@@ -291,7 +374,7 @@ const Cart = () => {
                                                 <div className='total-list mt-3'>
                                                     <div className='d-flex align-items-center justify-content-between'>
                                                         <label>Item(s) total: </label>
-                                                        <del>${productList.cartAmountDetails?.total_amount}</del>
+                                                        <span>${productList.cartAmountDetails?.total_amount}</span>
                                                     </div>
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>Item(s) discount: </label>
@@ -301,7 +384,7 @@ const Cart = () => {
                                                         <label>Item(s) sales tax: </label>
                                                         <span>${productList.cartAmountDetails?.sales_tax}</span>
                                                     </div>
-                                                    
+
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>Item(s) shipping charge: </label>
                                                         <span>${productList.cartAmountDetails?.shipping_charge}</span>
@@ -320,6 +403,33 @@ const Cart = () => {
                                                 </div>
 
                                                 <div className='checkout-main mt-3'>
+
+                                                    <div className='mb-3'>
+                                                        <div className='login-input text-start'>
+                                                            <label>Coupon Code</label>
+
+                                                            {productList.cartDiscount?.coupon_id?.coupon_title ?
+                                                                <div>
+                                                                    <div className='coupne-code d-flex align-items-center gap-2 mt-2'>
+                                                                        <span>{productList.cartDiscount.coupon_id?.coupon_title}</span>
+                                                                        <Button  onClick={() => handleCoupon("remove",productList?.cartDiscount.coupon_id?.coupon_title)} ><AiFillCloseCircle /></Button>
+                                                                    </div>
+                                                                    <p>{productList.cartDiscount?.coupon_id?.coupon_description}</p>
+                                                                </div> :
+                                                                <div className='d-flex align-items-center gap-2'>
+                                                                    <input className='mt-0' placeholder='Enter coupon code ' value={couponCode} onChange={(e) => setCouponCode(e.target.value)} type='text' />
+                                                                    {/* {console.log(productList,"productList")} */}
+                                                                    <Button className='checkout px-4 '
+                                                                        onClick={() => handleCoupon("apply")}
+                                                                        style={{ width: "auto", whiteSpace: "nowrap" }} >Apply</Button>
+                                                                </div>
+                                                            }
+
+
+
+                                                        </div>
+                                                    </div>
+
                                                     {/* <p>4 interest-free installments of <span>$15.39</span></p> */}
                                                     {/* <p className='add d-flex align-items-center gap-2 mt-2'> with
                                                         <img src='./img/after.png' alt='' width="60px" />
@@ -327,12 +437,20 @@ const Cart = () => {
                                                         <img src='./img/kla.png' alt='' width="60px" />
                                                         <img src='./img/cart/blue-note.png' alt='' />
                                                     </p> */}
-                                                    <Button className='checkout mt-4'>Checkout</Button>
-                                                    <Button className='mt-3 btn-cos'>Express checkout with</Button>
+
+                                                    {/* <StripeCheckout
+stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
+token={handleCheckout}
+  amount={15.59} // Amount in cents
+  name="My Product"
+  description="Product description"
+  currency="USD"
+/> */}
+                                                    <Button className='checkout mt-4' onClick={handleCheckout} >Checkout</Button>
+                                                    {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}
                                                 </div>
 
                                             </div>
-
 
                                             <div className='term mt-5'>
                                                 <p><img src='./img/cart/note.png' alt='' />
@@ -347,14 +465,14 @@ const Cart = () => {
                                                         Clubmall Purchase Protection
                                                     </span>
                                                     <p className='ps-4 mt-2'>Shop confidently on Clubmall knowing that if something goes wrong, we’ve always got your back.</p>
-                                                    <NavLink className='ps-4 mt-2'>See program terms</NavLink>
+                                                    {/* <NavLink className='ps-4 mt-2'>See program terms</NavLink> */}
                                                 </div>
                                                 <span>
                                                     <img src='./img/cart/commited.png' alt='' />
                                                     Clubmall is commited to environmental sustainability
                                                 </span>
 
-{/* 
+                                                {/* 
                                                 <h5 className='mt-4 pt-2'>Secure options in checkout</h5>
                                                 <img src='./img/cart/card-logo.png' alt='' className='mt-3 cards-logo' /> */}
                                             </div>
@@ -369,15 +487,15 @@ const Cart = () => {
                                             fleshProductList?.productListArrObj?.map((e) => {
                                                 return (
                                                     <ProCard
-                                                    id={e._id}
-                                                    img={e.product_images[0]?.file_name}
-                                                    name={e.name}
-                                                    group_price={e.group_price}
-                                                    individual_price={e.individual_price}
-                                                    sold={e.total_order}
-                                                    secper={e.secper}
-                                                    off={e.discount_percentage}
-                                                    path={fleshProductList?.productImagePath && fleshProductList.productImagePath}
+                                                        id={e._id}
+                                                        img={e.product_images[0]?.file_name}
+                                                        name={e.name}
+                                                        group_price={e.group_price}
+                                                        individual_price={e.individual_price}
+                                                        sold={e.total_order}
+                                                        secper={e.secper}
+                                                        off={e.discount_percentage}
+                                                        path={fleshProductList?.productImagePath && fleshProductList.productImagePath}
                                                     />
                                                 )
                                             })
@@ -389,6 +507,8 @@ const Cart = () => {
                                 </div>
 
                             </div>
+
+
                         </div>
                     </>
                 )}

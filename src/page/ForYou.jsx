@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Layout from '../layout/Layout'
-import { Button, Dropdown } from 'react-bootstrap'
+import { Button, Dropdown, Form, Modal } from 'react-bootstrap'
 import { POSTSList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
@@ -17,6 +17,8 @@ import { errorResponse, afterLogin, handelProductDetail } from '../helper/consta
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
+import { RiSendPlaneFill } from "react-icons/ri"
+import InstallApp from '../components/InstallApp';
 
 const ForYou = () => {
   const isLoggedIn = Is_Login();
@@ -37,7 +39,22 @@ const ForYou = () => {
   const [loading, setLoading] = useState(true);
   const [Mymessage, setMyMessage] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Declare totalPages state variable
+  const [show, setShow] = useState(false);
   const player = useRef();
+
+  const [showComments, setShowComments] = useState(false);
+  const handleCommentsClose = () => setShowComments(false);
+  const handleCommentsShow = () => setShowComments(true)
+
+  const [showReport, setShowReport] = useState(false);
+  const handleReportClose = () => setShowReport(false);
+  const handleReportShow = () => setShowReport(true)
+  const handleClose = () => {
+    setShow(false);
+  }
+
+  const handleShow = () => setShow(true);
+
   const startAnimation = () => {
     if (player.current) {
       player.current.play(); // Check if player.current is not null before accessing play()
@@ -72,8 +89,6 @@ const ForYou = () => {
     return url && /\.(mp4|webm|ogg)$/i.test(url);
   }
 
-
-
   const handleSlideChange = (swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
     if (isLoggedIn && swiper.activeIndex === postList.length - 2) {
@@ -107,63 +122,92 @@ const ForYou = () => {
         }, 100);
       }
     } else if (!isLoggedIn && swiper.activeIndex === 3) {
-      navigate('/login'); // Redirect user to the login page after the 3rd index video
+      handleShow()
+      setPostList(postList.slice(0, 3)); // Keep only the first three videos in the list
     }
   }
 
-
-  const LikeDissliek = async (post_id) => {
+  const followUnfollow = async (user_id) => {
     try {
       if (isLoggedIn) {
-
-        const res = await api.postWithToken(`${serverURL + "post-like-dislike "}`, { post_id: post_id });
-        if (res.data.success == true) {
-          setSucessSnackBarOpen(!sucessSnackBarOpen);
+        const res = await api.postWithToken(`${serverURL + "user-follow-unfollow"}`, { following: user_id });
+        if (res.data.success === true) {
           setMyMessage(res.data.message);
-          getPosts();
+          setSucessSnackBarOpen(!sucessSnackBarOpen);
+          // Update the postList state with the updated data
+          const updatedPostList = postList.map((post) => {
+            if (post.user_id === user_id) {
+              // Toggle the following status for the specific post
+              return {
+                ...post,
+                is_following: !post.is_following,
+                total_followers: post.is_following
+                  ? post.total_followers - 1
+                  : post.total_followers + 1,
+              };
+            }
+            return post;
+          });
+          setPostList(updatedPostList);
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
       } else {
         // User is not logged in, redirect to the login page
-        afterLogin(setMyMessage)
+        afterLogin(setMyMessage);
         setWarningSnackBarOpen(!warningSnackBarOpen);
       }
     } catch (error) {
-      errorResponse(error, setMyMessage)
+      errorResponse(error, setMyMessage);
       setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
-  const followUnfollow = async (user_id) => {
-
+  const LikeDissliek = async (post_id) => {
     try {
       if (isLoggedIn) {
-
-        const res = await api.postWithToken(`${serverURL + "user-follow-unfollow"}`, { following: user_id });
-        getPosts();
-        if (res.data.success == true) {
+        const res = await api.postWithToken(`${serverURL}post-like-dislike`, { post_id: post_id });
+        if (res.data.success === true) {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setMyMessage(res.data.message);
+          // Find the index of the post within the postList array
+          // Find the index of the post within the postList array
+          const postIndex = postList.findIndex((post) => post._id === post_id);
+          if (postIndex !== -1) {
+            // Toggle the like status and like count for the specific post
+            const updatedPost = {
+              ...postList[postIndex],
+              is_like: postList[postIndex].is_like === 0 ? 1 : 0,
+              total_like: postList[postIndex].is_like === 0 ? postList[postIndex].total_like + 1 : postList[postIndex].total_like - 1,
+            };
+            // Create a new array with the updated post
+            const updatedPostList = [...postList];
+            updatedPostList[postIndex] = updatedPost;
+
+            // Update the postList state with the updated data
+            setPostList(updatedPostList);
+            // getPosts(); // Move this line outside the if-else block
+          }
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
+
       } else {
         // User is not logged in, redirect to the login page
-        afterLogin(setMyMessage)
+        afterLogin(setMyMessage);
         setWarningSnackBarOpen(!warningSnackBarOpen);
       }
     } catch (error) {
-      errorResponse(error, setMyMessage)
+      errorResponse(error, setMyMessage);
       setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
   useEffect(() => {
     getPosts();
-  }, [page, isLoggedIn ]);
+  }, [page, isLoggedIn]);
 
   return (
 
@@ -203,7 +247,7 @@ const ForYou = () => {
         >
           {postList && postList.map((e, i) => (
             <SwiperSlide key={i}>
-              <div className='reels-box position-relative'>
+              <div className='reels-box position-relative pointer'>
                 {e.post_video_link && isVideo(e.post_video_link) ? (
                   <ReactPlayer
                     url={e.post_video_link}
@@ -260,6 +304,8 @@ const ForYou = () => {
 
                   </>
                 }
+
+
                 <div className='additional-icon'>
                   <div className='additional-box'>
 
@@ -268,8 +314,11 @@ const ForYou = () => {
                         <img alt='' src='./img/for_you/doc.png' />
                       </Button>
                     }
+
+
                     <Button>
-                      {e.is_like == 0 ? <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' /> : <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/liked.png' />}
+                      {e.is_like == 0 && <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' />}
+                      {e.is_like == 1 && <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/liked.png' />}
                       <p>{e.total_like}</p>
                     </Button>
 
@@ -278,7 +327,7 @@ const ForYou = () => {
                       <p>{e.total_like}</p>
                     </Button> */}
 
-                    <Button>
+                    <Button onClick={handleCommentsShow}>
                       <img alt='' src='./img/for_you/msg.png' />
                       <p>{e.total_comment}</p>
                     </Button>
@@ -293,11 +342,12 @@ const ForYou = () => {
                           <Button>
                             <img alt='' src='./img/for_you/add.png' />
                           </Button> */}
-                    <Button>
+                    <Button onClick={handleReportShow}>
                       <img alt='' src='./img/for_you/flag.png' />
                     </Button>
                   </div>
                 </div>
+
                 {/* <div className='cart-btn-reels'>
                         <Dropdown>
                           <Dropdown.Toggle id="dropdown-basic">
@@ -375,6 +425,73 @@ const ForYou = () => {
                 </div> */}
 
       </div>
+
+      <Modal show={showComments} onHide={handleCommentsClose} centered className='for_you-modal'>
+        <Modal.Body>
+          <div className='comment-modal'>
+            <h5>Comments</h5>
+            {/* <div className='show-all-comments d-flex align-items-center justify-content-center'>
+              <p>No Comments yet</p>
+            </div> */}
+            <div className='show-all-comments'>
+              <ul className='mt-4'>
+                <li>
+                  <div className='d-flex align-items-center gap-3'>
+                    <div className='comment-user'>
+                      <img src='./img/header/user-pic.png' alt='' width="30px" />
+                    </div>
+                    <div className='comments-user-name'>
+                      <h6>Mercedes Amg GT</h6>
+                      <span>it's a super car</span>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div className='d-flex align-items-center gap-3'>
+                    <div className='comment-user'>
+                      <img src='./img/header/user-pic.png' alt='' width="30px" />
+                    </div>
+                    <div className='comments-user-name'>
+                      <h6>Mercedes Amg GT</h6>
+                      <span>it's a super car it's a super car it's a super car it's a super car</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div className='sent-comment d-flex align-items-center gap-3'>
+              <div className='comment-user'>
+                <img src='./img/header/user-pic.png' alt='' width="30px" />
+              </div>
+              <div className='position-relative w-100'>
+                <input type='text' placeholder='Your comment..' />
+                <Button className='sent-comment-icon'><RiSendPlaneFill /></Button>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showReport} onHide={handleReportClose} centered className='for_you-modal'>
+        <Modal.Body>
+          <div className='comment-modal'>
+            <h5>Report</h5>
+            <Form className='mt-3'>
+              <div className='login-input text-start'>
+                <label>Report Type</label>
+                <input placeholder='Content' type='text' />
+              </div>
+              <div className='login-input text-start mt-3'>
+                <label>Description</label>
+                <textarea placeholder='Describe your report here' rows={5} />
+              </div>
+              <Button className='submit-btn mt-3 w-100'>Send</Button>
+            </Form>
+          </div>
+        </Modal.Body>
+      </Modal>
+      <InstallApp show={show} Hide={handleClose} />
+
     </Layout>
 
   )

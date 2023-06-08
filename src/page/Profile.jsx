@@ -86,12 +86,12 @@ const Profile = () => {
                                                 Country/Region & Language
                                             </Nav.Link>
                                         </Nav.Item> */}
-                                        <Nav.Item>
+                                        {/* <Nav.Item>
                                             <Nav.Link eventKey="wallet" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/wallet.png' alt='' />
                                                 Your payment methods
                                             </Nav.Link>
-                                        </Nav.Item>
+                                        </Nav.Item> */}
                                         <Nav.Item>
                                             <Nav.Link eventKey="security" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/security.png' alt='' />
