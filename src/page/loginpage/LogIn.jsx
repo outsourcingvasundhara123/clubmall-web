@@ -14,6 +14,8 @@ import { MdOutlineClose } from "react-icons/md"
 import { Link } from 'react-router-dom';
 import { login } from '../../helper/auth';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import AppleLogin from 'react-apple-login';
+import { BsApple } from 'react-icons/bs'
 
 const LogIn = () => {
 
@@ -171,15 +173,16 @@ const LogIn = () => {
                 <span>Or</span>
                 <div className='line'></div>
               </div>
-              <div className='d-flex align-items-center justify-content-center gap-4 mt-3'>
+              <div className='d-flex align-items-center justify-content-center gap-4 mt-2'>
+
                 <div className='google-login'>
-                  {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
+                  <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
                 </div>
                 {/* <NavLink>
                                 <img src='./img/login/google.png' alt='' />
                             </NavLink> */}
                 {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
-                {/* <FacebookLogin
+                <FacebookLogin
                   appId="1088597931155576"
                   style={{
                     backgroundColor: '#fff',
@@ -195,7 +198,29 @@ const LogIn = () => {
                   onProfileSuccess={(response) => {
                     console.log('Get Profile Success!', response);
                   }}
-                ><img src='./img/login/facebook.png' alt='' /></FacebookLogin> */}
+                ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
+
+                <AppleLogin
+                  clientId="YOUR_CLIENT_ID"
+                  redirectURI="YOUR_REDIRECT_URL"
+                  usePopup={true} // Catch the response
+                  scope="email name"
+                  responseMode="query"
+                  render={renderProps => (
+                    <button
+                      onClick={renderProps.onClick}
+                      style={{
+                        backgroundColor: "white",
+                        border: "none",
+                        fontSize: "35px",
+                        padding: "0px",
+                        display: "flex",
+                      }}
+                    >
+                      <BsApple />
+                    </button>
+                  )}
+                />
               </div>
             </div>
           </div>

@@ -15,7 +15,8 @@ import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
-
+import AppleLogin from 'react-apple-login';
+import { BsApple } from 'react-icons/bs'
 
 
 function Register() {
@@ -375,7 +376,7 @@ function Register() {
                             <span>Or</span>
                             <div className='line'></div>
                         </div>
-                        <div className='d-flex align-items-center justify-content-center gap-4 mt-3'>
+                        <div className='d-flex align-items-center justify-content-center gap-4 mt-2'>
 
                             <div className='google-login'>
 
@@ -410,6 +411,29 @@ function Register() {
                                     console.log('Get Profile Success!', response);
                                 }}
                             ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
+
+                            <AppleLogin
+                                clientId="YOUR_CLIENT_ID"
+                                redirectURI="YOUR_REDIRECT_URL"
+                                usePopup={true} // Catch the response
+                                scope="email name"
+                                responseMode="query"
+                                render={renderProps => (
+                                    <button
+                                        onClick={renderProps.onClick}
+                                        style={{
+                                            backgroundColor: "white",
+                                            border: "none",
+                                            fontSize: "35px",
+                                            padding: "0px",
+                                            display: "flex",
+                                            marginTop: "-3px"
+                                        }}
+                                    >
+                                        <BsApple />
+                                    </button>
+                                )}
+                            />
                         </div>
                     </div>
                 </div>
