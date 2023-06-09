@@ -13,6 +13,7 @@ import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import { Link } from 'react-router-dom';
 import { login } from '../../helper/auth';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 
 const LogIn = () => {
 
@@ -139,7 +140,9 @@ const LogIn = () => {
                     onChange={handleChange} name='password' value={values.password}
 
                     type={showPass ? "password" : "text"} />
-                  <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}><img src='./img/login/pass-show.png' alt='' /></Button>
+                  <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}>
+                    {showPass ? <AiFillEyeInvisible /> : <AiFillEye />}
+                  </Button>
                   <div className='error pass-error' >{errors?.password}</div>
                 </div>
                 <div className='d-flex justify-content-end'><Button className='reset-pass' onClick={handleShow}>Forgot your password?</Button></div>
@@ -219,7 +222,7 @@ const LogIn = () => {
                 </div> :
                   <div className='login-input text-start mt-4'>
                     <label>Email Address</label>
-                    <input placeholder='Rohan Vasundhara' type='text' />
+                    <input placeholder='Enter your email address' type='text' />
                   </div>
               }
 

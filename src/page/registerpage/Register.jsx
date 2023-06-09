@@ -10,10 +10,14 @@ import { validate } from './RegisterSchema';
 import SucessSnackBar from "../SnackBar/SnackBar";
 import ErrorSnackBar from "../SnackBar/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { GoogleLogin , useGoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import axios from 'axios';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+
+
+
 function Register() {
 
     const navigate = useNavigate();
@@ -161,9 +165,9 @@ function Register() {
 
         if (myotp.length === 6) {
             try {
-                api.post(`${serverURL}verify-email`,{
-                    email:otpEmail,
-                    verification_code:myotp
+                api.post(`${serverURL}verify-email`, {
+                    email: otpEmail,
+                    verification_code: myotp
                 })
                     .then((res) => {
                         if (res.data.success == true) {
@@ -190,24 +194,24 @@ function Register() {
     const googlelogin = useGoogleLogin({
 
         onSuccess: async (respose) => {
-          try {
-            const res = await axios.get(
-              "https://www.googleapis.com/oauth2/v3/userinfo",
-              {
-                headers: {
-                  Authorization: `Bearer ${respose.access_token}`,
-                },
-              }
-            );
-    
-            console.log(res.data);
-          } catch (err) {
-            console.log(err);
-          }
-        },
-      });
+            try {
+                const res = await axios.get(
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${respose.access_token}`,
+                        },
+                    }
+                );
 
-  
+                console.log(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        },
+    });
+
+
 
 
     return (
@@ -337,7 +341,9 @@ function Register() {
                                     <label>Password</label>
                                     <div className='position-relative'>
                                         <input placeholder='Enter your Password' onChange={handleChange} name='password' value={values.password} type={showPass ? "password" : "text"} />
-                                        <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}><img src='./img/login/pass-show.png' alt='' /></Button>
+                                        <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}>
+                                            {showPass ? <AiFillEyeInvisible /> : <AiFillEye />}
+                                        </Button>
                                     </div>
                                     <div className='error' >{errors?.password}</div>
                                 </div>
@@ -370,9 +376,9 @@ function Register() {
                             <div className='line'></div>
                         </div>
                         <div className='d-flex align-items-center justify-content-center gap-4 mt-3'>
-                           
-                            <div   className='google-login'>
- 
+
+                            <div className='google-login'>
+
                             </div>
                             {/* <GoogleLogin
                         clientId="402818709804-of0dbhqmjqeiddjejjpkvf1keu7v8556.apps.googleusercontent.com"
@@ -387,7 +393,7 @@ function Register() {
 
                             {/* 
                             {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
-                             <FacebookLogin
+                            <FacebookLogin
                                 appId="400392108750360"
                                 style={{
                                     backgroundColor: '#fff',
@@ -403,7 +409,7 @@ function Register() {
                                 onProfileSuccess={(response) => {
                                     console.log('Get Profile Success!', response);
                                 }}
-                            ><img src='./img/login/facebook.png' alt='' /></FacebookLogin> 
+                            ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
                         </div>
                     </div>
                 </div>

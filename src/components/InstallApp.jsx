@@ -4,11 +4,11 @@ import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
 
 const InstallApp = (props) => {
 
-  return (
+    return (
 
-    <div>
+        <div>
 
-<Modal show={props.show} onHide={props.Hide} centered className='welcome-modal'>
+            <Modal show={props.show} onHide={props.Hide} centered className='welcome-modal'>
                 <Modal.Body>
                     <div className='text-center p-3 p-sm-4'>
                         <img src='./img/modal-logo.png' alt='' />
@@ -27,8 +27,8 @@ const InstallApp = (props) => {
                 </Modal.Body>
             </Modal>
 
-    </div>
-  )
+        </div>
+    )
 }
 
 export default InstallApp
