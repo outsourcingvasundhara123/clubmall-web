@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect , useContext} from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button, Col, Modal, NavLink, Offcanvas, Row } from 'react-bootstrap'
 import {
@@ -29,7 +29,7 @@ import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 // import { useContext } from 'react'
 const ProductInfo = () => {
-    const { setCart , cart } = useContext(CartContext);
+    const { setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -275,6 +275,7 @@ const ProductInfo = () => {
                                                     hashNavigation={{
                                                         watchState: true,
                                                     }}
+                                                    loop={true}
                                                     breakpoints={{
                                                         0: {
                                                             slidesPerView: 1,
@@ -678,7 +679,7 @@ const ProductInfo = () => {
 
 
                             {/* cart drawer */}
-                            <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
+                            {/* <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
                                 <Offcanvas.Body>
                                     <div className='cart-side position-relative'>
 
@@ -764,7 +765,7 @@ const ProductInfo = () => {
                                         </div>
                                     </div>
                                 </Offcanvas.Body>
-                            </Offcanvas>
+                            </Offcanvas> */}
 
 
                             <Modal show={show} onHide={handleClose} centered className='welcome-modal'>

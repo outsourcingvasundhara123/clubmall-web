@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect , useContext } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button, Col, NavLink, Row } from 'react-bootstrap'
 import {
@@ -26,7 +26,7 @@ import { CartContext } from '../context/CartContext'
 
 const Cart = () => {
 
-    const { setCart , cart } = useContext(CartContext);
+    const { setCart, cart } = useContext(CartContext);
 
     // const stripePromise = loadStripe('pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr');
 
@@ -103,7 +103,7 @@ const Cart = () => {
         // }
     };
 
-    const removeCartData = async (id, action,qty) => {
+    const removeCartData = async (id, action, qty) => {
         try {
             var data = {
                 action: action,
@@ -219,7 +219,10 @@ const Cart = () => {
                                     <Col lg={7} md={12}>
                                         {productList.list.length <= 0 &&
                                             <div className='d-flex align-items-center justify-content-center h-100'>
-                                                <span className='empty'> the cart is empty  </span>
+                                                <div className='text-center found'>
+                                                    <img src='./img/not-found.png' alt='' />
+                                                    <p className='mt-3'>The cart is empty</p>
+                                                </div>
                                             </div>
                                         }
                                         <div className='cart-main-list'>
@@ -277,7 +280,7 @@ const Cart = () => {
                                                                                 }))
                                                                             }
                                                                         /> */}
-                                                                        <img src={e.product_images} alt=''  width="150px" />
+                                                                        <img src={e.product_images} alt='' width="150px" />
                                                                     </div>
                                                                     <div className='cart-items-def w-100'>
                                                                         <h5>{e.product_name}</h5>
@@ -316,13 +319,13 @@ const Cart = () => {
 
                                                                                 {/* </div> */}
                                                                                 <div className='qty d-flex align-items-center gap-3'>
-                                                                                <h5>Qty:</h5>
-                                                                                <div className='count-product'>
-                                                                                    <Button onClick ={(d) => (removeCartData(e._id, "update-to-cart-qty",e.qty - 1)) } > <MdRemove /></Button>
-                                                                                    <span>{e.qty}</span>
-                                                                                    <Button onClick ={(d) => (removeCartData(e._id, "update-to-cart-qty",e.qty + 1))}><MdAdd /></Button>
+                                                                                    <h5>Qty:</h5>
+                                                                                    <div className='count-product'>
+                                                                                        <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty - 1))} > <MdRemove /></Button>
+                                                                                        <span>{e.qty}</span>
+                                                                                        <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty + 1))}><MdAdd /></Button>
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
                                                                                 <Button onClick={() => removeCartData(e._id, "remove-to-cart-product")} className='delete-btn'>
                                                                                     <img src='./img/cart/delete.png' alt='' />
                                                                                 </Button>
@@ -523,7 +526,7 @@ token={handleCheckout}
                     </>
                 )
             }
-        </Layout >
+        </Layout>
     )
 }
 

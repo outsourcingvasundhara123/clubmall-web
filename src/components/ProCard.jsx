@@ -31,6 +31,7 @@ const ProCard = (props) => {
     return (
         <>
             <div className='cos-width'>
+            
                 <div className='product-card explore-card  pointer'>
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
@@ -49,6 +50,7 @@ const ProCard = (props) => {
                         </div>
                     </div>
                 </div>
+               
                 {
                     location.pathname === "/trending" ?
                         <>
@@ -62,20 +64,6 @@ const ProCard = (props) => {
                                     )
                                 })
                                 }
-
-                                {/* <Button className={`${productColorActive === "color2" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color2")}>
-                                    <img alt='' src='./img/selling/color2.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color3" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color3")}>
-                                    <img alt='' src='./img/selling/color3.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color4" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color4")}>
-                                    <img alt='' src='./img/selling/color4.png' width="20px" />
-                                </Button>
-                                <Button className={`${productColorActive === "color5" ? "active" : ""} color-btn`} onClick={() => setProductColorActive("color5")}>
-                                    <img alt='' src='./img/selling/color5.png' width="20px" />
-                                </Button>
-                         */}
 
                             </div>
                         </> : ""

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import Layout from '../layout/Layout'
-import { Button, Dropdown, Form, Modal } from 'react-bootstrap'
+import { Button, Dropdown, Form, Modal, NavLink } from 'react-bootstrap'
 import { POSTSList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
@@ -19,8 +19,10 @@ import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
 import { RiSendPlaneFill } from "react-icons/ri"
 import InstallApp from '../components/InstallApp';
+import { MdOutlineClose } from 'react-icons/md'
 
 const ForYou = () => {
+  const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
   const navigate = useNavigate();
   const swiperRef = useRef(null);
@@ -41,20 +43,33 @@ const ForYou = () => {
   const [totalPages, setTotalPages] = useState(0); // Declare totalPages state variable
   const [show, setShow] = useState(false);
   const player = useRef();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => setShowComments(false);
   const handleCommentsShow = () => setShowComments(true)
 
+  const [showAppDownload, setShowAppDownload] = useState(false);
+  const handleAppDownloadShow = () => setShowAppDownload(true);
+  const handleAppDownloadClose = () => setShowAppDownload(false);
+
+  const [showProduct, setShowProduct] = useState(false);
+  const handleProductShow = () => setShowProduct(true);
+  const handleProductClose = () => setShowProduct(false);
+
   const [showReport, setShowReport] = useState(false);
   const handleReportClose = () => setShowReport(false);
   const handleReportShow = () => setShowReport(true)
+
   const handleClose = () => {
+    setIsModalOpen(false);
     setShow(false);
-  }
-
-  const handleShow = () => setShow(true);
-
+  };
+  const handleShow = () => {
+    console.log("show");
+    setIsModalOpen(true);
+    setShow(true);
+  };
   const startAnimation = () => {
     if (player.current) {
       player.current.play(); // Check if player.current is not null before accessing play()
@@ -77,7 +92,12 @@ const ForYou = () => {
       setTotalPages(postsData.length);
       const updatedfavoriteProductList = [...postList, ...postsData]
         .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-      setPostList(updatedfavoriteProductList);
+      console.log(updatedfavoriteProductList, "updatedfavoriteProductList");
+      if (!isLoggedIn) {
+        setPostList(updatedfavoriteProductList.slice(0, 4));
+      } else {
+        setPostList(updatedfavoriteProductList);
+      }
       setIsFetching(false);
       stopAnimation();
     } catch (error) {
@@ -90,7 +110,9 @@ const ForYou = () => {
   }
 
   const handleSlideChange = (swiper) => {
+    console.log(swiper.activeIndex, " swiper.activeIndex");
     setCurrentVideoIndex(swiper.activeIndex);
+
     if (isLoggedIn && swiper.activeIndex === postList.length - 2) {
       // Check if the last video is being rendered
       if (swiper.activeIndex === postList.length - 2) { // Change to -2 instead of -1
@@ -122,8 +144,8 @@ const ForYou = () => {
         }, 100);
       }
     } else if (!isLoggedIn && swiper.activeIndex === 3) {
+      // setPostList(postList.slice(0, 3)); // Keep only the first three videos in the list
       handleShow()
-      setPostList(postList.slice(0, 3)); // Keep only the first three videos in the list
     }
   }
 
@@ -209,6 +231,9 @@ const ForYou = () => {
     getPosts();
   }, [page, isLoggedIn]);
 
+
+  console.log(postList, "postList");
+
   return (
 
     <Layout>
@@ -290,12 +315,12 @@ const ForYou = () => {
                     <div className='price'>
                       <Button>Individual Price <br />
                         ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
-                      <Button>Group Price: <br />
+                      <Button onClick={handleAppDownloadShow}>Group Price: <br />
                         ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
                     </div>
 
                     <div className='reel-items'>
-                      <p>{e.products_obj.length}+ More Products</p>
+                      <p onClick={handleProductShow} className='pointer'>{e.products_obj.length}+ More Products</p>
                       <div className='items-box p-2 mt-2'>
                         <img alt='' src={postlUrl + e.products_obj[0]?.product_id._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
                         <del>${e.products_obj[0]?.product_id?.group_price}</del>
@@ -330,21 +355,22 @@ const ForYou = () => {
                       <img alt='' src='./img/for_you/msg.png' />
                       <p>{e.total_comment}</p>
                     </Button>
-                  </div>
-                  <div className='additional-box mt-2'>
-                    <Button>
-                      <img alt='' src='./img/for_you/tip.png' />
+                    <Button onClick={handleReportShow}>
+                      <img alt='' src='./img/for_you/flag.png' />
                     </Button>
-                    {/* <Button>
+                  </div>
+                  {/* <div className='additional-box mt-2'> */}
+                  {/* <Button>
+                      <img alt='' src='./img/for_you/tip.png' />
+                    </Button> */}
+                  {/* <Button>
                             <img alt='' src='./img/for_you/share.png' />
                           </Button>
                           <Button>
                             <img alt='' src='./img/for_you/add.png' />
                           </Button> */}
-                    <Button onClick={handleReportShow}>
-                      <img alt='' src='./img/for_you/flag.png' />
-                    </Button>
-                  </div>
+
+                  {/* </div> */}
                 </div>
 
                 {/* <div className='cart-btn-reels'>
@@ -427,7 +453,10 @@ const ForYou = () => {
 
       <Modal show={showComments} onHide={handleCommentsClose} centered className='for_you-modal'>
         <Modal.Body>
-          <div className='comment-modal'>
+          <div className='comment-modal position-relative'>
+            <Button className='close-modal-btn forgot-pass-close' onClick={handleCommentsClose}>
+              <MdOutlineClose />
+            </Button>
             <h5>Comments</h5>
             {/* <div className='show-all-comments d-flex align-items-center justify-content-center'>
               <p>No Comments yet</p>
@@ -473,12 +502,20 @@ const ForYou = () => {
 
       <Modal show={showReport} onHide={handleReportClose} centered className='for_you-modal'>
         <Modal.Body>
-          <div className='comment-modal'>
+          <div className='comment-modal position-relative'>
+            <Button className='close-modal-btn forgot-pass-close' onClick={handleReportClose}>
+              <MdOutlineClose />
+            </Button>
             <h5>Report</h5>
             <Form className='mt-3'>
               <div className='login-input text-start'>
                 <label>Report Type</label>
-                <input placeholder='Content' type='text' />
+                <select className='select-arrow'>
+                  <option>Sexual content</option>
+                  <option>Child abuse</option>
+                  <option>Hateful or abusive content</option>
+                  <option>Violent or repulsive content</option>
+                </select>
               </div>
               <div className='login-input text-start mt-3'>
                 <label>Description</label>
@@ -489,9 +526,85 @@ const ForYou = () => {
           </div>
         </Modal.Body>
       </Modal>
+
       <InstallApp show={show} Hide={handleClose} />
 
-    </Layout>
+      <Modal show={showAppDownload} onHide={handleAppDownloadClose} centered className='welcome-modal'>
+        <Modal.Body>
+          <div className='text-center p-3 p-sm-4'>
+            <img src='./img/modal-logo.png' alt='' />
+            <h5 className='my-3'>Get the full experience on <br /> the app</h5>
+            <p>Follow you favoritevendor accounts,
+              explore new product and message the <br /> vendor</p>
+            <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
+              <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
+                <img src='./img/playstore.png' alt='' />
+              </NavLink>
+              <NavLink href='https://apps.apple.com/us/app/clubmall/id6444752184' target='_blank'>
+                <img src='./img/app.png' alt='' />
+              </NavLink>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showProduct} onHide={handleProductClose} centered className='for_you-modal product-list-modal'>
+        <Modal.Body>
+          <div className='product-modal position-relative'>
+            <Button className='close-modal-btn forgot-pass-close' onClick={handleProductClose}>
+              <MdOutlineClose />
+            </Button>
+            <h5>Product List</h5>
+            <div className='product-list-scroll mt-4' >
+              <div className='for_you_product d-flex align-items-start gap-3'>
+                <div className='cos-img-size'>
+                  <img src='./img/dummy.png' className='for-you-product-img' />
+                </div>
+                <div className='for-you-product-text'>
+                  <h6>A Student Backpack Casual School Bag Lightweight Computer Backpack</h6>
+                  <div className='d-flex align-items-center gap-1 my-2'>
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/nonrate.png' alt='' />
+                  </div>
+                  <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
+                    <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
+                      $17.87</Button>
+                    <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => setPerActive('Group')}>Group Price <br />
+                      $17.87</Button>
+                  </div>
+                </div>
+              </div>
+              <div className='for_you_product d-flex align-items-start gap-3 mt-3'>
+                <div className='cos-img-size'>
+                  <img src='./img/dummy.png' className='for-you-product-img' />
+                </div>
+                <div className='for-you-product-text'>
+                  <h6>A Student Backpack Casual School Bag Lightweight Computer Backpack</h6>
+                  <div className='d-flex align-items-center gap-1 my-2'>
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/rate.png' alt='' />
+                    <img src='./img/product_def/nonrate.png' alt='' />
+                  </div>
+                  <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
+                    <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
+                      $17.87</Button>
+                    <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => setPerActive('Group')}>Group Price <br />
+                      $17.87</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </Modal.Body>
+      </Modal>
+
+    </Layout >
 
   )
 }
