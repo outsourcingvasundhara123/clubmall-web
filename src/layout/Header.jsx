@@ -15,7 +15,7 @@ import { CartContext } from '../context/CartContext'
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { logout } from '../helper/auth'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 
 const Header = () => {
@@ -28,12 +28,10 @@ const Header = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [category, setcategory] = useState([]);
-    const [catrecount, setcarteCount] = useState(0);
     const UserName = sessionStorage.getItem("name") ? sessionStorage.getItem("name") : "undefail"
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
-
 
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
@@ -48,43 +46,14 @@ const Header = () => {
         setLoading(false);
     };
 
-
     const [newIn, setNewIn] = useState(false);
     const handleNewInClose = () => setNewIn(false);
     const handleNewInShow = () => setNewIn(true);
-
-
     const [CateData, setCateData] = useState(product_data.FeaturedData);
 
     const HandelShowData = (name) => {
         setCateData(product_data[name])
     }
-
-    const getCategory = async () => {
-        startAnimation()
-        try {
-            const [categoryResponse, cartListresponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" }),
-                api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
-
-            ]);
-            console.log(categoryResponse, "category");
-            const categoryData = categoryResponse.data.data;
-            const cartCountData = cartListresponse.data.data.list
-            setcarteCount(cartCountData?.length)
-            setCart(cartCountData?.length)
-            // Set the first half and second half of categories
-            setcategory(categoryData);
-            stopAnimation()
-        } catch (error) {
-            console.log(error);
-            errorResponse(error, setMyMessage);
-        }
-    };
-
-    useEffect(() => {
-        getCategory();
-    }, []);
 
     // // Update the cart count whenever the "cartCountData" changes
     // useEffect(() => {
@@ -112,7 +81,6 @@ const Header = () => {
             api.postWithToken(`${serverURL}logout`)
                 .then((res) => {
                     if (res.data.success === true) {
-
                         console.log(res.data, "res.data");
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
@@ -129,6 +97,30 @@ const Header = () => {
             console.error(error);
         }
     };
+
+
+        const getCategory = async () => {
+        startAnimation()
+        console.log("category--------------1111111111111");
+        try {
+
+            const  categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+            const categoryData = categoryResponse.data.data;
+            setcategory(categoryData);
+            stopAnimation()
+
+            const  cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })          
+            const cartCountData = cartListresponse.data.data.list
+            setCart(cartCountData?.length)
+        } catch (error) {
+            console.log(error);
+            errorResponse(error, setMyMessage);
+        }
+    };
+
+    useEffect(() => {
+        getCategory();
+    }, []);
 
 
     return (
@@ -178,9 +170,10 @@ const Header = () => {
                             <li>
                                 <Link to="/categories" className={`${active === "/categories" ? "active" : ""} `} onClick={() => setActive("/categories")}>Categories <MdOutlineKeyboardArrowDown /></Link>
                                 {/* names of the main categorys */}
-                                {isLoggedIn && <div className='mega-menu'>
-                                    <Row>
+                                <div className='mega-menu'>
 
+
+                                    <Row>
 
                                         <Col lg={3} md={6}>
                                             <div className='border-right-cos pe-4 h-100'>
@@ -198,26 +191,30 @@ const Header = () => {
                                                 </ul>
                                             </div>
                                         </Col>
+                                        {
+                                            loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                                                <>
+                                                    <Col lg={9} md={6}>
+                                                        <div className='mega-product'>
+                                                            {category && category?.productsCategory?.map((e, i) => {
+                                                                return (
+                                                                    <div className='product_image pointer' key={i}>
 
-                                        <Col lg={9} md={6}>
-                                            <div className='mega-product'>
-                                                {category && category?.productsCategory?.map((e, i) => {
-                                                    return (
-                                                        <div className='product_image pointer' key={i}>
-
-                                                            <div className='product-box'>
-                                                                <img width="100%" src={category.productImagePath + e.icon} alt='' />
-                                                            </div>
-                                                            <h6>{e.name}</h6>
+                                                                        <div className='product-box'>
+                                                                            <img width="100%" src={category.productImagePath + e.icon} alt='' />
+                                                                        </div>
+                                                                        <h6>{e.name}</h6>
+                                                                    </div>
+                                                                )
+                                                            })
+                                                            }
                                                         </div>
-
-                                                    )
-                                                })
-                                                }
-                                            </div>
-                                        </Col>
+                                                    </Col>
+                                                </>
+                                            )}
                                     </Row>
-                                </div>}
+
+                                </div>
                             </li>
                         </ul>
                     </div>

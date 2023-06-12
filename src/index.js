@@ -9,7 +9,7 @@ import { CartProvider } from './context/CartContext';
 ReactDOM.render(
   <React.StrictMode>
     <GoogleOAuthProvider 
-    clientId="402818709804-of0dbhqmjqeiddjejjpkvf1keu7v8556.apps.googleusercontent.com"
+    clientId={process.env.REACT_APP_CLIEN_ID}
     >
       <CartProvider>
         <App />

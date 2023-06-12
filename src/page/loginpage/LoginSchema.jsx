@@ -11,7 +11,7 @@ export const validate = (values) => {
     // Validate password field
     if (!values.password) {
         errors.password = "Password is required";
-    } else if (values.password.length < 3) {
+    } else if (values.password.length < 8) {
         errors.password = "Password must be at least 6 characters long";
     }
 

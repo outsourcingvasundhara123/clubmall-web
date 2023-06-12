@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect ,useRef } from 'react'
 import Layout from '../../layout/Layout'
 import { Button, Col, Form, NavLink, Row, Modal } from 'react-bootstrap'
 import PhoneInput from "react-phone-input-2";
@@ -17,8 +17,8 @@ import axios from 'axios';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 import AppleLogin from 'react-apple-login';
 import { BsApple } from 'react-icons/bs'
-
-
+import { SOCIALLOGIN } from '../../helper/endpoints';
+import { login } from '../../helper/auth';
 function Register() {
 
     const navigate = useNavigate();
@@ -47,6 +47,7 @@ function Register() {
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
     const [otpShow, SetOtpShow] = useState(false)
     const [otpEmail, SetEmail] = useState("")
+    const inputRefs = useRef([]);
 
 
     const handleClose = () => {
@@ -107,9 +108,9 @@ function Register() {
                 api.post(`${serverURL}signup`, updatedValues)
                     .then((res) => {
                         if (res.data.status === 1) {
+                            setMyMessage(res.data.message);
                             setSucessSnackBarOpen(!sucessSnackBarOpen);
                             setValues(initialValues);
-                            setMyMessage(res.data.message);
                             SetOtpShow(true)
                             // navigate("/login");
                             SetEmail(updatedValues.email)
@@ -125,14 +126,16 @@ function Register() {
             }
         }
     };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
                 const request2 = api.get(`${serverURL + "/state-list"}`);
                 const responses = await Promise.all([request1, request2]);
+                // console.log(responses[0].data.data.country, "responses[0].data.data.country");
                 setCountryList(responses[0].data.data.country);
-                setStateList(responses[1].data.data.states);
+                // setStateList(responses[1].data.data.states);
             } catch (error) {
                 console.error(error);
             }
@@ -141,21 +144,59 @@ function Register() {
         fetchData();
     }, []);
 
-    const responseMessage = (response) => {
-        console.log(response);
+    const checkforcounty = async () => {
+
+        try {
+            if (values.country_id && errors.country_id == undefined) {
+                console.log("called ");
+                const request1 = api.get(`${serverURL + "/country-list"}`);
+                var id = countryList.find((e => e._id == values.country_id))
+                const request2 = api.get(`${serverURL + `/state-list?country_id=${id.id}`}`);
+                const responses = await Promise.all([request1, request2]);
+                console.log(responses[1].data.data.states, "responses");
+                setStateList(responses[1].data.data.states)
+            } else {
+                setMyMessage("Country is required");
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
-    const errorMessage = (error) => {
-        console.log(error);
-    };
-
-    const handleChangeotp = (e) => {
-        const { name, value, type } = e.target;
+    const handleChangeotp = (index, event) => {
+        const { value } = event.target;
         let newValue = value;
-        setValues((prevValues) => ({
+      
+        // Restrict input to a single digit
+        if (value.length > 1) {
+          newValue = value.slice(0, 1);
+        }
+      
+        // Validate input as a number
+        if (!isNaN(newValue)) {
+          setValues((prevValues) => ({
             ...prevValues,
-            [name]: newValue,
-        }));
+            [`otp${index}`]: newValue,
+          }));
+      
+          // Auto focus on the next input field
+          if (newValue !== '') {
+            const nextIndex = index + 1;
+            if (nextIndex < 7) {
+              inputRefs.current[nextIndex].focus();
+            }
+          }
+        }
+      };
+
+    const handleKeyDown = (index, event) => {
+    if (event.key === 'Backspace' && values[`otp${index}`] === '') {
+      if (index > 1) {
+        const prevIndex = index - 1;
+        inputRefs.current[prevIndex].focus();
+      }
+    }
     };
 
     const SubmitOTP = (e) => {
@@ -172,11 +213,14 @@ function Register() {
                 })
                     .then((res) => {
                         if (res.data.success == true) {
-                            setSucessSnackBarOpen(!sucessSnackBarOpen);
                             setValues(initialValues);
                             setMyMessage(res.data.message);
+                            setSucessSnackBarOpen(!sucessSnackBarOpen);
                             SetOtpShow(true)
-                            navigate("/login");
+                            setTimeout(() => {
+                                navigate("/login");
+                            }, 1000); 
+                            
                         } else {
                             setMyMessage(res.data.message);
                             setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -195,25 +239,40 @@ function Register() {
     const googlelogin = useGoogleLogin({
 
         onSuccess: async (respose) => {
-            try {
-                const res = await axios.get(
-                    "https://www.googleapis.com/oauth2/v3/userinfo",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${respose.access_token}`,
-                        },
-                    }
-                );
-
-                console.log(res.data);
-            } catch (err) {
-                console.log(err);
-            }
+          try {
+            const res = await axios.get(
+              "https://www.googleapis.com/oauth2/v3/userinfo",
+              {
+                headers: {
+                  Authorization: `Bearer ${respose.access_token}`,
+                },
+              }
+            );
+            api.post(`${serverURL + SOCIALLOGIN}`,{
+              email:res.data.email,
+              social_login_type : 2,
+              social_login_id:res.data.sub,
+              login_type:4,
+              name:res.data.name,
+              username:res.data.given_name
+            })
+            .then((res) => {
+            //   if (res.data.success === true) {
+                setMyMessage(res.data.message);
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
+                login(res.data.data.user);
+                setTimeout(() => {
+                  setValues(initialValues);  
+                  navigate("/");
+              }, 1000); 
+                // }
+            })
+          } catch (err) {
+            console.log(err);
+          }
         },
-    });
-
-
-
+      });
+    
 
     return (
 
@@ -292,10 +351,13 @@ function Register() {
                             <Col lg={6} md={6} sm={12} className='mb-3'>
                                 <div className='login-input text-start'>
                                     <label>Country/Region</label>
-                                    <select onChange={handleChange} name='country_id'
+                                    <select name='country_id'
                                         value={values.country}
+                                        onChange={handleChange}
                                         className='select-arrow'>
                                         <option>Select Country</option>
+                                        {(countryList.length <= 0) && <option
+                                        >loding....</option>}
                                         {
                                             countryList.map((e, i) =>
                                             (
@@ -311,17 +373,27 @@ function Register() {
                             <Col lg={6} md={6} sm={12} className='mb-3'>
                                 <div className='login-input text-start'>
                                     <label>State</label>
-                                    <select onChange={handleChange}
+                                    <select
+                                        onClick={checkforcounty} onChange={handleChange}
                                         value={values.state}
                                         name='state_id' className='select-arrow'>
-                                        <option>Select State</option>
-                                        {
-                                            stateList.map((e, i) =>
-                                            (
-                                                <option key={i} >{e.name}</option>
+                                          <option>Select State</option>
+                                     {errors.country_id == undefined && (
+                                        <>
+                                     
+                                
+                                        
+                                     {
+                                         stateList.map((e, i) =>
+                                         (
+                                             <option key={i}   >{e.name}</option>
+                                         ))
+                                     }
+                                     )
+                                        </>
+                                     )}
 
-                                            ))
-                                        }
+                                       
                                     </select>
                                     <div className='error' >{errors?.state_id}</div>
                                 </div>
@@ -377,9 +449,9 @@ function Register() {
                             <div className='line'></div>
                         </div>
                         <div className='d-flex align-items-center justify-content-center gap-4 mt-2'>
-
-                            <div className='google-login'>
-
+                           
+                            <div   className='google-login'>
+ 
                             </div>
                             {/* <GoogleLogin
                         clientId="402818709804-of0dbhqmjqeiddjejjpkvf1keu7v8556.apps.googleusercontent.com"
@@ -391,11 +463,8 @@ function Register() {
                             <NavLink>
                                 <img onClick={googlelogin} src='./img/login/google.png' alt='' />
                             </NavLink>
-
-                            {/* 
-                            {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
                             <FacebookLogin
-                                appId="400392108750360"
+                                appId={process.env.REACT_APP_APP_ID}
                                 style={{
                                     backgroundColor: '#fff',
                                     padding: "0px",
@@ -411,7 +480,7 @@ function Register() {
                                     console.log('Get Profile Success!', response);
                                 }}
                             ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
-
+                            
                             <AppleLogin
                                 clientId="YOUR_CLIENT_ID"
                                 redirectURI="YOUR_REDIRECT_URL"
@@ -454,18 +523,30 @@ function Register() {
                             <h3>Verify Email </h3>
                             <p>Enter Verification code to Verify your email</p>
                         </div>
-                        <Form onSubmit={handleSubmit}>
-                            <div className='otp d-flex align-items-center justify-content-center mt-4 mb-1 gap-3 w-100'>
-                                <input value={values.otp1} type='number' name='otp1' onChange={handleChangeotp} max={1} />
-                                <input value={values.otp2} type='number' name='otp2' onChange={handleChangeotp} max={1} />
-                                <input value={values.otp3} type='number' name='otp3' onChange={handleChangeotp} max={1} />
-                                <input value={values.otp4} type='number' name='otp4' onChange={handleChangeotp} max={1} />
-                                <input value={values.otp5} type='number' name='otp5' onChange={handleChangeotp} max={1} />
-                                <input value={values.otp6} type='number' name='otp6' onChange={handleChangeotp} max={1} />
-                            </div>
 
-                            <Button type='button' className='w-100 mt-4 submit-btn' onClick={SubmitOTP}> Submit </Button>
-                        </Form>
+                        <Form onSubmit={handleSubmit}>
+              <div className='otp d-flex align-items-center justify-content-center mt-4 mb-1 gap-3 w-100'>
+                {[1, 2, 3, 4, 5, 6].map((index) => (
+                  <input
+                  key={index}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  value={values[`otp${index}`]}
+                  type="number"
+                  name={`otp${index}`}
+                  onChange={(event) => handleChangeotp(index, event)}
+                  onKeyDown={(event) => handleKeyDown(index, event)}
+                  maxLength={1}
+                  min={0}
+                  max={9}
+                  autoComplete="off"
+
+                />
+                ))}
+              </div>
+              <Button type='button' className='w-100 mt-4 submit-btn' onClick={SubmitOTP}>Submit</Button>
+            </Form>
+
+
                     </div>
                 </Modal.Body>
             </Modal>

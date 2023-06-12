@@ -43,6 +43,7 @@ const ForYou = () => {
   const [totalPages, setTotalPages] = useState(0); // Declare totalPages state variable
   const [show, setShow] = useState(false);
   const player = useRef();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => setShowComments(false);
@@ -59,12 +60,16 @@ const ForYou = () => {
   const [showReport, setShowReport] = useState(false);
   const handleReportClose = () => setShowReport(false);
   const handleReportShow = () => setShowReport(true)
+
   const handleClose = () => {
+    setIsModalOpen(false);
     setShow(false);
-  }
-
-  const handleShow = () => setShow(true);
-
+  };
+  const handleShow = () => {
+    console.log("show");
+    setIsModalOpen(true);
+    setShow(true);
+  };
   const startAnimation = () => {
     if (player.current) {
       player.current.play(); // Check if player.current is not null before accessing play()
@@ -87,7 +92,12 @@ const ForYou = () => {
       setTotalPages(postsData.length);
       const updatedfavoriteProductList = [...postList, ...postsData]
         .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-      setPostList(updatedfavoriteProductList);
+      console.log(updatedfavoriteProductList, "updatedfavoriteProductList");
+      if (!isLoggedIn) {
+        setPostList(updatedfavoriteProductList.slice(0, 4));
+      } else {
+        setPostList(updatedfavoriteProductList);
+      }
       setIsFetching(false);
       stopAnimation();
     } catch (error) {
@@ -100,7 +110,9 @@ const ForYou = () => {
   }
 
   const handleSlideChange = (swiper) => {
+    console.log(swiper.activeIndex, " swiper.activeIndex");
     setCurrentVideoIndex(swiper.activeIndex);
+
     if (isLoggedIn && swiper.activeIndex === postList.length - 2) {
       // Check if the last video is being rendered
       if (swiper.activeIndex === postList.length - 2) { // Change to -2 instead of -1
@@ -132,8 +144,8 @@ const ForYou = () => {
         }, 100);
       }
     } else if (!isLoggedIn && swiper.activeIndex === 3) {
+      // setPostList(postList.slice(0, 3)); // Keep only the first three videos in the list
       handleShow()
-      setPostList(postList.slice(0, 3)); // Keep only the first three videos in the list
     }
   }
 
@@ -218,6 +230,9 @@ const ForYou = () => {
   useEffect(() => {
     getPosts();
   }, [page, isLoggedIn]);
+
+
+  console.log(postList, "postList");
 
   return (
 
