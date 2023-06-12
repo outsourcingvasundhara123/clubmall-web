@@ -68,7 +68,7 @@ const Header = () => {
                 api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
 
             ]);
-            console.log(categoryResponse,"category");
+            console.log(categoryResponse, "category");
             const categoryData = categoryResponse.data.data;
             const cartCountData = cartListresponse.data.data.list
             setcarteCount(cartCountData?.length)
@@ -155,7 +155,7 @@ const Header = () => {
                     <div className='menu-box h-100'>
                         <ul className='h-100'>
                             <li>
-                                <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
+                                <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/")}>For You</Link>
                             </li>
 
                             <li>
@@ -167,7 +167,7 @@ const Header = () => {
                             </li>
 
                             <li>
-                                <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/")}>Fashion</Link>
+                                <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/fashion")}>Fashion</Link>
                             </li>
                             <li>
                                 <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => setActive("/selling")}>Hot Selling</Link>
@@ -177,11 +177,11 @@ const Header = () => {
                             </li>
                             <li>
                                 <Link to="/categories" className={`${active === "/categories" ? "active" : ""} `} onClick={() => setActive("/categories")}>Categories <MdOutlineKeyboardArrowDown /></Link>
-                                        {/* names of the main categorys */}
-                              {isLoggedIn && <div className='mega-menu'>
+                                {/* names of the main categorys */}
+                                {isLoggedIn && <div className='mega-menu'>
                                     <Row>
-                                       
-                                       
+
+
                                         <Col lg={3} md={6}>
                                             <div className='border-right-cos pe-4 h-100'>
                                                 <ul>
@@ -217,7 +217,7 @@ const Header = () => {
                                             </div>
                                         </Col>
                                     </Row>
-                                </div> }  
+                                </div>}
                             </li>
                         </ul>
                     </div>
@@ -384,7 +384,7 @@ const Header = () => {
                         <div className='menu-main'>
                             <ul className='h-100'>
                                 <li>
-                                    <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/for-you")}>For You</Link>
+                                    <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/")}>For You</Link>
                                 </li>
                                 <li>
                                     <Button onClick={() => {
@@ -396,7 +396,7 @@ const Header = () => {
                                     <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
                                 </li>
                                 <li>
-                                    <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/")}>Fashion</Link>
+                                    <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/fashion")}>Fashion</Link>
                                 </li>
                                 <li>
                                     <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => setActive("/selling")}>Hot Selling</Link>

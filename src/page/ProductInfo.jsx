@@ -275,6 +275,7 @@ const ProductInfo = () => {
                                                     hashNavigation={{
                                                         watchState: true,
                                                     }}
+                                                    loop={true}
                                                     breakpoints={{
                                                         0: {
                                                             slidesPerView: 1,

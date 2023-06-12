@@ -169,6 +169,7 @@ const Home = () => {
                                         hashNavigation={{
                                             watchState: true,
                                         }}
+                                        loop={true}
                                         breakpoints={breakpoints}
                                         navigation={true}
                                         modules={[Pagination, Navigation]}
@@ -259,6 +260,7 @@ const Home = () => {
                                         hashNavigation={{
                                             watchState: true,
                                         }}
+                                        loop={true}
                                         breakpoints={{
                                             0: {
                                                 slidesPerView: 1,
@@ -341,6 +343,7 @@ const Home = () => {
                                         hashNavigation={{
                                             watchState: true,
                                         }}
+                                        loop={true}
                                         breakpoints={{
                                             0: {
                                                 slidesPerView: 1,

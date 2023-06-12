@@ -43,10 +43,6 @@ export default [
     element: <Profile />,
   },
   {
-    path: "/particular-categories",
-    element: <Fashion />,
-  },
-  {
     path: "/new-in",
     element: <Home />,
   },

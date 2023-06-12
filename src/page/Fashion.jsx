@@ -13,7 +13,7 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
-import { handelProductDetail ,handelCategorydata } from '../helper/constants';
+import { handelProductDetail, handelCategorydata } from '../helper/constants';
 
 const Fashion = () => {
 
@@ -149,6 +149,7 @@ const Fashion = () => {
                                         hashNavigation={{
                                             watchState: true,
                                         }}
+
                                         breakpoints={{
                                             0: {
                                                 slidesPerView: 1,
@@ -175,12 +176,13 @@ const Fashion = () => {
                                                 spaceBetween: 20
                                             }
                                         }}
+                                        loop={true}
                                         navigation={true}
                                         modules={[Pagination, Navigation]}
                                         className="mySwiper"
                                     >
                                         {
-                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.slice(0, 10).map((e) => {
+                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <>
                                                         <SwiperSlide>
@@ -206,6 +208,7 @@ const Fashion = () => {
                                         hashNavigation={{
                                             watchState: true,
                                         }}
+                                        loop={true}
                                         breakpoints={{
                                             0: {
                                                 slidesPerView: 1,
@@ -237,7 +240,7 @@ const Fashion = () => {
                                         className="mySwiper"
                                     >
                                         {
-                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.slice(5, 15).map((e) => {
+                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <>
                                                         <SwiperSlide>
@@ -269,6 +272,7 @@ const Fashion = () => {
                                         hashNavigation={{
                                             watchState: true,
                                         }}
+                                        loop={true}
                                         breakpoints={{
                                             0: {
                                                 slidesPerView: 1,
@@ -300,7 +304,7 @@ const Fashion = () => {
                                         className="mySwiper"
                                     >
                                         {
-                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.slice(1, 20).map((e) => {
+                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <>
                                                         <SwiperSlide>
@@ -313,7 +317,7 @@ const Fashion = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn' onClick={() => handelCategorydata() }>View All</Button>
+                                        <Button className='view-all-btn' onClick={() => handelCategorydata()}>View All</Button>
                                     </div>
                                 </div>
 
@@ -326,6 +330,7 @@ const Fashion = () => {
                                         hashNavigation={{
                                             watchState: true,
                                         }}
+                                        loop={true}
                                         breakpoints={{
                                             0: {
                                                 slidesPerView: 1,
