@@ -92,6 +92,7 @@ const LogIn = () => {
                 setSucessSnackBarOpen(!sucessSnackBarOpen);
                 setValues(initialValues);
                 setMyMessage(res.data.message);
+                console.log(res.data.data,"login");
                 login(res.data.data.user);
                 navigate("/");
               } else {
@@ -294,7 +295,6 @@ const LogIn = () => {
   console.log(otpShow, "otpShow");
   console.log(values, "values");
 
-
   return (
     <Layout>
 
@@ -487,7 +487,6 @@ const LogIn = () => {
 
                 </div>
             }
-
 
             {
               (!show && otpShow) &&

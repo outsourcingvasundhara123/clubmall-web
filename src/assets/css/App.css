@@ -4620,3 +4620,10 @@ input[type='radio'] {
 }
 
 /* wishlist end */
+
+.myprofile {
+    width: 30px !important;
+    height: 30px !important;
+    object-fit: cover !important;
+    border-radius: 50%;
+}

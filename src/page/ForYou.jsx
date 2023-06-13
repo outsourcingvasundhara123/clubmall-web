@@ -27,6 +27,8 @@ const ForYou = () => {
   const navigate = useNavigate();
   const swiperRef = useRef(null);
   const defaultProfile = `./img/for_you/defaultuser.png`
+  const Userprofile = sessionStorage.getItem("profile_image") ? sessionStorage.getItem("profile_image") : defaultProfile
+  const UserId = sessionStorage.getItem("user") && sessionStorage.getItem("user")
   const [postList, setPostList] = useState([]);
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
@@ -44,39 +46,78 @@ const ForYou = () => {
   const [show, setShow] = useState(false);
   const player = useRef();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modelData, setMyModelData] = useState("");
+  const [comment, setCommnet] = useState(null);
+  const [postId, setPostId] = useState(null);
+  const [report, setReport] = useState({});
 
   const [showComments, setShowComments] = useState(false);
-  const handleCommentsClose = () => setShowComments(false);
-  const handleCommentsShow = () => setShowComments(true)
-
+  const handleCommentsClose = () => {
+    setCommnet(" ")
+    setShowComments(false);
+  }
   const [showAppDownload, setShowAppDownload] = useState(false);
   const handleAppDownloadShow = () => setShowAppDownload(true);
   const handleAppDownloadClose = () => setShowAppDownload(false);
-
   const [showProduct, setShowProduct] = useState(false);
   const handleProductShow = () => setShowProduct(true);
   const handleProductClose = () => setShowProduct(false);
-
   const [showReport, setShowReport] = useState(false);
-  const handleReportClose = () => setShowReport(false);
-  const handleReportShow = () => setShowReport(true)
+  
+  const handleReportClose = () => {
+    setReport({})
+    setShowReport(false);
+  }
+
+  const handleReportShow = (id) => {
+    setShowReport(true)
+    setPostId(id)
+  }
 
   const handleClose = () => {
     setIsModalOpen(false);
     setShow(false);
+    setCommnet("")
   };
+
   const handleShow = () => {
-    console.log("show");
     setIsModalOpen(true);
     setShow(true);
   };
+
   const startAnimation = () => {
     if (player.current) {
       player.current.play(); // Check if player.current is not null before accessing play()
     }
   };
+
   const stopAnimation = () => {
     setLoading(false);
+  };
+
+  const handleCommentsShow = async (id) => {
+    startAnimation();
+
+    try {
+      if (isLoggedIn) {
+        setShowComments(true)
+        setIsFetching(true)
+        const commentListResponse = await api.postWithToken(`${serverURL + "post-comment-list"}`, { post_id: id })
+        setPostId(id)
+        setProfileUrl(commentListResponse.data.data.profileImagePath)
+        const postsCommentData = commentListResponse.data.data.postsComment;
+        setTotalPages(postsCommentData.length);
+        setMyModelData(postsCommentData)
+        setIsFetching(false);
+        stopAnimation();
+      } else {
+        // User is not logged in, redirect to the login page
+        afterLogin(setMyMessage);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getPosts = async () => {
@@ -92,7 +133,6 @@ const ForYou = () => {
       setTotalPages(postsData.length);
       const updatedfavoriteProductList = [...postList, ...postsData]
         .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-      console.log(updatedfavoriteProductList, "updatedfavoriteProductList");
       if (!isLoggedIn) {
         setPostList(updatedfavoriteProductList.slice(0, 4));
       } else {
@@ -110,7 +150,6 @@ const ForYou = () => {
   }
 
   const handleSlideChange = (swiper) => {
-    console.log(swiper.activeIndex, " swiper.activeIndex");
     setCurrentVideoIndex(swiper.activeIndex);
 
     if (isLoggedIn && swiper.activeIndex === postList.length - 2) {
@@ -144,7 +183,6 @@ const ForYou = () => {
         }, 100);
       }
     } else if (!isLoggedIn && swiper.activeIndex === 3) {
-      // setPostList(postList.slice(0, 3)); // Keep only the first three videos in the list
       handleShow()
     }
   }
@@ -162,10 +200,8 @@ const ForYou = () => {
               // Toggle the following status for the specific post
               return {
                 ...post,
-                is_following: !post.is_following,
-                total_followers: post.is_following
-                  ? post.total_followers - 1
-                  : post.total_followers + 1,
+                is_follower: post.is_follower === 1 ? 0 : 1,
+                total_followers: post.is_follower === 1 ? post.total_followers - 1 : post.total_followers + 1,
               };
             }
             return post;
@@ -194,7 +230,6 @@ const ForYou = () => {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setMyMessage(res.data.message);
           // Find the index of the post within the postList array
-          // Find the index of the post within the postList array
           const postIndex = postList.findIndex((post) => post._id === post_id);
           if (postIndex !== -1) {
             // Toggle the like status and like count for the specific post
@@ -206,15 +241,118 @@ const ForYou = () => {
             // Create a new array with the updated post
             const updatedPostList = [...postList];
             updatedPostList[postIndex] = updatedPost;
-
             // Update the postList state with the updated data
             setPostList(updatedPostList);
-            // getPosts(); // Move this line outside the if-else block
           }
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
+      } else {
+        // User is not logged in, redirect to the login page
+        afterLogin(setMyMessage);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
+    } catch (error) {
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  };
+
+  const submitReport = async () => {
+    try {
+      if (isLoggedIn) {
+        console.log("report");
+        if (report && report.report_type && report.content) {
+          report.action = "create-post-report"
+          report.post_id = postId
+          const res = await api.postWithToken(`${serverURL}post-comment-create`, report);
+          if (res.data.success === true) {
+            setSucessSnackBarOpen(!sucessSnackBarOpen);
+            setMyMessage(res.data.message);
+            // for update count of total comments 
+            // setPostList((prevPostList) =>
+            //   prevPostList.map((post) =>
+            //     post._id === postId ? { ...post, total_comment: post.total_comment + 1 } : post
+            //   )
+            // );
+            setCommnet("")
+            handleCommentsShow(postId)
+          } else if (res.data.success === false) {
+            setMyMessage(res.data.message);
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+          }
+        } else {
+          setMyMessage("select a report type  and description ");
+          setWarningSnackBarOpen(!warningSnackBarOpen);
+        }
+      } else {
+        // User is not logged in, redirect to the login page
+        afterLogin(setMyMessage);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
+    } catch (error) {
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  };
+
+  const postComment = async () => {
+    try {
+      if (isLoggedIn) {
+        console.log(comment == " ", "comment");
+        if (comment && comment !== null && comment !== " ") {
+          const res = await api.postWithToken(`${serverURL}post-comment-create`, { post_id: postId, content: comment });
+          if (res.data.success === true) {
+            setSucessSnackBarOpen(!sucessSnackBarOpen);
+            setMyMessage(res.data.message);
+            // for update count of total comments 
+            setPostList((prevPostList) =>
+              prevPostList.map((post) =>
+                post._id === postId ? { ...post, total_comment: post.total_comment + 1 } : post
+              )
+            );
+            setCommnet("")
+            handleCommentsShow(postId)
+          } else if (res.data.success === false) {
+            setMyMessage(res.data.message);
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+          }
+        } else {
+          setMyMessage("Enter a comment");
+          setWarningSnackBarOpen(!warningSnackBarOpen);
+        }
+
+      } else {
+        // User is not logged in, redirect to the login page
+        afterLogin(setMyMessage);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
+    } catch (error) {
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  };
+
+  const DeleteComment = async (id) => {
+    try {
+      if (isLoggedIn) {
+        const res = await api.postWithToken(`${serverURL}post-comment-delete`, { post_id: postId, comment_id: id });
+        if (res.data.success === true) {
+          setSucessSnackBarOpen(!sucessSnackBarOpen);
+          setMyMessage(res.data.message);
+          // for update count of total comments 
+          setPostList((prevPostList) =>
+            prevPostList.map((post) =>
+              post._id === postId ? { ...post, total_comment: post.total_comment - 1 } : post
+            )
+          );
+          handleCommentsShow(postId)
+        } else if (res.data.success === false) {
+          setMyMessage(res.data.message);
+          setWarningSnackBarOpen(!warningSnackBarOpen);
+        }
+
 
       } else {
         // User is not logged in, redirect to the login page
@@ -232,8 +370,10 @@ const ForYou = () => {
   }, [page, isLoggedIn]);
 
 
-  console.log(postList, "postList");
-
+  // console.log(modelData, "modelData");
+  // console.log(postId, "postId");
+  console.log(report, "reportType");
+  
   return (
 
     <Layout>
@@ -298,7 +438,7 @@ const ForYou = () => {
 
                 <div className='user-name px-3'>
                   <div className='d-flex align-items-center gap-2'>
-                    <img alt='profile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} />
+                    <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} />
                     <div>
                       <p>{e.user_name}</p>
                       {/* <span>
@@ -306,12 +446,11 @@ const ForYou = () => {
                               13K</span> */}
                     </div>
                   </div>
-                  <Button className='follow-btn' onClick={() => followUnfollow(e.user_id)}  >+ Follow ({e.total_followers})</Button>
-                </div>
-
+                  <Button className='follow-btn' onClick={() => followUnfollow(e.user_id)}>
+                    {e.is_follower === 0 ? "+ Follow" : "Following"} ({e.total_followers})
+                  </Button>                </div>
                 {e.products_obj.length !== 0 &&
                   <>
-
                     <div className='price'>
                       <Button>Individual Price <br />
                         ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
@@ -351,11 +490,11 @@ const ForYou = () => {
                       <p>{e.total_like}</p>
                     </Button> */}
 
-                    <Button onClick={handleCommentsShow}>
+                    <Button onClick={() => handleCommentsShow(e._id)}>
                       <img alt='' src='./img/for_you/msg.png' />
                       <p>{e.total_comment}</p>
                     </Button>
-                    <Button onClick={handleReportShow}>
+                    <Button onClick={ () => handleReportShow(e._id)}>
                       <img alt='' src='./img/for_you/flag.png' />
                     </Button>
                   </div>
@@ -463,37 +602,39 @@ const ForYou = () => {
             </div> */}
             <div className='show-all-comments'>
               <ul className='mt-4'>
-                <li>
-                  <div className='d-flex align-items-center gap-3'>
-                    <div className='comment-user'>
-                      <img src='./img/header/user-pic.png' alt='' width="30px" />
-                    </div>
-                    <div className='comments-user-name'>
-                      <h6>Mercedes Amg GT</h6>
-                      <span>it's a super car</span>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div className='d-flex align-items-center gap-3'>
-                    <div className='comment-user'>
-                      <img src='./img/header/user-pic.png' alt='' width="30px" />
-                    </div>
-                    <div className='comments-user-name'>
-                      <h6>Mercedes Amg GT</h6>
-                      <span>it's a super car it's a super car it's a super car it's a super car</span>
-                    </div>
-                  </div>
-                </li>
+                {isFetching ? <p1> Loding..... </p1> :
+                  modelData && modelData?.map((e, i) => (
+                    <li>
+                      <div className='d-flex align-items-center gap-3'>
+                        <div className='comment-user'>
+                          <img className='myprofile' src={e.user_id.profile_image ? profilUrl + e.user_id.profile_image : `${defaultProfile}`}
+                            alt='' width="30px" />
+                        </div>
+                        <div className='comments-user-name'>
+                          <h6> {e.user_id.username}</h6>
+                          <span>{e.content}</span>
+                        </div>
+                        {UserId === e.user_id._id &&
+                          <Button onClick={() => DeleteComment(e._id)} className='delete-btn'>
+                            <img src='./img/cart/delete.png' alt='' />
+                          </Button>
+                        }
+                      </div>
+
+                    </li>
+
+                  ))
+                }
+                {(modelData.length <= 0) && (!isFetching) && <p>No Commnets are available</p>}
               </ul>
             </div>
             <div className='sent-comment d-flex align-items-center gap-3'>
               <div className='comment-user'>
-                <img src='./img/header/user-pic.png' alt='' width="30px" />
+                <img className='myprofile' src={Userprofile} alt='' width="30px" />
               </div>
               <div className='position-relative w-100'>
-                <input type='text' placeholder='Your comment..' />
-                <Button className='sent-comment-icon'><RiSendPlaneFill /></Button>
+                <input type='text' name='content' value={comment} onChange={(e) => setCommnet(e.target.value)} placeholder='Your  comment..' />
+                <Button onClick={postComment} className='sent-comment-icon'><RiSendPlaneFill /></Button>
               </div>
             </div>
           </div>
@@ -510,18 +651,19 @@ const ForYou = () => {
             <Form className='mt-3'>
               <div className='login-input text-start'>
                 <label>Report Type</label>
-                <select className='select-arrow'>
-                  <option>Sexual content</option>
-                  <option>Child abuse</option>
-                  <option>Hateful or abusive content</option>
-                  <option>Violent or repulsive content</option>
+                <select value={report.report_type} onChange={(e) => setReport({ ...report, report_type: e.target.value })} className='select-arrow'>
+                  <option defaultChecked={true} >Select Report Type</option>
+                  <option value="Sexual content" >Sexual content</option>
+                  <option value="Child abuse" >Child abuse</option>
+                  <option value="Hateful or abusive content" >Hateful or abusive content</option>
+                  <option value="Violent or repulsive content"> Violent or repulsive content</option>
                 </select>
               </div>
               <div className='login-input text-start mt-3'>
                 <label>Description</label>
-                <textarea placeholder='Describe your report here' rows={5} />
+                <textarea placeholder='Describe your report here' onChange={(e) => setReport({ ...report, content: e.target.value })} rows={5} />
               </div>
-              <Button className='submit-btn mt-3 w-100'>Send</Button>
+              <Button className='submit-btn mt-3 w-100' onClick={submitReport} >Send</Button>
             </Form>
           </div>
         </Modal.Body>
