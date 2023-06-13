@@ -29,6 +29,8 @@ const Header = () => {
     const handleShow = () => setShow(true);
     const [category, setcategory] = useState([]);
     const UserName = sessionStorage.getItem("name") ? sessionStorage.getItem("name") : "undefail"
+    const defaultProfile = `./img/for_you/defaultuser.png`
+    const Userprofile = sessionStorage.getItem("profile_image") ? sessionStorage.getItem("profile_image") : defaultProfile
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
@@ -98,10 +100,8 @@ const Header = () => {
         }
     };
 
-
         const getCategory = async () => {
         startAnimation()
-        console.log("category--------------1111111111111");
         try {
 
             const  categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
@@ -256,7 +256,7 @@ const Header = () => {
                                             <NavLink>
                                                 <Button className='pre-label-btn user-account'>
                                                     <div className='d-flex align-items-center gap-2'>
-                                                        <img src='./img/header/user-pic.png' alt='' />
+                                                    <img className='myprofile'  src={Userprofile} alt='' />
                                                         <div className='price-text text-start'>
                                                             <h6>Hello, {UserName}</h6>
                                                             <span>Orders & Account</span>
@@ -269,7 +269,7 @@ const Header = () => {
                                         <Dropdown.Menu>
                                             <div className='drop-items'>
                                                 <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
-                                                    <img src='./img/header/user-pic.png' alt='' />
+                                                    <img className='myprofile' src={Userprofile} alt='' />
                                                     <h6>Hello, {UserName}</h6>
                                                 </div>
                                             </div>
