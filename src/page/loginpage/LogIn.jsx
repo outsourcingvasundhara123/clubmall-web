@@ -431,11 +431,11 @@ const LogIn = () => {
               show ? <div className='pass-model-title text-center'>
                 <h3>Forget Password?</h3>
                 {(otpShow !== 1 && show == true) &&
-                  <p>Enter email ro retriveve OTP for resetting password</p>
+                  <p className='mt-2'>Enter email to retrieve OTP for resetting password</p>
                 }
 
               </div> : <div className='pass-model-title text-center'>
-                <h3>Verify Email </h3>
+                <h3>Verify your email </h3>
                 <p>Enter Verification code to Verify your email</p>
               </div>
             }
@@ -475,7 +475,7 @@ const LogIn = () => {
                             onChange={handleChange} name='password' value={values.password}
                             autoComplete="off"
                             type={showPass ? "password" : "text"} />
-                          <div className='error pass-error' >{(errors?.password !== "Password is required") && errors?.password }</div>
+                          <div className='error pass-error' >{(errors?.password !== "Password is required") && errors?.password}</div>
                           <Button className='show-hide-pass' onClick={() => setShowPass(!showPass)}>
                             {showPass ? <AiFillEyeInvisible /> : <AiFillEye />}
                           </Button>

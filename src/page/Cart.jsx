@@ -222,6 +222,7 @@ const Cart = () => {
                                                 <div className='text-center found'>
                                                     <img src='./img/not-found.png' alt='' />
                                                     <p className='mt-3'>The cart is empty</p>
+                                                    <Button className='mt-3 submit-btn'>Shop Now</Button>
                                                 </div>
                                             </div>
                                         }
