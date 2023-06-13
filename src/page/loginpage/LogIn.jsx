@@ -435,8 +435,8 @@ const LogIn = () => {
                 }
 
               </div> : <div className='pass-model-title text-center'>
-                <h3>Verify your email </h3>
-                <p>Enter Verification code to Verify your email</p>
+                <h3>Verify Email </h3>
+                <p>Enter verification code to verify your email</p>
               </div>
             }
 
