@@ -88,7 +88,7 @@ const Cart = () => {
 
         // console.log(token, "stripe");
         setIsOpen(!isOpen);
-
+console.log(token,"token");
         // const response = await fetch('YOUR_SERVER_ENDPOINT', {
         //   method: 'POST',
         //   // Include any necessary data for the server-side checkout process
@@ -101,6 +101,7 @@ const Cart = () => {
         //   // Handle any errors that occur during redirection to Stripe Checkout
         //   console.error(result.error);
         // }
+        
     };
 
     const removeCartData = async (id, action, qty) => {
@@ -438,9 +439,6 @@ const Cart = () => {
                                                                         style={{ width: "auto", whiteSpace: "nowrap" }} >Apply</Button>
                                                                 </div>
                                                             }
-
-
-
                                                         </div>
                                                     </div>
 
@@ -451,15 +449,15 @@ const Cart = () => {
                                                         <img src='./img/kla.png' alt='' width="60px" />
                                                         <img src='./img/cart/blue-note.png' alt='' />
                                                     </p> */}
-
-                                                    {/* <StripeCheckout
+ 
+<StripeCheckout
 stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
 token={handleCheckout}
-  amount={15.59} // Amount in cents
+  amount={productList.cartAmountDetails?.net_amount} // Amount in cents
   name="My Product"
   description="Product description"
   currency="USD"
-/> */}
+/> 
                                                     <Button className='checkout mt-4' onClick={handleCheckout} >Checkout</Button>
                                                     {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}
                                                 </div>

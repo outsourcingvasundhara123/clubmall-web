@@ -8,27 +8,27 @@ export default {
   getWithToken: async (URL) =>
     axios.get(URL, {
       headers: {
-        authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }),
     
   deleteWithToken: async (URL) =>
     axios.delete(URL, {
       headers: {
-        authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }),
   postWithToken: async (URL, DATA) =>
     axios.post(URL, DATA, {
       headers: {
-        authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }),
     
     putWithToken: async (URL, DATA) =>
     axios.put(URL, DATA, {
       headers: {
-        authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }),   
 };

@@ -85,7 +85,7 @@ const Home = () => {
 
     useEffect(() => {
         getCategory();
-        // setCorrectUser(sessionStorage.getItem("token"))
+        // setCorrectUser(localStorage.getItem("token"))
     }, []);
 
     const [active, setActive] = useState("1");

@@ -28,9 +28,9 @@ const Header = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [category, setcategory] = useState([]);
-    const UserName = sessionStorage.getItem("name") ? sessionStorage.getItem("name") : "undefail"
+    const UserName = localStorage.getItem("name") ? localStorage.getItem("name") : "undefail"
     const defaultProfile = `./img/for_you/defaultuser.png`
-    const Userprofile = sessionStorage.getItem("profile_image") ? sessionStorage.getItem("profile_image") : defaultProfile
+    const Userprofile = localStorage.getItem("profile_image") ? localStorage.getItem("profile_image") : defaultProfile
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
@@ -44,6 +44,7 @@ const Header = () => {
             player.current.play(); // Check if player.current is not null before accessing play()
         }
     };
+    
     const stopAnimation = () => {
         setLoading(false);
     };
@@ -531,11 +532,11 @@ const Header = () => {
                                 <li>04/18/2023</li>
                             </ul>
 
-                            <div className='mt-4'>
+                            {/* <div className='mt-4'>
                                 <h5>OUTFIT INSPO</h5>
                                 <NavLink>#sayodoinCLUBAMLL</NavLink>
                                 <NavLink>#MakeHerDay</NavLink>
-                            </div>
+                            </div> */}
                         </div>
                         <div className='new-in-box3'>
                             <h5>NEW IN WOMEN’S CLOTHING</h5>

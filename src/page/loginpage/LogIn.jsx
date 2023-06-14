@@ -89,12 +89,14 @@ const LogIn = () => {
             console.log(res.data, "res.data");
             if (res.data.success === true) {
               if (res.data.data.user) {
-                setSucessSnackBarOpen(!sucessSnackBarOpen);
-                setValues(initialValues);
                 setMyMessage(res.data.message);
-                console.log(res.data.data,"login");
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
                 login(res.data.data.user);
-                navigate("/");
+                setTimeout(() => {
+                  setValues(initialValues);
+                  navigate("/");
+                }, 1000);
+            
               } else {
                 console.log("else");
                 SetOtpShow(true)
@@ -142,7 +144,6 @@ const LogIn = () => {
           username: res.data.given_name
         })
           .then((res) => {
-            // if (res.data.success === true) {
             setMyMessage(res.data.message);
             setSucessSnackBarOpen(!sucessSnackBarOpen);
             login(res.data.data.user);
@@ -150,7 +151,6 @@ const LogIn = () => {
               setValues(initialValues);
               navigate("/");
             }, 1000);
-            // }
           })
       } catch (err) {
         console.log(err);
