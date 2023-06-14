@@ -4,7 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import AddCartModal from './AddCartModal';
 import { handelProductDetail } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
-
+import SucessSnackBar from "../components/SnackBar";
+import ErrorSnackBar from "../components/SnackBar";
 
 const ProCard = (props) => {
 
@@ -38,6 +39,9 @@ const ProCard = (props) => {
 
                 <div className='product-card explore-card  pointer'>
 
+
+               
+
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
@@ -50,16 +54,16 @@ const ProCard = (props) => {
                                 <span className='sub-per'>${props.individual_price} (Individual Price)</span>
                             </div>
 
-                            {props.is_wishList == 0
+                            {props.is_wishList === 0
                                 &&
-                                <Button className='like-btn' onClick={() => addWishList(props.id, "product-like-dislike")} >
+                                <Button className='like-btn' onClick={() => addWishList(props.id, "product-wishlist")} >
                                     <img src='./img/new_in/like.png' alt='' />
-                                </Button>}
+                                </Button>
+                                }
                             {
-                                props.is_wishList == 1 &&
+                                props.is_wishList === 1 &&
                                 <Button className='like-btn' onClick={() => addWishList(props.id, "product-delete-wishlist")} >
-                                    {/* <img src='./img/new_in/like.png' alt='' /> */}
-                                   <h1>hello</h1> 
+                                   <img src='./img/Vector.png' alt='' />
                                 </Button>
                             }
 
