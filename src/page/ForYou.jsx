@@ -64,10 +64,9 @@ const ForYou = () => {
   const handleProductShow = (data) => {
     setShowProduct(true);
     setMyModelData(data)
-    console.log(data,"data");
+    console.log(data, "data");
   }
-  const handleProductClose = () =>
-  {
+  const handleProductClose = () => {
     setMyModelData("")
     setShowProduct(false);
   }
@@ -615,7 +614,7 @@ const ForYou = () => {
             </div> */}
             <div className='show-all-comments'>
               <ul className='mt-4'>
-                {isFetching ? <p1> Loding..... </p1> :
+                {isFetching ? <p> Loding..... </p> :
                   modelData && modelData?.map((e, i) => (
                     <li>
                       <div className='d-flex align-items-center gap-3'>
@@ -710,33 +709,33 @@ const ForYou = () => {
             </Button>
             <h5>Product List</h5>
             <div className='product-list-scroll mt-4' >
-              {    
-              
-              modelData && modelData?.map((e, i) => (
-              
-                <div className='for_you_product d-flex align-items-start gap-3'>
-                <div className='cos-img-size'>
-                  <img src=   {postlUrl + e.product_id?._id + "/" + e.product_id.product_images[0]?.file_name} 
-                   
-                   className='for-you-product-img' />
-                </div>
-                <div className='for-you-product-text'>
-                  <h6>  {e.product_id.name} </h6>
+              {
 
-                  <div className='d-flex align-items-center gap-1 my-2'>
+                modelData && modelData?.map((e, i) => (
 
-                  <Rating name="read-only" value={e.product_id.rating} readOnly />
+                  <div className='for_you_product d-flex align-items-start gap-3 mt-2'>
+                    <div className='cos-img-size'>
+                      <img src={postlUrl + e.product_id?._id + "/" + e.product_id.product_images[0]?.file_name}
 
+                        className='for-you-product-img' />
+                    </div>
+                    <div className='for-you-product-text w-100'>
+                      <h6>  {e.product_id.name} </h6>
+
+                      <div className='d-flex align-items-center gap-1 my-2'>
+
+                        <Rating name="read-only" value={e.product_id.rating} readOnly />
+
+                      </div>
+                      <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
+                        <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
+                          $ {e.product_id.individual_price} </Button>
+                        <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => (handleAppDownloadShow(), setPerActive('Group'))}>Group Price <br />
+                          ${e.product_id.group_price} </Button>
+                      </div>
+                    </div>
                   </div>
-                  <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                    <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
-                      $ {e.product_id.individual_price} </Button>
-                    <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => (handleAppDownloadShow() ,setPerActive('Group') ) }>Group Price <br />
-                      ${e.product_id.group_price} </Button>
-                  </div>
-                </div>
-              </div>
-              ))}
+                ))}
 
             </div>
           </div>

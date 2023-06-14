@@ -88,7 +88,7 @@ const Cart = () => {
 
         // console.log(token, "stripe");
         setIsOpen(!isOpen);
-console.log(token,"token");
+        console.log(token, "token");
         // const response = await fetch('YOUR_SERVER_ENDPOINT', {
         //   method: 'POST',
         //   // Include any necessary data for the server-side checkout process
@@ -101,7 +101,7 @@ console.log(token,"token");
         //   // Handle any errors that occur during redirection to Stripe Checkout
         //   console.error(result.error);
         // }
-        
+
     };
 
     const removeCartData = async (id, action, qty) => {
@@ -291,7 +291,6 @@ console.log(token,"token");
                                                                             {e.sku_attributes?.color[0]?.name}
                                                                             <MdOutlineKeyboardArrowRight />
                                                                         </Button>
-                                                                        <p>Hot Deal</p>
 
                                                                         <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                                             <div className='items-per d-flex align-items-center gap-2 mt-2'>
@@ -449,8 +448,8 @@ console.log(token,"token");
                                                         <img src='./img/kla.png' alt='' width="60px" />
                                                         <img src='./img/cart/blue-note.png' alt='' />
                                                     </p> */}
- 
-{/* <StripeCheckout
+
+                                                    {/* <StripeCheckout
 stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
 token={handleCheckout}
   amount={productList.cartAmountDetails?.net_amount} // Amount in cents
@@ -458,7 +457,16 @@ token={handleCheckout}
   description="Product description"
   currency="USD"
 />  */}
-                                                    <Button className='checkout mt-4' onClick={handleCheckout} >Checkout</Button>
+                                                    <div className='mt-3 login-input'>
+                                                        <label>Shipping details</label>
+                                                        <div className='address-shipped mt-2'>
+                                                            <h6>User name</h6>
+                                                            <p className='mt-1'>dsfgs,sdfsdfsfsdf,sdfsdfsdfsd</p>
+                                                            <p>258888</p>
+                                                            <Button className='change-add mt-3'>Change</Button>
+                                                        </div>
+                                                    </div>
+                                                    <Button className='checkout mt-3' onClick={handleCheckout} >Checkout</Button>
                                                     {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}
                                                 </div>
 

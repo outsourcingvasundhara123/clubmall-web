@@ -101,16 +101,16 @@ const Header = () => {
         }
     };
 
-        const getCategory = async () => {
+    const getCategory = async () => {
         startAnimation()
         try {
 
-            const  categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
             const categoryData = categoryResponse.data.data;
             setcategory(categoryData);
             stopAnimation()
 
-            const  cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })          
+            const cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })
             const cartCountData = cartListresponse.data.data.list
             setCart(cartCountData?.length)
         } catch (error) {
@@ -257,7 +257,7 @@ const Header = () => {
                                             <NavLink>
                                                 <Button className='pre-label-btn user-account'>
                                                     <div className='d-flex align-items-center gap-2'>
-                                                    <img className='myprofile'  src={Userprofile} alt='' />
+                                                        <img className='myprofile' src={Userprofile} alt='' />
                                                         <div className='price-text text-start'>
                                                             <h6>Hello, {UserName}</h6>
                                                             <span>Orders & Account</span>

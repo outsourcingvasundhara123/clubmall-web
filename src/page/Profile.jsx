@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Layout from '../layout/Layout'
-import { Button, Col, Form, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
+import { Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdKeyboardDoubleArrowRight,
@@ -9,9 +9,16 @@ import {
 import ProCard from '../components/ProCard'
 import { data } from "../page/Data"
 import { handelCategorydata } from '../helper/constants'
+import { MdOutlineClose } from 'react-icons/md'
+
 const Profile = () => {
 
     const [itemShow, setItemShow] = useState(false);
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     return (
         <Layout>
@@ -343,7 +350,7 @@ const Profile = () => {
 
                                         <Tab.Pane eventKey="location">
                                             <div className='location-main'>
-                                                <Button>+ Add a new address</Button>
+                                                <Button onClick={handleShow}>+ Add a new address</Button>
                                                 <div className='address-box mt-3'>
                                                     <h5>Rohan Vasundhara <span>+ 1 (774) 360-8208</span></h5>
                                                     <p className='my-2'>376 Center St <br />Chula Vista, CA 91910-3800, United States</p>
@@ -398,13 +405,13 @@ const Profile = () => {
                                                         </div>
                                                         <Button>Link</Button>
                                                     </div>
-                                                    <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
+                                                    {/* <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
                                                         <div className='d-flex align-items-center gap-3'>
                                                             <img src='./img/profile/twitter.png' alt='' />
                                                             <h5>Twitter</h5>
                                                         </div>
                                                         <Button>Link</Button>
-                                                    </div>
+                                                    </div> */}
                                                     <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
                                                         <div className='d-flex align-items-center gap-3'>
                                                             <img src='./img/profile/apple.png' alt='' />
@@ -420,37 +427,37 @@ const Profile = () => {
                                         <Tab.Pane eventKey="notification">
                                             <div className='security-main'>
                                                 <Row>
-                                                    <Col xl={8} lg={6} md={12}>
+                                                    <Col xl={12} lg={12} md={12}>
                                                         <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd'>
                                                             <div>
                                                                 <h5>Promotions</h5>
                                                                 <p>On: Email  I  off: SMS</p>
                                                             </div>
-                                                            <Button>Edit</Button>
+                                                            {/* <Button>Edit</Button> */}
                                                         </div>
                                                         <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
                                                             <div>
                                                                 <h5>Order updates</h5>
                                                                 <p>On: Email  I  off: SMS</p>
                                                             </div>
-                                                            <Button>Edit</Button>
+                                                            {/* <Button>Edit</Button> */}
                                                         </div>
                                                         <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
                                                             <div>
                                                                 <h5>Chat messages</h5>
                                                                 <p>On: Email</p>
                                                             </div>
-                                                            <Button>Edit</Button>
+                                                            {/* <Button>Edit</Button> */}
                                                         </div>
                                                         <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
                                                             <div>
                                                                 <h5>Your recommendations</h5>
                                                                 <p>On: Email  I  off: SMS</p>
                                                             </div>
-                                                            <Button>Edit</Button>
+                                                            {/* <Button>Edit</Button> */}
                                                         </div>
                                                     </Col>
-                                                    <Col xl={4} lg={6} md={12} className='mt-4 mt-lg-0'>
+                                                    {/* <Col xl={4} lg={6} md={12} className='mt-4 mt-lg-0'>
                                                         <div className='receive'>
                                                             <h5>Receive SMS notifications</h5>
                                                             <p className='mt-2'>Message and data rates may apply. Message frequency varies. Text STOP to opt out and HELP for help. <NavLink>Terms of Use</NavLink> and <NavLink>Privacy & Cookie Policy</NavLink>.</p>
@@ -466,7 +473,7 @@ const Profile = () => {
                                                             </div>
                                                             <Button className='submit-btn-receive mt-4'>Submit</Button>
                                                         </div>
-                                                    </Col>
+                                                    </Col> */}
                                                 </Row>
                                             </div>
                                         </Tab.Pane>
@@ -506,7 +513,89 @@ const Profile = () => {
 
                 </div>
             </div>
-        </Layout >
+
+            <Modal show={show} onHide={handleClose} className='add-address' centered>
+                <Modal.Body>
+                    <div className='position-relative'>
+                        <Button className='close-modal-btn forgot-pass-close' onClick={handleClose}>
+                            <MdOutlineClose />
+                        </Button>
+                        <h5>Shipping address</h5>
+                        <Form>
+                            <Row className='mt-2'>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Ship to Address</label>
+                                        <select className='select-arrow'>
+                                            <option>ind</option>
+                                            <option>US</option>
+                                            <option>Aug</option>
+                                        </select>
+                                    </div>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Full Name</label>
+                                        <input placeholder='Full Name'
+                                            type='text'
+                                        />
+                                    </div>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Phone Number</label>
+                                        <input placeholder='Phone Number'
+                                            type='number'
+                                        />
+                                    </div>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>City</label>
+                                        <input placeholder='City'
+                                            type='text'
+                                        />
+                                    </div>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>State</label>
+                                        <select className='select-arrow'>
+                                            <option>ind</option>
+                                            <option>US</option>
+                                            <option>Aug</option>
+                                        </select>
+                                    </div>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Zip Code</label>
+                                        <input placeholder='City'
+                                            type='text'
+                                        />
+                                    </div>
+                                </Col>
+                                <Col lg={12} md={12} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Address</label>
+                                        <textarea className='w-100' placeholder='Enter Address' rows={5}></textarea>
+                                    </div>
+                                </Col>
+                            </Row>
+                            <div className='d-flex align-items-start check-terms gap-3 mt-3'>
+                                <Form.Check
+                                    type="checkbox"
+                                    id='check_terms'
+                                />
+                                <label htmlFor='check_terms' className='pointer'>Make this my default address</label>
+                            </div>
+                            <button className='submit-btn w-100 mt-3'>User this Address</button>
+                        </Form>
+                    </div>
+                </Modal.Body>
+            </Modal>
+
+        </Layout>
     )
 }
 

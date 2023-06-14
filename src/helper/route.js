@@ -10,6 +10,8 @@ import ForYou from '../page/ForYou';
 import LogIn from '../page/loginpage/LogIn';
 import Register from '../page/registerpage/Register';
 import Wishlist from '../page/Wishlist';
+import About from '../page/About';
+import Policy from '../page/Policy';
 
 
 export default [
@@ -65,5 +67,13 @@ export default [
   {
     path: "/wishlist",
     element: <Wishlist />,
+  },
+  {
+    path: "/about",
+    element: <About />,
+  },
+  {
+    path: "/privacy-policy",
+    element: <Policy />,
   },
 ];

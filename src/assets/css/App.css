@@ -92,6 +92,13 @@ p {
     margin: 0 auto;
 }
 
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+
 @media (max-width: 768px) {
     .container-cos {
         max-width: 90%;
@@ -1500,6 +1507,7 @@ del {
 .footer .footer-box a {
     color: #fff;
     margin-bottom: 8px;
+    text-decoration: none;
 }
 
 .footer .footer-working {
@@ -1547,6 +1555,18 @@ del {
 
 .shop-categories .cate-main {
     row-gap: 20px !important;
+}
+
+.cate-main .cat-img-round {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 250px;
+    height: 250px;
+    background-color: #d3d3d35c;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .shop-categories .cate-box h5 {
@@ -3302,6 +3322,24 @@ input[type='radio'] {
     }
 }
 
+.add-address h5 {
+    font-weight: 700;
+    font-size: 24px;
+    color: #223263;
+    text-align: center;
+}
+
+.add-address .modal-dialog {
+    max-width: 700px;
+}
+
+.add-address .modal-dialog .modal-content {
+    background: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.08);
+    border-radius: 11px;
+}
+
 /* profile end */
 
 
@@ -4626,4 +4664,283 @@ input[type='radio'] {
     height: 30px !important;
     object-fit: cover !important;
     border-radius: 50%;
+}
+
+
+
+/* about start */
+.about .banner-left-box {
+    width: 550px;
+    margin-top: 30%;
+    margin-left: 10%;
+}
+
+.about .banner-left-box h1 {
+    font-weight: 800;
+    color: #000;
+    font-size: 60px;
+    line-height: 70px;
+}
+
+.red-color {
+    color: #e02e24 !important;
+}
+
+.download-ui p {
+    color: #232233 !important;
+    font-size: 25px;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+@media (max-width: 1600px) {
+    .about .banner-left-box {
+        margin-left: 0;
+    }
+
+    .about .banner-left-box h1 {
+        font-size: 50px;
+        line-height: 60px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .about .banner-left-box {
+        margin-left: 0;
+        margin-top: 0;
+        text-align: center;
+        width: 100%;
+    }
+
+    .about .banner-left-box h1 {
+        font-size: 50px;
+        line-height: 60px !important;
+    }
+
+    .about .app-download {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .about .banner-left-box {
+        width: 100%;
+
+    }
+
+    .download-ui p {
+        font-size: 20px !important;
+    }
+
+    .about .banner-left-box h1 {
+        font-size: 40px;
+        line-height: 50px !important;
+    }
+}
+
+.clubmall-work .clubmall-work-text h2 {
+    font-size: 50px;
+    color: #000;
+    font-weight: 800;
+}
+
+.clubmall-work .clubmall-work-text p {
+    font-size: 24px;
+    color: #757095;
+    margin-top: 20px;
+}
+
+.clubmall-work {
+    margin-top: 100px;
+}
+
+@media (max-width: 991px) {
+    .clubmall-work .clubmall-work-text {
+        text-align: center;
+    }
+
+    .clubmall-work {
+        margin-top: 50px;
+    }
+}
+
+@media (max-width: 600px) {
+    .clubmall-work .clubmall-work-text h2 {
+        font-size: 40px;
+    }
+
+    .clubmall-work .clubmall-work-text p {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 425px) {
+    .clubmall-work .clubmall-work-text h2 {
+        font-size: 30px;
+    }
+}
+
+/* .round-bg {
+    background-image: url("../img/pink-box-bg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    padding: 100px;
+} */
+
+.policy h3,
+.policy h5 {
+    color: #000;
+}
+
+.policy p,
+.policy ul li span {
+    color: #323f4b;
+}
+
+.policy ul li {
+    color: #e02e24;
+}
+
+
+.policy h3 {
+    font-weight: 600;
+    text-align: center;
+}
+
+.policy h5 {
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.policy a {
+    display: inline-block;
+}
+
+
+
+
+.download-section .section-texts {
+    padding: 120px 50px;
+    background: rgba(224, 46, 36, .4);
+    border-radius: 50px;
+}
+
+.download-section .download-app-partial {
+    position: relative;
+    z-index: 1;
+}
+
+.download-section .section-texts {
+    background-image: url("../img/bg-bottom-left.png");
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    background-size: auto 86%;
+    position: relative;
+}
+
+.download-section .section-texts:after,
+.download-section .section-texts:before,
+.download-section .section-texts .top-right-bg {
+    position: absolute;
+    content: "";
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+}
+
+.download-section .section-texts::after {
+    background: url("../img/bg-bottom-right.png");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 16% auto;
+    z-index: 0;
+}
+
+.download-section .section-texts::before {
+    background: url("../img/bg-top-left.png");
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: 16% auto;
+    z-index: 0;
+}
+
+.download-section .section-texts .top-right-bg {
+    background-image: url("../img/bg-top-right.png");
+    background-position: top right;
+    background-repeat: no-repeat;
+    background-size: auto 86%;
+}
+
+.download-section .section-title {
+    line-height: 65px;
+    position: relative;
+    z-index: 1;
+    max-width: 880px;
+    margin: 0 auto 40px;
+    font-size: 50px;
+    color: #000;
+    font-weight: 700;
+}
+
+.pink-box {
+    margin-top: 100px;
+}
+
+@media (max-width: 991px) {
+    .download-section .section-title {
+        font-size: 40px;
+        line-height: 55px;
+    }
+
+    .download-section .section-texts {
+        padding: 50px 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .download-section .section-title {
+        font-size: 24px;
+        line-height: 35px;
+    }
+
+    .download-section .section-texts::before,
+    .download-section .section-texts::after {
+        display: none;
+    }
+
+    .pink-box {
+        margin-top: 50px;
+    }
+
+    .download-section .section-texts {
+        border-radius: 20px;
+    }
+}
+
+/* about end */
+
+.address-shipped {
+    border: 1px solid lightgray;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.address-shipped h6 {
+    color: #071234;
+    font-weight: 600;
+}
+
+.address-shipped p {
+    font-size: 16px !important;
+}
+
+.change-add {
+    background-color: transparent !important;
+    border: none;
+    color: rgb(0, 68, 255) !important;
+    font-weight: 600;
+    padding: 0;
+    font-size: 15px;
 }

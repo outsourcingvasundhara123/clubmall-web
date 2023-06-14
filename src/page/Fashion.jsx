@@ -382,7 +382,7 @@ const Fashion = () => {
 
                         </section>
 
-                        <section className='video-section'>
+                        {/* <section className='video-section'>
                             <div className='container-cos'>
                                 <video
                                     width="100%"
@@ -398,7 +398,7 @@ const Fashion = () => {
                                     <source src="./img/video.mp4" type="video/mp4" />
                                 </video>
                             </div>
-                        </section>
+                        </section> */}
 
                         <section className='explore'>
                             <div className='container-cos'>
