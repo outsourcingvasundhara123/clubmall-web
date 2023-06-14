@@ -450,14 +450,14 @@ console.log(token,"token");
                                                         <img src='./img/cart/blue-note.png' alt='' />
                                                     </p> */}
  
-<StripeCheckout
+{/* <StripeCheckout
 stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
 token={handleCheckout}
   amount={productList.cartAmountDetails?.net_amount} // Amount in cents
   name="My Product"
   description="Product description"
   currency="USD"
-/> 
+/>  */}
                                                     <Button className='checkout mt-4' onClick={handleCheckout} >Checkout</Button>
                                                     {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}
                                                 </div>
