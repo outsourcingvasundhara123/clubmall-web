@@ -468,7 +468,8 @@ p {
 
 
 .new_in_model .modal-dialog {
-    margin: 61px 50px 15px 50px !important;
+    margin: 60px auto !important;
+    max-width: 800px !important;
 }
 
 .new_in_model .modal-content {
@@ -480,13 +481,6 @@ p {
 
 .new_in_model .modal-body {
     padding: 10px 30px 30px 30px;
-}
-
-.new_in_model .new-in-main {
-    display: flex;
-    column-gap: 30px;
-    flex-wrap: wrap;
-    justify-content: space-between;
 }
 
 @media (max-width: 1863px) {
@@ -502,14 +496,6 @@ p {
 .new_in_model .new-in-box5,
 .new_in_model .new-in-box6 {
     margin-top: 20px;
-}
-
-.new_in_model .new-in-box1 {
-    width: 300px;
-}
-
-.new_in_model .new-in-box6 {
-    width: 570px;
 }
 
 .new_in_model .sky-text {
@@ -635,6 +621,10 @@ p {
 
     .new_in_model .modal-dialog {
         margin: 12px !important;
+    }
+
+    .new_in_model .modal-dialog {
+        max-width: 100% !important;
     }
 
 }
