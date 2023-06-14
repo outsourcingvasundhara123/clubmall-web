@@ -20,6 +20,8 @@ import { useNavigate } from 'react-router-dom'
 import { RiSendPlaneFill } from "react-icons/ri"
 import InstallApp from '../components/InstallApp';
 import { MdOutlineClose } from 'react-icons/md'
+import { Rating } from '@mui/material';
+
 
 const ForYou = () => {
   const [perActive, setPerActive] = useState('Individual');
@@ -27,8 +29,8 @@ const ForYou = () => {
   const navigate = useNavigate();
   const swiperRef = useRef(null);
   const defaultProfile = `./img/for_you/defaultuser.png`
-  const Userprofile = sessionStorage.getItem("profile_image") ? sessionStorage.getItem("profile_image") : defaultProfile
-  const UserId = sessionStorage.getItem("user") && sessionStorage.getItem("user")
+  const Userprofile = localStorage.getItem("profile_image") ? localStorage.getItem("profile_image") : defaultProfile
+  const UserId = localStorage.getItem("user") && localStorage.getItem("user")
   const [postList, setPostList] = useState([]);
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
@@ -60,13 +62,22 @@ const ForYou = () => {
   const handleAppDownloadShow = () => setShowAppDownload(true);
   const handleAppDownloadClose = () => setShowAppDownload(false);
   const [showProduct, setShowProduct] = useState(false);
-  const handleProductShow = () => setShowProduct(true);
-  const handleProductClose = () => setShowProduct(false);
+
+  const handleProductShow = (data) => {
+    setShowProduct(true);
+    setMyModelData(data)
+    console.log(data, "data");
+  }
+  const handleProductClose = () => {
+    setMyModelData("")
+    setShowProduct(false);
+  }
   const [showReport, setShowReport] = useState(false);
-  
+
   const handleReportClose = () => {
     setReport({})
     setShowReport(false);
+    setPostId(null)
   }
 
   const handleReportShow = (id) => {
@@ -123,7 +134,6 @@ const ForYou = () => {
   const getPosts = async () => {
     startAnimation();
     try {
-
       const getTyp = isLoggedIn ? api.getWithToken : api.get;
       const [postListResponse] = await Promise.all([
         getTyp(`${serverURL + POSTSList + `?action=list&page=${page}`}`),
@@ -249,6 +259,7 @@ const ForYou = () => {
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
       } else {
+
         // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
         setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -262,22 +273,28 @@ const ForYou = () => {
   const submitReport = async () => {
     try {
       if (isLoggedIn) {
-        console.log("report");
-        if (report && report.report_type && report.content) {
+        if (report && report.report_type && report.content && report.report_type !== " ") {
           report.action = "create-post-report"
           report.post_id = postId
-          const res = await api.postWithToken(`${serverURL}post-comment-create`, report);
+          report.is_comment = true
+
+          const res = await api.postWithToken(`${serverURL}report-manage`, report);
           if (res.data.success === true) {
-            setSucessSnackBarOpen(!sucessSnackBarOpen);
             setMyMessage(res.data.message);
+            setSucessSnackBarOpen(!sucessSnackBarOpen);
+            setPostList((prevPostList) => prevPostList.filter((post) => post._id !== postId));
+            setTimeout(() => {
+              handleReportClose()
+            }, 1000);
+
             // for update count of total comments 
             // setPostList((prevPostList) =>
             //   prevPostList.map((post) =>
             //     post._id === postId ? { ...post, total_comment: post.total_comment + 1 } : post
             //   )
             // );
+
             setCommnet("")
-            handleCommentsShow(postId)
           } else if (res.data.success === false) {
             setMyMessage(res.data.message);
             setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -300,7 +317,6 @@ const ForYou = () => {
   const postComment = async () => {
     try {
       if (isLoggedIn) {
-        console.log(comment == " ", "comment");
         if (comment && comment !== null && comment !== " ") {
           const res = await api.postWithToken(`${serverURL}post-comment-create`, { post_id: postId, content: comment });
           if (res.data.success === true) {
@@ -372,8 +388,7 @@ const ForYou = () => {
 
   // console.log(modelData, "modelData");
   // console.log(postId, "postId");
-  console.log(report, "reportType");
-  
+
   return (
 
     <Layout>
@@ -452,16 +467,16 @@ const ForYou = () => {
                 {e.products_obj.length !== 0 &&
                   <>
                     <div className='price'>
-                      <Button>Individual Price <br />
+                      <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} >Individual Price <br />
                         ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
                       <Button onClick={handleAppDownloadShow}>Group Price: <br />
                         ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
                     </div>
 
                     <div className='reel-items'>
-                      <p onClick={handleProductShow} className='pointer'>{e.products_obj.length}+ More Products</p>
+                      <p onClick={() => handleProductShow(e.products_obj)} className='pointer'>{e.products_obj.length}+ More Products</p>
                       <div className='items-box p-2 mt-2'>
-                        <img alt='' src={postlUrl + e.products_obj[0]?.product_id._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
+                        <img alt='' src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
                         <del>${e.products_obj[0]?.product_id?.group_price}</del>
                       </div>
                     </div>
@@ -478,7 +493,6 @@ const ForYou = () => {
                       </Button>
                     }
 
-
                     <Button>
                       {e.is_like == 0 && <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' />}
                       {e.is_like == 1 && <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/liked.png' />}
@@ -494,7 +508,7 @@ const ForYou = () => {
                       <img alt='' src='./img/for_you/msg.png' />
                       <p>{e.total_comment}</p>
                     </Button>
-                    <Button onClick={ () => handleReportShow(e._id)}>
+                    <Button onClick={() => handleReportShow(e._id)}>
                       <img alt='' src='./img/for_you/flag.png' />
                     </Button>
                   </div>
@@ -602,25 +616,24 @@ const ForYou = () => {
             </div> */}
             <div className='show-all-comments'>
               <ul className='mt-4'>
-                {isFetching ? <p1> Loding..... </p1> :
+                {isFetching ? <p> Loding..... </p> :
                   modelData && modelData?.map((e, i) => (
                     <li>
                       <div className='d-flex align-items-center gap-3'>
                         <div className='comment-user'>
-                          <img className='myprofile' src={e.user_id.profile_image ? profilUrl + e.user_id.profile_image : `${defaultProfile}`}
+                          <img className='myprofile' src={e.user_id?.profile_image ? profilUrl + e.user_id?.profile_image : `${defaultProfile}`}
                             alt='' width="30px" />
                         </div>
                         <div className='comments-user-name'>
-                          <h6> {e.user_id.username}</h6>
+                          <h6> {e.user_id?.username}</h6>
                           <span>{e.content}</span>
                         </div>
-                        {UserId === e.user_id._id &&
-                          <Button onClick={() => DeleteComment(e._id)} className='delete-btn'>
+                        {UserId === e.user_id?._id &&
+                          <Button onClick={() => DeleteComment(e?._id)} className='delete-btn'>
                             <img src='./img/cart/delete.png' alt='' />
                           </Button>
                         }
                       </div>
-
                     </li>
 
                   ))
@@ -698,50 +711,35 @@ const ForYou = () => {
             </Button>
             <h5>Product List</h5>
             <div className='product-list-scroll mt-4' >
-              <div className='for_you_product d-flex align-items-start gap-3'>
-                <div className='cos-img-size'>
-                  <img src='./img/dummy.png' className='for-you-product-img' />
-                </div>
-                <div className='for-you-product-text'>
-                  <h6>A Student Backpack Casual School Bag Lightweight Computer Backpack</h6>
-                  <div className='d-flex align-items-center gap-1 my-2'>
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/nonrate.png' alt='' />
-                  </div>
-                  <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                    <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
-                      $17.87</Button>
-                    <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => setPerActive('Group')}>Group Price <br />
-                      $17.87</Button>
-                  </div>
-                </div>
-              </div>
-              <div className='for_you_product d-flex align-items-start gap-3 mt-3'>
-                <div className='cos-img-size'>
-                  <img src='./img/dummy.png' className='for-you-product-img' />
-                </div>
-                <div className='for-you-product-text'>
-                  <h6>A Student Backpack Casual School Bag Lightweight Computer Backpack</h6>
-                  <div className='d-flex align-items-center gap-1 my-2'>
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/rate.png' alt='' />
-                    <img src='./img/product_def/nonrate.png' alt='' />
-                  </div>
-                  <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                    <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
-                      $17.87</Button>
-                    <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => setPerActive('Group')}>Group Price <br />
-                      $17.87</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
+              {
 
+                modelData && modelData?.map((e, i) => (
+
+                  <div className='for_you_product d-flex align-items-start gap-3 mt-2'>
+                    <div className='cos-img-size'>
+                      <img src={postlUrl + e.product_id?._id + "/" + e.product_id.product_images[0]?.file_name}
+
+                        className='for-you-product-img' />
+                    </div>
+                    <div className='for-you-product-text w-100'>
+                      <h6>  {e.product_id.name} </h6>
+
+                      <div className='d-flex align-items-center gap-1 my-2'>
+
+                        <Rating name="read-only" value={e.product_id.rating} readOnly />
+
+                      </div>
+                      <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
+                        <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
+                          $ {e.product_id.individual_price} </Button>
+                        <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => (handleAppDownloadShow(), setPerActive('Group'))}>Group Price <br />
+                          ${e.product_id.group_price} </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+            </div>
           </div>
         </Modal.Body>
       </Modal>

@@ -33,7 +33,7 @@ const Wishlist = () => {
                             <div className='position-relative'>
                                 <img src='./img/dummy.png' alt='' />
                                 <div className='d-flex align-items-center gap-2 share-del-btn'>
-                                    <Button><IoMdShareAlt /></Button>
+                                    {/* <Button><IoMdShareAlt /></Button> */}
                                     <Button><MdDelete /></Button>
                                 </div>
                             </div>

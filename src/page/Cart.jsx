@@ -16,16 +16,18 @@ import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
-import { errorResponse } from '../helper/constants'
+import { errorResponse , afterLogin } from '../helper/constants'
 import { loadStripe } from '@stripe/stripe-js';
 import StripeCheckout from 'react-stripe-checkout';
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { handelCategorydata } from '../helper/constants'
 import { MdRemove, MdAdd } from 'react-icons/md'
 import { CartContext } from '../context/CartContext'
+import { Is_Login } from '../helper/IsLogin'
 
 const Cart = () => {
 
+    const isLoggedIn = Is_Login();
     const { setCart, cart } = useContext(CartContext);
 
     // const stripePromise = loadStripe('pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr');
@@ -54,6 +56,7 @@ const Cart = () => {
     const [loading, setLoading] = useState(true);
     const [count, setCount] = useState(0);
     const player = useRef();
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -88,7 +91,7 @@ const Cart = () => {
 
         // console.log(token, "stripe");
         setIsOpen(!isOpen);
-
+        console.log(token, "token");
         // const response = await fetch('YOUR_SERVER_ENDPOINT', {
         //   method: 'POST',
         //   // Include any necessary data for the server-side checkout process
@@ -101,6 +104,7 @@ const Cart = () => {
         //   // Handle any errors that occur during redirection to Stripe Checkout
         //   console.error(result.error);
         // }
+
     };
 
     const removeCartData = async (id, action, qty) => {
@@ -131,6 +135,7 @@ const Cart = () => {
     const getCartData = async () => {
         startAnimation()
         try {
+            // if (isLoggedIn) {
             const [poroductResponse, flashProduct] = await Promise.all([
                 api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
                 api.post(`${serverURL + PRODUCTList}`, {
@@ -146,6 +151,11 @@ const Cart = () => {
             setProductList(poroductData);
             setFleshProductList(flashProductproductListData)
             stopAnimation()
+        // } else {
+        //     // User is not logged in, redirect to the login page
+        //     afterLogin(setMyMessage);
+        //     setWarningSnackBarOpen(!warningSnackBarOpen);
+        //   }
         } catch (error) {
             console.log(error);
             errorResponse(error, setMyMessage);
@@ -290,7 +300,6 @@ const Cart = () => {
                                                                             {e.sku_attributes?.color[0]?.name}
                                                                             <MdOutlineKeyboardArrowRight />
                                                                         </Button>
-                                                                        <p>Hot Deal</p>
 
                                                                         <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                                             <div className='items-per d-flex align-items-center gap-2 mt-2'>
@@ -438,9 +447,6 @@ const Cart = () => {
                                                                         style={{ width: "auto", whiteSpace: "nowrap" }} >Apply</Button>
                                                                 </div>
                                                             }
-
-
-
                                                         </div>
                                                     </div>
 
@@ -455,12 +461,21 @@ const Cart = () => {
                                                     {/* <StripeCheckout
 stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
 token={handleCheckout}
-  amount={15.59} // Amount in cents
+  amount={productList.cartAmountDetails?.net_amount} // Amount in cents
   name="My Product"
   description="Product description"
   currency="USD"
-/> */}
-                                                    <Button className='checkout mt-4' onClick={handleCheckout} >Checkout</Button>
+/>  */}
+                                                    <div className='mt-3 login-input'>
+                                                        <label>Shipping details</label>
+                                                        <div className='address-shipped mt-2'>
+                                                            <h6>User name</h6>
+                                                            <p className='mt-1'>dsfgs,sdfsdfsfsdf,sdfsdfsdfsd</p>
+                                                            <p>258888</p>
+                                                            <Button className='change-add mt-3'>Change</Button>
+                                                        </div>
+                                                    </div>
+                                                    <Button className='checkout mt-3' onClick={handleCheckout} >Checkout</Button>
                                                     {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}
                                                 </div>
 

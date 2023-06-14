@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Layout from '../../layout/Layout'
 import { Button, Col, Form, NavLink, Row, Modal } from 'react-bootstrap'
 import PhoneInput from "react-phone-input-2";
@@ -167,36 +167,36 @@ function Register() {
     const handleChangeotp = (index, event) => {
         const { value } = event.target;
         let newValue = value;
-      
+
         // Restrict input to a single digit
         if (value.length > 1) {
-          newValue = value.slice(0, 1);
+            newValue = value.slice(0, 1);
         }
-      
+
         // Validate input as a number
         if (!isNaN(newValue)) {
-          setValues((prevValues) => ({
-            ...prevValues,
-            [`otp${index}`]: newValue,
-          }));
-      
-          // Auto focus on the next input field
-          if (newValue !== '') {
-            const nextIndex = index + 1;
-            if (nextIndex < 7) {
-              inputRefs.current[nextIndex].focus();
+            setValues((prevValues) => ({
+                ...prevValues,
+                [`otp${index}`]: newValue,
+            }));
+
+            // Auto focus on the next input field
+            if (newValue !== '') {
+                const nextIndex = index + 1;
+                if (nextIndex < 7) {
+                    inputRefs.current[nextIndex].focus();
+                }
             }
-          }
         }
-      };
+    };
 
     const handleKeyDown = (index, event) => {
-    if (event.key === 'Backspace' && values[`otp${index}`] === '') {
-      if (index > 1) {
-        const prevIndex = index - 1;
-        inputRefs.current[prevIndex].focus();
-      }
-    }
+        if (event.key === 'Backspace' && values[`otp${index}`] === '') {
+            if (index > 1) {
+                const prevIndex = index - 1;
+                inputRefs.current[prevIndex].focus();
+            }
+        }
     };
 
     const SubmitOTP = (e) => {
@@ -219,8 +219,8 @@ function Register() {
                             SetOtpShow(true)
                             setTimeout(() => {
                                 navigate("/login");
-                            }, 1000); 
-                            
+                            }, 1000);
+
                         } else {
                             setMyMessage(res.data.message);
                             setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -239,40 +239,40 @@ function Register() {
     const googlelogin = useGoogleLogin({
 
         onSuccess: async (respose) => {
-          try {
-            const res = await axios.get(
-              "https://www.googleapis.com/oauth2/v3/userinfo",
-              {
-                headers: {
-                  Authorization: `Bearer ${respose.access_token}`,
-                },
-              }
-            );
-            api.post(`${serverURL + SOCIALLOGIN}`,{
-              email:res.data.email,
-              social_login_type : 2,
-              social_login_id:res.data.sub,
-              login_type:4,
-              name:res.data.name,
-              username:res.data.given_name
-            })
-            .then((res) => {
-            //   if (res.data.success === true) {
-                setMyMessage(res.data.message);
-                setSucessSnackBarOpen(!sucessSnackBarOpen);
-                login(res.data.data.user);
-                setTimeout(() => {
-                  setValues(initialValues);  
-                  navigate("/");
-              }, 1000); 
-                // }
-            })
-          } catch (err) {
-            console.log(err);
-          }
+            try {
+                const res = await axios.get(
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${respose.access_token}`,
+                        },
+                    }
+                );
+                api.post(`${serverURL + SOCIALLOGIN}`, {
+                    email: res.data.email,
+                    social_login_type: 2,
+                    social_login_id: res.data.sub,
+                    login_type: 4,
+                    name: res.data.name,
+                    username: res.data.given_name
+                })
+                    .then((res) => {
+                        //   if (res.data.success === true) {
+                        setMyMessage(res.data.message);
+                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                        login(res.data.data.user);
+                        setTimeout(() => {
+                            setValues(initialValues);
+                            navigate("/");
+                        }, 1000);
+                        // }
+                    })
+            } catch (err) {
+                console.log(err);
+            }
         },
-      });
-    
+    });
+
 
     return (
 
@@ -377,23 +377,23 @@ function Register() {
                                         onClick={checkforcounty} onChange={handleChange}
                                         value={values.state}
                                         name='state_id' className='select-arrow'>
-                                          <option>Select State</option>
-                                     {errors.country_id == undefined && (
-                                        <>
-                                     
-                                
-                                        
-                                     {
-                                         stateList.map((e, i) =>
-                                         (
-                                             <option key={i}   >{e.name}</option>
-                                         ))
-                                     }
-                                     )
-                                        </>
-                                     )}
+                                        <option>Select State</option>
+                                        {errors.country_id == undefined && (
+                                            <>
 
-                                       
+
+
+                                                {
+                                                    stateList.map((e, i) =>
+                                                    (
+                                                        <option key={i}   >{e.name}</option>
+                                                    ))
+                                                }
+                                                )
+                                            </>
+                                        )}
+
+
                                     </select>
                                     <div className='error' >{errors?.state_id}</div>
                                 </div>
@@ -431,7 +431,7 @@ function Register() {
                                 checked={values.terms_and_condition}
                             />
 
-                            <label htmlFor='check_terms' className='pointer'>I accept to the <NavLink>Privacy Policy</NavLink> & <NavLink>Terms & Condition</NavLink></label>
+                            <label htmlFor='check_terms' className='pointer'>I accept to the <Link to="/privacy-policy">Privacy Policy</Link> & <NavLink>Terms & Condition</NavLink></label>
 
                         </div>
                         <div className='error d-flex align-items-start check-terms gap-2' >{errors?.terms_and_condition}</div>
@@ -449,9 +449,9 @@ function Register() {
                             <div className='line'></div>
                         </div>
                         <div className='d-flex align-items-center justify-content-center gap-4 mt-2'>
-                           
-                            <div   className='google-login'>
- 
+
+                            <div className='google-login'>
+
                             </div>
                             {/* <GoogleLogin
                         clientId="402818709804-of0dbhqmjqeiddjejjpkvf1keu7v8556.apps.googleusercontent.com"
@@ -480,7 +480,7 @@ function Register() {
                                     console.log('Get Profile Success!', response);
                                 }}
                             ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
-                            
+
                             <AppleLogin
                                 clientId="YOUR_CLIENT_ID"
                                 redirectURI="YOUR_REDIRECT_URL"
@@ -521,30 +521,30 @@ function Register() {
                         </Button>
                         <div className='pass-model-title text-center'>
                             <h3>Verify Email </h3>
-                            <p>Enter Verification code to Verify your email</p>
+                            <p>Enter verification code to verify your email</p>
                         </div>
 
                         <Form onSubmit={handleSubmit}>
-              <div className='otp d-flex align-items-center justify-content-center mt-4 mb-1 gap-3 w-100'>
-                {[1, 2, 3, 4, 5, 6].map((index) => (
-                  <input
-                  key={index}
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  value={values[`otp${index}`]}
-                  type="number"
-                  name={`otp${index}`}
-                  onChange={(event) => handleChangeotp(index, event)}
-                  onKeyDown={(event) => handleKeyDown(index, event)}
-                  maxLength={1}
-                  min={0}
-                  max={9}
-                  autoComplete="off"
+                            <div className='otp d-flex align-items-center justify-content-center mt-4 mb-1 gap-3 w-100'>
+                                {[1, 2, 3, 4, 5, 6].map((index) => (
+                                    <input
+                                        key={index}
+                                        ref={(el) => (inputRefs.current[index] = el)}
+                                        value={values[`otp${index}`]}
+                                        type="number"
+                                        name={`otp${index}`}
+                                        onChange={(event) => handleChangeotp(index, event)}
+                                        onKeyDown={(event) => handleKeyDown(index, event)}
+                                        maxLength={1}
+                                        min={0}
+                                        max={9}
+                                        autoComplete="off"
 
-                />
-                ))}
-              </div>
-              <Button type='button' className='w-100 mt-4 submit-btn' onClick={SubmitOTP}>Submit</Button>
-            </Form>
+                                    />
+                                ))}
+                            </div>
+                            <Button type='button' className='w-100 mt-4 submit-btn' onClick={SubmitOTP}>Submit</Button>
+                        </Form>
 
 
                     </div>

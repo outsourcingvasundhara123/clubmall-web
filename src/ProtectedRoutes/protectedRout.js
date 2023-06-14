@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const protectedRout = () => {
     const navigate = useNavigate();
-    const sessionToken = sessionStorage.getItem("token");
+    const sessionToken = localStorage.getItem("token");
     const token = useSelector(state => state.token)
   
     const checkUserToken = () => sessionToken !== token && navigate("/admin-login");

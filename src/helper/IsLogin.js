@@ -5,7 +5,7 @@ export const Is_Login = () => {
 
   useEffect(() => {
     // Check if the user is logged in by reading the session storage
-    const loggedInUser = sessionStorage.getItem('token');
+    const loggedInUser = localStorage.getItem('token');
     setIsLoggedIn(!!loggedInUser);
   }, []);
 

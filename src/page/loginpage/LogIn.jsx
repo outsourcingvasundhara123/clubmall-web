@@ -89,12 +89,14 @@ const LogIn = () => {
             console.log(res.data, "res.data");
             if (res.data.success === true) {
               if (res.data.data.user) {
-                setSucessSnackBarOpen(!sucessSnackBarOpen);
-                setValues(initialValues);
                 setMyMessage(res.data.message);
-                console.log(res.data.data,"login");
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
                 login(res.data.data.user);
-                navigate("/");
+                setTimeout(() => {
+                  setValues(initialValues);
+                  navigate("/");
+                }, 1000);
+
               } else {
                 console.log("else");
                 SetOtpShow(true)
@@ -142,7 +144,6 @@ const LogIn = () => {
           username: res.data.given_name
         })
           .then((res) => {
-            // if (res.data.success === true) {
             setMyMessage(res.data.message);
             setSucessSnackBarOpen(!sucessSnackBarOpen);
             login(res.data.data.user);
@@ -150,7 +151,6 @@ const LogIn = () => {
               setValues(initialValues);
               navigate("/");
             }, 1000);
-            // }
           })
       } catch (err) {
         console.log(err);
@@ -347,7 +347,7 @@ const LogIn = () => {
                   name="terms_and_condition"
                   checked={values.terms_and_condition}
                 />
-                <label htmlFor='check_terms' className='pointer'>I accept to the <NavLink>Privacy Policy</NavLink> & <NavLink>Terms & Condition</NavLink></label>
+                <label htmlFor='check_terms' className='pointer'>I accept to the <Link to="/privacy-policy">Privacy Policy</Link> & <NavLink>Terms & Condition</NavLink></label>
               </div>
               <div className='error d-flex align-items-start check-terms gap-2 mt-1' >{errors?.terms_and_condition}</div>
 

@@ -28,9 +28,9 @@ const Header = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [category, setcategory] = useState([]);
-    const UserName = sessionStorage.getItem("name") ? sessionStorage.getItem("name") : "undefail"
+    const UserName = localStorage.getItem("name") ? localStorage.getItem("name") : "undefail"
     const defaultProfile = `./img/for_you/defaultuser.png`
-    const Userprofile = sessionStorage.getItem("profile_image") ? sessionStorage.getItem("profile_image") : defaultProfile
+    const Userprofile = localStorage.getItem("profile_image") ? localStorage.getItem("profile_image") : defaultProfile
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
@@ -44,6 +44,7 @@ const Header = () => {
             player.current.play(); // Check if player.current is not null before accessing play()
         }
     };
+
     const stopAnimation = () => {
         setLoading(false);
     };
@@ -100,16 +101,16 @@ const Header = () => {
         }
     };
 
-        const getCategory = async () => {
+    const getCategory = async () => {
         startAnimation()
         try {
 
-            const  categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
             const categoryData = categoryResponse.data.data;
             setcategory(categoryData);
             stopAnimation()
 
-            const  cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })          
+            const cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })
             const cartCountData = cartListresponse.data.data.list
             setCart(cartCountData?.length)
         } catch (error) {
@@ -256,7 +257,7 @@ const Header = () => {
                                             <NavLink>
                                                 <Button className='pre-label-btn user-account'>
                                                     <div className='d-flex align-items-center gap-2'>
-                                                    <img className='myprofile'  src={Userprofile} alt='' />
+                                                        <img className='myprofile' src={Userprofile} alt='' />
                                                         <div className='price-text text-start'>
                                                             <h6>Hello, {UserName}</h6>
                                                             <span>Orders & Account</span>
@@ -491,7 +492,7 @@ const Header = () => {
                 </Modal.Body>
             </Modal>
 
-            <Modal show={newIn} onHide={handleNewInClose} className='mobile-menu new_in_model'>
+            <Modal show={newIn} onHide={handleNewInClose} className='mobile-menu new_in_model ps-0'>
                 <Modal.Body>
                     <div className='new-in-main position-relative pt-3'>
                         <Button className='close-modal-btn' onClick={handleNewInClose} style={{
@@ -500,7 +501,7 @@ const Header = () => {
                         }}>
                             <MdOutlineClose />
                         </Button>
-                        <div className='new-in-box1'>
+                        {/* <div className='new-in-box1'>
                             <div className='sky-box position-relative'>
                                 <img src='./img/new_in/sky1.png' width="100%" alt='' />
                                 <div className='sky-text'>
@@ -517,58 +518,73 @@ const Header = () => {
                                     <Link to="/categories">Shop Now</Link>
                                 </div>
                             </div>
-                        </div>
-                        <div className='new-in-box2'>
-                            <h5>NEW IN TODAY</h5>
-                            <ul>
-                                <li className='mt-3'>04/18/2023</li>
-                                <li>04/18/2023</li>
-                                <li>04/18/2023</li>
-                                <li>04/18/2023</li>
-                                <li>04/18/2023</li>
-                                <li>04/18/2023</li>
-                                <li>04/18/2023</li>
-                                <li>04/18/2023</li>
-                            </ul>
+                        </div> */}
 
-                            <div className='mt-4'>
+                        <Row>
+                            <Col lg={4} md={6} sm={12}>
+                                <div className='new-in-box2'>
+                                    <h5>NEW IN TODAY</h5>
+                                    <ul>
+                                        <li className='mt-3'>04/18/2023</li>
+                                        <li>04/18/2023</li>
+                                        <li>04/18/2023</li>
+                                        <li>04/18/2023</li>
+                                        <li>04/18/2023</li>
+                                        <li>04/18/2023</li>
+                                        <li>04/18/2023</li>
+                                        <li>04/18/2023</li>
+                                    </ul>
+
+                                    {/* <div className='mt-4'>
                                 <h5>OUTFIT INSPO</h5>
                                 <NavLink>#sayodoinCLUBAMLL</NavLink>
                                 <NavLink>#MakeHerDay</NavLink>
-                            </div>
-                        </div>
-                        <div className='new-in-box3'>
-                            <h5>NEW IN WOMEN’S CLOTHING</h5>
-                            <ul>
-                                <li className='mt-3'><NavLink>Dresses</NavLink></li>
-                                <li><NavLink>Top</NavLink></li>
-                                <li><NavLink>Blouses</NavLink></li>
-                                <li><NavLink>Bottoms</NavLink></li>
-                                <li><NavLink>Two-pieces</NavLink></li>
-                                <li><NavLink>Denim</NavLink></li>
-                                <li><NavLink>Jumpsuits & Bodysuits</NavLink></li>
-                                <li><NavLink>Blazer & Suits</NavLink></li>
-                                <li><NavLink>Linerie & Loungewear</NavLink></li>
-                                <li><NavLink>Sweaters & Sweatshirts</NavLink></li>
-                                <li><NavLink>Outerwear</NavLink></li>
-                            </ul>
-                        </div>
-                        <div className='new-in-box4'>
-                            <h5 className='mt-0'><NavLink>NEW IN BEACHWEAR</NavLink></h5>
-                            <h5><NavLink>NEW IN MATERNITY</NavLink></h5>
-                            <h5><NavLink>NEW IN ACTIVERWEAR</NavLink></h5>
-                            <h5><NavLink>NEW IN WEDDING</NavLink></h5>
-                            <h5><NavLink>NEW IN HOME</NavLink></h5>
-                            <h5><NavLink>NEW IN ACCESSORIES</NavLink></h5>
-                            <h5><NavLink>NEW IN SHOES</NavLink></h5>
-                            <h5><NavLink>NEW IN BAGS</NavLink></h5>
-                            <h5><NavLink>NEW IN JEWELARY</NavLink></h5>
-                            <h5><NavLink>NEW IN STATIONARY</NavLink></h5>
-                            <h5><NavLink>NEW IN ELECTRONICS</NavLink></h5>
-                            <h5><NavLink>NEW IN PETS</NavLink></h5>
-                            <h5><NavLink>NEW IN BEAUTY</NavLink></h5>
-                        </div>
-                        <div className='new-in-box5'>
+                            </div> */}
+                                </div>
+                            </Col>
+                            <Col lg={4} md={6} sm={12} className='mt-3 mt-md-0'>
+                                <div className='new-in-box3'>
+                                    <h5>NEW IN WOMEN’S CLOTHING</h5>
+                                    <ul>
+                                        <li className='mt-3'><NavLink>Dresses</NavLink></li>
+                                        <li><NavLink>Top</NavLink></li>
+                                        <li><NavLink>Blouses</NavLink></li>
+                                        <li><NavLink>Bottoms</NavLink></li>
+                                        <li><NavLink>Two-pieces</NavLink></li>
+                                        <li><NavLink>Denim</NavLink></li>
+                                        <li><NavLink>Jumpsuits & Bodysuits</NavLink></li>
+                                        <li><NavLink>Blazer & Suits</NavLink></li>
+                                        <li><NavLink>Linerie & Loungewear</NavLink></li>
+                                        <li><NavLink>Sweaters & Sweatshirts</NavLink></li>
+                                        <li><NavLink>Outerwear</NavLink></li>
+                                    </ul>
+                                </div>
+                            </Col>
+                            <Col lg={4} md={6} sm={12} className='mt-3 mt-lg-0'>
+                                <div className='new-in-box4'>
+                                    <h5 className='mt-0'><NavLink>NEW IN BEACHWEAR</NavLink></h5>
+                                    <h5><NavLink>NEW IN MATERNITY</NavLink></h5>
+                                    <h5><NavLink>NEW IN ACTIVERWEAR</NavLink></h5>
+                                    <h5><NavLink>NEW IN WEDDING</NavLink></h5>
+                                    <h5><NavLink>NEW IN HOME</NavLink></h5>
+                                    <h5><NavLink>NEW IN ACCESSORIES</NavLink></h5>
+                                    <h5><NavLink>NEW IN SHOES</NavLink></h5>
+                                    <h5><NavLink>NEW IN BAGS</NavLink></h5>
+                                    <h5><NavLink>NEW IN JEWELARY</NavLink></h5>
+                                    <h5><NavLink>NEW IN STATIONARY</NavLink></h5>
+                                    <h5><NavLink>NEW IN ELECTRONICS</NavLink></h5>
+                                    <h5><NavLink>NEW IN PETS</NavLink></h5>
+                                    <h5><NavLink>NEW IN BEAUTY</NavLink></h5>
+                                </div>
+                            </Col>
+                        </Row>
+
+
+
+
+
+
+                        {/* <div className='new-in-box5'>
                             <h5 className='mt-0 text-red'><NavLink>MOTF</NavLink></h5>
                             <h5 className='text-red'><NavLink>ROMWE</NavLink></h5>
                             <h5><NavLink>EMERY ROSE</NavLink></h5>
@@ -616,12 +632,12 @@ const Header = () => {
                                 </div>
                             </div>
 
-                        </div>
+                        </div> */}
                     </div>
                 </Modal.Body>
             </Modal>
 
-        </Fragment>
+        </Fragment >
     )
 }
 

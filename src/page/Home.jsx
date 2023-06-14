@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import { Button, Col, Row } from 'react-bootstrap'
@@ -17,9 +17,14 @@ import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import CategoryList from './CategoryList';
 import Loader from '../components/Loader';
 import { handelProductDetail } from '../helper/constants';
+import { CartContext } from '../context/CartContext';
+import SucessSnackBar from "../components/SnackBar";
+import ErrorSnackBar from "../components/SnackBar";
+import { Is_Login } from '../helper/IsLogin';
 
 const Home = () => {
-
+    const isLoggedIn = Is_Login();
+    const { getCartData, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const navigate = useNavigate();
     const [category, setcategory] = useState([]);
     const [currentUser, setCorrectUser] = useState("");
@@ -27,6 +32,7 @@ const Home = () => {
     const [trendingProductList, setTrendingProductList] = useState([]);
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
+    const [active, setActive] = useState("1");
     const player = useRef();
 
     const startAnimation = () => {
@@ -34,9 +40,11 @@ const Home = () => {
             player.current.play(); // Check if player.current is not null before accessing play()
         }
     };
+
     const stopAnimation = () => {
         setLoading(false);
     };
+
     const breakpoints = {
         0: {
             slidesPerView: 1,
@@ -60,19 +68,22 @@ const Home = () => {
         },
     }
 
-    const getCategory = async () => {
+    const getProducts = async () => {
 
         try {
             startAnimation()
+
+            const apiTyp = isLoggedIn ? api.postWithToken : api.post;
             const [categoryResponse, trendingproductListResponse, productListResponse] = await Promise.all([
                 api.post(`${serverURL + PRODUCTCATEGORY}`),
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" })
+                apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+                apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" })
             ]);
+
             const categoryData = categoryResponse.data.data;
             const productListData = productListResponse.data.data;
             const trendingproductData = trendingproductListResponse.data.data
-
+            
             setcategory(categoryData);
             setProductList(productListData);
             setTrendingProductList(trendingproductData)
@@ -84,17 +95,34 @@ const Home = () => {
     };
 
     useEffect(() => {
-        getCategory();
-        // setCorrectUser(sessionStorage.getItem("token"))
+        getProducts();
+        getCartData()
     }, []);
 
-    const [active, setActive] = useState("1");
     const handleClick = (event) => {
         setActive(event.target.id);
     }
 
+    // console.log(wishlist,"wishList");
+
     return (
         <Layout>
+
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
+
+
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -290,7 +318,9 @@ const Home = () => {
                                         {
                                             trendingProductList.productListArrObj?.slice(0, 5).map((e) => {
                                                 return (
+
                                                     <SwiperSlide>
+                                                        {console.log(e, "eeee")}
                                                         <ProCard
                                                             id={e._id}
                                                             img={e.product_images[0]?.file_name}
@@ -301,7 +331,8 @@ const Home = () => {
                                                             secper={e.secper}
                                                             off={e.discount_percentage}
                                                             path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
-                                                        />
+                                                            is_wishList={e.wishList}
+                                                      />
                                                     </SwiperSlide>
                                                 )
                                             })

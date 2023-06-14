@@ -231,7 +231,8 @@ const ProductInfo = () => {
 
                                 <Row className='mt-4'>
                                     <Col lg={6} md={12}>
-                                        <div>
+                                        <div className='position-relative'>
+                                            <Button className='wishlist-btn'><img src='./img/header/wishlist.png' alt='' width="25px" /></Button>
                                             <ProductSlider colorProduct={colorProduct} productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>

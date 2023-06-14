@@ -5,11 +5,17 @@ import Footer from './Footer'
 const Layout = (props) => {
     return (
         <>
-            <Header />
-            <div className='mar-cos'>
-                {props.children}
+            <div className='page-layout'>
+                <div>
+                    <Header />
+
+                    <div className='mar-cos'>
+                        {props.children}
+                    </div>
+                </div>
+
+                <Footer />
             </div>
-            <Footer />
         </>
     )
 }

@@ -134,7 +134,9 @@ const Selling = () => {
                                         category.productsCategory && category.productsCategory?.slice(0, 5).map((e) => {
                                             return (
                                                 <div className='cate-box text-center pointer'>
-                                                    <img src={category.productsCategoryIconPath + e.icon} alt='' width="100%" />
+                                                    <div className='cat-img-round'>
+                                                        <img src={category.productsCategoryIconPath + e.icon} alt='' width="100%" />
+                                                    </div>
                                                     <h5 className='mt-4'>{e.name}</h5>
                                                 </div>
                                             )
@@ -191,7 +193,7 @@ const Selling = () => {
                                                 {
                                                     womanProductList && womanProductList.map((e) => {
                                                         return (
-                                                            
+
                                                             <ProCard
                                                                 id={e._id}
                                                                 img={e.product_images[0]?.file_name}
@@ -243,7 +245,7 @@ const Selling = () => {
                                             <div className='mb-0 mt-4 explore-main'>
                                                 {
                                                     kidsProductList && kidsProductList.map((e) => {
-                                                     
+
                                                         return (
                                                             <ProCard
                                                                 id={e._id}
@@ -270,7 +272,7 @@ const Selling = () => {
                             </div>
                         </section>
 
-                        <section className='get-set'>
+                        {/* <section className='get-set'>
                             <div className='container-cos'>
                                 <div className='title w-100 text-center'>
                                     <h2><span>G</span>ET SET TO HOST PRODUCT</h2>
@@ -296,7 +298,7 @@ const Selling = () => {
                                     </Col>
                                 </Row>
                             </div>
-                        </section>
+                        </section> */}
 
                         <section className='get-set hot'>
                             <div className='container-cos'>

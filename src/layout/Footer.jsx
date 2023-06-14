@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col, NavLink, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
     return (
@@ -9,34 +10,34 @@ const Footer = () => {
                     <div className='info footer-box'>
                         <h5>Company Info</h5>
                         <div className='mt-3'>
-                            <NavLink>About</NavLink>
-                            <NavLink>Affiliate & Influencer</NavLink>
-                            <NavLink>Campus Ambassador</NavLink>
+                            <Link to="/about">About</Link>
+                            <Link to="/influencer">Affiliate & Influencer</Link>
+                            {/* <NavLink>Campus Ambassador</NavLink>
                             <NavLink>Contact Us</NavLink>
                             <NavLink>Careers</NavLink>
-                            <NavLink>Press</NavLink>
+                            <NavLink>Press</NavLink> */}
                         </div>
                     </div>
                     <div className='info footer-box'>
                         <h5>Customer Services</h5>
                         <div className='mt-3'>
-                            <NavLink>Terms of use</NavLink>
-                            <NavLink>Return and refund policy</NavLink>
+                            <Link to="/terms-use">Terms of use</Link>
+                            {/* <NavLink>Return and refund policy</NavLink>
                             <NavLink>Intellectual property policy</NavLink>
                             <NavLink>Shipping info</NavLink>
-                            <NavLink>Student discount</NavLink>
+                            <NavLink>Student discount</NavLink> */}
                         </div>
                     </div>
                     <div className='info footer-box'>
                         <h5>Help</h5>
                         <div className='mt-3'>
-                            <NavLink>Support center & FAQ</NavLink>
-                            <NavLink>Clubmall Purchase Protection</NavLink>
-                            <NavLink>Privacy Policy and setting</NavLink>
-                            <NavLink>Sitemap</NavLink>
+                            {/* <NavLink>Support center & FAQ</NavLink>
+                            <NavLink>Clubmall Purchase Protection</NavLink> */}
+                            <Link to="/privacy-policy">Privacy Policy</Link>
+                            {/* <NavLink>Sitemap</NavLink>
                             <NavLink>How to order</NavLink>
                             <NavLink>How to Track</NavLink>
-                            <NavLink>Sell on Clubmall</NavLink>
+                            <NavLink>Sell on Clubmall</NavLink> */}
                         </div>
                     </div>
                     <div className='info footer-box'>
@@ -74,25 +75,7 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-                <Row className="cards-all mt-5">
-                    <Col xl={6} lg={12} md={12}>
-                        <div className=''>
-                            <h5>Secure Sertification</h5>
-                            <div className='mt-3'>
-                                <img src='./img/cards1.png' alt='' />
-                            </div>
-                        </div>
-                    </Col>
-                    <Col xl={6} lg={12} md={12} className='mt-4 mt-xl-0'>
-                        <div className=''>
-                            <h5>We accept</h5>
-                            <div className='mt-3'>
-                                <img src='./img/cards2.png' alt='' />
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
-                <p className='last'>@2023 WhaleCo Inc.</p>
+                <p className='last'>@2023 Clubmall.</p>
             </div>
         </div>
     )
