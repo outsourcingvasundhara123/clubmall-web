@@ -96,7 +96,7 @@ const LogIn = () => {
                   setValues(initialValues);
                   navigate("/");
                 }, 1000);
-            
+
               } else {
                 console.log("else");
                 SetOtpShow(true)
@@ -347,7 +347,7 @@ const LogIn = () => {
                   name="terms_and_condition"
                   checked={values.terms_and_condition}
                 />
-                <label htmlFor='check_terms' className='pointer'>I accept to the <NavLink>Privacy Policy</NavLink> & <NavLink>Terms & Condition</NavLink></label>
+                <label htmlFor='check_terms' className='pointer'>I accept to the <Link to="/privacy-policy">Privacy Policy</Link> & <NavLink>Terms & Condition</NavLink></label>
               </div>
               <div className='error d-flex align-items-start check-terms gap-2 mt-1' >{errors?.terms_and_condition}</div>
 

@@ -91,7 +91,7 @@ const About = () => {
                                     <p className='section-title'>
                                         Looking for clothing at reasonable prices? Download the app to experience all the benefits of CLUBMALL
                                     </p>
-                                    <div className='download-ui'>
+                                    <div className='download-ui position-relative' style={{ zIndex: "99" }}>
                                         <p>DOWNLOAD THE APP NOW</p>
                                         <div className='d-flex align-items-center justify-content-center gap-2 mt-2 app-download'>
                                             <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>

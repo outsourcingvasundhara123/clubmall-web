@@ -150,7 +150,7 @@ p {
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 999;
+    z-index: 999999;
 }
 
 .header {
@@ -1508,6 +1508,7 @@ del {
     color: #fff;
     margin-bottom: 8px;
     text-decoration: none;
+    display: block;
 }
 
 .footer .footer-working {
@@ -4762,6 +4763,10 @@ input[type='radio'] {
     .clubmall-work {
         margin-top: 50px;
     }
+
+    .space-top {
+        margin-top: 0 !important;
+    }
 }
 
 @media (max-width: 600px) {
@@ -4943,4 +4948,43 @@ input[type='radio'] {
     font-weight: 600;
     padding: 0;
     font-size: 15px;
+}
+
+.contact-title h1 {
+    font-size: 50px;
+    font-weight: 600;
+    color: #223263;
+}
+
+.contact-title p {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.contact {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+@media (max-width: 425px) {
+    .contact-title h1 {
+        font-size: 40px;
+    }
+
+    .contact-title p {
+        font-size: 20px;
+    }
+}
+
+.wishlist-btn {
+    border: none;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 999;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff !important;
+    border-radius: 50%;
 }

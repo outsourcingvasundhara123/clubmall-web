@@ -11,7 +11,7 @@ const Footer = () => {
                         <h5>Company Info</h5>
                         <div className='mt-3'>
                             <Link to="/about">About</Link>
-                            <NavLink>Affiliate & Influencer</NavLink>
+                            <Link to="/influencer">Affiliate & Influencer</Link>
                             {/* <NavLink>Campus Ambassador</NavLink>
                             <NavLink>Contact Us</NavLink>
                             <NavLink>Careers</NavLink>
@@ -21,7 +21,7 @@ const Footer = () => {
                     <div className='info footer-box'>
                         <h5>Customer Services</h5>
                         <div className='mt-3'>
-                            <NavLink>Terms of use</NavLink>
+                            <Link to="/terms-use">Terms of use</Link>
                             {/* <NavLink>Return and refund policy</NavLink>
                             <NavLink>Intellectual property policy</NavLink>
                             <NavLink>Shipping info</NavLink>
