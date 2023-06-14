@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
     const navigate = useNavigate();
-    const { cart, setCart } = useContext(CartContext);
+    const { wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -356,7 +356,7 @@ const Header = () => {
 
                                     <Link to="/wishlist" className='cart position-relative flag-selector'>
                                         <img src='./img/header/wishlist.png' alt='' width="25px" />
-                                        <span className='cart-items-count'>1</span>
+                                        <span className='cart-items-count'>{wishlistCount}</span>
                                     </Link>
 
                                     <Link to="/cart" className='cart position-relative flag-selector'>
