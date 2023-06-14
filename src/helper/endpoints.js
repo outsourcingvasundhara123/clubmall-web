@@ -6,3 +6,5 @@ export const PRODUCTList = "product-list";
 export const PRODUCTCATEGORY = "product-dependent-list";
 export const PRODUCTSEARCH = "search";
 export const SOCIALLOGIN = "social-login";
+export const WISHLIST = "product-like-wishlist";
+

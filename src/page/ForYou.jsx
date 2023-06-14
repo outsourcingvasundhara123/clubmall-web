@@ -21,6 +21,8 @@ import { RiSendPlaneFill } from "react-icons/ri"
 import InstallApp from '../components/InstallApp';
 import { MdOutlineClose } from 'react-icons/md'
 import { Rating } from '@mui/material';
+
+
 const ForYou = () => {
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();

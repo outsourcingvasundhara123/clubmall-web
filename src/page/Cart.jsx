@@ -16,16 +16,18 @@ import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
-import { errorResponse } from '../helper/constants'
+import { errorResponse , afterLogin } from '../helper/constants'
 import { loadStripe } from '@stripe/stripe-js';
 import StripeCheckout from 'react-stripe-checkout';
 import { AiFillCloseCircle } from 'react-icons/ai'
 import { handelCategorydata } from '../helper/constants'
 import { MdRemove, MdAdd } from 'react-icons/md'
 import { CartContext } from '../context/CartContext'
+import { Is_Login } from '../helper/IsLogin'
 
 const Cart = () => {
 
+    const isLoggedIn = Is_Login();
     const { setCart, cart } = useContext(CartContext);
 
     // const stripePromise = loadStripe('pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr');
@@ -54,6 +56,7 @@ const Cart = () => {
     const [loading, setLoading] = useState(true);
     const [count, setCount] = useState(0);
     const player = useRef();
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -132,6 +135,7 @@ const Cart = () => {
     const getCartData = async () => {
         startAnimation()
         try {
+            // if (isLoggedIn) {
             const [poroductResponse, flashProduct] = await Promise.all([
                 api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
                 api.post(`${serverURL + PRODUCTList}`, {
@@ -147,6 +151,11 @@ const Cart = () => {
             setProductList(poroductData);
             setFleshProductList(flashProductproductListData)
             stopAnimation()
+        // } else {
+        //     // User is not logged in, redirect to the login page
+        //     afterLogin(setMyMessage);
+        //     setWarningSnackBarOpen(!warningSnackBarOpen);
+        //   }
         } catch (error) {
             console.log(error);
             errorResponse(error, setMyMessage);

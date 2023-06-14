@@ -1,11 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import { Button } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import AddCartModal from './AddCartModal';
 import { handelProductDetail } from '../helper/constants';
+import { CartContext } from '../context/CartContext';
+
 
 const ProCard = (props) => {
 
+    const { addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const location = useLocation(window.location.pathname);
     const navigate = useNavigate();
     const [product_id, setProduct_id] = useState({});
@@ -30,9 +33,11 @@ const ProCard = (props) => {
 
     return (
         <>
+
             <div className='cos-width'>
-            
+
                 <div className='product-card explore-card  pointer'>
+
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
@@ -44,13 +49,24 @@ const ProCard = (props) => {
                                 <p className='per'>${props.group_price} <span>(Group Price)</span></p>
                                 <span className='sub-per'>${props.individual_price} (Individual Price)</span>
                             </div>
-                            <Button className='like-btn'>
-                                <img src='./img/new_in/like.png' alt='' />
-                            </Button>
+
+                            {props.is_wishList == 0
+                                &&
+                                <Button className='like-btn' onClick={() => addWishList(props.id, "product-like-dislike")} >
+                                    <img src='./img/new_in/like.png' alt='' />
+                                </Button>}
+                            {
+                                props.is_wishList == 1 &&
+                                <Button className='like-btn' onClick={() => addWishList(props.id, "product-delete-wishlist")} >
+                                    {/* <img src='./img/new_in/like.png' alt='' /> */}
+                                   <h1>hello</h1> 
+                                </Button>
+                            }
+
                         </div>
                     </div>
                 </div>
-               
+
                 {
                     location.pathname === "/trending" ?
                         <>
