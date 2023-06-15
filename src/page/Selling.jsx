@@ -401,8 +401,9 @@ const Selling = () => {
                             </div>
                         </section>
                     </>
-                )}
-        </Layout>
+                )
+            }
+        </Layout >
     )
 }
 

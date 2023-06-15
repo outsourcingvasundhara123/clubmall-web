@@ -37,11 +37,7 @@ const ProCard = (props) => {
 
             <div className='cos-width'>
 
-                <div className='product-card explore-card  pointer'>
-
-
-               
-
+                <div className='product-card explore-card pointer'>
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
@@ -59,11 +55,11 @@ const ProCard = (props) => {
                                 <Button className='like-btn' onClick={() => addWishList(props.id, "product-wishlist")} >
                                     <img src='./img/new_in/like.png' alt='' />
                                 </Button>
-                                }
+                            }
                             {
                                 props.is_wishList === 1 &&
                                 <Button className='like-btn' onClick={() => addWishList(props.id, "product-delete-wishlist")} >
-                                   <img src='./img/Vector.png' alt='' />
+                                    <img src='./img/Vector.png' alt='' />
                                 </Button>
                             }
 
@@ -71,39 +67,42 @@ const ProCard = (props) => {
                     </div>
                 </div>
 
-                {
-                    location.pathname === "/trending" ?
-                        <>
-                            <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
+                <div style={{ width: "280px" }}>
+                    {
+                        location.pathname === "/trending" ?
+                            <>
+                                <div className='product-color-cos d-flex align-items-center flex-wrap gap-2 mt-2'>
 
-                                {props.color && props.color.map((e, i) => {
-                                    return (
-                                        <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
-                                            <img alt='' src={e.imgUrl} width="20px" />
-                                        </Button>
-                                    )
-                                })
-                                }
+                                    {props.color && props.color.map((e, i) => {
+                                        return (
+                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                <img alt='' src={e.imgUrl} width="20px" />
+                                            </Button>
+                                        )
+                                    })
+                                    }
 
-                            </div>
-                        </> : ""
-                }
-                {
-                    location.pathname === "/categories" ?
-                        <>
-                            <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
-                                {props.color && props.color.map((e, i) => {
-                                    return (
-                                        <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
-                                            <img alt='' src={e.imgUrl} width="20px" />
-                                        </Button>
-                                    )
-                                })
-                                }
-                            </div>
-                        </> : ""
-                }
+                                </div>
+                            </> : ""
+                    }
+                    {
+                        location.pathname === "/categories" ?
+                            <>
+                                <div className='product-color-cos d-flex align-items-center flex-wrap gap-2 mt-2'>
+                                    {props.color && props.color.map((e, i) => {
+                                        return (
+                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                <img alt='' src={e.imgUrl} width="20px" />
+                                            </Button>
+                                        )
+                                    })
+                                    }
+                                </div>
+                            </> : ""
+                    }
+                </div>
             </div>
+
             <AddCartModal handleClose={handleClose} show={show} product_id={product_id} />
         </>
     )

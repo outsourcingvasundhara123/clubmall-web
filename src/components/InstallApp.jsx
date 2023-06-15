@@ -6,8 +6,7 @@ const InstallApp = (props) => {
 
     return (
 
-        <div>
-
+        <>
             <Modal show={props.show} onHide={props.Hide} centered className='welcome-modal'>
                 <Modal.Body>
                     <div className='text-center p-3 p-sm-4'>
@@ -27,7 +26,7 @@ const InstallApp = (props) => {
                 </Modal.Body>
             </Modal>
 
-        </div>
+        </>
     )
 }
 
