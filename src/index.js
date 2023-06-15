@@ -14,6 +14,7 @@ ReactDOM.render(
       <CartProvider>
         <App />
       </CartProvider>
+   
     </GoogleOAuthProvider>
   </React.StrictMode>,
   document.getElementById('root')

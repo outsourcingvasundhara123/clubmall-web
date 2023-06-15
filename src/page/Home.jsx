@@ -26,6 +26,7 @@ const Home = () => {
 
     const { loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+   
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     // const [category, setcategory] = useState([]);
@@ -110,7 +111,6 @@ const Home = () => {
 
     console.log(Mymessage, "Mymessage");
     console.log(sucessSnackBarOpen, "sucessSnackBarOpen");
-
 
     return (
         <Layout>

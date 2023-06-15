@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button, Col, Row } from 'react-bootstrap'
 
@@ -14,8 +14,16 @@ import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
 import { handelProductDetail, handelCategorydata } from '../helper/constants';
+import { CartContext } from '../context/CartContext';
+import { Is_Login } from '../helper/IsLogin';
+import SucessSnackBar from "../components/SnackBar";
+import ErrorSnackBar from "../components/SnackBar";
 
 const Fashion = () => {
+
+    const isLoggedIn = Is_Login();
+    const { userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const navigate = useNavigate();
 
@@ -31,11 +39,11 @@ const Fashion = () => {
         setShow(true);
     }
 
-    const [category, setcategory] = useState([]);
-    const [productList, setProductList] = useState([]);
-    const [trendingProductList, setTrendingProductList] = useState([]);
-    const [userProductList, setUserProductList] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // const [category, setcategory] = useState([]);
+    // const [productList, setProductList] = useState([]);
+    // const [trendingProductList, setTrendingProductList] = useState([]);
+    // const [userProductList, setUserProductList] = useState([]);
+    // const [loading, setLoading] = useState(true);
     const player = useRef();
 
     const startAnimation = () => {
@@ -47,42 +55,58 @@ const Fashion = () => {
         setLoading(false);
     };
 
-    const serverURL = getServerURL();
+    // const serverURL = getServerURL();
 
-    const getCategory = async () => {
-        startAnimation()
+    // const getCategory = async () => {
+    //     startAnimation()
 
-        try {
-            const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
-                api.post(`${serverURL + PRODUCTCATEGORY}`),
-                api.post(`${serverURL + PRODUCTList}`, { product_list_type: "trending-product" }),
-                api.post(`${serverURL + PRODUCTList}`, { product_list_type: "flashsale-products" }),
-                api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
+    //     try {
+    //         const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
+    //             api.post(`${serverURL + PRODUCTCATEGORY}`),
+    //             api.post(`${serverURL + PRODUCTList}`, { product_list_type: "trending-product" }),
+    //             api.post(`${serverURL + PRODUCTList}`, { product_list_type: "flashsale-products" }),
+    //             api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
 
-            ]);
+    //         ]);
 
-            const categoryData = categoryResponse.data.data;
-            const productListData = productListResponse.data.data;
-            const trendingproductData = trendingproductListResponse.data.data
-            const userproductData = userProductList.data.data
+    //         const categoryData = categoryResponse.data.data;
+    //         const productListData = productListResponse.data.data;
+    //         const trendingproductData = trendingproductListResponse.data.data
+    //         const userproductData = userProductList.data.data
 
-            setcategory(categoryData);
-            setProductList(productListData);
-            setTrendingProductList(trendingproductData)
-            setUserProductList(userproductData)
-            stopAnimation()
+    //         setcategory(categoryData);
+    //         setProductList(productListData);
+    //         setTrendingProductList(trendingproductData)
+    //         setUserProductList(userproductData)
+    //         stopAnimation()
 
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     useEffect(() => {
-        getCategory();
-    }, []);
+        getProducts();
+        getWishList()
+    }, [isLoggedIn]);
 
     return (
         <Layout>
+
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
+
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -411,20 +435,30 @@ const Fashion = () => {
                                         productList.productListArrObj && productList.productListArrObj?.slice(0, 20).map((e) => {
                                             return (
                                                 <div className='product-card explore-card  pointer' >
-                                                    <div className='position-relative'>
-                                                        <img alt={e.name} src={productList?.productImagePath && productList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} className='img-fluid' onClick={() => handelProductDetail(e._id)} />
+                                                    <div className='position-relative'  >
+                                                        <img onClick={() => handelProductDetail(e._id)} alt={e.name} src={productList?.productImagePath && productList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} className='img-fluid' />
                                                         <Button className='add-to-card-btn' onClick={() => handleShow(e._id)} >Add to Cart</Button>
                                                     </div>
-                                                    <div className='py-3 px-3' onClick={() => handelProductDetail(e._id)}>
+                                                    <div className='py-3 px-3'  >
                                                         <h5>{e.name}</h5>
                                                         <div className='d-flex align-items-center justify-content-between'>
                                                             <div>
                                                                 <p className='per'>${e.group_price} <span>(Group Price)</span></p>
                                                                 <span className='sub-per'>${e.individual_price} (Individual Price)</span>
                                                             </div>
-                                                            <Button className='like-btn'>
-                                                                <img alt='' src='./img/new_in/like.png' />
-                                                            </Button>
+                                                            {e.wishList === 0
+                                                                &&
+                                                                <Button className='like-btn' onClick={() => addWishList(e._id, "product-wishlist")} >
+                                                                    <img src='./img/new_in/like.png' alt='' />
+                                                                </Button>
+                                                            }
+                                                        
+                                                            {
+                                                                e.wishList === 1 &&
+                                                                <Button className='like-btn' onClick={() => addWishList(e._id, "product-delete-wishlist")} >
+                                                                    <img src='./img/Vector.png' alt='' />
+                                                                </Button>
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>

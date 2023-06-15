@@ -28,7 +28,7 @@ import { Is_Login } from '../helper/IsLogin'
 const Cart = () => {
 
     const isLoggedIn = Is_Login();
-    const { setCart, cart } = useContext(CartContext);
+    const { getMyAddress, correntAddess, setCart, cart, } = useContext(CartContext);
 
     // const stripePromise = loadStripe('pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr');
 
@@ -87,24 +87,38 @@ const Cart = () => {
         setShow(true);
     }
 
-    const handleCheckout = (token) => {
+    const handleCheckout = async (token) => {
+        try {
+            // console.log(token, "stripe");
+            setIsOpen(!isOpen);
 
-        // console.log(token, "stripe");
-        setIsOpen(!isOpen);
-        console.log(token, "token");
-        // const response = await fetch('YOUR_SERVER_ENDPOINT', {
-        //   method: 'POST',
-        //   // Include any necessary data for the server-side checkout process
-        // });
-        // const session = await response.json();
-        // const result = await stripe.redirectToCheckout({
-        //   sessionId: session.id,
-        // });
-        // if (result.error) {
-        //   // Handle any errors that occur during redirection to Stripe Checkout
-        //   console.error(result.error);
-        // }
+            if (correntAddess?.data?.length !== 0) {
+                const data = {
+                    order_items: productList.list,
+                    seller_id: "6386bfbe29a80c18d7b15488",
+                    shipping_address_id: correntAddess.data[0]._id,
+                    shipping_method_id: correntAddess.shipping_method_id
+                }
+                const res = await api.postWithToken(`${serverURL + "order-create"}`, data)
+                if (res.data.success == true) {
+                    setMyMessage(res.data.message);
+                    setSucessSnackBarOpen(!sucessSnackBarOpen);
+                    console.log(res.data,"order");
+                    getCartData()
+                } else {
+                    setMyMessage(res.data.message);
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                }
 
+            } else {
+                setMyMessage("Add shipping address")
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+            }
+        } catch (error) {
+            console.log(error);
+            errorResponse(error, setMyMessage);
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+        }
     };
 
     const removeCartData = async (id, action, qty) => {
@@ -143,7 +157,6 @@ const Cart = () => {
                     page: 1
                 })
             ]);
-
             const poroductData = poroductResponse.data.data;
             const flashProductproductListData = flashProduct.data.data;
             let ids = poroductData.list.map((e) => e._id)
@@ -162,7 +175,6 @@ const Cart = () => {
             setWarningSnackBarOpen(!warningSnackBarOpen);
         }
     };
-
 
     const handleCoupon = async (action, coupon) => {
         try {
@@ -190,6 +202,7 @@ const Cart = () => {
 
     useEffect(() => {
         getCartData();
+        getMyAddress()
     }, []);
 
 
@@ -239,8 +252,6 @@ const Cart = () => {
                                         <div className='cart-main-list'>
 
                                             <div>
-
-
 
                                             </div>
 
@@ -459,21 +470,29 @@ const Cart = () => {
                                                     </p> */}
 
                                                     {/* <StripeCheckout
-stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
-token={handleCheckout}
-  amount={productList.cartAmountDetails?.net_amount} // Amount in cents
-  name="My Product"
-  description="Product description"
-  currency="USD"
-/>  */}
-                                                    <div className='mt-3 login-input'>
-                                                        <label>Shipping details</label>
-                                                        {/* <div className='address-shipped mt-2'>
-                                                            <h6>User name</h6>
-                                                            <p className='mt-1'>dsfgs,sdfsdfsfsdf,sdfsdfsdfsd</p>
-                                                            <p>258888</p>
-                                                        </div> */}
-                                                        <Button className='change-add'>Add</Button>
+                                                        stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
+                                                        token={handleCheckout}
+                                                        amount={productList.cartAmountDetails?.net_amount} // Amount in cents
+                                                        name="My Product"
+                                                        description="Product description"
+                                                        currency="USD"
+                                                    /> */}
+                                                    <div>
+                                                        <div className='mt-3 login-input'>
+                                                            <label>Shipping details</label>
+
+                                                            {correntAddess.data && correntAddess.data.map((e, i) => {
+                                                                return (
+
+                                                                    <div className='address-shipped mt-2'>
+                                                                        <h6> {e.fullname}</h6>
+                                                                        <p className='mt-1'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
+                                                                    </div>
+                                                                )
+                                                            })}
+                                                            {correntAddess.data?.length == 0 && <Button className='change-add' onClick={() => navigate("profile")} >Add</Button>}
+                                                        </div>
+
                                                     </div>
                                                     <Button className='checkout mt-3' onClick={handleCheckout} >Checkout</Button>
                                                     {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}
@@ -542,7 +561,7 @@ token={handleCheckout}
                     </>
                 )
             }
-        </Layout>
+        </Layout >
     )
 }
 

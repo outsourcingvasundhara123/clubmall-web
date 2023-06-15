@@ -21,13 +21,22 @@ export const CartProvider = ({ children }) => {
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const [wishProductUrl, setWishProductURL] = useState("");
+  const [userProductList, setUserProductList] = useState([]);
 
   const [category, setcategory] = useState([]);
+  const [categoryWeb, setCategoryWeb] = useState([]);
+  const [sellingCategory, setSellingCategory] = useState({});
+  const [myAddress, setMyAddess] = useState([]);
+  const [  correntAddess,   setCorrentAddess] = useState({});
+  
   const [currentUser, setCorrectUser] = useState("");
   const [productList, setProductList] = useState([]);
   const [trendingProductList, setTrendingProductList] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingCategory, setLoadingCategory] = useState(true);
+
+  
   const serverURL = getServerURL();
   const player = useRef();
 
@@ -39,6 +48,20 @@ export const CartProvider = ({ children }) => {
 const stopAnimation = () => {
     setLoading(false);
 };
+
+
+//category page 
+const playercategory = useRef();
+
+const startAnimationcategory = () => {
+  if (playercategory.current) {
+    playercategory.current.play(); // Check if player.current is not null before accessing play()
+  }
+};
+const stopAnimationcategory = () => {
+  setLoadingCategory(false);
+};
+
 
   const addWishList = async (id, action) => {
     try {
@@ -90,25 +113,77 @@ const stopAnimation = () => {
     }
 };
 
+  const getMyAddress = async () => {
+    startAnimation()
+    try {
+        const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, {  "action":"shipping-address-list" })
+        setMyAddess(res.data.data.userData)
+        let data = res.data.data?.userData.filter((e) => e.is_default == 1)
+        const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
+          "action":"list",
+          "country_id": data[0].country_id._id
+      })
+        setCorrentAddess({data:data,shipping_method_id:res2.data.data?.list[0]?._id })
+        stopAnimation()
+    } catch (error) {
+        errorResponse(error, setMyMessage);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+};
+
+
 const getProducts = async () => {
 
   try {
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-      const [categoryResponse, trendingproductListResponse, productListResponse] = await Promise.all([
+      const [categoryResponse, trendingproductListResponse, productListResponse,userProductList] = await Promise.all([
           api.post(`${serverURL + PRODUCTCATEGORY}`),
           apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-          api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" })
+          apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
+          api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
+
       ]);
 
       const categoryData = categoryResponse.data.data;
       const productListData = productListResponse.data.data;
       const trendingproductData = trendingproductListResponse.data.data
+      const userproductData = userProductList.data.data;
 
       setcategory(categoryData);
       setProductList(productListData);
       setTrendingProductList(trendingproductData)
+      setUserProductList(userproductData)
 
+      stopAnimation()
+  } catch (error) {
+      console.log(error);
+  }
+};
+
+const getCategoryWeb = async () => {
+
+  startAnimation()
+
+  try {
+      const [categoryResponse] = await Promise.all([
+          api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+      ]);
+      const categoryData = categoryResponse.data.data;
+      setSellingCategory(
+        {
+          first:{_id:categoryData.productsCategoryList[0]?._id,name:categoryData.productsCategoryList[0]?.child[0]?.name,id:categoryData.productsCategoryList[0]?.child[0]?._id},
+          second:{_id:categoryData.productsCategoryList[1]?._id,name:categoryData.productsCategoryList[1]?.child[0]?.name,id:categoryData.productsCategoryList[1]?.child[0]?._id},
+          third:{_id:categoryData.productsCategoryList[2]?._id,name:categoryData.productsCategoryList[2]?.child[0]?.name,id:categoryData.productsCategoryList[2]?.child[0]?._id},
+      })
+      // Divide the category list into two parts
+      const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
+
+      const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
+      const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
+      // Set the first half and second half of categories
+      setCategoryWeb({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath , categoryData:categoryData.productsCategory });
+   
       stopAnimation()
   } catch (error) {
       console.log(error);
@@ -118,9 +193,9 @@ const getProducts = async () => {
   return (
 
     <CartContext.Provider value={{
-      cart,setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      correntAddess,myAddress,getMyAddress,sellingCategory,stopAnimationcategory, startAnimationcategory, playercategory,loadingCategory,setLoadingCategory, startAnimation,stopAnimation,player,cart,setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen,setWarningSnackBarOpen , getWishList , wishlist , getProducts,wishProductUrl,category,currentUser,
-      productList,trendingProductList,loading,setLoading,wishlistCount
+      productList,trendingProductList,loading,setLoading,wishlistCount,userProductList,getCategoryWeb,categoryWeb
     }}>
       {children}
     </CartContext.Provider>

@@ -9,7 +9,7 @@ import ErrorSnackBar from "../components/SnackBar";
 
 const ProCard = (props) => {
 
-    const { addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const { addWishList } = useContext(CartContext);
     const location = useLocation(window.location.pathname);
     const navigate = useNavigate();
     const [product_id, setProduct_id] = useState({});
