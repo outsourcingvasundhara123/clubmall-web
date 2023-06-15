@@ -35,14 +35,18 @@ const ProCard = (props) => {
     return (
         <>
 
-            <div className='cos-width'>
+            <div className='cos-width explore-card'>
 
-                <div className='product-card explore-card pointer'>
+                <div className='product-card   pointer'>
+
+
+
+
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
                     </div>
-                    <div className='py-3 px-3'>
+                    <div className='py-3 px-3 space-card'>
                         <h5>{props.name}</h5>
                         <div className='d-flex align-items-center justify-content-between'>
                             <div>
@@ -67,42 +71,43 @@ const ProCard = (props) => {
                     </div>
                 </div>
 
-                <div style={{ width: "280px" }}>
-                    {
-                        location.pathname === "/trending" ?
-                            <>
-                                <div className='product-color-cos d-flex align-items-center flex-wrap gap-2 mt-2'>
+                {
+                    location.pathname === "/trending" ?
+                        <>
+                            <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
 
-                                    {props.color && props.color.map((e, i) => {
-                                        return (
+                                {props.color && props.color.map((e, i) => {
+                                    return (
+                                        <div>
                                             <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
                                                 <img alt='' src={e.imgUrl} width="20px" />
                                             </Button>
-                                        )
-                                    })
-                                    }
+                                        </div>
+                                    )
+                                })
+                                }
 
-                                </div>
-                            </> : ""
-                    }
-                    {
-                        location.pathname === "/categories" ?
-                            <>
-                                <div className='product-color-cos d-flex align-items-center flex-wrap gap-2 mt-2'>
-                                    {props.color && props.color.map((e, i) => {
-                                        return (
+                            </div>
+                        </> : ""
+                }
+                {
+                    location.pathname === "/categories" ?
+                        <>
+                            <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
+                                {props.color && props.color.map((e, i) => {
+                                    return (
+                                        <div>
                                             <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
                                                 <img alt='' src={e.imgUrl} width="20px" />
                                             </Button>
-                                        )
-                                    })
-                                    }
-                                </div>
-                            </> : ""
-                    }
-                </div>
+                                        </div>
+                                    )
+                                })
+                                }
+                            </div>
+                        </> : ""
+                }
             </div>
-
             <AddCartModal handleClose={handleClose} show={show} product_id={product_id} />
         </>
     )

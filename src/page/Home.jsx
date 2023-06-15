@@ -64,8 +64,12 @@ const Home = () => {
             slidesPerView: 4,
             spaceBetween: 20
         },
-        1300: {
+        1200: {
             slidesPerView: 5,
+            spaceBetween: 20
+        },
+        1300: {
+            slidesPerView: 6,
             spaceBetween: 20
         },
     }
