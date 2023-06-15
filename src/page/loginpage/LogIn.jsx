@@ -98,7 +98,6 @@ const LogIn = () => {
                 }, 1000);
 
               } else {
-                console.log("else");
                 SetOtpShow(true)
                 SetEmail(updatedValues.email)
                 setMyMessage(res.data.message);

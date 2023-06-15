@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import { Button } from 'react-bootstrap'
 import AddCartModal from './AddCartModal'
 import { useNavigate } from 'react-router-dom';
 import { handelProductDetail } from '../helper/constants';
+import { CartContext } from '../context/CartContext';
 
 const PinkCard = (props) => {
 
     const navigate = useNavigate();
-
+    const { addWishList } = useContext(CartContext);
     const [show, setShow] = useState(false);
     const handleClose = () => {
      setProduct_id({})  
@@ -20,7 +21,6 @@ const PinkCard = (props) => {
         setShow(true);
     }
       
-
     return (
         <>
             <div className='pink-card  pointer'>
@@ -33,9 +33,19 @@ const PinkCard = (props) => {
                         <h5>${props.img.individual_price}</h5>
                         <p>Group Price: <b>${props.img.group_price}</b></p>
                     </div>
-                    <Button className='like-btn'>
-                        <img alt='' src='./img/new_in/like.png' />
-                    </Button>
+                    {props.img.wishList === 0
+                                &&
+                                <Button className='like-btn' onClick={() => addWishList(props.img._id, "product-wishlist")} >
+                                    <img src='./img/new_in/like.png' alt='' />
+                                </Button>
+                                }
+                            {
+                                props.img.wishList === 1 &&
+                                <Button className='like-btn' onClick={() => addWishList(props.img._id, "product-delete-wishlist")} >
+                                   <img src='./img/Vector.png' alt='' />
+                                </Button>
+                            }
+
                 </div>
             </div>
 

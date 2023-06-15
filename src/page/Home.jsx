@@ -26,6 +26,7 @@ const Home = () => {
 
     const { loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+   
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     // const [category, setcategory] = useState([]);
@@ -111,7 +112,6 @@ const Home = () => {
     console.log(Mymessage, "Mymessage");
     console.log(sucessSnackBarOpen, "sucessSnackBarOpen");
 
-
     return (
         <Layout>
 
@@ -166,8 +166,8 @@ const Home = () => {
                                         </Col>
                                         <Col xl={3} lg={3} md={6} sm={6} className='py-4'>
                                             <div className='discount-card mt-1' style={{ borderRight: "none" }}>
-                                                <p className='d-flex justify-content-center'><span className='discount-btn'>CODE : HOIYUBN58</span></p>
-                                                <p>CAPPED AT $60</p>
+                                                <p className='d-flex justify-content-center'><span className='discount-btn'>CODE : clubmall30</span></p>
+                                                <p>CAPPED AT $5</p>
                                             </div>
                                         </Col>
                                     </Row>

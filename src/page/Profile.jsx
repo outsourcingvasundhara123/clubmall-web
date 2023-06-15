@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect ,useContext} from 'react'
 import Layout from '../layout/Layout'
 import { Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
 import {
@@ -10,18 +10,181 @@ import ProCard from '../components/ProCard'
 import { data } from "../page/Data"
 import { handelCategorydata } from '../helper/constants'
 import { MdOutlineClose } from 'react-icons/md'
+import api from '../helper/api';
+import { getServerURL } from '../helper/envConfig'
+import { validate } from './AddressSchima';
+import SucessSnackBar from "../components/SnackBar";
+import ErrorSnackBar from "../components/SnackBar";
+import { useNavigate } from 'react-router-dom'
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import axios from 'axios';
+import { CartContext } from '../context/CartContext';
 
 const Profile = () => {
 
-    const [itemShow, setItemShow] = useState(false);
+    const {myAddress, getMyAddress,userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
+    const initialValues = {
+        country_id: "",
+        state_id: "",
+        fullname: "",
+        contact_no: "",
+        address: "",
+        city: "",
+        zipcode: "",
+    };
+    const [showPass, setShowPass] = useState(true)
+    const [values, setValues] = useState(initialValues);
+    const [errors, setErrors] = useState({});
+    const [Mymessage, setMyMessage] = useState("");
+    const [stateList, setStateList] = useState([]);
+    const [countryList, setCountryList] = useState([]);
+    const [submitCount, setSubmitCount] = useState(0);
+    const serverURL = getServerURL();
+    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [itemShow, setItemShow] = useState(false);
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
+    const handleClose = () =>{
+        setErrors({})
+        setShow(false);
+        setValues(initialValues)
+        setSubmitCount(0)
+    } 
     const handleShow = () => setShow(true);
+
+    const handleChange = (e) => {
+
+        const { name, value, checked, type } = e.target;
+        let newValue = type === "checkbox" ? checked : value;
+
+        if (name === "state_id") {
+            const selectedState = stateList.find((state) => state.name === newValue);
+            newValue = selectedState ? selectedState._id : "";
+        }
+
+        if (name === "country_id") {
+            const selectedState = countryList.find((state) => state.name === newValue);
+            newValue = selectedState ? selectedState._id : "";
+        }
+
+        if (submitCount > 0) {
+            const validationErrors = validate({ ...values, [name]: newValue });
+            setErrors(validationErrors);
+
+            // Remove error message for the specific field if it is valid
+            if (Object.keys(validationErrors).length === 0) {
+                delete errors[name];
+            }
+        }
+
+        setValues((prevValues) => ({
+            ...prevValues,
+            [name]: newValue,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        setSubmitCount(submitCount + 1)
+
+        const updatedValues = { ...values }; // Create a copy of the values object
+
+        const validationErrors = validate(updatedValues);
+        setErrors(validationErrors);
+
+        if (updatedValues.contact_no) {
+            updatedValues.contact_no = "+" + updatedValues.contact_no;
+        }
+
+        if (updatedValues.first_name && updatedValues.last_name) {
+            updatedValues.name = updatedValues.first_name + " " + updatedValues.last_name;
+        }
+
+        if (Object.keys(validationErrors).length === 0) {
+            
+            console.log(updatedValues, "updatedValues");
+
+            try {
+                api.postWithToken(`${serverURL}shipping-address-create`, updatedValues)
+                    .then((res) => {
+                        if (res.data.status === 1) {
+                            setMyMessage(res.data.message);
+                            setSucessSnackBarOpen(!sucessSnackBarOpen);
+                            getMyAddress()
+                            setTimeout(() => {
+                                setValues(initialValues);
+                                handleClose()
+                            }, 1000);
+                            // navigate("/login");
+                            // console.log(updatedValues.email,"updatedValues");
+                        } else {
+                            setMyMessage(res.data.message);
+                            setWarningSnackBarOpen(!warningSnackBarOpen);
+                        }
+                    });
+            } catch (error) {
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+                console.error(error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const request1 = api.get(`${serverURL + "/country-list"}`);
+                const request2 = api.get(`${serverURL + "/state-list"}`);
+                const responses = await Promise.all([request1, request2]);
+                // console.log(responses[0].data.data.country, "responses[0].data.data.country");
+                setCountryList(responses[0].data.data.country);
+                // setStateList(responses[1].data.data.states);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+        getMyAddress()
+    }, []);
+
+    const checkforcounty = async () => {
+
+        try {
+            if (values.country_id && errors.country_id == undefined) {
+                const request1 = api.get(`${serverURL + "/country-list"}`);
+                var id = countryList.find((e => e._id == values.country_id))
+                const request2 = api.get(`${serverURL + `/state-list?country_id=${id.id}`}`);
+                const responses = await Promise.all([request1, request2]);
+                setStateList(responses[1].data.data.states)
+            } else {
+                setMyMessage("Country is required");
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <Layout>
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
             <div className='profile pt-4 pb-5'>
 
                 <div className='container-cos'>
@@ -351,24 +514,30 @@ const Profile = () => {
                                         <Tab.Pane eventKey="location">
                                             <div className='location-main'>
                                                 <Button onClick={handleShow}>+ Add a new address</Button>
-                                                <div className='address-box mt-3'>
-                                                    <h5>Rohan Vasundhara <span>+ 1 (774) 360-8208</span></h5>
-                                                    <p className='my-2'>376 Center St <br />Chula Vista, CA 91910-3800, United States</p>
-                                                    <div className='d-flex align-items-center justify-content-between'>
-                                                        <div className='d-flex align-items-center check-options'>
-                                                            <input type='checkbox' id='add-select' />
-                                                            <label htmlFor='add-select'>Default</label>
-                                                        </div>
-                                                        <div className='copy-main'>
-                                                            <Button>Copy</Button>
-                                                            <span>I</span>
-                                                            <Button>Edit</Button>
-                                                            <span>I</span>
-                                                            <Button>Delete</Button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                             
+                                                {myAddress &&  myAddress.map((e, i) => {
+                                return (
+                                    <div className='address-box mt-3'>
+                                    <h5> {e.fullname}</h5>
+                                    <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <div className='d-flex align-items-center check-options'>
+                                            <input type='checkbox' id='add-select' checked={e.is_default == 1} />
+                                            <label htmlFor='add-select'>Default</label>
+                                        </div>
+                                        <div className='copy-main'>
+                                            {/* <Button>Copy</Button> */}
+                                            {/* <span>I</span> */}
+                                            <Button>Edit</Button>
+                                            <span>I</span>
+                                            <Button>Delete</Button>
+                                        </div>
+                                    </div>
+                                </div>    
+                                    )})} 
+                                            
                                             </div>
+                                               
                                         </Tab.Pane>
 
                                         <Tab.Pane eventKey="security">
@@ -525,12 +694,24 @@ const Profile = () => {
                             <Row className='mt-2'>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
-                                        <label>Ship to Address</label>
-                                        <select className='select-arrow'>
-                                            <option>ind</option>
-                                            <option>US</option>
-                                            <option>Aug</option>
+                                        <label>Ship to Address</label>                                
+                                            <select name='country_id'
+                                            value={values.country}
+                                            onChange={handleChange}
+                                            className='select-arrow'>
+                                            <option>Select Country</option>
+                                            {(countryList.length <= 0) && <option
+                                            >loding....</option>}
+                                            {
+                                                countryList.map((e, i) =>
+                                                (
+                                                    <option key={i} value={e.name}
+                                                    >{e.name}</option>
+
+                                                ))
+                                            }
                                         </select>
+                                        <div className='error' >{errors?.country_id}</div>
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
@@ -538,7 +719,12 @@ const Profile = () => {
                                         <label>Full Name</label>
                                         <input placeholder='Full Name'
                                             type='text'
+                                            name='fullname'
+                                            onChange={handleChange}
+                                            value={values.fullname}
                                         />
+                                        <div className='error' >{errors?.fullname}</div>
+
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
@@ -546,7 +732,13 @@ const Profile = () => {
                                         <label>Phone Number</label>
                                         <input placeholder='Phone Number'
                                             type='number'
+                                            name="contact_no"
+                                            value={values.contact_no}
+                                            onChange={handleChange}
                                         />
+
+                                        <div className='error' >{errors?.contact_no}</div>
+
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
@@ -554,42 +746,73 @@ const Profile = () => {
                                         <label>City</label>
                                         <input placeholder='City'
                                             type='text'
+                                            name='city'
+                                            onChange={handleChange}
+                                            value={values.city}
                                         />
+                                        <div className='error' >{errors?.city}</div>
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>State</label>
-                                        <select className='select-arrow'>
-                                            <option>ind</option>
-                                            <option>US</option>
-                                            <option>Aug</option>
+                                        <select
+                                            onClick={checkforcounty} onChange={handleChange}
+                                            value={values.state}
+                                            name='state_id' className='select-arrow'>
+                                            <option>Select State</option>
+                                            {errors.country_id == undefined && (
+                                                <>
+
+                                                    {
+                                                        stateList.map((e, i) =>
+                                                        (
+                                                            <option key={i}   >{e.name}</option>
+                                                        ))
+                                                    }
+                                                    )
+                                                </>
+                                            )}
+
+
                                         </select>
+                                        <div className='error' >{errors?.state_id}</div>
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Zip Code</label>
-                                        <input placeholder='City'
-                                            type='text'
+                                        <input placeholder='Zip Code'
+                                            type='number'
+                                            onChange={handleChange}
+                                            value={values.zipcode}
+                                            name='zipcode'
                                         />
+                                        <div className='error' >{errors?.zipcode}</div>
                                     </div>
                                 </Col>
                                 <Col lg={12} md={12} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Address</label>
-                                        <textarea className='w-100' placeholder='Enter Address' rows={5}></textarea>
+                                        <textarea className='w-100'
+                                            onChange={handleChange}
+                                            name='address'
+                                            value={values.address} placeholder='Enter Address'
+                                            rows={5}></textarea>
+
+                                        <div className='error' >{errors?.address}</div>
+
                                     </div>
                                 </Col>
                             </Row>
-                            <div className='d-flex align-items-start check-terms gap-3 mt-3'>
+                            {/* <div className='d-flex align-items-start check-terms gap-3 mt-3'>
                                 <Form.Check
                                     type="checkbox"
                                     id='check_terms'
                                 />
                                 <label htmlFor='check_terms' className='pointer'>Make this my default address</label>
-                            </div>
-                            <button className='submit-btn w-100 mt-3'>User this Address</button>
+                            </div> */}
+                            <button className='submit-btn w-100 mt-3' type='button' onClick={handleSubmit} >Add Address</button>
                         </Form>
                     </div>
                 </Modal.Body>

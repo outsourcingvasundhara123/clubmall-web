@@ -58,7 +58,6 @@ function Register() {
         const { name, value, checked, type } = e.target;
         let newValue = type === "checkbox" ? checked : value;
 
-
         if (name === "state_id") {
             const selectedState = stateList.find((state) => state.name === newValue);
             newValue = selectedState ? selectedState._id : "";
