@@ -151,13 +151,13 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>B</span>ASKET STUFFERS FOR EVERTONE FROM $0.39</h2>
                                 </div>
-                                <Row className='mt-5'>
+                                <Row className='mt-4'>
 
                                     {
                                         category.productsCategory && category.productsCategory?.slice(5, 9).map((e) => {
                                             return (
 
-                                                <Col lg={3} md={6} sm={12}>
+                                                <Col lg={3} md={6} sm={12} className='mt-4'>
                                                     <div className='basket-box'>
                                                         <h5>{e.name}</h5>
                                                         <img src={category.productsCategoryIconPath + e.icon} alt='' width="80%" className='my-4' />
@@ -401,8 +401,9 @@ const Selling = () => {
                             </div>
                         </section>
                     </>
-                )}
-        </Layout>
+                )
+            }
+        </Layout >
     )
 }
 

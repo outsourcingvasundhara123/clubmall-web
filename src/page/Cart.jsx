@@ -16,7 +16,7 @@ import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
-import { errorResponse , afterLogin } from '../helper/constants'
+import { errorResponse, afterLogin } from '../helper/constants'
 import { loadStripe } from '@stripe/stripe-js';
 import StripeCheckout from 'react-stripe-checkout';
 import { AiFillCloseCircle } from 'react-icons/ai'
@@ -151,11 +151,11 @@ const Cart = () => {
             setProductList(poroductData);
             setFleshProductList(flashProductproductListData)
             stopAnimation()
-        // } else {
-        //     // User is not logged in, redirect to the login page
-        //     afterLogin(setMyMessage);
-        //     setWarningSnackBarOpen(!warningSnackBarOpen);
-        //   }
+            // } else {
+            //     // User is not logged in, redirect to the login page
+            //     afterLogin(setMyMessage);
+            //     setWarningSnackBarOpen(!warningSnackBarOpen);
+            //   }
         } catch (error) {
             console.log(error);
             errorResponse(error, setMyMessage);
@@ -468,12 +468,12 @@ token={handleCheckout}
 />  */}
                                                     <div className='mt-3 login-input'>
                                                         <label>Shipping details</label>
-                                                        <div className='address-shipped mt-2'>
+                                                        {/* <div className='address-shipped mt-2'>
                                                             <h6>User name</h6>
                                                             <p className='mt-1'>dsfgs,sdfsdfsfsdf,sdfsdfsdfsd</p>
                                                             <p>258888</p>
-                                                            <Button className='change-add mt-3'>Change</Button>
-                                                        </div>
+                                                        </div> */}
+                                                        <Button className='change-add'>Add</Button>
                                                     </div>
                                                     <Button className='checkout mt-3' onClick={handleCheckout} >Checkout</Button>
                                                     {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}

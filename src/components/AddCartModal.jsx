@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect , useContext } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
@@ -21,7 +21,7 @@ import InstallApp from '../components/InstallApp';
 import { CartContext } from '../context/CartContext'
 
 const AddCartModal = (props) => {
-    const { setCart , cart } = useContext(CartContext);
+    const { setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');

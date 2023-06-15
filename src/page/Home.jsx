@@ -23,15 +23,17 @@ import ErrorSnackBar from "../components/SnackBar";
 import { Is_Login } from '../helper/IsLogin';
 
 const Home = () => {
+
+    const { loading, setLoading, wishProductUrl, category, currentUser,
+        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const isLoggedIn = Is_Login();
-    const { getCartData, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const navigate = useNavigate();
-    const [category, setcategory] = useState([]);
-    const [currentUser, setCorrectUser] = useState("");
-    const [productList, setProductList] = useState([]);
-    const [trendingProductList, setTrendingProductList] = useState([]);
+    // const [category, setcategory] = useState([]);
+    // const [currentUser, setCorrectUser] = useState("");
+    // const [productList, setProductList] = useState([]);
+    // const [trendingProductList, setTrendingProductList] = useState([]);
     const serverURL = getServerURL();
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [active, setActive] = useState("1");
     const player = useRef();
 
@@ -62,48 +64,53 @@ const Home = () => {
             slidesPerView: 4,
             spaceBetween: 20
         },
-        1300: {
+        1200: {
             slidesPerView: 5,
+            spaceBetween: 20
+        },
+        1300: {
+            slidesPerView: 6,
             spaceBetween: 20
         },
     }
 
-    const getProducts = async () => {
+    // const getProducts = async () => {
 
-        try {
-            startAnimation()
+    //     try {
+    //         startAnimation()
+    //         const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+    //         const [categoryResponse, trendingproductListResponse, productListResponse] = await Promise.all([
+    //             api.post(`${serverURL + PRODUCTCATEGORY}`),
+    //             apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+    //             api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" })
+    //         ]);
 
-            const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-            const [categoryResponse, trendingproductListResponse, productListResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTCATEGORY}`),
-                apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-                apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" })
-            ]);
+    //         const categoryData = categoryResponse.data.data;
+    //         const productListData = productListResponse.data.data;
+    //         const trendingproductData = trendingproductListResponse.data.data
 
-            const categoryData = categoryResponse.data.data;
-            const productListData = productListResponse.data.data;
-            const trendingproductData = trendingproductListResponse.data.data
-            
-            setcategory(categoryData);
-            setProductList(productListData);
-            setTrendingProductList(trendingproductData)
+    //         setcategory(categoryData);
+    //         setProductList(productListData);
+    //         setTrendingProductList(trendingproductData)
 
-            stopAnimation()
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    //         stopAnimation()
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     useEffect(() => {
         getProducts();
-        getCartData()
-    }, []);
+        getWishList()
+    }, [isLoggedIn]);
 
     const handleClick = (event) => {
         setActive(event.target.id);
     }
 
-    // console.log(wishlist,"wishList");
+    console.log(Mymessage, "Mymessage");
+    console.log(sucessSnackBarOpen, "sucessSnackBarOpen");
+
 
     return (
         <Layout>
@@ -122,10 +129,11 @@ const Home = () => {
                 type="error"
             />
 
-
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
+
+
                         <section className='home-first-image'>
                             <div className='container-cos'>
                                 <div className='w-100  pointer ' onClick={() => navigate("/categories")}>
@@ -320,7 +328,6 @@ const Home = () => {
                                                 return (
 
                                                     <SwiperSlide>
-                                                        {console.log(e, "eeee")}
                                                         <ProCard
                                                             id={e._id}
                                                             img={e.product_images[0]?.file_name}
@@ -331,8 +338,8 @@ const Home = () => {
                                                             secper={e.secper}
                                                             off={e.discount_percentage}
                                                             path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
-                                                            is_wishList={e.wishList}
-                                                      />
+                                                            is_wishList={e.wishList && e.wishList}
+                                                        />
                                                     </SwiperSlide>
                                                 )
                                             })
