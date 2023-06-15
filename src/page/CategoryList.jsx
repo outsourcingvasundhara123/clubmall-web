@@ -51,7 +51,7 @@ const CategoryList = () => {
 
     const CateResponsiveOptions = {
         0: {
-            items: 1,
+            items: 2,
         },
         425: {
             items: 2,
@@ -60,13 +60,13 @@ const CategoryList = () => {
             items: 3,
         },
         1024: {
-            items: 3,
-        },
-        1200: {
             items: 4,
         },
-        1700: {
+        1200: {
             items: 5,
+        },
+        1700: {
+            items: 6,
         },
     };
 
@@ -111,7 +111,7 @@ const CategoryList = () => {
                             {category && category.firstHalf && category.firstHalf.map((e, i) => {
                                 return (
                                     <div className='item' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i}   onClick={() => handelCategorydata(e.name)}>
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => handelCategorydata(e.name)}>
                                             <div className='categories-slider-img '>   {/* "active-catagories" use this class to active catagories */}
                                                 <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                             </div>
@@ -137,7 +137,7 @@ const CategoryList = () => {
                                     <div className='item ' key={i} onClick={() => handelCategorydata(e.name)} >
                                         <div className='cate-slider-box text-center px-0 px-md-3 pointer'  >
                                             <div className='categories-slider-img'  >
-                                                <img   src={category.productsCategoryIconPath + e.icon} alt='' />
+                                                <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
                                             <p>From ${e.minPrice}</p>

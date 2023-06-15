@@ -35,18 +35,18 @@ const ProCard = (props) => {
     return (
         <>
 
-            <div className='cos-width'>
+            <div className='cos-width explore-card'>
 
-                <div className='product-card explore-card  pointer'>
+                <div className='product-card   pointer'>
 
 
-               
+
 
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
                     </div>
-                    <div className='py-3 px-3'>
+                    <div className='py-3 px-3 space-card'>
                         <h5>{props.name}</h5>
                         <div className='d-flex align-items-center justify-content-between'>
                             <div>
@@ -59,11 +59,11 @@ const ProCard = (props) => {
                                 <Button className='like-btn' onClick={() => addWishList(props.id, "product-wishlist")} >
                                     <img src='./img/new_in/like.png' alt='' />
                                 </Button>
-                                }
+                            }
                             {
                                 props.is_wishList === 1 &&
                                 <Button className='like-btn' onClick={() => addWishList(props.id, "product-delete-wishlist")} >
-                                   <img src='./img/Vector.png' alt='' />
+                                    <img src='./img/Vector.png' alt='' />
                                 </Button>
                             }
 
@@ -74,13 +74,15 @@ const ProCard = (props) => {
                 {
                     location.pathname === "/trending" ?
                         <>
-                            <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
+                            <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
 
                                 {props.color && props.color.map((e, i) => {
                                     return (
-                                        <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
-                                            <img alt='' src={e.imgUrl} width="20px" />
-                                        </Button>
+                                        <div>
+                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                <img alt='' src={e.imgUrl} width="20px" />
+                                            </Button>
+                                        </div>
                                     )
                                 })
                                 }
@@ -91,12 +93,14 @@ const ProCard = (props) => {
                 {
                     location.pathname === "/categories" ?
                         <>
-                            <div className='product-color-cos d-flex align-items-center gap-2 mt-2'>
+                            <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
                                 {props.color && props.color.map((e, i) => {
                                     return (
-                                        <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
-                                            <img alt='' src={e.imgUrl} width="20px" />
-                                        </Button>
+                                        <div>
+                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                <img alt='' src={e.imgUrl} width="20px" />
+                                            </Button>
+                                        </div>
                                     )
                                 })
                                 }
