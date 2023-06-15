@@ -158,8 +158,8 @@ const Home = () => {
                                         </Col>
                                         <Col xl={3} lg={3} md={6} sm={6} className='py-4'>
                                             <div className='discount-card mt-1' style={{ borderRight: "none" }}>
-                                                <p className='d-flex justify-content-center'><span className='discount-btn'>CODE : HOIYUBN58</span></p>
-                                                <p>CAPPED AT $60</p>
+                                                <p className='d-flex justify-content-center'><span className='discount-btn'>CODE : clubmall30</span></p>
+                                                <p>CAPPED AT $5</p>
                                             </div>
                                         </Col>
                                     </Row>
