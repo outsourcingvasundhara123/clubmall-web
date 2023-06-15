@@ -15,8 +15,7 @@ import Loader from '../components/Loader';
 import { FiFilter } from 'react-icons/fi'
 
 const Categories = () => {
-
-    const [filterShow, setFilterShow] = useState(true)
+    const [filterShow, setFilterShow] = useState(window.innerWidth < 991 ? false : true)
     const [productColorActive, setProductColorActive] = useState()
     const [postList, setPostList] = useState([]);
     const serverURL = getServerURL();
