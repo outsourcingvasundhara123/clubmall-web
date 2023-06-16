@@ -10,7 +10,7 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
-import { handelCategorydata } from '../helper/constants';
+import { handelCategorydata,handelCategory } from '../helper/constants';
 
 const CategoryList = () => {
 
@@ -111,7 +111,7 @@ const CategoryList = () => {
                             {category && category.firstHalf && category.firstHalf.map((e, i) => {
                                 return (
                                     <div className='item' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => handelCategorydata(e.name)}>
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => handelCategorydata(e._id)}>
                                             <div className='categories-slider-img '>   {/* "active-catagories" use this class to active catagories */}
                                                 <img src={category.productsCategoryIconPath + e.icon} alt='' />
                                             </div>

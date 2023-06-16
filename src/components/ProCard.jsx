@@ -76,7 +76,7 @@ const ProCard = (props) => {
                         <>
                             <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
 
-                                {props.color && props.color.map((e, i) => {
+                                {props.color && props.color?.map((e, i) => {
                                     return (
                                         <div>
                                             <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
@@ -94,7 +94,7 @@ const ProCard = (props) => {
                     location.pathname === "/categories" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
-                                {props.color && props.color.map((e, i) => {
+                                {props.color && props.color?.map((e, i) => {
                                     return (
                                         <div>
                                             <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>

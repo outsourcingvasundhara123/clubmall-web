@@ -231,7 +231,7 @@ const AddCartModal = (props) => {
                                                     <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
-                                                            modelProduct.productList?.sku_attributes.size.map((e, i) => {
+                                                            modelProduct.productList?.sku_attributes.size?.map((e, i) => {
                                                                 return (
                                                                     <Button className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
                                                                         {e.name}

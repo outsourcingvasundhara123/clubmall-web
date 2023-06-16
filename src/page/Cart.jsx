@@ -28,8 +28,6 @@ import { useStripe, useElements } from '@stripe/react-stripe-js';
 // Your public Stripe key
 const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
 
-console.log(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL,"stripePromise");
-
 const WrappedCart = () => {
 
     const stripe = useStripe();
@@ -101,61 +99,67 @@ const WrappedCart = () => {
             // console.log(token, "stripe");
             setIsOpen(!isOpen);
 
-            if (productList.list.length !== 0) {
+            if (productList.list.length == 0) {
                 setMyMessage("You dont have any product in a cart")
                 setWarningSnackBarOpen(!warningSnackBarOpen);
             } else {
 
                 if (correntAddess?.data?.length !== 0) {
+
+                    const amountInCents = Math.round(productList?.cartAmountDetails?.net_amount * 100);
+
                     const data = {
                         order_items: productList.list,
                         seller_id: "6386bfbe29a80c18d7b15488",
                         shipping_address_id: correntAddess.data[0]._id,
                         shipping_method_id: correntAddess.shipping_method_id
                     }
-                    const res = await api.postWithToken(`${serverURL + "order-create"}`, data)
-                    if (res.data.success == true) {
-                        setMyMessage(res.data.message);
-                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                    
+                    const order = await api.postWithToken(`${serverURL + "order-create"}`, data)
 
+                    if (order.data.success == true) {
+                        // create payment intent and get client_secret
+                        const paymentIntentResponse = await api.postWithToken(`${serverURL + "create-payment-intent"}`, {
+                        amount: amountInCents,
+                        order_id:order.data.data?.orderObj?._id
+                        });
 
-                        // const amountInDollars = 0.50;  // $0.50
-                        // const amountInCents = Math.round(amountInDollars * 100);
-                        // // create payment intent and get client_secret
-                        // const paymentIntentResponse = await api.postWithToken(`${serverURL + "create-payment-intent"}`, {
-                        //     amount: amountInCents, // replace with correct amount calculation logic
-                        // });
-                        // const clientSecret = paymentIntentResponse.data.clientSecret;
-                     
-                        // if (!stripe || !elements) {
-                        //     return;
-                        //   }
-                        // const cardElement = elements.getElement(CardElement);
+                        const clientSecret = paymentIntentResponse.data.clientSecret;
+                        if (!stripe || !elements) {
+                            return;
+                        }
+                        const cardElement = elements.getElement(CardElement);
+    
+                        if (!cardElement) {
+                            console.log("CardElement not loaded");
+                            return;
+                        }
+                        const payment = await stripe.confirmCardPayment(clientSecret, {
+                            payment_method: {
+                                card: cardElement,
+                                billing_details: {
+                                },
+                            },
+                        });
+                        
+                        const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, {order_id:order.data.data?.orderObj?._id})
+                        console.log('paymentStatus', paymentStatus);
 
-                        // if (!cardElement) {
-                        //   console.log("CardElement not loaded");
-                        //   return;
-                        // }
-              
-                        // const payment = await stripe.confirmCardPayment(clientSecret, {
-                        //   payment_method: {
-                        //     card: cardElement,
-                        //     billing_details: {
-                        //       // Add your billing details here
-                        //     },
-                        //   },
-                        // });
-              
-                        // if (payment.error) {
-                        //   console.log(payment.error.message);
-                        // } else {
-                        //   console.log('Payment succeeded!', payment);
-                        //   // Continue with the rest of your checkout flow here.
-                        // }
-
+                        if (payment.error) {
+                            setMyMessage(payment.error.message);
+                            setWarningSnackBarOpen(!warningSnackBarOpen);
+                            console.log(payment.error.message);
+                        } else {
+                            setMyMessage(paymentStatus.data.message);
+                            setSucessSnackBarOpen(!sucessSnackBarOpen);
+                            setTimeout(() => {
+                                navigate("/")
+                            }, 1000);
+                            // Continue with the rest of your checkout flow here.
+                        }
                         getCartData()
                     } else {
-                        setMyMessage(res.data.message);
+                        setMyMessage(order.data.message);
                         setWarningSnackBarOpen(!warningSnackBarOpen);
                     }
 
@@ -207,9 +211,10 @@ const WrappedCart = () => {
                     page: 1
                 })
             ]);
+
             const poroductData = poroductResponse.data.data;
             const flashProductproductListData = flashProduct.data.data;
-            let ids = poroductData.list.map((e) => e._id)
+            let ids = poroductData.list?.map((e) => e._id)
             setCouponId(ids)
             setProductList(poroductData);
             setFleshProductList(flashProductproductListData)
@@ -338,7 +343,7 @@ const WrappedCart = () => {
                                                 <div className='mt-3'>
 
                                                     {
-                                                        productList.list && productList.list.map((e, i) => {
+                                                        productList.list && productList.list?.map((e, i) => {
                                                             return (
                                                                 <div className='cart-items' key={i} >
                                                                     <div className='items-img select-all d-flex align-items-center'>
@@ -528,8 +533,9 @@ const WrappedCart = () => {
                                                         </div>
 
                                                     </div>
-                                                    
-                                                    {/* <CardElement /> */}
+                                                    <div className='address-shipped mt-3'>
+                                                        <CardElement />
+                                                    </div>
 
                                                     {stripe ? (
                                                         <ElementsConsumer>
@@ -543,7 +549,7 @@ const WrappedCart = () => {
                                                         <div>Loading...</div>
                                                     )
                                                     }
-                                                   
+
                                                 </div>
 
                                             </div>
@@ -580,7 +586,7 @@ const WrappedCart = () => {
                                     <h4>Based on your recently viewed</h4>
                                     <div className='mb-0 explore-main'>
                                         {
-                                            fleshProductList?.productListArrObj?.map((e) => {
+                                           fleshProductList?.productListArrObj && fleshProductList?.productListArrObj?.map((e) => {
                                                 return (
                                                     <ProCard
                                                         id={e._id}
@@ -606,7 +612,6 @@ const WrappedCart = () => {
 
 
                         </div>
-                        {/* </Elements> */}
 
                     </>
                 )
