@@ -19,8 +19,10 @@ import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants';
 import InstallApp from '../components/InstallApp';
 import { CartContext } from '../context/CartContext'
+import { useLocation } from 'react-router-dom';
 
 const AddCartModal = (props) => {
+    let location = useLocation();
     const { setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
@@ -123,6 +125,9 @@ const AddCartModal = (props) => {
                         setProductColorActive(" ")
                         setSizeActive(" ")
                         setTimeout(() => {
+                            if(location.pathname == "/cart"){                                
+                                window.location.reload();
+                            }
                             props.handleClose()
                         }, 1000);
                     } else if (res.data.success === false) {
@@ -145,7 +150,6 @@ const AddCartModal = (props) => {
             setWarningSnackBarOpen(!warningSnackBarOpen);
         }
     };
-
 
     return (
         <>

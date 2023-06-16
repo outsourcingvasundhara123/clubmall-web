@@ -58,7 +58,7 @@ const WrappedCart = () => {
     const [Mymessage, setMyMessage] = useState("");
     const [couponId, setCouponId] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [count, setCount] = useState(0);
+    const [is_Wait, setIs_Wait] = useState(false);
     const player = useRef();
     const [stripeLoaded, setStripeLoaded] = useState(false);
 
@@ -95,6 +95,7 @@ const WrappedCart = () => {
     // create order 
     const handleCheckout = async (event) => {
 
+
         try {
             // console.log(token, "stripe");
             setIsOpen(!isOpen);
@@ -114,14 +115,28 @@ const WrappedCart = () => {
                         shipping_address_id: correntAddess.data[0]._id,
                         shipping_method_id: correntAddess.shipping_method_id
                     }
-                    
+
+                    //validation for card detail
+
+                    const cardElement = elements.getElement(CardElement);
+                    if (cardElement) {
+                        const cardElementState = cardElement._empty;
+
+                        if (cardElementState) {
+                            setMyMessage('Please enter your card details');
+                            setWarningSnackBarOpen(!warningSnackBarOpen);
+                            return;
+                        }
+                    }
+
                     const order = await api.postWithToken(`${serverURL + "order-create"}`, data)
 
                     if (order.data.success == true) {
+                        setIs_Wait(true)
                         // create payment intent and get client_secret
                         const paymentIntentResponse = await api.postWithToken(`${serverURL + "create-payment-intent"}`, {
-                        amount: amountInCents,
-                        order_id:order.data.data?.orderObj?._id
+                            amount: amountInCents,
+                            order_id: order.data.data?.orderObj?._id
                         });
 
                         const clientSecret = paymentIntentResponse.data.clientSecret;
@@ -129,7 +144,7 @@ const WrappedCart = () => {
                             return;
                         }
                         const cardElement = elements.getElement(CardElement);
-    
+
                         if (!cardElement) {
                             console.log("CardElement not loaded");
                             return;
@@ -141,8 +156,8 @@ const WrappedCart = () => {
                                 },
                             },
                         });
-                        
-                        const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, {order_id:order.data.data?.orderObj?._id})
+
+                        const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
                         console.log('paymentStatus', paymentStatus);
 
                         if (payment.error) {
@@ -157,6 +172,7 @@ const WrappedCart = () => {
                             }, 1000);
                             // Continue with the rest of your checkout flow here.
                         }
+                        setIs_Wait(false)
                         getCartData()
                     } else {
                         setMyMessage(order.data.message);
@@ -201,6 +217,7 @@ const WrappedCart = () => {
     };
 
     const getCartData = async () => {
+
         startAnimation()
         try {
             // if (isLoggedIn) {
@@ -541,7 +558,7 @@ const WrappedCart = () => {
                                                         <ElementsConsumer>
                                                             {({ elements, stripe }) => (
                                                                 <div>
-                                                                    <Button className='checkout mt-3' disabled={!stripe} onClick={() => handleCheckout()}>Checkout</Button>
+                                                                    <Button className='checkout mt-3' disabled={!stripe} onClick={() => handleCheckout()}>  {is_Wait  ? "Loading..." : "Checkout" } </Button>
                                                                 </div>
                                                             )}
                                                         </ElementsConsumer>
@@ -586,7 +603,7 @@ const WrappedCart = () => {
                                     <h4>Based on your recently viewed</h4>
                                     <div className='mb-0 explore-main'>
                                         {
-                                           fleshProductList?.productListArrObj && fleshProductList?.productListArrObj?.map((e) => {
+                                            fleshProductList?.productListArrObj && fleshProductList?.productListArrObj?.map((e) => {
                                                 return (
                                                     <ProCard
                                                         id={e._id}

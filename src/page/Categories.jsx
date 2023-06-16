@@ -22,7 +22,7 @@ const Categories = () => {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const player = useRef();
-    const CategorieName = localStorage.getItem("selectedcategories") ? localStorage.getItem("selectedcategories") : "Women Apparel"
+    const Categorie_id = localStorage.getItem("selectedcategories") ? localStorage.getItem("selectedcategories") : "Women Apparel"
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -36,8 +36,11 @@ const Categories = () => {
         startAnimation()
         try {
             const [postListResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "by-categories" ,
+                product_category_one_id:Categorie_id
+            }),
             ]);
+            console.log(postListResponse,"postListResponse.data.data");
             const postsData = postListResponse.data.data;
             setPostList(postsData);
             stopAnimation()
@@ -48,7 +51,7 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-    }, []);
+    }, [Categorie_id]);
 
     useEffect(() => {
         const handleResize = () => {

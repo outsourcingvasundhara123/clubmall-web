@@ -56,7 +56,6 @@ export const handelCategorydata = (categorie,navigate) => {
     
 };
 
-
 export const colors = [
     { id: 1, img: "./img/selling/color1.png" },
     { id: 2, img: "./img/selling/color2.png" },

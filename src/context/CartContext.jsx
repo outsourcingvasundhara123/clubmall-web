@@ -1,9 +1,9 @@
-import React, {useRef, createContext, useState } from 'react';
-import { WISHLIST,PRODUCTCATEGORY, PRODUCTList } from '../helper/endpoints';
+import React, { useRef, createContext, useState } from 'react';
+import { WISHLIST, PRODUCTCATEGORY, PRODUCTList } from '../helper/endpoints';
 import { getServerURL } from '../helper/envConfig';
 import api from '../helper/api';
 import { Is_Login } from '../helper/IsLogin'
-import { errorResponse , afterLogin } from '../helper/constants';
+import { errorResponse, afterLogin } from '../helper/constants';
 import { useNavigate } from 'react-router-dom'
 
 // Create the cart context
@@ -13,7 +13,7 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const isLoggedIn = Is_Login();
   const [cart, setCart] = useState(0);
-  
+
   const [wishlistCount, setWishlistCount] = useState(0);
 
   const [Mymessage, setMyMessage] = useState("");
@@ -27,8 +27,8 @@ export const CartProvider = ({ children }) => {
   const [categoryWeb, setCategoryWeb] = useState([]);
   const [sellingCategory, setSellingCategory] = useState({});
   const [myAddress, setMyAddess] = useState([]);
-  const [  correntAddess,   setCorrentAddess] = useState({});
-  
+  const [correntAddess, setCorrentAddess] = useState({});
+
   const [currentUser, setCorrectUser] = useState("");
   const [productList, setProductList] = useState([]);
   const [trendingProductList, setTrendingProductList] = useState([]);
@@ -36,31 +36,32 @@ export const CartProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [loadingCategory, setLoadingCategory] = useState(true);
 
-  
+
   const serverURL = getServerURL();
   const player = useRef();
 
   const startAnimation = () => {
     if (player.current) {
-        player.current.play(); // Check if player.current is not null before accessing play()
+      player.current.play(); // Check if player.current is not null before accessing play()
     }
-};
-const stopAnimation = () => {
+  };
+  const stopAnimation = () => {
     setLoading(false);
-};
+  };
 
 
-//category page 
-const playercategory = useRef();
+  //category page 
+  const playercategory = useRef();
 
-const startAnimationcategory = () => {
-  if (playercategory.current) {
-    playercategory.current.play(); // Check if player.current is not null before accessing play()
-  }
-};
-const stopAnimationcategory = () => {
-  setLoadingCategory(false);
-};
+  const startAnimationcategory = () => {
+    if (playercategory.current) {
+      playercategory.current.play(); // Check if player.current is not null before accessing play()
+    }
+  };
+
+  const stopAnimationcategory = () => {
+    setLoadingCategory(false);
+  };
 
 
   const addWishList = async (id, action) => {
@@ -97,51 +98,50 @@ const stopAnimationcategory = () => {
     startAnimation()
     try {
       // if (isLoggedIn) {
-        const res = await api.postWithToken(`${serverURL + WISHLIST}`, { "action": "my-wishlist-list" })
-        setWishList(res.data.data.list)
-        setWishlistCount(res.data.data.list.length)
-        setWishProductURL(res.data.data.productImagePath)
-        stopAnimation()
+      const res = await api.postWithToken(`${serverURL + WISHLIST}`, { "action": "my-wishlist-list" })
+      setWishList(res.data.data.list)
+      setWishlistCount(res.data.data.list.length)
+      setWishProductURL(res.data.data.productImagePath)
+      stopAnimation()
       // } else {
       //   // User is not logged in, redirect to the login page
       //   afterLogin(setMyMessage);
       //   setWarningSnackBarOpen(!warningSnackBarOpen);
       // }
     } catch (error) {
-        errorResponse(error, setMyMessage);
-        setWarningSnackBarOpen(!warningSnackBarOpen);
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
     }
-};
+  };
 
   const getMyAddress = async () => {
     startAnimation()
     try {
-        const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, {  "action":"shipping-address-list" })
-        setMyAddess(res.data.data.userData)
-        let data = res.data.data?.userData.filter((e) => e.is_default == 1)
-        const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
-          "action":"list",
-          "country_id": data[0].country_id._id
+      const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, { "action": "shipping-address-list" })
+      setMyAddess(res.data.data.userData)
+      let data = res.data.data?.userData.filter((e) => e.is_default == 1)
+      const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
+        "action": "list",
+        "country_id": data[0].country_id._id
       })
-        setCorrentAddess({data:data,shipping_method_id:res2.data.data?.list[0]?._id })
-        stopAnimation()
+      setCorrentAddess({ data: data, shipping_method_id: res2.data.data?.list[0]?._id })
+      stopAnimation()
     } catch (error) {
-        errorResponse(error, setMyMessage);
-        setWarningSnackBarOpen(!warningSnackBarOpen);
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
     }
-};
+  };
 
+  const getProducts = async () => {
 
-const getProducts = async () => {
-
-  try {
+    try {
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-      const [categoryResponse, trendingproductListResponse, productListResponse,userProductList] = await Promise.all([
-          api.post(`${serverURL + PRODUCTCATEGORY}`),
-          apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-          apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
-          api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
+      const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
+        api.post(`${serverURL + PRODUCTCATEGORY}`),
+        apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+        apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
+        api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
 
       ]);
 
@@ -156,46 +156,65 @@ const getProducts = async () => {
       setUserProductList(userproductData)
 
       stopAnimation()
-  } catch (error) {
+    } catch (error) {
       console.log(error);
-  }
-};
+    }
+  };
 
-const getCategoryWeb = async () => {
+  const getCategoryWeb = async () => {
 
-  startAnimation()
+    startAnimation()
 
-  try {
+    try {
       const [categoryResponse] = await Promise.all([
-          api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+        api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
       ]);
       const categoryData = categoryResponse.data.data;
       setSellingCategory(
         {
-          first:{_id:categoryData.productsCategoryList[0]?._id,name:categoryData.productsCategoryList[0]?.child[0]?.name,id:categoryData.productsCategoryList[0]?.child[0]?._id},
-          second:{_id:categoryData.productsCategoryList[1]?._id,name:categoryData.productsCategoryList[1]?.child[0]?.name,id:categoryData.productsCategoryList[1]?.child[0]?._id},
-          third:{_id:categoryData.productsCategoryList[2]?._id,name:categoryData.productsCategoryList[2]?.child[0]?.name,id:categoryData.productsCategoryList[2]?.child[0]?._id},
-      })
+          first: { _id: categoryData.productsCategoryList[0]?._id, name: categoryData.productsCategoryList[0]?.child[0]?.name, id: categoryData.productsCategoryList[0]?.child[0]?._id },
+          second: { _id: categoryData.productsCategoryList[1]?._id, name: categoryData.productsCategoryList[1]?.child[0]?.name, id: categoryData.productsCategoryList[1]?.child[0]?._id },
+          third: { _id: categoryData.productsCategoryList[2]?._id, name: categoryData.productsCategoryList[2]?.child[0]?.name, id: categoryData.productsCategoryList[2]?.child[0]?._id },
+        })
       // Divide the category list into two parts
       const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
 
       const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
       const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
       // Set the first half and second half of categories
-      setCategoryWeb({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath , categoryData:categoryData.productsCategory });
-   
+      setCategoryWeb({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath, categoryData: categoryData.productsCategory });
+
       stopAnimation()
-  } catch (error) {
+    } catch (error) {
       console.log(error);
-  }
-};
+    }
+  };
+
+  // const getCategoryData = async () => {
+  //   startAnimation()
+  //   try {
+  //       const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, {  "action":"shipping-address-list" })
+  //       setMyAddess(res.data.data.userData)
+  //       let data = res.data.data?.userData.filter((e) => e.is_default == 1)
+  //       const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
+  //         "action":"list",
+  //         "country_id": data[0].country_id._id
+  //     })
+  //       setCorrentAddess({data:data,shipping_method_id:res2.data.data?.list[0]?._id })
+  //       stopAnimation()
+  //   } catch (error) {
+  //       errorResponse(error, setMyMessage);
+  //       setWarningSnackBarOpen(!warningSnackBarOpen);
+  //   }
+  // };
+
 
   return (
 
     <CartContext.Provider value={{
-      correntAddess,myAddress,getMyAddress,sellingCategory,stopAnimationcategory, startAnimationcategory, playercategory,loadingCategory,setLoadingCategory, startAnimation,stopAnimation,player,cart,setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
-      setSucessSnackBarOpen,setWarningSnackBarOpen , getWishList , wishlist , getProducts,wishProductUrl,category,currentUser,
-      productList,trendingProductList,loading,setLoading,wishlistCount,userProductList,getCategoryWeb,categoryWeb
+      correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
+      productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>
       {children}
     </CartContext.Provider>
