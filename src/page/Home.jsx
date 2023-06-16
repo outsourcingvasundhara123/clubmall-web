@@ -16,7 +16,7 @@ import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import CategoryList from './CategoryList';
 import Loader from '../components/Loader';
-import { handelProductDetail } from '../helper/constants';
+import { handelProductDetail,handelCategory} from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";

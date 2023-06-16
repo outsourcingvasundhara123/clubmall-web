@@ -148,7 +148,7 @@ const Selling = () => {
                                     {
                                         categoryWeb.categoryData && categoryWeb.categoryData?.slice(0, 5).map((e) => {
                                             return (
-                                                <div className='cate-box text-center pointer'>
+                                                <div className='cate-box text-center pointer' onClick={() => handelCategorydata(e._id)} >
                                                     <div className='cat-img-round'>
                                                         <img src={categoryWeb.productsCategoryIconPath + e.icon} alt='' width="100%" />
                                                     </div>
@@ -177,7 +177,7 @@ const Selling = () => {
                                                         <h5>{e.name}</h5>
                                                         <img src={categoryWeb.productsCategoryIconPath + e.icon} alt='' width="80%" className='my-4' />
                                                         <div className='d-flex justify-content-center'>
-                                                            <Button className='shop-btn' onClick={() => navigate("/categories")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                            <Button className='shop-btn' onClick={() => handelCategorydata(e._id)} >Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                         </div>
                                                     </div>
                                                 </Col>

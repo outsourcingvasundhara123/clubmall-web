@@ -42,14 +42,19 @@ export const handelProductDetail = (productId) => {
     window.location.href = "/Product-info";
   };
 
-  export const handelCategorydata = (categorie) => {
+export const handelCategorydata = (categorie,navigate) => {
     if(categorie == undefined ){
-        localStorage.setItem("selectedcategories", "Women Apparel");
+        localStorage.setItem("selectedcategories", "646b3f3a9d6497250b8f17c4");
     }else{
         localStorage.setItem("selectedcategories", categorie);
     }
+   if(navigate !== undefined){
+    navigate("/categories");
+   }else{
     window.location.href = "/categories";
-  };
+   } 
+    
+};
 
 
 export const colors = [
