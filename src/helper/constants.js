@@ -5,7 +5,11 @@ export const errorResponse = (error,setMyMessage,props) => {
         if (status === 403) {
             setTimeout(() => {
                 window.location.href = "/login";
-                sessionStorage.removeItem("token");
+                // sessionStorage.removeItem("token");
+                localStorage.removeItem('token');
+                localStorage.removeItem('name');
+                localStorage.removeItem('user');
+                localStorage.removeItem('profile_image');
             }, 5000);
         }else{
             setMyMessage(data.message)

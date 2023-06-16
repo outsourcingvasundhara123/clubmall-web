@@ -51,7 +51,7 @@ const Selling = () => {
         startAnimation()
 
         try {
-            const [womenCategory, kidCategory, menCategory, favorites] = await Promise.all([
+            const [womenCategory, menCategory , kidCategory, favorites] = await Promise.all([
                 // api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" }),
                 // api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
                 api.post(`${serverURL + PRODUCTList}`, {
