@@ -22,18 +22,20 @@ import { handelCategorydata } from '../helper/constants'
 import { MdRemove, MdAdd } from 'react-icons/md'
 import { CartContext } from '../context/CartContext'
 import { Is_Login } from '../helper/IsLogin'
-// import { CardElement, Elements, ElementsConsumer } from "@stripe/react-stripe-js";
+import { CardElement, Elements, ElementsConsumer } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-// import { useStripe, useElements } from '@stripe/react-stripe-js';
+import { useStripe, useElements } from '@stripe/react-stripe-js';
 // Your public Stripe key
-// const stripePromise = loadStripe('pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr');
+const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
 
+console.log(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL,"stripePromise");
 
-const Cart = () => {
+const WrappedCart = () => {
 
-    // const stripe = useStripe();
-    // const elements = useElements();
-    // const isLoggedIn = Is_Login();
+    const stripe = useStripe();
+    const elements = useElements();
+
+    const isLoggedIn = Is_Login();
     const { getMyAddress, correntAddess, setCart, cart, } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
@@ -60,6 +62,7 @@ const Cart = () => {
     const [loading, setLoading] = useState(true);
     const [count, setCount] = useState(0);
     const player = useRef();
+    const [stripeLoaded, setStripeLoaded] = useState(false);
 
     const startAnimation = () => {
         if (player.current) {
@@ -91,53 +94,75 @@ const Cart = () => {
         setShow(true);
     }
 
-    const handleCheckout = async (token) => {
+    // create order 
+    const handleCheckout = async (event) => {
+
         try {
             // console.log(token, "stripe");
             setIsOpen(!isOpen);
 
-            if (correntAddess?.data?.length !== 0) {
-                const data = {
-                    order_items: productList.list,
-                    seller_id: "6386bfbe29a80c18d7b15488",
-                    shipping_address_id: correntAddess.data[0]._id,
-                    shipping_method_id: correntAddess.shipping_method_id
-                }
-                const res = await api.postWithToken(`${serverURL + "order-create"}`, data)
-                if (res.data.success == true) {
-                    setMyMessage(res.data.message);
-                    setSucessSnackBarOpen(!sucessSnackBarOpen);
-                    console.log(res.data, "order");
+            if (productList.list.length !== 0) {
+                setMyMessage("You dont have any product in a cart")
+                setWarningSnackBarOpen(!warningSnackBarOpen);
+            } else {
 
-                     //payment
-
-                    // const payment = await stripePromise.then(stripe => stripe.confirmCardPayment(res.data.client_secret, {
-                    //     payment_method: {
-                    //         card: elements.getElement(CardElement),
-                    //         billing_details: {
-                    //             // Add your billing details here
-                    //         },
-                    //     }
-                    // }));
-                    // if (payment.error) {
-                    //     // Show error to your customer.
-                    //     console.log(payment.error.message);
-                    // } else {
-                    //     // The payment succeeded!
-                    //     console.log('Payment succeeded!', payment);
-                    //     // Continue with the rest of your checkout flow here.
-                    // }
+                if (correntAddess?.data?.length !== 0) {
+                    const data = {
+                        order_items: productList.list,
+                        seller_id: "6386bfbe29a80c18d7b15488",
+                        shipping_address_id: correntAddess.data[0]._id,
+                        shipping_method_id: correntAddess.shipping_method_id
+                    }
+                    const res = await api.postWithToken(`${serverURL + "order-create"}`, data)
+                    if (res.data.success == true) {
+                        setMyMessage(res.data.message);
+                        setSucessSnackBarOpen(!sucessSnackBarOpen);
 
 
-                    // getCartData()
+                        // const amountInDollars = 0.50;  // $0.50
+                        // const amountInCents = Math.round(amountInDollars * 100);
+                        // // create payment intent and get client_secret
+                        // const paymentIntentResponse = await api.postWithToken(`${serverURL + "create-payment-intent"}`, {
+                        //     amount: amountInCents, // replace with correct amount calculation logic
+                        // });
+                        // const clientSecret = paymentIntentResponse.data.clientSecret;
+                     
+                        // if (!stripe || !elements) {
+                        //     return;
+                        //   }
+                        // const cardElement = elements.getElement(CardElement);
+
+                        // if (!cardElement) {
+                        //   console.log("CardElement not loaded");
+                        //   return;
+                        // }
+              
+                        // const payment = await stripe.confirmCardPayment(clientSecret, {
+                        //   payment_method: {
+                        //     card: cardElement,
+                        //     billing_details: {
+                        //       // Add your billing details here
+                        //     },
+                        //   },
+                        // });
+              
+                        // if (payment.error) {
+                        //   console.log(payment.error.message);
+                        // } else {
+                        //   console.log('Payment succeeded!', payment);
+                        //   // Continue with the rest of your checkout flow here.
+                        // }
+
+                        getCartData()
+                    } else {
+                        setMyMessage(res.data.message);
+                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                    }
+
                 } else {
-                    setMyMessage(res.data.message);
+                    setMyMessage("Add shipping address")
                     setWarningSnackBarOpen(!warningSnackBarOpen);
                 }
-
-            } else {
-                setMyMessage("Add shipping address")
-                setWarningSnackBarOpen(!warningSnackBarOpen);
             }
         } catch (error) {
             console.log(error);
@@ -234,53 +259,54 @@ const Cart = () => {
     return (
         <Layout>
 
-                {
-                    loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
-                        <>
-                            <SucessSnackBar
-                                open={sucessSnackBarOpen}
-                                setOpen={setSucessSnackBarOpen}
-                                text={Mymessage}
-                                type="success"
-                            />
+            {
+                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                    <>
+                        <SucessSnackBar
+                            open={sucessSnackBarOpen}
+                            setOpen={setSucessSnackBarOpen}
+                            text={Mymessage}
+                            type="success"
+                        />
 
-                            <ErrorSnackBar
-                                open={warningSnackBarOpen}
-                                setOpen={setWarningSnackBarOpen}
-                                text={Mymessage}
-                                type="error"
-                            />
-                                        {/* <Elements stripe={stripePromise}> */}
-                            <div className='cart-main pt-4 pb-5'>
-                                <div className='container-cos'>
+                        <ErrorSnackBar
+                            open={warningSnackBarOpen}
+                            setOpen={setWarningSnackBarOpen}
+                            text={Mymessage}
+                            type="error"
+                        />
 
-                                    <div className='page-path d-flex align-items-center gap-1'>
-                                        <div className='d-flex align-items-center gap-1'>
-                                            <NavLink>Home</NavLink>
-                                            <MdOutlineKeyboardArrowRight />
-                                        </div>
-                                        <NavLink className='active'>cart</NavLink>
+                        {/* <Elements stripe={stripePromise}> */}
+                        <div className='cart-main pt-4 pb-5'>
+                            <div className='container-cos'>
 
+                                <div className='page-path d-flex align-items-center gap-1'>
+                                    <div className='d-flex align-items-center gap-1'>
+                                        <NavLink>Home</NavLink>
+                                        <MdOutlineKeyboardArrowRight />
                                     </div>
+                                    <NavLink className='active'>cart</NavLink>
 
-                                    <Row className='mt-3'>
-                                        <Col lg={7} md={12}>
-                                            {productList.list.length <= 0 &&
-                                                <div className='d-flex align-items-center justify-content-center h-100'>
-                                                    <div className='text-center found'>
-                                                        <img src='./img/not-found.png' alt='' />
-                                                        <p className='mt-3'>The cart is empty</p>
-                                                        <Button className='mt-3 submit-btn'>Shop Now</Button>
-                                                    </div>
+                                </div>
+
+                                <Row className='mt-3'>
+                                    <Col lg={7} md={12}>
+                                        {productList.list.length <= 0 &&
+                                            <div className='d-flex align-items-center justify-content-center h-100'>
+                                                <div className='text-center found'>
+                                                    <img src='./img/not-found.png' alt='' />
+                                                    <p className='mt-3'>The cart is empty</p>
+                                                    <Button className='mt-3 submit-btn'>Shop Now</Button>
                                                 </div>
-                                            }
-                                            <div className='cart-main-list'>
+                                            </div>
+                                        }
+                                        <div className='cart-main-list'>
 
-                                                <div>
+                                            <div>
 
-                                                </div>
+                                            </div>
 
-                                                {/* <div className='product-info'>
+                                            {/* <div className='product-info'>
                                                 <div className='order-time d-flex align-items-center justify-content-between'>
                                                     <div className='d-flex align-items-center gap-3'>
                                                         <img src='./img/product_def/right-green.png' alt='' className='right-green-mark' />
@@ -299,8 +325,8 @@ const Cart = () => {
                                                 </div>
                                             </div> */}
 
-                                                <div className='select-items mt-4'>
-                                                    {/* <div className='select-all d-flex align-items-center'>
+                                            <div className='select-items mt-4'>
+                                                {/* <div className='select-all d-flex align-items-center'>
                                                     <input
                                                         id='select-all'
                                                         type='checkbox'
@@ -309,14 +335,14 @@ const Cart = () => {
                                                     <label htmlFor='select-all'>Select all</label>
                                                 </div> */}
 
-                                                    <div className='mt-3'>
+                                                <div className='mt-3'>
 
-                                                        {
-                                                            productList.list && productList.list.map((e, i) => {
-                                                                return (
-                                                                    <div className='cart-items' key={i} >
-                                                                        <div className='items-img select-all d-flex align-items-center'>
-                                                                            {/* <input
+                                                    {
+                                                        productList.list && productList.list.map((e, i) => {
+                                                            return (
+                                                                <div className='cart-items' key={i} >
+                                                                    <div className='items-img select-all d-flex align-items-center'>
+                                                                        {/* <input
                                                                             id='select-all'
                                                                             type='checkbox'
                                                                             checked={checkboxes.checkbox1}
@@ -327,67 +353,49 @@ const Cart = () => {
                                                                                 }))
                                                                             }
                                                                         /> */}
-                                                                            <img src={e.product_images} alt='' width="150px" />
-                                                                        </div>
-                                                                        <div className='cart-items-def w-100'>
-                                                                            <h5>{e.product_name}</h5>
-                                                                            <span className='d-flex align-items-center'>By {e.seller_name}</span>
-                                                                            <Button className='select-items-color mt-2 my-3'>
-                                                                                {e.sku_attributes?.color[0]?.name}
-                                                                                <MdOutlineKeyboardArrowRight />
-                                                                            </Button>
+                                                                        <img src={e.product_images} alt='' width="150px" />
+                                                                    </div>
+                                                                    <div className='cart-items-def w-100'>
+                                                                        <h5>{e.product_name}</h5>
+                                                                        <span className='d-flex align-items-center'>By {e.seller_name}</span>
+                                                                        <Button className='select-items-color mt-2 my-3'>
+                                                                            {e.sku_attributes?.color[0]?.name}
+                                                                            <MdOutlineKeyboardArrowRight />
+                                                                        </Button>
 
-                                                                            <div className='wrap-cos d-flex align-items-center justify-content-between'>
-                                                                                <div className='items-per d-flex align-items-center gap-2 mt-2'>
-                                                                                    <h5>${e.product_details.individual_price}</h5>
-                                                                                    <del>${e.product_details.group_price}</del>
-                                                                                    <span>{Math.round(e.product_details.group_price * 100 / e.product_details.individual_price)}% Off</span>
-                                                                                </div>
+                                                                        <div className='wrap-cos d-flex align-items-center justify-content-between'>
+                                                                            <div className='items-per d-flex align-items-center gap-2 mt-2'>
+                                                                                <h5>${e.product_details.individual_price}</h5>
+                                                                                <del>${e.product_details.group_price}</del>
+                                                                                <span>{Math.round(e.product_details.group_price * 100 / e.product_details.individual_price)}% Off</span>
+                                                                            </div>
 
-                                                                                <div className='product-info d-flex align-items-center gap-3 marg-cos'>
-                                                                                    {/* <div className='qty d-flex align-items-center gap-2'> */}
-                                                                                    {/* <h5>Qty:</h5> */}
-                                                                                    {/* <select value={e.qty} onChange={(d) => removeCartData(e._id, "update-to-cart-qty", d.target.value)} >
-                                                                                        <option value="1">
-                                                                                            1
-                                                                                        </option>
-                                                                                        <option value="2">
-                                                                                            2
-                                                                                        </option>
-                                                                                        <option value="3">
-                                                                                            3
-                                                                                        </option>
-                                                                                        <option value="4">
-                                                                                            4
-                                                                                        </option>
+                                                                            <div className='product-info d-flex align-items-center gap-3 marg-cos'>
 
-                                                                                    </select> */}
-
-                                                                                    {/* </div> */}
-                                                                                    <div className='qty d-flex align-items-center gap-3'>
-                                                                                        <h5>Qty:</h5>
-                                                                                        <div className='count-product'>
-                                                                                            <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty - 1))} > <MdRemove /></Button>
-                                                                                            <span>{e.qty}</span>
-                                                                                            <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty + 1))}><MdAdd /></Button>
-                                                                                        </div>
+                                                                                <div className='qty d-flex align-items-center gap-3'>
+                                                                                    <h5>Qty:</h5>
+                                                                                    <div className='count-product'>
+                                                                                        <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty - 1))} > <MdRemove /></Button>
+                                                                                        <span>{e.qty}</span>
+                                                                                        <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty + 1))}><MdAdd /></Button>
                                                                                     </div>
-                                                                                    <Button onClick={() => removeCartData(e._id, "remove-to-cart-product")} className='delete-btn'>
-                                                                                        <img src='./img/cart/delete.png' alt='' />
-                                                                                    </Button>
                                                                                 </div>
+                                                                                <Button onClick={() => removeCartData(e._id, "remove-to-cart-product")} className='delete-btn'>
+                                                                                    <img src='./img/cart/delete.png' alt='' />
+                                                                                </Button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                )
-                                                            })
-                                                        }
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
 
 
-                                                    </div>
                                                 </div>
+                                            </div>
 
-                                                {/* <div className='unavailable mt-5'>
+                                            {/* <div className='unavailable mt-5'>
                                                 <h5>Unavailable item (1)</h5>
                                                 <div className='mail d-flex align-items-center gap-2 mb-4 mt-2 pt-1'>
                                                     <img src='./img/cart/email.png' alt='' />
@@ -423,78 +431,78 @@ const Cart = () => {
                                                 </div>
                                             </div> */}
 
-                                            </div>
-                                        </Col>
+                                        </div>
+                                    </Col>
 
-                                        <Col lg={5} md={12} className='mt-5 mt-lg-0'>
-                                            <div className='ps-0 ps-lg-5'>
-                                                <div className='order-summary'>
-                                                    <h5>Order summary</h5>
+                                    <Col lg={5} md={12} className='mt-5 mt-lg-0'>
+                                        <div className='ps-0 ps-lg-5'>
+                                            <div className='order-summary'>
+                                                <h5>Order summary</h5>
 
-                                                    <div className='total-list mt-3'>
-                                                        <div className='d-flex align-items-center justify-content-between'>
-                                                            <label>Item(s) total: </label>
-                                                            <span>${productList.cartAmountDetails?.total_amount}</span>
-                                                        </div>
-                                                        <div className='d-flex align-items-center justify-content-between mt-2'>
-                                                            <label>Item(s) discount: </label>
-                                                            <span>-${productList.cartAmountDetails?.discount_amount}</span>
-                                                        </div>
-                                                        <div className='d-flex align-items-center justify-content-between mt-2'>
-                                                            <label>Item(s) sales tax: </label>
-                                                            <span>${productList.cartAmountDetails?.sales_tax}</span>
-                                                        </div>
-
-                                                        <div className='d-flex align-items-center justify-content-between mt-2'>
-                                                            <label>Item(s) shipping charge: </label>
-                                                            <span>${productList.cartAmountDetails?.shipping_charge}</span>
-                                                        </div>
-                                                        <div className='d-flex align-items-center justify-content-end mt-3'>
-                                                            <h5>${productList.cartAmountDetails?.net_amount}</h5>
-                                                        </div>
+                                                <div className='total-list mt-3'>
+                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                        <label>Item(s) total: </label>
+                                                        <span>${productList.cartAmountDetails?.total_amount ? productList.cartAmountDetails?.total_amount : 0}</span>
+                                                    </div>
+                                                    <div className='d-flex align-items-center justify-content-between mt-2'>
+                                                        <label>Item(s) discount: </label>
+                                                        <span>-${productList.cartAmountDetails?.discount_amount ? productList.cartAmountDetails?.discount_amount : 0}</span>
+                                                    </div>
+                                                    <div className='d-flex align-items-center justify-content-between mt-2'>
+                                                        <label>Item(s) sales tax: </label>
+                                                        <span>${productList.cartAmountDetails?.sales_tax ? productList.cartAmountDetails?.sales_tax : 0}</span>
                                                     </div>
 
-                                                    <div className='total'>
-                                                        <div className='d-flex align-items-center justify-content-between'>
-                                                            <h5>Estimated total ({productList.list?.length} items)</h5>
-                                                            <h5>${productList.cartAmountDetails?.net_amount}</h5>
-                                                        </div>
-                                                        {/* <p>Taxes and delivery fees are calculated on the next page.</p> */}
+                                                    <div className='d-flex align-items-center justify-content-between mt-2'>
+                                                        <label>Item(s) shipping charge: </label>
+                                                        <span>${productList.cartAmountDetails?.shipping_charge ? productList.cartAmountDetails?.shipping_charge : 0}</span>
                                                     </div>
+                                                    <div className='d-flex align-items-center justify-content-end mt-3'>
+                                                        <h5>${productList.cartAmountDetails?.net_amount ? productList.cartAmountDetails?.net_amount : 0}</h5>
+                                                    </div>
+                                                </div>
 
-                                                    <div className='checkout-main mt-3'>
+                                                <div className='total'>
+                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                        <h5>Estimated total ({productList.list?.length} items)</h5>
+                                                        <h5>${productList.cartAmountDetails?.net_amount ? productList.cartAmountDetails?.net_amount : 0}</h5>
+                                                    </div>
+                                                    {/* <p>Taxes and delivery fees are calculated on the next page.</p> */}
+                                                </div>
 
-                                                        <div className='mb-3'>
-                                                            <div className='login-input text-start'>
-                                                                <label>Coupon Code</label>
+                                                <div className='checkout-main mt-3'>
 
-                                                                {productList.cartDiscount?.coupon_id?.coupon_title ?
-                                                                    <div>
-                                                                        <div className='coupne-code d-flex align-items-center gap-2 mt-2'>
-                                                                            <span>{productList.cartDiscount.coupon_id?.coupon_title}</span>
-                                                                            <Button onClick={() => handleCoupon("remove", productList?.cartDiscount.coupon_id?.coupon_title)} ><AiFillCloseCircle /></Button>
-                                                                        </div>
-                                                                        <p>{productList.cartDiscount?.coupon_id?.coupon_description}</p>
-                                                                    </div> :
-                                                                    <div className='d-flex align-items-center gap-2'>
-                                                                        <input className='mt-0' placeholder='Enter coupon code ' value={couponCode} onChange={(e) => setCouponCode(e.target.value)} type='text' />
-                                                                        <Button className='checkout px-4 '
-                                                                            onClick={() => handleCoupon("apply")}
-                                                                            style={{ width: "auto", whiteSpace: "nowrap" }} >Apply</Button>
+                                                    <div className='mb-3'>
+                                                        <div className='login-input text-start'>
+                                                            <label>Coupon Code</label>
+
+                                                            {productList.cartDiscount?.coupon_id?.coupon_title ?
+                                                                <div>
+                                                                    <div className='coupne-code d-flex align-items-center gap-2 mt-2'>
+                                                                        <span>{productList.cartDiscount.coupon_id?.coupon_title}</span>
+                                                                        <Button onClick={() => handleCoupon("remove", productList?.cartDiscount.coupon_id?.coupon_title)} ><AiFillCloseCircle /></Button>
                                                                     </div>
-                                                                }
-                                                            </div>
+                                                                    <p>{productList.cartDiscount?.coupon_id?.coupon_description}</p>
+                                                                </div> :
+                                                                <div className='d-flex align-items-center gap-2'>
+                                                                    <input className='mt-0' placeholder='Enter coupon code ' value={couponCode} onChange={(e) => setCouponCode(e.target.value)} type='text' />
+                                                                    <Button className='checkout px-4 '
+                                                                        onClick={() => handleCoupon("apply")}
+                                                                        style={{ width: "auto", whiteSpace: "nowrap" }} >Apply</Button>
+                                                                </div>
+                                                            }
                                                         </div>
+                                                    </div>
 
-                                                        {/* <p>4 interest-free installments of <span>$15.39</span></p> */}
-                                                        {/* <p className='add d-flex align-items-center gap-2 mt-2'> with
+                                                    {/* <p>4 interest-free installments of <span>$15.39</span></p> */}
+                                                    {/* <p className='add d-flex align-items-center gap-2 mt-2'> with
                                                         <img src='./img/after.png' alt='' width="60px" />
                                                         or
                                                         <img src='./img/kla.png' alt='' width="60px" />
                                                         <img src='./img/cart/blue-note.png' alt='' />
                                                     </p> */}
 
-                                                        {/* <StripeCheckout
+                                                    {/* <StripeCheckout
                                                         stripeKey="pk_test_51LRdY5Gli3mG69O8osWmVdwsRWJG0zFsKoef3dVnaJd8byvVQKQQlbFJtdU5mTp5oAMn9TddIezKaOsrOl6WaSVG00dCweTrSr"
                                                         token={handleCheckout}
                                                         amount={productList.cartAmountDetails?.net_amount} // Amount in cents
@@ -503,94 +511,116 @@ const Cart = () => {
                                                         currency="USD"
                                                     /> */}
 
-                                                        <div>
-                                                            <div className='mt-3 login-input'>
-                                                                <label>Shipping details</label>
+                                                    <div>
+                                                        <div className='mt-3 login-input'>
+                                                            <label>Shipping details</label>
 
-                                                                {correntAddess.data && correntAddess.data.map((e, i) => {
-                                                                    return (
+                                                            {correntAddess.data && correntAddess.data.map((e, i) => {
+                                                                return (
 
-                                                                        <div className='address-shipped mt-2'>
-                                                                            <h6> {e.fullname}</h6>
-                                                                            <p className='mt-1'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
-                                                                        </div>
-                                                                    )
-                                                                })}
-                                                                {correntAddess.data?.length == 0 && <Button className='change-add' onClick={() => navigate("profile")} >Add</Button>}
-                                                            </div>
-
+                                                                    <div className='address-shipped mt-2'>
+                                                                        <h6> {e.fullname}</h6>
+                                                                        <p className='mt-1'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
+                                                                    </div>
+                                                                )
+                                                            })}
+                                                            {correntAddess.data?.length == 0 && <Button className='change-add' onClick={() => navigate("profile")} >Add</Button>}
                                                         </div>
-                                                        <Button className='checkout mt-3' onClick={handleCheckout} >Checkout</Button>
-                                                        {/* <Button className='mt-3 btn-cos'>Express checkout with</Button> */}
-                                                    </div>
 
+                                                    </div>
+                                                    
+                                                    {/* <CardElement /> */}
+
+                                                    {stripe ? (
+                                                        <ElementsConsumer>
+                                                            {({ elements, stripe }) => (
+                                                                <div>
+                                                                    <Button className='checkout mt-3' disabled={!stripe} onClick={() => handleCheckout()}>Checkout</Button>
+                                                                </div>
+                                                            )}
+                                                        </ElementsConsumer>
+                                                    ) : (
+                                                        <div>Loading...</div>
+                                                    )
+                                                    }
+                                                   
                                                 </div>
 
-                                                <div className='term mt-5'>
-                                                    <p><img src='./img/cart/note.png' alt='' />
-                                                        Item availability and pricing are not guaranteed until payment is final.</p>
-                                                    <span>
-                                                        <img src='./img/cart/lock.png' alt='' />
-                                                        You will not be charged until you review this order on the next page
-                                                    </span>
-                                                    <div>
-                                                        <span>
-                                                            <img src='./img/cart/cart-icone.png' alt='' />
-                                                            Clubmall Purchase Protection
-                                                        </span>
-                                                        <p className='ps-4 mt-2'>Shop confidently on Clubmall knowing that if something goes wrong, we’ve always got your back.</p>
-                                                        {/* <NavLink className='ps-4 mt-2'>See program terms</NavLink> */}
-                                                    </div>
-                                                    <span>
-                                                        <img src='./img/cart/commited.png' alt='' />
-                                                        Clubmall is commited to environmental sustainability
-                                                    </span>
+                                            </div>
 
-                                                    {/* 
+                                            <div className='term mt-5'>
+                                                <p><img src='./img/cart/note.png' alt='' />
+                                                    Item availability and pricing are not guaranteed until payment is final.</p>
+                                                <span>
+                                                    <img src='./img/cart/lock.png' alt='' />
+                                                    You will not be charged until you review this order on the next page
+                                                </span>
+                                                <div>
+                                                    <span>
+                                                        <img src='./img/cart/cart-icone.png' alt='' />
+                                                        Clubmall Purchase Protection
+                                                    </span>
+                                                    <p className='ps-4 mt-2'>Shop confidently on Clubmall knowing that if something goes wrong, we’ve always got your back.</p>
+                                                    {/* <NavLink className='ps-4 mt-2'>See program terms</NavLink> */}
+                                                </div>
+                                                <span>
+                                                    <img src='./img/cart/commited.png' alt='' />
+                                                    Clubmall is commited to environmental sustainability
+                                                </span>
+
+                                                {/* 
                                                 <h5 className='mt-4 pt-2'>Secure options in checkout</h5>
                                                 <img src='./img/cart/card-logo.png' alt='' className='mt-3 cards-logo' /> */}
-                                                </div>
-                                            </div>
-                                        </Col>
-                                    </Row>
-
-                                    <div className='recent-view product-info'>
-                                        <h4>Based on your recently viewed</h4>
-                                        <div className='mb-0 explore-main'>
-                                            {
-                                                fleshProductList?.productListArrObj?.map((e) => {
-                                                    return (
-                                                        <ProCard
-                                                            id={e._id}
-                                                            img={e.product_images[0]?.file_name}
-                                                            name={e.name}
-                                                            group_price={e.group_price}
-                                                            individual_price={e.individual_price}
-                                                            sold={e.total_order}
-                                                            secper={e.secper}
-                                                            off={e.discount_percentage}
-                                                            path={fleshProductList?.productImagePath && fleshProductList.productImagePath}
-                                                        />
-                                                    )
-                                                })
-                                            }
-                                            <div className='w-100 d-flex justify-content-center'>
-                                                <Button className='shop-btn rotate-img' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Col>
+                                </Row>
 
+                                <div className='recent-view product-info'>
+                                    <h4>Based on your recently viewed</h4>
+                                    <div className='mb-0 explore-main'>
+                                        {
+                                            fleshProductList?.productListArrObj?.map((e) => {
+                                                return (
+                                                    <ProCard
+                                                        id={e._id}
+                                                        img={e.product_images[0]?.file_name}
+                                                        name={e.name}
+                                                        group_price={e.group_price}
+                                                        individual_price={e.individual_price}
+                                                        sold={e.total_order}
+                                                        secper={e.secper}
+                                                        off={e.discount_percentage}
+                                                        path={fleshProductList?.productImagePath && fleshProductList.productImagePath}
+                                                    />
+                                                )
+                                            })
+                                        }
+                                        <div className='w-100 d-flex justify-content-center'>
+                                            <Button className='shop-btn rotate-img' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                        </div>
+                                    </div>
                                 </div>
 
-
                             </div>
+
+
+                        </div>
                         {/* </Elements> */}
-                        </>
-                    )
-                }
-            
+
+                    </>
+                )
+            }
+
         </Layout >
     )
 }
+// Wrap your Cart component with Elements component
+const Cart = () => (
+    <Elements stripe={stripePromise}>
+        <WrappedCart />
+    </Elements>
+);
+
 
 export default Cart
