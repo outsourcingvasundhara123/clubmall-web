@@ -190,7 +190,6 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-
   // const getCategoryData = async () => {
   //   startAnimation()
   //   try {
