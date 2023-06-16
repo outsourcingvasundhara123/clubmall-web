@@ -114,7 +114,19 @@ const WrappedCart = () => {
                         shipping_address_id: correntAddess.data[0]._id,
                         shipping_method_id: correntAddess.shipping_method_id
                     }
+
+
+                    const cardElement = elements.getElement(CardElement);
+                    if (cardElement) {
+                        const cardElementState = cardElement._empty;
                     
+                        if (cardElementState) {
+                            setMyMessage('Please enter your card details');
+                            setWarningSnackBarOpen(!warningSnackBarOpen);
+                            return;
+                        }
+                    }
+
                     const order = await api.postWithToken(`${serverURL + "order-create"}`, data)
 
                     if (order.data.success == true) {
@@ -141,7 +153,7 @@ const WrappedCart = () => {
                                 },
                             },
                         });
-                        
+
                         const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, {order_id:order.data.data?.orderObj?._id})
                         console.log('paymentStatus', paymentStatus);
 
@@ -201,6 +213,7 @@ const WrappedCart = () => {
     };
 
     const getCartData = async () => {
+
         startAnimation()
         try {
             // if (isLoggedIn) {
