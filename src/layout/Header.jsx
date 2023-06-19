@@ -169,7 +169,7 @@ const Header = () => {
                                 <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => setActive("/trending")}>Trending</Link>
                             </li>
                             <li>
-                                <Link to="/categories" className={`${active === "/categories" ? "active" : ""} `} onClick={() => setActive("/categories")}>Categories <MdOutlineKeyboardArrowDown /></Link>
+                                <Link className={`${active === "/categories" ? "active" : ""} `} >Categories <MdOutlineKeyboardArrowDown /></Link>
                                 {/* names of the main categorys */}
                                 <div className='mega-menu'>
 
@@ -403,7 +403,7 @@ const Header = () => {
                                     <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => setActive("/trending")}>Trending</Link>
                                 </li>
                                 <li className='position-relative show-body-menu'>
-                                    <Link to="/categories" className={`${active === "/categories" ? "active" : ""} `} onClick={() => setActive("/categories")}>
+                                    <Link  className={`${active === "/categories" ? "active" : ""} `} >
                                         Categories
                                     </Link>
                                     <Accordion>

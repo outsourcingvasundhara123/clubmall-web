@@ -24,7 +24,7 @@ import { Is_Login } from '../helper/IsLogin';
 
 const Home = () => {
 
-    const { loading, setLoading, wishProductUrl, category, currentUser,
+    const {startAnimation,stopAnimation,player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const isLoggedIn = Is_Login();
@@ -36,17 +36,17 @@ const Home = () => {
     const serverURL = getServerURL();
     // const [loading, setLoading] = useState(true);
     const [active, setActive] = useState("1");
-    const player = useRef();
+    // const player = useRef();
 
-    const startAnimation = () => {
-        if (player.current) {
-            player.current.play(); // Check if player.current is not null before accessing play()
-        }
-    };
+    // const startAnimation = () => {
+    //     if (player.current) {
+    //         player.current.play(); // Check if player.current is not null before accessing play()
+    //     }
+    // };
 
-    const stopAnimation = () => {
-        setLoading(false);
-    };
+    // const stopAnimation = () => {
+    //     setLoading(false);
+    // };
 
     const breakpoints = {
         0: {
@@ -75,31 +75,6 @@ const Home = () => {
         },
     }
 
-    // const getProducts = async () => {
-
-    //     try {
-    //         startAnimation()
-    //         const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-    //         const [categoryResponse, trendingproductListResponse, productListResponse] = await Promise.all([
-    //             api.post(`${serverURL + PRODUCTCATEGORY}`),
-    //             apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-    //             api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" })
-    //         ]);
-
-    //         const categoryData = categoryResponse.data.data;
-    //         const productListData = productListResponse.data.data;
-    //         const trendingproductData = trendingproductListResponse.data.data
-
-    //         setcategory(categoryData);
-    //         setProductList(productListData);
-    //         setTrendingProductList(trendingproductData)
-
-    //         stopAnimation()
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
     useEffect(() => {
         getProducts();
         getWishList()
@@ -108,9 +83,6 @@ const Home = () => {
     const handleClick = (event) => {
         setActive(event.target.id);
     }
-
-    console.log(Mymessage, "Mymessage");
-    console.log(sucessSnackBarOpen, "sucessSnackBarOpen");
 
     return (
         <Layout>

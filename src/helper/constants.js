@@ -5,7 +5,6 @@ export const errorResponse = (error,setMyMessage,props) => {
         if (status === 403) {
             setTimeout(() => {
                 window.location.href = "/login";
-                // sessionStorage.removeItem("token");
                 localStorage.removeItem('token');
                 localStorage.removeItem('name');
                 localStorage.removeItem('user');

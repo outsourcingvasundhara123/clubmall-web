@@ -77,7 +77,6 @@ const CategoryList = () => {
                 api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
             ]);
             const categoryData = categoryResponse.data.data;
-
             // Divide the category list into two parts
             const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
 
@@ -134,7 +133,7 @@ const CategoryList = () => {
                         >
                             {category && category.secondHalf && category.secondHalf.map((e, i) => {
                                 return (
-                                    <div className='item ' key={i} onClick={() => handelCategorydata(e.name)} >
+                                    <div className='item ' key={i} onClick={() => handelCategorydata(e._id)} >
                                         <div className='cate-slider-box text-center px-0 px-md-3 pointer'  >
                                             <div className='categories-slider-img'  >
                                                 <img src={category.productsCategoryIconPath + e.icon} alt='' />

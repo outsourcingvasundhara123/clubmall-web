@@ -32,10 +32,19 @@ export const CartProvider = ({ children }) => {
   const [currentUser, setCorrectUser] = useState("");
   const [productList, setProductList] = useState([]);
   const [trendingProductList, setTrendingProductList] = useState([]);
-
   const [loading, setLoading] = useState(true);
   const [loadingCategory, setLoadingCategory] = useState(true);
 
+  const [womanProductList, setWomanProductList] = useState([]);
+  const [manProductList, setManProductList] = useState([]);
+  const [kidsProductList, setkidsProductList] = useState([]);
+  const [favoriteProductList, setFavoriteProductList] = useState([]);
+  const [womanpage, setWomanPage] = useState(1);
+  const [manpage, setManPage] = useState(1);
+  const [kidspage, setKidPage] = useState(1);
+  const [favoritepage, setFavoritePage] = useState(1);
+  const [sellProducUrl, setSellProducUrl] = useState("");
+  const [viewMoreLodr, setViewmoreLoder] = useState(false);
 
   const serverURL = getServerURL();
   const player = useRef();
@@ -49,7 +58,6 @@ export const CartProvider = ({ children }) => {
     setLoading(false);
   };
 
-
   //category page 
   const playercategory = useRef();
 
@@ -62,7 +70,6 @@ export const CartProvider = ({ children }) => {
   const stopAnimationcategory = () => {
     setLoadingCategory(false);
   };
-
 
   const addWishList = async (id, action) => {
     try {
@@ -78,6 +85,7 @@ export const CartProvider = ({ children }) => {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           getWishList()
           getProducts()
+          getSellProducts()
         } else {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -161,8 +169,70 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const getSellProducts = async () => {
+
+    
+    try {
+      startAnimation()
+      const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+
+        const [womenCategory, menCategory, kidCategory, favorites] = await Promise.all([
+          apiTyp(`${serverURL + PRODUCTList}`, {
+                product_list_type: "by-categories",
+                product_category_one_id: sellingCategory?.first?._id,
+                product_category_two_id: sellingCategory?.first?.id,
+                page: womanpage
+            }),
+            apiTyp(`${serverURL + PRODUCTList}`, {
+                product_list_type: "by-categories",
+                product_category_one_id: sellingCategory?.second?._id,
+                product_category_two_id: sellingCategory?.second?.id,
+                page: kidspage
+            }),
+            apiTyp(`${serverURL + PRODUCTList}`, {
+                product_list_type: "by-categories",
+                product_category_one_id: sellingCategory?.third?._id,
+                product_category_two_id: sellingCategory?.third?.id,
+                page: manpage
+            }),
+            apiTyp(`${serverURL + PRODUCTList}`, {
+                product_list_type: "recommended-products",
+                page: favoritepage
+            })
+        ]);
+
+        const womanproductData = womenCategory.data.data;
+        const manproductData = menCategory.data.data;
+        const kidsproductData = kidCategory.data.data;
+        const favoriteproductData = favorites.data.data;
+
+        // Merge products without repetitions
+        const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
+            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+        const updatedManProductList = [...manProductList, ...manproductData.productListArrObj]
+            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+        const updatedKidsProductList = [...kidsProductList, ...kidsproductData.productListArrObj]
+            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+
+        const updatedfavoriteProductList = [...favoriteProductList, ...favoriteproductData.productListArrObj]
+            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+
+        setSellProducUrl(womanproductData.productImagePath);
+        setWomanProductList(updatedWomanProductList);
+        setManProductList(updatedManProductList);
+        setkidsProductList(updatedKidsProductList);
+        setFavoriteProductList(updatedfavoriteProductList)
+        setViewmoreLoder(false)
+        stopAnimation()
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
   const getCategoryWeb = async () => {
 
+    console.log("called");
     startAnimation()
 
     try {
@@ -176,6 +246,7 @@ export const CartProvider = ({ children }) => {
           second: { _id: categoryData.productsCategoryList[1]?._id, name: categoryData.productsCategoryList[1]?.child[0]?.name, id: categoryData.productsCategoryList[1]?.child[0]?._id },
           third: { _id: categoryData.productsCategoryList[2]?._id, name: categoryData.productsCategoryList[2]?.child[0]?.name, id: categoryData.productsCategoryList[2]?.child[0]?._id },
         })
+        
       // Divide the category list into two parts
       const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
 
@@ -190,10 +261,15 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+
+
+
+
+
   // const getCategoryData = async () => {
   //   startAnimation()
   //   try {
-  //       const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, {  "action":"shipping-address-list" })
+  //       const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, {"action":"shipping-address-list"})
   //       setMyAddess(res.data.data.userData)
   //       let data = res.data.data?.userData.filter((e) => e.is_default == 1)
   //       const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
@@ -212,7 +288,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>

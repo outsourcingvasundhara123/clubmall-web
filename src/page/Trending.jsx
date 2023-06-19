@@ -56,14 +56,14 @@ const Trending = () => {
                     <>
                         <section className='explore mar-bot-20'>
                             <div className='container-cos'>
-                                <div className='btns mt-5'>
+                                {/* <div className='btns mt-5'>
                                     <Button className={active === "1" ? "active" : undefined} id={"1"} onClick={handleClick}>All</Button>
                                     <Button className={active === "2" ? "active" : undefined} id={"2"} onClick={handleClick}>Today</Button>
                                     <Button className={active === "3" ? "active" : undefined} id={"3"} onClick={handleClick}>Yesterday</Button>
                                     <Button className={active === "4" ? "active" : undefined} id={"4"} onClick={handleClick}>1 month ago</Button>
                                     <Button className={active === "5" ? "active" : undefined} id={"5"} onClick={handleClick}>10 Month ago</Button>
                                     <Button className={active === "6" ? "active" : undefined} id={"6"} onClick={handleClick}>1 year ago</Button>
-                                </div>
+                                </div> */}
 
                                 <div className='mb-0 mt-4 explore-main mar-top-0'>
                                     {

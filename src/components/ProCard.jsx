@@ -32,15 +32,13 @@ const ProCard = (props) => {
         }
     }, []);
 
+
     return (
         <>
 
             <div className='cos-width explore-card'>
 
                 <div className='product-card   pointer'>
-
-
-
 
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />

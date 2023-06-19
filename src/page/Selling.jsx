@@ -16,117 +16,45 @@ import { CartContext } from '../context/CartContext';
 
 const Selling = () => {
 
-    const isLoggedIn = Is_Login();
-    const { sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const { viewMoreLodr, setViewmoreLoder, stopAnimation, startAnimation, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishsellProducUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
+    const isLoggedIn = Is_Login();
     const navigate = useNavigate();
-    // const [category, setcategory] = useState([]);
-    // const [trendingProductList, setTrendingProductList] = useState([]);
-    const [womanProductList, setWomanProductList] = useState([]);
-    const [manProductList, setManProductList] = useState([]);
-    const [kidsProductList, setkidsProductList] = useState([]);
-    const [favoriteProductList, setFavoriteProductList] = useState([]);
-    const [womanpage, setWomanPage] = useState(1);
-    const [manpage, setManPage] = useState(1);
-    const [kidspage, setKidPage] = useState(1);
-    const [favoritepage, setFavoritePage] = useState(1);
-    const [productUrl, setProducUrl] = useState("");
+
     const serverURL = getServerURL();
-    // const [loading, setLoading] = useState(true);
     const player = useRef(null);
-    const [viewMoreLodr, setViewmoreLoder] = useState(false);
 
-    const startAnimation = () => {
-        if (player.current) {
-            player.current.play(); // Check if player.current is not null before accessing play()
-        }
-    };
-    const stopAnimation = () => {
-        setLoading(false);
-    };
-
-    const getallProducts = async () => {
-
-        startAnimation()
-
-        try {
-            const [womenCategory, menCategory, kidCategory, favorites] = await Promise.all([
-                // api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" }),
-                // api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-                api.post(`${serverURL + PRODUCTList}`, {
-                    product_list_type: "by-categories",
-                    product_category_one_id: sellingCategory?.first?._id,
-                    product_category_two_id: sellingCategory?.first?.id,
-                    page: womanpage
-                }),
-                api.post(`${serverURL + PRODUCTList}`, {
-                    product_list_type: "by-categories",
-                    product_category_one_id: sellingCategory?.second?._id,
-                    product_category_two_id: sellingCategory?.second?.id,
-                    page: kidspage
-                }),
-                api.post(`${serverURL + PRODUCTList}`, {
-                    product_list_type: "by-categories",
-                    product_category_one_id: sellingCategory?.third?._id,
-                    product_category_two_id: sellingCategory?.third?.id,
-                    page: manpage
-                }),
-                api.post(`${serverURL + PRODUCTList}`, {
-                    product_list_type: "recommended-products",
-                    page: favoritepage
-                })
-            ]);
-
-            // console.log(sellingCategory?.first?._id,"womanproductData");
-
-            // const categoryData = categoryResponse.data.data;
-            // const trendingproductData = trendingproductListResponse.data.data
-            const womanproductData = womenCategory.data.data;
-            const manproductData = menCategory.data.data;
-            const kidsproductData = kidCategory.data.data;
-            const favoriteproductData = favorites.data.data;
-
-            // Merge products without repetitions
-            const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
-                .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-            const updatedManProductList = [...manProductList, ...manproductData.productListArrObj]
-                .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-            const updatedKidsProductList = [...kidsProductList, ...kidsproductData.productListArrObj]
-                .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-
-            const updatedfavoriteProductList = [...favoriteProductList, ...favoriteproductData.productListArrObj]
-                .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-
-            setProducUrl(womanproductData.productImagePath);
-            // setcategory(categoryData);
-            setWomanProductList(updatedWomanProductList);
-            setManProductList(updatedManProductList);
-            setkidsProductList(updatedKidsProductList);
-            setFavoriteProductList(updatedfavoriteProductList)
-            // setTrendingProductList(trendingproductData)
-            setViewmoreLoder(false)
-
-            stopAnimation()
-
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     useEffect(() => {
-        getallProducts();
-
-    }, [womanpage, manpage, kidspage, favoritepage, sellingCategory]);
+        getSellProducts();
+        getWishList()
+    }, [womanpage, manpage, kidspage, favoritepage, sellingCategory, isLoggedIn]);
 
     useEffect(() => {
         getCategoryWeb()
         getProducts()
     }, []);
 
+    console.log(womanProductList,"womanProductList");
+
     return (
 
         <Layout>
+
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
 
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
@@ -217,7 +145,7 @@ const Selling = () => {
                                                                 sold={e.total_order}
                                                                 secper={e.secper}
                                                                 off={e.discount_percentage}
-                                                                path={productUrl && productUrl}
+                                                                path={sellProducUrl && sellProducUrl}
                                                                 is_wishList={e.wishList && e.wishList}
                                                             />
                                                         )
@@ -243,7 +171,9 @@ const Selling = () => {
                                                                 sold={e.total_order}
                                                                 secper={e.secper}
                                                                 off={e.discount_percentage}
-                                                                path={productUrl && productUrl}
+                                                                path={sellProducUrl && sellProducUrl}
+                                                                is_wishList={e.wishList && e.wishList}
+
                                                             />
                                                         )
                                                     })
@@ -269,7 +199,9 @@ const Selling = () => {
                                                                 sold={e.total_order}
                                                                 secper={e.secper}
                                                                 off={e.discount_percentage}
-                                                                path={productUrl && productUrl}
+                                                                path={sellProducUrl && sellProducUrl}
+                                                                is_wishList={e.wishList && e.wishList}
+
                                                             />
                                                         )
                                                     })
@@ -371,7 +303,8 @@ const Selling = () => {
                                                     sold={e.total_order}
                                                     secper={e.secper}
                                                     off={e.discount_percentage}
-                                                    path={productUrl && productUrl}
+                                                    path={sellProducUrl && sellProducUrl}
+                                                    is_wishList={e.wishList && e.wishList}
                                                 />
                                             )
                                         })
@@ -402,7 +335,8 @@ const Selling = () => {
                                                     sold={e.total_order}
                                                     secper={e.secper}
                                                     off={e.discount_percentage}
-                                                    path={productUrl && productUrl}
+                                                    path={sellProducUrl && sellProducUrl}
+                                                    is_wishList={e.wishList && e.wishList}
                                                 />
                                             )
                                         })
