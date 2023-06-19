@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import SliderTwo from '../components/SliderTwo'
 import { Accordion, Button, Col, Row } from 'react-bootstrap'
@@ -7,14 +7,22 @@ import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { colors, categoriesSliderData } from '../helper/constants'
 import { RangeSlider } from 'rsuite';
-import { PRODUCTList, PRODUCTSEARCH } from "../helper/endpoints";
+import { PRODUCTList, PRODUCTSEARCH, PRODUCTCATEGORY } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
 import { FiFilter } from 'react-icons/fi'
+import { CartContext } from '../context/CartContext';
 
 const Categories = () => {
+
+    const { categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+
+    const [subCat, setSubCat] = useState(null)
+    const [catName,setCatName] =  useState()
+    const [subCatList, setSubCatList] = useState([])
     const [filterShow, setFilterShow] = useState(window.innerWidth < 991 ? false : true)
     const [productColorActive, setProductColorActive] = useState()
     const [postList, setPostList] = useState([]);
@@ -33,14 +41,28 @@ const Categories = () => {
     };
 
     const getCategory = async () => {
-        startAnimation()
+
+        // getProducts()
         try {
+            startAnimation()
+            setLoading(true)
+            let categoryDtata = await api.post(`${serverURL + PRODUCTCATEGORY}`)
+            let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
+            var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
+            setSubCatList(subcat[0]?.child)
+
+            if(subCat === null){
+                setSubCat(subcat[0]?.child[0].name)
+            }
+            
+            setCatName(subcat[0]?.name)
             const [postListResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "by-categories" ,
-                product_category_one_id:Categorie_id
-            }),
+                api.post(`${serverURL + PRODUCTList}`, {
+                    "product_list_type": "by-categories",
+                    product_category_one_id: Categorie_id,
+                    product_category_two_id:subCart_id._id
+                }),
             ]);
-            console.log(postListResponse,"postListResponse.data.data");
             const postsData = postListResponse.data.data;
             setPostList(postsData);
             stopAnimation()
@@ -51,7 +73,9 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-    }, [Categorie_id]);
+        getProducts()
+    }, [Categorie_id,subCat]);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -69,6 +93,7 @@ const Categories = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
+
     }, []);
 
     return (
@@ -82,6 +107,21 @@ const Categories = () => {
                                 {/* <div className='categories-slider'>
                                     <SliderTwo data={categoriesSliderData} />
                                 </div> */}
+
+                                <div className='sub-categories-list'>
+                                    <h3>{catName}</h3>
+                                    <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+
+
+                                        {
+                                            subCatList.map((e, i) => {
+                                                return (
+                                                    <Button  key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => setSubCat(e.name)}>{e.name} </Button>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                </div>
 
                                 <div className='filter-product pt-4'>
                                     <Row>
@@ -412,9 +452,9 @@ const Categories = () => {
 
                                         </Col>
                                         <Col xxl={9} xl={8} lg={7} sm={12} className='mt-3 mt-lg-0'>
-                                            <div className='fill-title'>
+                                            {/* <div className='fill-title'>
                                                 <h5>Trending Items</h5>
-                                            </div>
+                                            </div> */}
                                             <div className='mb-0 explore-main'>
                                                 {
                                                     postList.productListArrObj?.map((e) => {
