@@ -17,7 +17,7 @@ import { CartContext } from '../context/CartContext';
 const Selling = () => {
 
     const isLoggedIn = Is_Login();
-    const {sellingCategory,getCategoryWeb ,categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const { sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ const Selling = () => {
         startAnimation()
 
         try {
-            const [womenCategory, menCategory , kidCategory, favorites] = await Promise.all([
+            const [womenCategory, menCategory, kidCategory, favorites] = await Promise.all([
                 // api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" }),
                 // api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
                 api.post(`${serverURL + PRODUCTList}`, {
@@ -63,7 +63,7 @@ const Selling = () => {
                 api.post(`${serverURL + PRODUCTList}`, {
                     product_list_type: "by-categories",
                     product_category_one_id: sellingCategory?.second?._id,
-                    product_category_two_id:sellingCategory?.second?.id,
+                    product_category_two_id: sellingCategory?.second?.id,
                     page: kidspage
                 }),
                 api.post(`${serverURL + PRODUCTList}`, {
@@ -117,11 +117,11 @@ const Selling = () => {
     useEffect(() => {
         getallProducts();
 
-    }, [womanpage, manpage, kidspage, favoritepage ,sellingCategory]);
+    }, [womanpage, manpage, kidspage, favoritepage, sellingCategory]);
 
     useEffect(() => {
-        getCategoryWeb()     
-        getProducts()   
+        getCategoryWeb()
+        getProducts()
     }, []);
 
     return (
@@ -195,7 +195,7 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>C</span>ELEBRATE IN FRESH STYLES </h2>
                                 </div>
-                                <div className='tabs-content mt-5'>
+                                <div className='tabs-content mt-5 '>
                                     <Tabs
                                         defaultActiveKey={sellingCategory?.first?.name}
                                         id="fill-tab-example"
@@ -318,9 +318,9 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>H</span>OT DEALS</h2>
                                 </div>
-                                <Row className='mt-5'>
+                                <Row className='mt-5 mar-top-20'>
                                     <Col lg={12} md={12} sm={12}>
-                                        <div className='get-box hot-box position-relative'>
+                                        <div className='get-box hot-box position-relative cos-height'>
                                             <img src='./img/selling/img9.png' alt='' />
                                             <div className='hot-text'>
                                                 <h5>TRENDING <br /> FOR DEALS</h5>
@@ -328,7 +328,7 @@ const Selling = () => {
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col lg={6} md={12} sm={12} className='mt-4'>
+                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10'>
                                         <div className='get-box hot-sub-box position-relative'>
                                             <img src='./img/selling/img10.png' alt='' />
                                             <div className='hot-text'>
@@ -337,7 +337,7 @@ const Selling = () => {
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col lg={6} md={12} sm={12} className='mt-4'>
+                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10'>
                                         <div className='get-box hot-sub-box position-relative'>
                                             <img src='./img/selling/img11.png' alt='' />
                                             <div className='hot-text'>
@@ -353,12 +353,12 @@ const Selling = () => {
                             </div>
                         </section>
 
-                        <section className='explore'>
+                        <section className='explore mar-top-40 mar-bot-0'>
                             <div className='container-cos'>
                                 <div className='title w-100 text-center'>
                                     <h2><span>F</span>AVORITES FOR YOU</h2>
                                 </div>
-                                <div className='mb-0 mt-4 explore-main'>
+                                <div className='mb-0 mt-4 explore-main mar-top-0'>
                                     {
                                         favoriteProductList && favoriteProductList.map((e) => {
                                             return (
@@ -378,18 +378,18 @@ const Selling = () => {
                                     }
 
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn' onClick={() => setFavoritePage(favoritepage + 1)} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => setFavoritePage(favoritepage + 1)} >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>
                         </section>
 
-                        <section className='explore'>
+                        <section className='explore mar-top-40 mar-bot-20'>
                             <div className='container-cos'>
                                 <div className='title w-100 text-center'>
                                     <h2><span>E</span>XPLORE YOUR INTERESTS</h2>
                                 </div>
-                                <div className='mb-0 mt-4 explore-main'>
+                                <div className='mb-0 mt-4 explore-main mar-top-0'>
                                     {
                                         trendingProductList.productListArrObj?.map((e) => {
                                             return (
@@ -408,7 +408,7 @@ const Selling = () => {
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn' onClick={() => handelCategorydata()} >View More<MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => handelCategorydata()} >View More<MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>

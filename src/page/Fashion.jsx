@@ -176,16 +176,16 @@ const Fashion = () => {
 
                                         breakpoints={{
                                             0: {
-                                                slidesPerView: 1,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             600: {
                                                 slidesPerView: 2,
-                                                spaceBetween: 20
+                                                spaceBetween: 10
                                             },
                                             991: {
-                                                slidesPerView: 3,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             1140: {
                                                 slidesPerView: 4,
@@ -235,16 +235,16 @@ const Fashion = () => {
                                         loop={true}
                                         breakpoints={{
                                             0: {
-                                                slidesPerView: 1,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             600: {
                                                 slidesPerView: 2,
-                                                spaceBetween: 20
+                                                spaceBetween: 10
                                             },
                                             991: {
-                                                slidesPerView: 3,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             1140: {
                                                 slidesPerView: 4,
@@ -299,16 +299,16 @@ const Fashion = () => {
                                         loop={true}
                                         breakpoints={{
                                             0: {
-                                                slidesPerView: 1,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             600: {
                                                 slidesPerView: 2,
-                                                spaceBetween: 20
+                                                spaceBetween: 10
                                             },
                                             991: {
-                                                slidesPerView: 3,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             1140: {
                                                 slidesPerView: 4,
@@ -357,16 +357,16 @@ const Fashion = () => {
                                         loop={true}
                                         breakpoints={{
                                             0: {
-                                                slidesPerView: 1,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             600: {
                                                 slidesPerView: 2,
-                                                spaceBetween: 20
+                                                spaceBetween: 10
                                             },
                                             991: {
-                                                slidesPerView: 3,
-                                                spaceBetween: 20
+                                                slidesPerView: 2,
+                                                spaceBetween: 10
                                             },
                                             1140: {
                                                 slidesPerView: 4,
@@ -424,13 +424,13 @@ const Fashion = () => {
                             </div>
                         </section> */}
 
-                        <section className='explore'>
+                        <section className='explore mar-top-40 mar-bot-20'>
                             <div className='container-cos'>
                                 <div className='title w-100 text-center'>
                                     <h2><span>S</span>HOP COLLECTION </h2>
                                 </div>
 
-                                <div className='mb-0 mt-4 explore-main particular-product-items'>
+                                <div className='mb-0 mt-4 explore-main particular-product-items mar-top-0'>
                                     {
                                         productList.productListArrObj && productList.productListArrObj?.slice(0, 20).map((e) => {
                                             return (
@@ -439,7 +439,7 @@ const Fashion = () => {
                                                         <img onClick={() => handelProductDetail(e._id)} alt={e.name} src={productList?.productImagePath && productList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} className='img-fluid' />
                                                         <Button className='add-to-card-btn' onClick={() => handleShow(e._id)} >Add to Cart</Button>
                                                     </div>
-                                                    <div className='py-3 px-3'  >
+                                                    <div className='py-3 px-3 space-card'  >
                                                         <h5>{e.name}</h5>
                                                         <div className='d-flex align-items-center justify-content-between'>
                                                             <div>
@@ -449,10 +449,10 @@ const Fashion = () => {
                                                             {e.wishList === 0
                                                                 &&
                                                                 <Button className='like-btn' onClick={() => addWishList(e._id, "product-wishlist")} >
-                                                                    <img src='./img/new_in/like.png' alt='' />
+                                                                    <img src='./img/new_in/like.png' className='like-size' alt='' />
                                                                 </Button>
                                                             }
-                                                        
+
                                                             {
                                                                 e.wishList === 1 &&
                                                                 <Button className='like-btn' onClick={() => addWishList(e._id, "product-delete-wishlist")} >

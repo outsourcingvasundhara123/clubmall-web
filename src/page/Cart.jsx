@@ -558,7 +558,7 @@ const WrappedCart = () => {
                                                         <ElementsConsumer>
                                                             {({ elements, stripe }) => (
                                                                 <div>
-                                                                    <Button className='checkout mt-3' disabled={!stripe} onClick={() => handleCheckout()}>  {is_Wait  ? "Loading..." : "Checkout" } </Button>
+                                                                    <Button className='checkout mt-3' disabled={!stripe} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Checkout"} </Button>
                                                                 </div>
                                                             )}
                                                         </ElementsConsumer>
@@ -571,7 +571,7 @@ const WrappedCart = () => {
 
                                             </div>
 
-                                            <div className='term mt-5'>
+                                            <div className='term mt-5 mar-top-20'>
                                                 <p><img src='./img/cart/note.png' alt='' />
                                                     Item availability and pricing are not guaranteed until payment is final.</p>
                                                 <span>
@@ -620,7 +620,7 @@ const WrappedCart = () => {
                                             })
                                         }
                                         <div className='w-100 d-flex justify-content-center'>
-                                            <Button className='shop-btn rotate-img' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                            <Button className='shop-btn rotate-img btn-cos-mobile' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
                                     </div>
                                 </div>
