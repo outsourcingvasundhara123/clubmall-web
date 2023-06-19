@@ -9,7 +9,7 @@ const Footer = () => {
                 <div className='footer-working'>
                     <div className='info footer-box'>
                         <h5>Company Info</h5>
-                        <div className='mt-3'>
+                        <div className='mt-2 mt-sm-3'>
                             <Link to="/about">About</Link>
                             <Link to="/influencer">Affiliate & Influencer</Link>
                             {/* <NavLink>Campus Ambassador</NavLink>
@@ -20,7 +20,7 @@ const Footer = () => {
                     </div>
                     <div className='info footer-box'>
                         <h5>Customer Services</h5>
-                        <div className='mt-3'>
+                        <div className='mt-2 mt-sm-3'>
                             <Link to="/terms-use">Terms of use</Link>
                             {/* <NavLink>Return and refund policy</NavLink>
                             <NavLink>Intellectual property policy</NavLink>
@@ -30,7 +30,7 @@ const Footer = () => {
                     </div>
                     <div className='info footer-box'>
                         <h5>Help</h5>
-                        <div className='mt-3'>
+                        <div className='mt-2 mt-sm-3'>
                             {/* <NavLink>Support center & FAQ</NavLink>
                             <NavLink>Clubmall Purchase Protection</NavLink> */}
                             <Link to="/privacy-policy">Privacy Policy</Link>
@@ -42,7 +42,7 @@ const Footer = () => {
                     </div>
                     <div className='info footer-box'>
                         <h5>Download the Clubmall App</h5>
-                        <div className='mt-3'>
+                        <div className='mt-2 mt-sm-3'>
                             <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
                                 <img src='./img/play.png' alt='' />
                             </NavLink>
@@ -53,7 +53,7 @@ const Footer = () => {
                     </div>
                     <div className='info footer-box'>
                         <h5>Connect with Clubmall</h5>
-                        <div className='mt-3 d-flex align-items-center gap-3'>
+                        <div className='mt-2 mt-sm-3 d-flex align-items-center gap-3'>
                             <NavLink href='https://www.instagram.com/clubmallofficial/' target='_blank'>
                                 <img src='./img/insta.png' alt='' />
                             </NavLink>

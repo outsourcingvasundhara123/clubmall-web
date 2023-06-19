@@ -51,13 +51,13 @@ const ProCard = (props) => {
                         <div className='d-flex align-items-center justify-content-between'>
                             <div>
                                 <p className='per'>${props.group_price} <span>(Group Price)</span></p>
-                                <span className='sub-per'>${props.individual_price} (Individual Price)</span>
+                                <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
 
                             {props.is_wishList === 0
                                 &&
                                 <Button className='like-btn' onClick={() => addWishList(props.id, "product-wishlist")} >
-                                    <img src='./img/new_in/like.png' alt='' />
+                                    <img src='./img/new_in/like.png' className='like-size' alt='' />
                                 </Button>
                             }
                             {

@@ -279,16 +279,16 @@ const ProductInfo = () => {
                                                     loop={true}
                                                     breakpoints={{
                                                         0: {
-                                                            slidesPerView: 1,
-                                                            spaceBetween: 20
+                                                            slidesPerView: 2,
+                                                            spaceBetween: 10
                                                         },
                                                         425: {
                                                             slidesPerView: 2,
-                                                            spaceBetween: 20
+                                                            spaceBetween: 10
                                                         },
                                                         650: {
-                                                            slidesPerView: 3,
-                                                            spaceBetween: 20
+                                                            slidesPerView: 2,
+                                                            spaceBetween: 10
                                                         },
                                                         991: {
                                                             slidesPerView: 2,
@@ -587,7 +587,7 @@ const ProductInfo = () => {
                                     </Col>
                                 </Row>
 
-                                <div className='review mt-5'>
+                                <div className='review mt-5 mar-top-20'>
                                     <h4 className='info-title'>All Reviews (6)</h4>
                                     <div className=''>
                                         <div className='d-flex align-items-start review-box gap-3 mt-4'>
@@ -651,7 +651,7 @@ const ProductInfo = () => {
                                     </div>
                                 </div>
 
-                                <div className='recent-view'>
+                                <div className='recent-view mar-top-20'>
                                     <h4>Items you may want to add</h4>
                                     <div className='mb-0 explore-main'>
                                         {
@@ -672,7 +672,7 @@ const ProductInfo = () => {
                                             })
                                         }
                                         <div className='w-100 d-flex justify-content-center'>
-                                            <Button className='shop-btn rotate-img' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                            <Button className='shop-btn rotate-img btn-cos-mobile' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
                                     </div>
                                 </div>

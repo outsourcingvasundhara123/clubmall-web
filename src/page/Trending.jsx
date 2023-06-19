@@ -54,7 +54,7 @@ const Trending = () => {
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
-                        <section className='explore'>
+                        <section className='explore mar-bot-20'>
                             <div className='container-cos'>
                                 <div className='btns mt-5'>
                                     <Button className={active === "1" ? "active" : undefined} id={"1"} onClick={handleClick}>All</Button>
@@ -65,7 +65,7 @@ const Trending = () => {
                                     <Button className={active === "6" ? "active" : undefined} id={"6"} onClick={handleClick}>1 year ago</Button>
                                 </div>
 
-                                <div className='mb-0 mt-4 explore-main'>
+                                <div className='mb-0 mt-4 explore-main mar-top-0'>
                                     {
                                         postList.productListArrObj?.map((e) => {
                                             return (
@@ -80,12 +80,12 @@ const Trending = () => {
                                                     off={e.discount_percentage}
                                                     path={postList?.productImagePath && postList.productImagePath}
                                                     color={e.sku_attributes.color}
-                                                    />
+                                                />
                                             )
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>

@@ -16,7 +16,7 @@ import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import CategoryList from './CategoryList';
 import Loader from '../components/Loader';
-import { handelProductDetail,handelCategory} from '../helper/constants';
+import { handelProductDetail, handelCategory } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
@@ -26,7 +26,7 @@ const Home = () => {
 
     const { loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
-   
+
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     // const [category, setcategory] = useState([]);
@@ -50,16 +50,16 @@ const Home = () => {
 
     const breakpoints = {
         0: {
-            slidesPerView: 1,
-            spaceBetween: 20
+            slidesPerView: 3,
+            spaceBetween: 10
         },
         600: {
-            slidesPerView: 2,
-            spaceBetween: 20
+            slidesPerView: 3,
+            spaceBetween: 10
         },
         991: {
             slidesPerView: 3,
-            spaceBetween: 20
+            spaceBetween: 10
         },
         1140: {
             slidesPerView: 4,
@@ -198,7 +198,7 @@ const Home = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>C</span>LUBMALL SALE</h2>
                                 </div>
-                                <div className='mt-5'>
+                                <div className='mt-5 mar-cos-sale'>
                                     <Swiper
                                         slidesPerView={4}
                                         spaceBetween={30}
@@ -242,7 +242,7 @@ const Home = () => {
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4'>
+                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10'>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
                                                 <img src='./img/img5.png' alt='' />
@@ -260,7 +260,7 @@ const Home = () => {
                             </div>
                         </section>
 
-                        <section className='section-4' style={{ marginTop: "80px" }}>
+                        <section className='section-4 jewellery' style={{ marginTop: "80px" }}>
                             <div className='container-cos'>
                                 <div className='title w-100 text-center'>
                                     <h2><span>D</span>AILY DROPS</h2>
@@ -276,7 +276,7 @@ const Home = () => {
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4'>
+                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10'>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
                                                 <img src='./img/daily-drop-2.png' alt='' />
@@ -289,7 +289,7 @@ const Home = () => {
 
                         <section className='stylist mb-5'>
                             <div className='container-cos'>
-                                <div className='mt-5'>
+                                <div className='mt-5 mar-top-10'>
                                     <Swiper
                                         slidesPerView={4}
                                         spaceBetween={30}
@@ -299,16 +299,16 @@ const Home = () => {
                                         loop={true}
                                         breakpoints={{
                                             0: {
-                                                slidesPerView: 1,
-                                                spaceBetween: 20
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
                                             },
                                             600: {
-                                                slidesPerView: 2,
-                                                spaceBetween: 20
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
                                             },
                                             991: {
                                                 slidesPerView: 3,
-                                                spaceBetween: 20
+                                                spaceBetween: 10
                                             },
                                             1140: {
                                                 slidesPerView: 4,
@@ -349,12 +349,12 @@ const Home = () => {
                             </div>
                         </section>
 
-                        <section className='home-first-image ' >
+                        <section className='home-first-image mar-top-10' >
                             <div className='container-cos'>
                                 <div className='title w-100 text-center '>
                                     <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
                                 </div>
-                                <div className='w-100 mt-5 pointer' onClick={() => navigate("/categories")}>
+                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => navigate("/categories")}>
                                     <img src="./img/homePageBg1.png" alt="" width={"100%"} />
                                 </div>
                             </div>
@@ -369,12 +369,12 @@ const Home = () => {
                             </div>
                         </section>
 
-                        <section className='stylist mb-5'>
+                        <section className='stylist mb-5 mar-top-40 mar-bot-20'>
                             <div className='container-cos'>
                                 <div className='title w-100 text-center'>
                                     <h2><span>S</span>TYLE GALLERY</h2>
                                 </div>
-                                <div className='mt-5'>
+                                <div className='mt-5 mar-top-20'>
                                     <Swiper
                                         slidesPerView={4}
                                         spaceBetween={30}
@@ -384,12 +384,12 @@ const Home = () => {
                                         loop={true}
                                         breakpoints={{
                                             0: {
-                                                slidesPerView: 1,
-                                                spaceBetween: 20
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
                                             },
                                             600: {
                                                 slidesPerView: 3,
-                                                spaceBetween: 20
+                                                spaceBetween: 10
                                             },
                                             991: {
                                                 slidesPerView: 4,
@@ -425,7 +425,7 @@ const Home = () => {
                             </div>
                         </section>
 
-                        <section className='explore my-5'>
+                        <section className='explore my-5 mar-top-0 mar-bot-20'>
                             <div className='container-cos d-flex justify-content-center'>
                                 <div className='btns-home'>
                                     <Button className={active === "2" ? "active" : undefined} style={{ backgroundColor: "#2D4658" }} id={"2"} onClick={handleClick}>Spring&Summer</Button>

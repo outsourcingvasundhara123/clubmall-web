@@ -10,7 +10,7 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
-import { handelCategorydata,handelCategory } from '../helper/constants';
+import { handelCategorydata, handelCategory } from '../helper/constants';
 
 const CategoryList = () => {
 
@@ -51,13 +51,13 @@ const CategoryList = () => {
 
     const CateResponsiveOptions = {
         0: {
-            items: 2,
+            items: 4,
         },
         425: {
-            items: 2,
+            items: 4,
         },
         768: {
-            items: 3,
+            items: 4,
         },
         1024: {
             items: 4,
@@ -164,7 +164,7 @@ const CategoryList = () => {
 export default CategoryList
 
 
-// use contect 
+// use contect
 
 // import React, { useRef, useState, useEffect,useContext } from 'react'
 // import "swiper/css/pagination";

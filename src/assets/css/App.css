@@ -617,6 +617,7 @@ p {
 
     .header .toggle {
         display: block;
+        display: flex;
     }
 
     .new_in_model .modal-dialog {
@@ -1688,7 +1689,6 @@ del {
     font-weight: 700;
     font-size: 40px;
     color: #223263;
-    line-height: 40px;
 }
 
 .hot .hot-text h5 span {
@@ -4495,7 +4495,7 @@ input[type='radio'] {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 75%;
+    width: 95%;
 }
 
 /* color */
@@ -5037,5 +5037,396 @@ input[type='radio'] {
 @media (max-width: 991px) {
     .filter-show {
         display: block;
+    }
+}
+
+
+
+
+
+@media (max-width: 668px) {
+    .cate-slider-box h6 {
+        font-size: 12px;
+        margin-top: 10px !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        height: 28px;
+    }
+
+    .like-size {
+        width: 80% !important;
+    }
+
+    .cate-slider-box p {
+        font-size: 10px;
+        margin-top: 5px !important;
+    }
+
+    .owl-carousel .item {
+        padding: 5px;
+    }
+
+    .title h2 {
+        font-size: 20px;
+    }
+
+    .title h2 span {
+        font-size: 33px !important;
+    }
+
+    .title h2 span::before {
+        width: 50px;
+        height: 50px;
+        top: -9px;
+        left: -18px;
+    }
+
+    .home-first-image {
+        margin: 100px 0 10px 0px;
+    }
+
+    .home-second-image {
+        margin: 10px 0;
+    }
+
+    .mar-cos-sale {
+        margin-top: 20px !important;
+    }
+
+    .categories {
+        margin: 40px 0;
+    }
+
+    .categories-slider {
+        margin-top: 20px !important;
+    }
+
+    .slider-controls button {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .stylist-card {
+        border-radius: 0;
+    }
+
+    .stylist-card .title,
+    .product-card h5 {
+        font-size: 10px;
+    }
+
+    .stylist-card .group-price,
+    .stylist-card .individual-price,
+    .per,
+    .per span,
+    .sub-per {
+        font-size: 9px;
+        margin-top: 0;
+    }
+
+    .stylist-card .individual-price {
+        margin-bottom: 8px !important;
+    }
+
+    .stylist-card .progress {
+        height: 3px;
+    }
+
+    .stylist-card .stock {
+        font-size: 10px;
+    }
+
+    .stylist-card .desc {
+        padding: 0px 5px;
+    }
+
+    .discount p {
+        font-size: 7px !important;
+    }
+
+    .discount svg {
+        font-size: 16px;
+    }
+
+    .stylist-card .discount {
+        right: 5px;
+        top: 5px;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
+        font-size: 11px !important;
+    }
+
+    .section-4 {
+        margin-top: 10px !important;
+    }
+
+    .section-4 .big-box h5 {
+        font-size: 18px !important;
+    }
+
+    .section-4 .product-s4-card .card-text span {
+        font-size: 12px !important;
+    }
+
+    .section-4 .shop-btn,
+    .get-set .shop-btn,
+    .basket .shop-btn,
+    .tab-content .shop-btn,
+    .btn-cos-mobile {
+        height: 35px !important;
+        padding: 0 10px;
+        font-size: 12px;
+        column-gap: 3px;
+        margin-top: 10px !important;
+    }
+
+    .section-4 .shop-btn svg,
+    .get-set .shop-btn svg,
+    .basket .shop-btn svg,
+    .tab-content .shop-btn svg,
+    .btn-cos-mobile svg {
+        font-size: 16px;
+    }
+
+    .jewellery .shop-btn {
+        display: none;
+    }
+
+    .mar-top-10 {
+        margin-top: 10px !important;
+    }
+
+    .mar-top-20 {
+        margin-top: 20px !important;
+    }
+
+    .mar-top-40 {
+        margin-top: 40px !important;
+    }
+
+    .mar-bot-20 {
+        margin-bottom: 20px !important;
+    }
+
+    .stylist-card1 {
+        border-radius: 0;
+    }
+
+    .shop-now,
+    .add-to-card-btn {
+        font-size: 9px;
+    }
+
+    .explore .btns-home button {
+        padding: 6px 20px;
+        font-size: 12px;
+    }
+
+    .shop-care-bears-btn {
+        font-size: 12px;
+        margin-top: 10px !important;
+        padding: 8px 20px;
+    }
+
+    .sec-2 .shop-care-bears p {
+        font-size: 16px;
+    }
+
+    .pink-card .pink-card-text {
+        padding: 5px !important;
+    }
+
+    .pink-card h5 {
+        font-size: 15px;
+    }
+
+    .pink-card p {
+        font-size: 12px;
+    }
+
+    .shop-categories,
+    .basket,
+    .tabs-cos,
+    .get-set {
+        margin: 40px 0;
+    }
+
+    .tabs-content {
+        margin-top: 20px !important;
+    }
+
+    .hot .hot-text h5 {
+        font-size: 24px;
+    }
+
+    .cos-height {
+        height: 200px;
+        border-radius: 18px !important;
+        overflow: hidden !important;
+    }
+
+    .hot-sub-box .hot-text {
+        left: 6%;
+    }
+
+    .mar-top-0 {
+        margin-top: 0 !important;
+    }
+
+    .mar-bot-20 {
+        margin-bottom: 20px !important;
+    }
+
+    .hot .hot-text h5 {
+        font-size: 22px !important;
+    }
+
+    .view-all-btn {
+        padding: 8px 30px;
+        font-size: 14px;
+    }
+
+    .in-per {
+        display: none;
+    }
+
+    .footer {
+        padding: 20px 0;
+    }
+
+    .footer .footer-box h5,
+    .cards-all h5 {
+        font-size: 15px;
+    }
+
+    .footer .footer-box a {
+        font-size: 12px;
+    }
+
+    .footer .last {
+        font-size: 15px;
+    }
+
+    .header .account .login-btn {
+        font-size: 13px;
+    }
+
+    .mar-bot-0 {
+        margin-bottom: 0 !important;
+    }
+
+    .mobile-menu .menu-main ul li a,
+    .new-in-btn {
+        font-size: 14px;
+    }
+
+    .product-info .slide-box span {
+        font-size: 12px;
+    }
+
+    .slider-box-per {
+        padding-top: 0px !important;
+    }
+
+    .product-info .slide-box h5 {
+        font-size: 16px;
+    }
+
+    .product-info .slide-box del {
+        font-size: 14px;
+    }
+
+    .checkout {
+        font-size: 13px;
+    }
+
+    .cart-main .term span,
+    .cart-main .term p {
+        font-size: 13px;
+    }
+
+    .product-info .pro-def h6,
+    .review .review-box h5 {
+        font-size: 15px;
+    }
+
+    .product-info .per-pro h3 {
+        font-size: 24px;
+    }
+
+    .review .review-box p {
+        font-size: 12px;
+    }
+
+    .recent-view h4 {
+        font-size: 18px;
+    }
+
+    .product-info .per-pro h3 {
+        font-size: 20px;
+    }
+
+    .product-info .per-pro span,
+    .product-info .per-pro del {
+        font-size: 14px;
+    }
+
+    .product-info .size button {
+        font-size: 12px;
+    }
+
+    .product-info .description span,
+    .product-info .shipping-def ul li,
+    .product-info .security-line {
+        font-size: 14px;
+    }
+
+    .product-info .security-line svg {
+        font-size: 18px;
+    }
+
+    .product-info .security-line svg {
+        margin-left: -5px;
+        margin-top: 4px;
+    }
+
+    .info-title {
+        font-size: 17px;
+    }
+
+    .header a,
+    .header .drop-items h6 {
+        font-size: 15px;
+    }
+
+    .security-main h5 {
+        font-size: 16px;
+    }
+
+    .list-not p {
+        font-size: 14px;
+    }
+
+    .security-main button {
+        font-size: 12px;
+    }
+
+    .third-party h5 {
+        font-size: 15px;
+    }
+
+    .third-party h4 {
+        font-size: 18px;
     }
 }

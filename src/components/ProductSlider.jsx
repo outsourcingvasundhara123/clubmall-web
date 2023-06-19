@@ -6,10 +6,10 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct }) => {
 
   // Transform the data into the required format
   const images = productList && productList?.map((product) => ({
-    original: productImagePath + id + "/" + product?.file_name ,
+    original: productImagePath + id + "/" + product?.file_name,
     thumbnail: productImagePath + id + "/" + product.thumbnail,
   }));
-  
+
   const data = [...images, ...(colorProduct || [])];
 
   return (
@@ -17,7 +17,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct }) => {
       <div className="wrapper">
         {images && <ImageGallery
           items={data}
-          thumbnailPosition="left"
+          thumbnailPosition={window.innerWidth < 668 ? "bottom" : "left"}
           showFullscreenButton={false}
           showPlayButton={false}
         />}
