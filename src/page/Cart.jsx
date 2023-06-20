@@ -25,6 +25,7 @@ import { Is_Login } from '../helper/IsLogin'
 import { CardElement, Elements, ElementsConsumer } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useStripe, useElements } from '@stripe/react-stripe-js';
+
 // Your public Stripe key
 const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
 
@@ -34,7 +35,7 @@ const WrappedCart = () => {
     const elements = useElements();
 
     const isLoggedIn = Is_Login();
-    const { getMyAddress, correntAddess, setCart, cart, } = useContext(CartContext);
+    const { setProfileOption, getMyAddress, correntAddess, setCart, cart, } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -95,7 +96,6 @@ const WrappedCart = () => {
     // create order 
     const handleCheckout = async (event) => {
 
-
         try {
             // console.log(token, "stripe");
             setIsOpen(!isOpen);
@@ -134,7 +134,7 @@ const WrappedCart = () => {
                     if (order.data.success == true) {
                         setIs_Wait(true)
                         // create payment intent and get client_secret
-                        const paymentIntentResponse = await api.postWithToken(`${serverURL + "create-payment-intent"}`, {
+                        const paymentIntentResponse = await api.post(`${serverURL + "create-payment-intent"}`, {
                             amount: amountInCents,
                             order_id: order.data.data?.orderObj?._id
                         });
@@ -149,6 +149,7 @@ const WrappedCart = () => {
                             console.log("CardElement not loaded");
                             return;
                         }
+
                         const payment = await stripe.confirmCardPayment(clientSecret, {
                             payment_method: {
                                 card: cardElement,
@@ -159,7 +160,7 @@ const WrappedCart = () => {
 
                         const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
                         console.log('paymentStatus', paymentStatus);
-
+                        console.log(payment, "payment");
                         if (payment.error) {
                             setMyMessage(payment.error.message);
                             setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -167,8 +168,10 @@ const WrappedCart = () => {
                         } else {
                             setMyMessage(paymentStatus.data.message);
                             setSucessSnackBarOpen(!sucessSnackBarOpen);
+
                             setTimeout(() => {
-                                navigate("/")
+                                setProfileOption("list")
+                                navigate("/profile")
                             }, 1000);
                             // Continue with the rest of your checkout flow here.
                         }
@@ -574,10 +577,10 @@ const WrappedCart = () => {
                                             <div className='term mt-5 mar-top-20'>
                                                 <p><img src='./img/cart/note.png' alt='' />
                                                     Item availability and pricing are not guaranteed until payment is final.</p>
-                                                <span>
+                                                {/* <span>
                                                     <img src='./img/cart/lock.png' alt='' />
                                                     You will not be charged until you review this order on the next page
-                                                </span>
+                                                </span> */}
                                                 <div>
                                                     <span>
                                                         <img src='./img/cart/cart-icone.png' alt='' />

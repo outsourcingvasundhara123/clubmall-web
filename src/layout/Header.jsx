@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
     const navigate = useNavigate();
-    const { wishlistCount, cart, setCart } = useContext(CartContext);
+    const { profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -306,15 +306,17 @@ const Header = () => {
                                                 </div>
                                             </div>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/list.png' alt='' />
-                                                Your orders
+                                            <Dropdown.Item onClick={() => setProfileOption("list")} >
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/list.png' alt='' />
+                                                    Your orders
+                                                </Link>
                                             </Dropdown.Item>
                                             {/* <Dropdown.Item href="#/action-1">
                                                 <img src='./img/header/review.png' alt='' />
                                                 Your reviews
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item href="#/action-1">
+                                            <Dropdown.Item onClick={() => setProfileOption("user")}>
                                                 <Link to="/profile" className='p-0'>
                                                     <img src='./img/header/user.png' alt='' />
                                                     Your profile
@@ -332,24 +334,30 @@ const Header = () => {
                                                 <img src='./img/header/shop.png' alt='' />
                                                 Followed shops
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/location.png' alt='' />
-                                                Addresses
+                                            <Dropdown.Item onClick={() => setProfileOption("location")}>
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/location.png' alt='' />
+                                                    Addresses
+                                                </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/security.png' alt='' />
-                                                Account security
+                                            <Dropdown.Item onClick={() => setProfileOption("security")}>
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/security.png' alt='' />
+                                                    Account security
+                                                </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1" className='pb-3'>
-                                                <img src='./img/header/notification.png' alt='' />
-                                                Notifications
+                                            <Dropdown.Item className='pb-3' onClick={() => setProfileOption("notification")}>
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/notification.png' alt='' />
+                                                    Notifications
+                                                </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item href="#/action-1">
+                                            <Dropdown.Item >
                                                 <img src='./img/header/switch.png' alt='' />
                                                 Switch accounts
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1" onClick={handleLogout} >
+                                            <Dropdown.Item onClick={handleLogout} >
                                                 <img src='./img/header/logout.png' alt='' />
                                                 Sign out
                                             </Dropdown.Item>

@@ -45,6 +45,7 @@ export const CartProvider = ({ children }) => {
   const [favoritepage, setFavoritePage] = useState(1);
   const [sellProducUrl, setSellProducUrl] = useState("");
   const [viewMoreLodr, setViewmoreLoder] = useState(false);
+  const [profileOption, setProfileOption] = useState();
 
   const serverURL = getServerURL();
   const player = useRef();
@@ -288,7 +289,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      profileOption, setProfileOption, viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>
