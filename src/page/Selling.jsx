@@ -36,7 +36,7 @@ const Selling = () => {
         getProducts()
     }, []);
 
-    console.log(womanProductList,"womanProductList");
+    console.log(womanProductList, "womanProductList");
 
     return (
 
@@ -71,7 +71,7 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>S</span>HOP BY CATEGORY </h2>
                                 </div>
-                                <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4'>
+                                <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4 mar-top-0'>
 
                                     {
                                         categoryWeb.categoryData && categoryWeb.categoryData?.slice(0, 5).map((e) => {

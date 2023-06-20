@@ -659,9 +659,9 @@ p {
         padding: 0 5px;
     }
 
-    .search-main {
+    /* .search-main {
         display: none !important;
-    }
+    } */
 
     .header {
         justify-content: space-between;
@@ -997,15 +997,10 @@ p {
 .discount-card .discount-btn {
     background: #E02E24 !important;
     border-radius: 24px;
-    padding: 0 24px;
-    max-width: 50%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
+    padding: 8px 20px;
     color: white !important;
     font-size: 14px;
+    border: none;
 }
 
 /* Discount offer end */
@@ -3212,6 +3207,7 @@ input[type='radio'] {
     color: #E02E24 !important;
     font-weight: 500;
     font-size: 15px;
+    padding: 0;
 }
 
 .delete-account {
@@ -3637,7 +3633,7 @@ input[type='radio'] {
 
     .tabs-cos .nav-tabs .nav-link,
     .tabs-cos .nav-tabs .nav-link.active {
-        font-size: 16px;
+        font-size: 13px;
     }
 }
 
@@ -4547,9 +4543,9 @@ input[type='radio'] {
 }
 
 @media (max-width: 425px) {
-    .mobile-row {
+    /* .mobile-row {
         flex-direction: column;
-    }
+    } */
 
     .mobile-row button {
         width: 100%;
@@ -5367,7 +5363,7 @@ input[type='radio'] {
     }
 
     .recent-view h4 {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .product-info .per-pro h3 {
@@ -5408,7 +5404,7 @@ input[type='radio'] {
     }
 
     .security-main h5 {
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .list-not p {
@@ -5420,24 +5416,220 @@ input[type='radio'] {
     }
 
     .third-party h5 {
-        font-size: 15px;
+        font-size: 15px !important;
     }
 
     .third-party h4 {
-        font-size: 18px;
+        font-size: 15px;
+        margin-bottom: 20px;
+    }
+
+    .logo img {
+        width: 40px;
+    }
+
+    .header-icon {
+        width: 22px;
+    }
+
+    .myprofile {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .header .account button {
+        font-size: 24px;
+    }
+
+    .account {
+        gap: 15px !important;
+    }
+
+    .header {
+        height: 60px;
+        column-gap: 10px;
+    }
+
+    .search-filed {
+        padding: 6px 8px;
+    }
+
+    .profile .nav-pills .nav-link {
+        font-size: 14px;
+    }
+
+    input[type='radio'] {
+        height: 15px;
+        width: 15px;
+    }
+
+    .gap-mobile {
+        gap: 15px !important;
+    }
+
+    .profile .save-btn {
+        font-size: 14px;
+        padding: 7px 0;
+    }
+
+    .input-filed input,
+    .input-filed textarea {
+        padding: 6px 10px;
+    }
+
+    .input-filed label {
+        font-size: 14px;
+    }
+
+    .location-main button {
+        font-size: 15px;
+    }
+
+    .location-main .address-box {
+        margin-top: 10px !important;
+        padding: 10px 11px;
+    }
+
+    .address-box p {
+        font-size: 13px;
+    }
+
+    .copy-main button {
+        font-size: 13px !important;
+    }
+
+    .address-box label {
+        margin-bottom: 4px;
+    }
+
+    .total-usd {
+        padding-bottom: 15px !important;
+        margin-top: 15px !important;
+    }
+
+    .total-usd img {
+        width: 25px;
+    }
+
+    .third-party {
+        margin-top: 30px !important;
+    }
+
+    .delete-account {
+        font-size: 15px;
+        margin-top: 20px !important;
+    }
+
+    .security-main .linked {
+        font-size: 14px;
+    }
+
+    .order-list .nav-tabs .nav-link {
+        font-size: 12px;
+        padding: 0 0 8px 0;
+    }
+
+    .order-list .nav-tabs {
+        column-gap: 15px;
+    }
+
+    .found p {
+        font-size: 15px;
+    }
+
+    .found img {
+        width: 60px;
+    }
+
+    .order-list .search-order input::-webkit-input-placeholder {
+        font-size: 13px;
+    }
+
+    .search-filed input::-webkit-input-placeholder {
+        font-size: 12px;
+    }
+
+    .btn-scroll-top {
+        width: 40px;
+        height: 40px;
+    }
+
+    .page-path a {
+        font-size: 14px;
+    }
+
+    .price button {
+        font-size: 13px;
+    }
+
+    .add-cart-items {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+
+    .product-info .modal-body {
+        padding-bottom: 10px;
+    }
+
+    .image-gallery-thumbnail {
+        width: 50px;
+        height: 50px;
+    }
+
+    .image-gallery-right-nav,
+    .image-gallery-left-nav {
+        width: 40px;
+        height: 40px;
+    }
+
+    .colors,
+    .wishlist-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+    .wishlist-btn img {
+        width: 18px;
+    }
+
+    .check-terms label {
+        font-size: 12px;
+        margin-top: 3px;
+    }
+
+    .login-input input,
+    .login-input select,
+    .login-input textarea {
+        font-size: 14px;
+    }
+
+    .submit-btn {
+        height: 37px;
+        margin-top: 20px !important;
+    }
+
+    .login-input label {
+        font-size: 13px;
+    }
+
+    .footer-sec .register-link,
+    .reset-pass {
+        font-size: 12px;
     }
 }
-.sub-categories-list{
+
+.sub-categories-list {
     background-color: #f6f6f6;
     padding: 24px;
 }
 
-.sub-categories-list h3{
+.sub-categories-list h3 {
     font-weight: 700;
     font-size: 22px;
     color: #223263;
 }
-.sub-categories-list button{
+
+.sub-categories-list button {
     border: 1px solid #e5e5e5;
     padding: 0 12px;
     cursor: pointer;
@@ -5447,6 +5639,76 @@ input[type='radio'] {
     font-size: 14px;
 }
 
-.sub-categories-list button.active{
+.sub-categories-list button.active {
     border: 1px solid #000;
+}
+
+.tabs-cos .nav-tabs {
+    flex-wrap: nowrap;
+}
+
+@media (max-width: 1200px) {
+    .discount-offer h1 {
+        font-size: 30px;
+    }
+
+    .discount-offer p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 991px) {
+    .discount-offer h1 {
+        font-size: 24px;
+    }
+
+    .discount-offer p {
+        font-size: 14px;
+    }
+
+    .discount-card .discount-btn {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .discount-offer h1 {
+        font-size: 20px;
+    }
+
+    .discount-offer p {
+        font-size: 12px;
+    }
+
+    .discount-card .discount-btn {
+        padding: 8px;
+    }
+
+    .pad-cos {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+@media (max-width: 512px) {
+    .discount-offer p {
+        font-size: 8px;
+    }
+
+    .discount-offer h1 {
+        font-size: 15px;
+    }
+
+    .pad-cos {
+        padding: 10px 0 !important;
+    }
+
+    .discount-card .discount-btn {
+        padding: 3px;
+        font-size: 8px;
+    }
+
+    .discount-offer {
+        padding: 0 12px;
+    }
 }

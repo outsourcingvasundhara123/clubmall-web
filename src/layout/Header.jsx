@@ -143,7 +143,7 @@ const Header = () => {
             <div className='header-main'>
                 <div className='header d-flex align-items-center gap-5 position-relative'>
                     <div className='logo'>
-                        <Link to="/home"><img src='./img/logo.png' alt='' /></Link>
+                        <Link to="/home" className='py-0'><img src='./img/logo.png' alt='' /></Link>
                     </div>
                     <div className='menu-box h-100'>
                         <ul className='h-100'>
@@ -252,9 +252,49 @@ const Header = () => {
                         {
                             isLoggedIn ?
                                 <>
+
+
+                                    {/* <Dropdown>
+                                        <Dropdown.Toggle id="dropdown-basic">
+                                            <NavLink className='flag-selector'>
+                                                <Button className='pre-label-btn user-account p-0 '>
+                                                    <img src={selectedFlag} alt='' width="26px" height="26px" />
+                                                </Button>
+                                            </NavLink>
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu className='select-country'>
+                                            <h5>Change country / region</h5>
+
+                                            {
+                                                countryData.map((event, i) => {
+                                                    return (
+                                                        <Dropdown.Item href="#/action-1" className='mt-2'>
+                                                            <div className='d-flex align-items-center justify-content-between w-100'>
+                                                                <label htmlFor={event.id} className='d-flex align-items-center gap-3' onClick={() => setSelectedFlag(event.flag)}>
+                                                                    <img src={event.flag} alt='' width="20px" height="20px" />
+                                                                    {event.name}</label>
+                                                                <input type='radio' id={event.id} name='country' />
+                                                            </div>
+                                                        </Dropdown.Item>
+                                                    )
+                                                })
+                                            }
+                                        </Dropdown.Menu>
+                                    </Dropdown> */}
+
+                                    <Link to="/wishlist" className='cart position-relative flag-selector'>
+                                        <img src='./img/header/wishlist.png' className='header-icon' alt='' width="25px" />
+                                        <span className='cart-items-count'>{wishlistCount}</span>
+                                    </Link>
+
+                                    <Link to="/cart" className='cart position-relative flag-selector'>
+                                        <img src='./img/header/cart.png' className='header-icon' alt='' width="25px" />
+                                        <span className='cart-items-count'>{cart && cart}</span>
+                                    </Link>
                                     <Dropdown>
                                         <Dropdown.Toggle id="dropdown-basic" className='p-0'>
-                                            <NavLink>
+                                            <NavLink className='py-0'>
                                                 <Button className='pre-label-btn user-account'>
                                                     <div className='d-flex align-items-center gap-2'>
                                                         <img className='myprofile' src={Userprofile} alt='' />
@@ -324,49 +364,10 @@ const Header = () => {
                                             </Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
-
-                                    {/* <Dropdown>
-                                        <Dropdown.Toggle id="dropdown-basic">
-                                            <NavLink className='flag-selector'>
-                                                <Button className='pre-label-btn user-account p-0 '>
-                                                    <img src={selectedFlag} alt='' width="26px" height="26px" />
-                                                </Button>
-                                            </NavLink>
-                                        </Dropdown.Toggle>
-
-                                        <Dropdown.Menu className='select-country'>
-                                            <h5>Change country / region</h5>
-
-                                            {
-                                                countryData.map((event, i) => {
-                                                    return (
-                                                        <Dropdown.Item href="#/action-1" className='mt-2'>
-                                                            <div className='d-flex align-items-center justify-content-between w-100'>
-                                                                <label htmlFor={event.id} className='d-flex align-items-center gap-3' onClick={() => setSelectedFlag(event.flag)}>
-                                                                    <img src={event.flag} alt='' width="20px" height="20px" />
-                                                                    {event.name}</label>
-                                                                <input type='radio' id={event.id} name='country' />
-                                                            </div>
-                                                        </Dropdown.Item>
-                                                    )
-                                                })
-                                            }
-                                        </Dropdown.Menu>
-                                    </Dropdown> */}
-
-                                    <Link to="/wishlist" className='cart position-relative flag-selector'>
-                                        <img src='./img/header/wishlist.png' alt='' width="25px" />
-                                        <span className='cart-items-count'>{wishlistCount}</span>
-                                    </Link>
-
-                                    <Link to="/cart" className='cart position-relative flag-selector'>
-                                        <img src='./img/header/cart.png' alt='' width="25px" />
-                                        <span className='cart-items-count'>{cart && cart}</span>
-                                    </Link>
                                 </>
                                 : <Link to="/login" className='login-btn'>Login</Link>
                         }
-                        <Button className='toggle ' onClick={handleShow}>
+                        <Button className='toggle px-0' onClick={handleShow}>
                             <HiOutlineMenuAlt1 />
                         </Button>
                     </div>
@@ -385,13 +386,13 @@ const Header = () => {
                                     <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/")}>For You</Link>
                                 </li>
                                 <li>
+                                    <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
+                                </li>
+                                <li>
                                     <Button onClick={() => {
                                         handleClose();
                                         handleNewInShow();
                                     }} className='new-in-btn'>New In</Button>
-                                </li>
-                                <li>
-                                    <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
                                 </li>
                                 <li>
                                     <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/fashion")}>Fashion</Link>
@@ -403,7 +404,7 @@ const Header = () => {
                                     <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => setActive("/trending")}>Trending</Link>
                                 </li>
                                 <li className='position-relative show-body-menu'>
-                                    <Link  className={`${active === "/categories" ? "active" : ""} `} >
+                                    <Link className={`${active === "/categories" ? "active" : ""} `} >
                                         Categories
                                     </Link>
                                     <Accordion>
