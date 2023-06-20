@@ -3304,9 +3304,6 @@ input[type='radio'] {
 }
 
 @media (max-width: 1300px) {
-    .order-list {
-        padding-top: 60px;
-    }
 
     .order-list .search-order {
         width: 100%;
@@ -5526,7 +5523,6 @@ input[type='radio'] {
     }
 
     .order-list .nav-tabs .nav-link {
-        font-size: 12px;
         padding: 0 0 8px 0;
     }
 
@@ -5616,6 +5612,10 @@ input[type='radio'] {
     .footer-sec .register-link,
     .reset-pass {
         font-size: 12px;
+    }
+
+    .order-list {
+        padding-top: 0px;
     }
 }
 
@@ -5711,5 +5711,66 @@ input[type='radio'] {
 
     .discount-offer {
         padding: 0 12px;
+    }
+}
+
+.order-table tr th {
+    font-size: 15px;
+    text-align: center;
+    color: #223263;
+    font-weight: 700;
+}
+
+.order-table tr td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.order-table tr td .pro-text h6 {
+    color: #223263;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.order-table tr td .pro-text span {
+    text-align: left;
+    display: block;
+    margin-top: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #223263;
+    opacity: 0.5;
+}
+
+.order-table tr td .badge {
+    padding: 6px 15px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: normal;
+}
+
+.order-table tr td p {
+    color: #384f94;
+}
+
+@media (max-width: 668px) {
+    .order-table tr th {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .order-table tr td .pro-text h6 {
+        font-size: 14px;
+    }
+
+    .order-table tr td p,
+    .order-table tr td .pro-text span {
+        font-size: 13px;
     }
 }

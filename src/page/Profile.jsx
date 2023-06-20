@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
-import { Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
+import { Badge, Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdKeyboardDoubleArrowRight,
@@ -23,7 +23,7 @@ import { CartContext } from '../context/CartContext';
 
 const Profile = () => {
 
-    const { profileOption, setProfileOption, myAddress, getMyAddress,userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const { profileOption, setProfileOption, myAddress, getMyAddress, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -204,7 +204,7 @@ const Profile = () => {
                                         <Nav.Item>
                                             <Nav.Link eventKey="list" onClick={() => setItemShow(true)}>
                                                 <img src='./img/header/list.png' alt='' />
-                                                Your orders
+                                                My orders
                                             </Nav.Link>
                                         </Nav.Item>
                                         {/* <Nav.Item>
@@ -286,69 +286,111 @@ const Profile = () => {
                                                     <input type="text" placeholder="Item name / Order ID / Tracking No." class="w-100" spellcheck="false" data-ms-editor="true" />
                                                 </div> */}
 
-                                                <Tabs
+                                                <div className='order-table'>
+                                                    <Table bordered responsive>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Products</th>
+                                                                <th>Quantity</th>
+                                                                <th>Amount</th>
+                                                                <th>Shipping To</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td width={400}>
+                                                                    <div className='d-flex align-items-start gap-2'>
+                                                                        <img src='./img/dummy.png' width="80px" />
+                                                                        <div className='pro-text'>
+                                                                            <h6>A Student Backpack Casual School Bag Lightweight Computer Backpack Water Resistant Travel Backpack Fits 13 Inch Laptop</h6>
+                                                                            <span>ID: #1708</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><p>1</p></td>
+                                                                <td><p>$15.23</p></td>
+                                                                <td>
+                                                                    <p>cvv,df,6888</p>
+                                                                    <p>258888</p>
+                                                                </td>
+                                                                <td><Badge bg="success">success</Badge></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </Table>
+                                                </div>
+
+                                                {/* <div className='error'>
+                                                    <div className='d-flex justify-content-center py-5'>
+                                                        <div className='text-center found'>
+                                                            <img src='./img/not-found.png' alt='' />
+                                                            <p className='mt-3'>You don’t have any orders</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='find-your-order'>
+                                                        <Row className='align-items-end'>
+                                                            <Col lg={6} md={6} sm={12}>
+                                                                <label className='mb-1'>Can’t find your order?</label>
+                                                                <div className='order-input d-flex align-items-center gap-2'>
+                                                                    <input placeholder='Try signing in with another account' className='w-100' />
+                                                                    <img src='./img/profile/gfa.png' className='me-2' alt='' />
+                                                                </div>
+                                                            </Col>
+                                                            <Col lg={6} md={6} sm={12} className='mt-3 mt-md-0'>
+                                                                <div className='order-input d-flex align-items-center gap-2'>
+                                                                    <input placeholder='Self-service to find order' className='w-100' />
+                                                                    <img src='./img/profile/right-arrow.png' className='me-2' alt='' />
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                </div> */}
+
+                                                {/* <Tabs
                                                     defaultActiveKey="all-orders"
                                                     id="uncontrolled-tab-example"
                                                     className="mb-3"
                                                 >
                                                     <Tab eventKey="all-orders" title="All orders">
-                                                        <div className='d-flex justify-content-center py-5'>
-                                                            <div className='text-center found'>
-                                                                <img src='./img/not-found.png' alt='' />
-                                                                <p className='mt-3'>You don’t have any orders</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className='find-your-order'>
-                                                            <Row className='align-items-end'>
-                                                                {/* <Col lg={6} md={6} sm={12}>
-                                                                    <label className='mb-1'>Can’t find your order?</label>
-                                                                    <div className='order-input d-flex align-items-center gap-2'>
-                                                                        <input placeholder='Try signing in with another account' className='w-100' />
-                                                                        <img src='./img/profile/gfa.png' className='me-2' alt='' />
-                                                                    </div>
-                                                                </Col> */}
-                                                                {/* <Col lg={6} md={6} sm={12} className='mt-3 mt-md-0'>
-                                                                    <div className='order-input d-flex align-items-center gap-2'>
-                                                                        <input placeholder='Self-service to find order' className='w-100' />
-                                                                        <img src='./img/profile/right-arrow.png' className='me-2' alt='' />
-                                                                    </div>
-                                                                </Col> */}
-                                                            </Row>
-                                                        </div>
+
+
+
+                                                       
                                                     </Tab>
-                                                    {/* <Tab eventKey="processing" title="Processing">
+                                                    <Tab eventKey="processing" title="Processing">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Processing</p>
                                                             </div>
                                                         </div>
-                                                    </Tab> */}
-                                                    {/* <Tab eventKey="Shipped" title="Shipped">
+                                                    </Tab>
+                                                    <Tab eventKey="Shipped" title="Shipped">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Shipped</p>
                                                             </div>
                                                         </div>
-                                                    </Tab> */}
-                                                    {/* <Tab eventKey="Delivered" title="Delivered">
+                                                    </Tab>
+                                                    <Tab eventKey="Delivered" title="Delivered">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Delivered</p>
                                                             </div>
                                                         </div>
-                                                    </Tab> */}
-                                                    {/* <Tab eventKey="Returns" title="Returns">
+                                                    </Tab>
+                                                    <Tab eventKey="Returns" title="Returns">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Returns</p>
                                                             </div>
                                                         </div>
-                                                    </Tab> */}
-                                                </Tabs>
+                                                    </Tab>
+                                                </Tabs> */}
 
                                             </div>
 
