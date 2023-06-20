@@ -24,7 +24,7 @@ import { Is_Login } from '../helper/IsLogin';
 
 const Home = () => {
 
-    const {startAnimation,stopAnimation,player, loading, setLoading, wishProductUrl, category, currentUser,
+    const { startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const isLoggedIn = Is_Login();
@@ -117,28 +117,30 @@ const Home = () => {
                         <section>
                             <div className='container-cos'>
                                 <div className='discount-offer'>
-                                    <Row >
-                                        <Col xl={3} lg={3} md={6} sm={6} className='py-4'>
+                                    <Row className='align-items-center'>
+                                        <Col className='py-4 pad-cos'>
                                             <div className='discount-card'>
                                                 <h1>10% OFF</h1>
                                                 <p>ORDERS OF $49+</p>
                                             </div>
                                         </Col>
-                                        <Col xl={3} lg={3} md={6} sm={6} className='py-4'>
-                                            <div className='discount-card mid-border-none'>
+                                        <Col className='py-4 pad-cos'>
+                                            <div className='discount-card'>
                                                 <h1>15% OFF</h1>
                                                 <p>ORDERS OF $89+</p>
                                             </div>
                                         </Col>
-                                        <Col xl={3} lg={3} md={6} sm={6} className='py-4'>
-                                            <div className='discount-card '>
+                                        <Col className='py-4 pad-cos'>
+                                            <div className='discount-card'>
                                                 <h1>20% OFF</h1>
                                                 <p>ORDERS OF $89+</p>
                                             </div>
                                         </Col>
-                                        <Col xl={3} lg={3} md={6} sm={6} className='py-4'>
+                                        <Col className='py-4 pad-cos'>
                                             <div className='discount-card mt-1' style={{ borderRight: "none" }}>
-                                                <p className='d-flex justify-content-center'><span className='discount-btn'>CODE : clubmall30</span></p>
+                                                <Button className='discount-btn mx-auto'>
+                                                    CODE : clubmall30
+                                                </Button>
                                                 <p>CAPPED AT $5</p>
                                             </div>
                                         </Col>

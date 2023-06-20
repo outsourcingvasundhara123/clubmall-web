@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useContext} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
 import {
@@ -23,7 +23,7 @@ import { CartContext } from '../context/CartContext';
 
 const Profile = () => {
 
-    const {myAddress, getMyAddress,userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const { myAddress, getMyAddress, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -48,12 +48,12 @@ const Profile = () => {
     const [itemShow, setItemShow] = useState(false);
     const [show, setShow] = useState(false);
 
-    const handleClose = () =>{
+    const handleClose = () => {
         setErrors({})
         setShow(false);
         setValues(initialValues)
         setSubmitCount(0)
-    } 
+    }
     const handleShow = () => setShow(true);
 
     const handleChange = (e) => {
@@ -106,7 +106,7 @@ const Profile = () => {
         }
 
         if (Object.keys(validationErrors).length === 0) {
-            
+
             console.log(updatedValues, "updatedValues");
 
             try {
@@ -388,7 +388,7 @@ const Profile = () => {
                                                             </div>
                                                             <div className='input-filed mt-3'>
                                                                 <label>Gender</label>
-                                                                <div className='d-flex align-items-center gap-4 w-fit mt-2'>
+                                                                <div className='d-flex align-items-center gap-4 w-fit mt-2 gap-mobile'>
                                                                     <div className='d-flex align-items-center gap-2 w-fit gender'>
                                                                         <input type='radio' name='gender' id='female' />
                                                                         <label htmlFor='female'>Female</label>
@@ -514,30 +514,31 @@ const Profile = () => {
                                         <Tab.Pane eventKey="location">
                                             <div className='location-main'>
                                                 <Button onClick={handleShow}>+ Add a new address</Button>
-                                             
-                                                {myAddress &&  myAddress.map((e, i) => {
-                                return (
-                                    <div className='address-box mt-3'>
-                                    <h5> {e.fullname}</h5>
-                                    <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
-                                    <div className='d-flex align-items-center justify-content-between'>
-                                        <div className='d-flex align-items-center check-options'>
-                                            <input type='checkbox' id='add-select' checked={e.is_default == 1} />
-                                            <label htmlFor='add-select'>Default</label>
-                                        </div>
-                                        <div className='copy-main'>
-                                            {/* <Button>Copy</Button> */}
-                                            {/* <span>I</span> */}
-                                            <Button>Edit</Button>
-                                            <span>I</span>
-                                            <Button>Delete</Button>
-                                        </div>
-                                    </div>
-                                </div>    
-                                    )})} 
-                                            
+
+                                                {myAddress && myAddress.map((e, i) => {
+                                                    return (
+                                                        <div className='address-box mt-3'>
+                                                            <h5> {e.fullname}</h5>
+                                                            <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
+                                                            <div className='d-flex align-items-center justify-content-between'>
+                                                                <div className='d-flex align-items-center check-options'>
+                                                                    <input type='checkbox' id='add-select' checked={e.is_default == 1} />
+                                                                    <label htmlFor='add-select'>Default</label>
+                                                                </div>
+                                                                <div className='copy-main'>
+                                                                    {/* <Button>Copy</Button> */}
+                                                                    {/* <span>I</span> */}
+                                                                    <Button>Edit</Button>
+                                                                    <span>I</span>
+                                                                    <Button>Delete</Button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })}
+
                                             </div>
-                                               
+
                                         </Tab.Pane>
 
                                         <Tab.Pane eventKey="security">
@@ -674,7 +675,7 @@ const Profile = () => {
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn rotate-img'  >View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn rotate-img btn-cos-mobile'  >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div> : <></>
@@ -694,8 +695,8 @@ const Profile = () => {
                             <Row className='mt-2'>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
-                                        <label>Ship to Address</label>                                
-                                            <select name='country_id'
+                                        <label>Ship to Address</label>
+                                        <select name='country_id'
                                             value={values.country}
                                             onChange={handleChange}
                                             className='select-arrow'>
