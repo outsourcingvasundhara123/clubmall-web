@@ -309,7 +309,7 @@ const Header = () => {
                                             <Dropdown.Item onClick={() => setProfileOption("list")} >
                                                 <Link to="/profile" className='p-0'>
                                                     <img src='./img/header/list.png' alt='' />
-                                                    Your orders
+                                                    My orders
                                                 </Link>
                                             </Dropdown.Item>
                                             {/* <Dropdown.Item href="#/action-1">
