@@ -100,8 +100,8 @@ const WrappedCart = () => {
             // console.log(token, "stripe");
             setIsOpen(!isOpen);
 
-            if (productList.list.length == 0) {
-                setMyMessage("You dont have any product in a cart")
+            if (productList.list.length === 0) {
+                setMyMessage("You don't have any product in a cart")
                 setWarningSnackBarOpen(!warningSnackBarOpen);
             } else {
 
@@ -111,7 +111,6 @@ const WrappedCart = () => {
 
                     const data = {
                         order_items: productList.list,
-                        seller_id: "6386bfbe29a80c18d7b15488",
                         shipping_address_id: correntAddess.data[0]._id,
                         shipping_method_id: correntAddess.shipping_method_id
                     }
@@ -159,8 +158,6 @@ const WrappedCart = () => {
                         });
 
                         const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
-                        console.log('paymentStatus', paymentStatus);
-                        console.log(payment, "payment");
                         if (payment.error) {
                             setMyMessage(payment.error.message);
                             setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -205,7 +202,7 @@ const WrappedCart = () => {
             }
             const res = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
 
-            if (res.data.success == true) {
+            if (res.data.success === true) {
                 getCartData()
                 setCart(cart - 1)
                 setMyMessage(res.data.message);
@@ -261,12 +258,12 @@ const WrappedCart = () => {
 
             const res = await api.postWithToken(`${serverURL + "coupon-code-manage"}`, data)
 
-            if (res.data.success == true) {
+            if (res.data.success === true) {
                 getCartData()
                 setMyMessage(res.data.message);
                 setSucessSnackBarOpen(!sucessSnackBarOpen);
                 setCouponCode("")
-            } else if (res.data.success == false) {
+            } else if (res.data.success === false) {
                 setMyMessage(res.data.message);
                 setWarningSnackBarOpen(!warningSnackBarOpen);
             }
@@ -577,10 +574,6 @@ const WrappedCart = () => {
                                             <div className='term mt-5 mar-top-20'>
                                                 <p><img src='./img/cart/note.png' alt='' />
                                                     Item availability and pricing are not guaranteed until payment is final.</p>
-                                                {/* <span>
-                                                    <img src='./img/cart/lock.png' alt='' />
-                                                    You will not be charged until you review this order on the next page
-                                                </span> */}
                                                 <div>
                                                     <span>
                                                         <img src='./img/cart/cart-icone.png' alt='' />
