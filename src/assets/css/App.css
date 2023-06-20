@@ -4687,7 +4687,8 @@ input[type='radio'] {
 .shop-btn:hover,
 .add-cart-items:hover,
 .btn-scroll-top:hover,
-.shop-care-bears-btn:hover {
+.shop-care-bears-btn:hover,
+.checkout:hover {
     background-color: #b3221a !important;
 }
 

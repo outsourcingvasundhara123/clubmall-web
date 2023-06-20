@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
     const navigate = useNavigate();
-    const { wishlistCount, cart, setCart } = useContext(CartContext);
+    const { profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -283,16 +283,7 @@ const Header = () => {
                                         </Dropdown.Menu>
                                     </Dropdown> */}
 
-                                    <Link to="/wishlist" className='cart position-relative flag-selector'>
-                                        <img src='./img/header/wishlist.png' className='header-icon' alt='' width="25px" />
-                                        <span className='cart-items-count'>{wishlistCount}</span>
-                                    </Link>
-
-                                    <Link to="/cart" className='cart position-relative flag-selector'>
-                                        <img src='./img/header/cart.png' className='header-icon' alt='' width="25px" />
-                                        <span className='cart-items-count'>{cart && cart}</span>
-                                    </Link>
-                                    <Dropdown>
+                                    <Dropdown className='order-lg-1 order-4'>
                                         <Dropdown.Toggle id="dropdown-basic" className='p-0'>
                                             <NavLink className='py-0'>
                                                 <Button className='pre-label-btn user-account'>
@@ -315,15 +306,17 @@ const Header = () => {
                                                 </div>
                                             </div>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/list.png' alt='' />
-                                                Your orders
+                                            <Dropdown.Item onClick={() => setProfileOption("list")} >
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/list.png' alt='' />
+                                                    Your orders
+                                                </Link>
                                             </Dropdown.Item>
                                             {/* <Dropdown.Item href="#/action-1">
                                                 <img src='./img/header/review.png' alt='' />
                                                 Your reviews
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item href="#/action-1">
+                                            <Dropdown.Item onClick={() => setProfileOption("user")}>
                                                 <Link to="/profile" className='p-0'>
                                                     <img src='./img/header/user.png' alt='' />
                                                     Your profile
@@ -341,33 +334,50 @@ const Header = () => {
                                                 <img src='./img/header/shop.png' alt='' />
                                                 Followed shops
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/location.png' alt='' />
-                                                Addresses
+                                            <Dropdown.Item onClick={() => setProfileOption("location")}>
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/location.png' alt='' />
+                                                    Addresses
+                                                </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/security.png' alt='' />
-                                                Account security
+                                            <Dropdown.Item onClick={() => setProfileOption("security")}>
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/security.png' alt='' />
+                                                    Account security
+                                                </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1" className='pb-3'>
-                                                <img src='./img/header/notification.png' alt='' />
-                                                Notifications
+                                            <Dropdown.Item className='pb-3' onClick={() => setProfileOption("notification")}>
+                                                <Link to="/profile" className='p-0'>
+                                                    <img src='./img/header/notification.png' alt='' />
+                                                    Notifications
+                                                </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item href="#/action-1">
+                                            <Dropdown.Item >
                                                 <img src='./img/header/switch.png' alt='' />
                                                 Switch accounts
                                             </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1" onClick={handleLogout} >
+                                            <Dropdown.Item onClick={handleLogout} >
                                                 <img src='./img/header/logout.png' alt='' />
                                                 Sign out
                                             </Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
+
+                                    <Link to="/wishlist" className='cart position-relative flag-selector order-2'>
+                                        <img src='./img/header/wishlist.png' className='header-icon' alt='' width="25px" />
+                                        <span className='cart-items-count'>{wishlistCount}</span>
+                                    </Link>
+
+                                    <Link to="/cart" className='cart position-relative flag-selector order-3'>
+                                        <img src='./img/header/cart.png' className='header-icon' alt='' width="25px" />
+                                        <span className='cart-items-count'>{cart && cart}</span>
+                                    </Link>
+
                                 </>
                                 : <Link to="/login" className='login-btn'>Login</Link>
                         }
-                        <Button className='toggle px-0' onClick={handleShow}>
+                        <Button className='toggle px-0 order-4' onClick={handleShow}>
                             <HiOutlineMenuAlt1 />
                         </Button>
                     </div>

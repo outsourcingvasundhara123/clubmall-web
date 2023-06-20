@@ -23,7 +23,7 @@ import { CartContext } from '../context/CartContext';
 
 const Profile = () => {
 
-    const { myAddress, getMyAddress, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const { profileOption, setProfileOption, myAddress, getMyAddress,userProductList, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -196,9 +196,8 @@ const Profile = () => {
                         <NavLink className='active'>Profile</NavLink>
                     </div>
 
-
                     <div className='mt-4 profile-tabs'>
-                        <Tab.Container id="left-tabs-example" defaultActiveKey="user">
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={profileOption}>
                             <Row>
                                 <Col xl={3} lg={4} md={6}>
                                     <Nav variant="pills" className="flex-column">
@@ -281,10 +280,11 @@ const Profile = () => {
                                     <Tab.Content>
                                         <Tab.Pane eventKey="list">
                                             <div className='order-list position-relative'>
-                                                <div className='search-order d-flex align-items-center gap-2'>
+
+                                                {/* <div className='search-order d-flex align-items-center gap-2'>
                                                     <img src='./img/header/search-icone.png' alt='' />
                                                     <input type="text" placeholder="Item name / Order ID / Tracking No." class="w-100" spellcheck="false" data-ms-editor="true" />
-                                                </div>
+                                                </div> */}
 
                                                 <Tabs
                                                     defaultActiveKey="all-orders"
@@ -300,54 +300,54 @@ const Profile = () => {
                                                         </div>
                                                         <div className='find-your-order'>
                                                             <Row className='align-items-end'>
-                                                                <Col lg={6} md={6} sm={12}>
+                                                                {/* <Col lg={6} md={6} sm={12}>
                                                                     <label className='mb-1'>Can’t find your order?</label>
                                                                     <div className='order-input d-flex align-items-center gap-2'>
                                                                         <input placeholder='Try signing in with another account' className='w-100' />
                                                                         <img src='./img/profile/gfa.png' className='me-2' alt='' />
                                                                     </div>
-                                                                </Col>
-                                                                <Col lg={6} md={6} sm={12} className='mt-3 mt-md-0'>
+                                                                </Col> */}
+                                                                {/* <Col lg={6} md={6} sm={12} className='mt-3 mt-md-0'>
                                                                     <div className='order-input d-flex align-items-center gap-2'>
                                                                         <input placeholder='Self-service to find order' className='w-100' />
                                                                         <img src='./img/profile/right-arrow.png' className='me-2' alt='' />
                                                                     </div>
-                                                                </Col>
+                                                                </Col> */}
                                                             </Row>
                                                         </div>
                                                     </Tab>
-                                                    <Tab eventKey="processing" title="Processing">
+                                                    {/* <Tab eventKey="processing" title="Processing">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Processing</p>
                                                             </div>
                                                         </div>
-                                                    </Tab>
-                                                    <Tab eventKey="Shipped" title="Shipped">
+                                                    </Tab> */}
+                                                    {/* <Tab eventKey="Shipped" title="Shipped">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Shipped</p>
                                                             </div>
                                                         </div>
-                                                    </Tab>
-                                                    <Tab eventKey="Delivered" title="Delivered">
+                                                    </Tab> */}
+                                                    {/* <Tab eventKey="Delivered" title="Delivered">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Delivered</p>
                                                             </div>
                                                         </div>
-                                                    </Tab>
-                                                    <Tab eventKey="Returns" title="Returns">
+                                                    </Tab> */}
+                                                    {/* <Tab eventKey="Returns" title="Returns">
                                                         <div className='d-flex justify-content-center py-5'>
                                                             <div className='text-center found'>
                                                                 <img src='./img/not-found.png' alt='' />
                                                                 <p className='mt-3'>You don’t have any Returns</p>
                                                             </div>
                                                         </div>
-                                                    </Tab>
+                                                    </Tab> */}
                                                 </Tabs>
 
                                             </div>
@@ -674,9 +674,9 @@ const Profile = () => {
                                             )
                                         })
                                     }
-                                    <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn rotate-img btn-cos-mobile'  >View More <MdKeyboardDoubleArrowRight /></Button>
-                                    </div>
+                                    {/* <div className='w-100 d-flex justify-content-center'>
+                                        <Button className='shop-btn rotate-img'  >View More <MdKeyboardDoubleArrowRight /></Button>
+                                    </div> */}
                                 </div>
                             </div> : <></>
                     }
