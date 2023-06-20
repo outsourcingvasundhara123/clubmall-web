@@ -283,16 +283,7 @@ const Header = () => {
                                         </Dropdown.Menu>
                                     </Dropdown> */}
 
-                                    <Link to="/wishlist" className='cart position-relative flag-selector'>
-                                        <img src='./img/header/wishlist.png' className='header-icon' alt='' width="25px" />
-                                        <span className='cart-items-count'>{wishlistCount}</span>
-                                    </Link>
-
-                                    <Link to="/cart" className='cart position-relative flag-selector'>
-                                        <img src='./img/header/cart.png' className='header-icon' alt='' width="25px" />
-                                        <span className='cart-items-count'>{cart && cart}</span>
-                                    </Link>
-                                    <Dropdown>
+                                    <Dropdown className='order-lg-1 order-4'>
                                         <Dropdown.Toggle id="dropdown-basic" className='p-0'>
                                             <NavLink className='py-0'>
                                                 <Button className='pre-label-btn user-account'>
@@ -364,10 +355,21 @@ const Header = () => {
                                             </Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
+
+                                    <Link to="/wishlist" className='cart position-relative flag-selector order-2'>
+                                        <img src='./img/header/wishlist.png' className='header-icon' alt='' width="25px" />
+                                        <span className='cart-items-count'>{wishlistCount}</span>
+                                    </Link>
+
+                                    <Link to="/cart" className='cart position-relative flag-selector order-3'>
+                                        <img src='./img/header/cart.png' className='header-icon' alt='' width="25px" />
+                                        <span className='cart-items-count'>{cart && cart}</span>
+                                    </Link>
+
                                 </>
                                 : <Link to="/login" className='login-btn'>Login</Link>
                         }
-                        <Button className='toggle px-0' onClick={handleShow}>
+                        <Button className='toggle px-0 order-4' onClick={handleShow}>
                             <HiOutlineMenuAlt1 />
                         </Button>
                     </div>
