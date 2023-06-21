@@ -72,7 +72,7 @@ const Selling = () => {
                                 <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4 mar-top-0'>
 
                                     {
-                                        categoryWeb.categoryData && categoryWeb.categoryData?.slice(0, 5).map((e) => {
+                                        categoryWeb.categoryData && categoryWeb.categoryData?.slice(0, 6).map((e) => {
                                             return (
                                                 <div className='cate-box text-center pointer' onClick={() => handelCategorydata(e._id)} >
                                                     <div className='cat-img-round'>
