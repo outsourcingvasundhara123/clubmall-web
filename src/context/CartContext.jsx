@@ -45,6 +45,11 @@ export const CartProvider = ({ children }) => {
   const [sellProducUrl, setSellProducUrl] = useState("");
   const [viewMoreLodr, setViewmoreLoder] = useState(false);
   const [profileOption, setProfileOption] = useState();
+ 
+  var SearchKeyWord =  localStorage.getItem("search") && localStorage.getItem("search")
+  const [searchpostList, setSearchPostList] = useState([]);
+  const [searchPage, setSearchPage] = useState(1);
+  const [searchUrl, setSearchURL] = useState("");
 
   const serverURL = getServerURL();
   const player = useRef();
@@ -240,19 +245,42 @@ export const CartProvider = ({ children }) => {
 
     try {
       const [categoryResponse] = await Promise.all([
-        api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+        api.post(`${serverURL + PRODUCTCATEGORY}`)
       ]);
       const categoryData = categoryResponse.data.data;
-      setSellingCategory(
-        {
-          first: { _id: categoryData.productsCategoryList[0]?._id, name: categoryData.productsCategoryList[0]?.child[0]?.name, id: categoryData.productsCategoryList[0]?.child[0]?._id },
-          second: { _id: categoryData.productsCategoryList[1]?._id, name: categoryData.productsCategoryList[1]?.child[0]?.name, id: categoryData.productsCategoryList[1]?.child[0]?._id },
-          third: { _id: categoryData.productsCategoryList[2]?._id, name: categoryData.productsCategoryList[2]?.child[0]?.name, id: categoryData.productsCategoryList[2]?.child[0]?._id },
-        })
-        
+    
+      //for random category
+      const randomIndices = [];
+      const maxIndex = categoryData.productsCategoryList.length - 1;
+      
+      while (randomIndices.length < 3) {
+        const randomIndex = Math.floor(Math.random() * maxIndex);
+        if (!randomIndices.includes(randomIndex)) {
+          randomIndices.push(randomIndex);
+        }
+      }
+
+      const sellingCategory = {
+        first: {
+          _id: categoryData.productsCategoryList[randomIndices[0]]?._id,
+          name: categoryData.productsCategoryList[randomIndices[0]]?.child[0]?.name,
+          id: categoryData.productsCategoryList[randomIndices[0]]?.child[0]?._id,
+        },
+        second: {
+          _id: categoryData.productsCategoryList[randomIndices[1]]?._id,
+          name: categoryData.productsCategoryList[randomIndices[1]]?.child[0]?.name,
+          id: categoryData.productsCategoryList[randomIndices[1]]?.child[0]?._id,
+        },
+        third: {
+          _id: categoryData.productsCategoryList[randomIndices[2]]?._id,
+          name: categoryData.productsCategoryList[randomIndices[2]]?.child[0]?.name,
+          id: categoryData.productsCategoryList[randomIndices[2]]?.child[0]?._id,
+        },
+      };
+
+      setSellingCategory(sellingCategory)
       // Divide the category list into two parts
       const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
-
       const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
       const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
       // Set the first half and second half of categories
@@ -264,12 +292,39 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const getSearchedProduct = async () => {
+    try {
+        startAnimation()
+        const [postListResponse] = await Promise.all([
+            api.postWithToken(`${serverURL + "search"}`, {
+                q: SearchKeyWord,
+                search_type: "product",
+                page: searchPage
+            }),
+        ]);
+        const postsData = postListResponse.data;
+        // // console.log(postsData,"postsData");
+        const updatedProductList = [...searchpostList, ...postsData.data]
+            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+            setSearchPostList(updatedProductList);
+        console.log(postsData);
+        setSearchURL(postsData.productImagePath)
+        setViewmoreLoder(false)
+        stopAnimation()
+    } catch (error) {
+        console.log(error);
+    }
+};
 
+ const handelSearch = (search) => {
+  localStorage.setItem("search", search);
+  getSearchedProduct()
+};
 
   return (
 
     <CartContext.Provider value={{
-      profileOption, setProfileOption, viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      handelSearch,searchUrl,searchPage, SearchKeyWord, searchpostList, setSearchPage,searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>

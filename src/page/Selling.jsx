@@ -76,7 +76,7 @@ const Selling = () => {
                                             return (
                                                 <div className='cate-box text-center pointer' onClick={() => handelCategorydata(e._id)} >
                                                     <div className='cat-img-round'>
-                                                        <img src={categoryWeb.productsCategoryIconPath + e.icon} alt='' width="100%" />
+                                                        <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="100%" />
                                                     </div>
                                                     <h5 className='mt-4'>{e.name}</h5>
                                                 </div>
@@ -101,7 +101,7 @@ const Selling = () => {
                                                 <Col lg={3} md={6} sm={12} className='mt-4'>
                                                     <div className='basket-box'>
                                                         <h5>{e.name}</h5>
-                                                        <img src={categoryWeb.productsCategoryIconPath + e.icon} alt='' width="80%" className='my-4' />
+                                                        <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="80%" className='my-4' />
                                                         <div className='d-flex justify-content-center'>
                                                             <Button className='shop-btn' onClick={() => handelCategorydata(e._id)} >Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                         </div>

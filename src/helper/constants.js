@@ -36,10 +36,11 @@ export const afterLogin = (setMyMessage) => {
       }
   };
   
-export const handelProductDetail = (productId) => {
+  export const handelProductDetail = (productId) => {
     localStorage.setItem("selectedProductId", productId);
     window.location.href = "/Product-info";
   };
+
 
 export const handelCategorydata = (categorie,navigate) => {
     if(categorie == undefined ){

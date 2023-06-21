@@ -14,7 +14,7 @@ import About from '../page/About';
 import Policy from '../page/Policy';
 import TermsUse from '../page/TermsUse';
 import Influencer from '../page/Influencer';
-
+import Search from '../page/Search';
 
 export default [
 
@@ -29,6 +29,10 @@ export default [
   {
     path: "/trending",
     element: <Trending />,
+  },
+  {
+    path: "/search",
+    element: <Search/>,
   },
   {
     path: "/categories",
