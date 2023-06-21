@@ -17,10 +17,10 @@ import ErrorSnackBar from "../components/SnackBar";
 import { logout } from '../helper/auth'
 import { useNavigate } from 'react-router-dom';
 
-
 const Header = () => {
+
     const navigate = useNavigate();
-    const { profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const {handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -34,6 +34,7 @@ const Header = () => {
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [search, setSearch] = useState("");
 
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
@@ -54,7 +55,7 @@ const Header = () => {
     const handleNewInShow = () => setNewIn(true);
     const [CateData, setCateData] = useState(product_data.FeaturedData);
 
-    const HandelShowData = (name,e) => {
+    const HandelShowData = (name, e) => {
         // {console.log(e,"category list")}
         setCateData(product_data[name])
     }
@@ -106,7 +107,7 @@ const Header = () => {
         startAnimation()
         try {
 
-            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "web" })
+            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`)
             const categoryData = categoryResponse.data.data;
             setcategory(categoryData);
             stopAnimation()
@@ -174,18 +175,16 @@ const Header = () => {
                                 {/* names of the main categorys */}
                                 <div className='mega-menu'>
 
-
                                     <Row>
-
                                         <Col lg={3} md={6}>
                                             <div className='border-right-cos pe-4 h-100'>
                                                 <ul>
 
                                                     {category && category?.productsCategory?.map((e, i) => {
                                                         return (
-                                                       
-                                                            <li key={i} onMouseOver={() => HandelShowData(e.name,e)}>
-                                                                     
+
+                                                            <li key={i} onMouseOver={() => HandelShowData(e.name, e)}>
+
                                                                 <p>{e.name}</p>
                                                                 <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                             </li>
@@ -205,7 +204,7 @@ const Header = () => {
                                                                     <div className='product_image pointer' onClick={() => handelCategorydata(e._id)} key={i}>
 
                                                                         <div className='product-box'>
-                                                                            <img width="100%" src={category.productImagePath + e.icon} alt='' />
+                                                                            <img width="100%" src={category.productImagePath + e.product_icon} alt='' />
                                                                         </div>
                                                                         <h6>{e.name}</h6>
                                                                     </div>
@@ -247,7 +246,8 @@ const Header = () => {
                         </NavLink>
                         <div className='search-filed d-flex align-items-center gap-2'>
                             <img src='./img/header/search-icone.png' alt='' />
-                            <input type='text' placeholder='Search Product' className='w-100' />
+                            <input type='text' onChange={(e) => setSearch(e.target.value)} placeholder='Search Product' className='w-100' />
+                            {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
                         </div>
                     </div>
                     <div className='account d-flex align-items-center gap-3 gap-sm-4'>
@@ -255,8 +255,6 @@ const Header = () => {
                         {
                             isLoggedIn ?
                                 <>
-
-
                                     {/* <Dropdown>
                                         <Dropdown.Toggle id="dropdown-basic">
                                             <NavLink className='flag-selector'>
@@ -300,7 +298,6 @@ const Header = () => {
                                                 </Button>
                                             </NavLink>
                                         </Dropdown.Toggle>
-
                                         <Dropdown.Menu>
                                             <div className='drop-items'>
                                                 <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>

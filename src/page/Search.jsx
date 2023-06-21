@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react'
+
+import React, { useRef, useState, useEffect , useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
@@ -8,59 +9,56 @@ import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
 import { handelCategorydata } from '../helper/constants'
-const Trending = () => {
+import { CartContext } from '../context/CartContext';
+
+const Search = () => {
+
+//   const [searchPage, setSearchPage] = useState(1);
+    const { searchUrl,SearchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct,  startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const [active, setActive] = useState("1");
-
+    // var SearchKeyWord =  localStorage.getItem("search") && localStorage.getItem("search")
     const handleClick = (event) => {
         setActive(event.target.id);
     }
 
-    const [postList, setPostList] = useState([]);
+    // const [postList, setPostList] = useState([]);
     const serverURL = getServerURL();
-    const [page, setPage] = useState(1);
-    const [url, setURL] = useState("");
-    const [loading, setLoading] = useState(true);
+    // const [page, setPage] = useState(1);
+    // const [url, setURL] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
-    const player = useRef();
 
-    const startAnimation = () => {
-        if (player.current) {
-            player.current.play(); // Check if player.current is not null before accessing play()
-        }
-    };
-    const stopAnimation = () => {
-        setLoading(false);
-    };
-
-    const getTrendingProduct = async () => {
-        try {
-            startAnimation()
-            const [postListResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product", 
-                page: page
-            }),
-            ]);
-            const postsData = postListResponse.data.data;
-            // console.log(postsData,"postsData");
-            const updatedProductList = [...postList, ...postsData.productListArrObj]
-            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-            setPostList(updatedProductList);
-            setURL(postsData.productImagePath)
-            setViewmoreLoder(false)
-            stopAnimation()
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-
+    // const getSearchedProduct = async () => {
+    //     try {
+    //         startAnimation()
+    //         const [postListResponse] = await Promise.all([
+    //             api.postWithToken(`${serverURL + "search"}`, {
+    //                 q: SearchKeyWord,
+    //                 search_type: "product",
+    //                 page: page
+    //             }),
+    //         ]);
+    //         const postsData = postListResponse.data;
+    //         // // console.log(postsData,"postsData");
+    //         const updatedProductList = [...postList, ...postsData.data]
+    //             .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+    //         setPostList(updatedProductList);
+    //         console.log(postsData);
+    //         setURL(postsData.profileImagePath)
+    //         setViewmoreLoder(false)
+    //         stopAnimation()
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
     useEffect(() => {
-        getTrendingProduct();
-    }, [page]);
+        getSearchedProduct();
+    }, [SearchKeyWord, searchPage]);
 
-   console.log(page , "page");
+
+    // console.log(postList,"postList");
 
     return (
         <Layout>
@@ -80,25 +78,26 @@ const Trending = () => {
 
                                 <div className='mb-0 mt-4 explore-main mar-top-0'>
                                     {
-                                        postList && postList?.map((e) => {
+                                        searchpostList && searchpostList?.map((e) => {
                                             return (
+
                                                 <ProCard
                                                     id={e._id}
                                                     img={e.product_images[0]?.file_name}
                                                     name={e.name}
                                                     group_price={e.group_price}
                                                     individual_price={e.individual_price}
-                                                    sold={e.total_order}
-                                                    secper={e.secper}
-                                                    off={e.discount_percentage}
-                                                    path={url && url}
-                                                    color={e.sku_attributes.color}
+                                                    // sold={e.total_order && e.total_order }
+                                                    // secper={e.secper && e.secper }
+                                                    // off={e.discount_percentage && e.discount_percentage}
+                                                    path={searchUrl && searchUrl}
+                                                    // color={e.sku_attributes.color}
                                                 />
                                             )
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1) , setViewmoreLoder(true)) } >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setSearchPage(searchPage + 1), setViewmoreLoder(true))} >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -109,4 +108,4 @@ const Trending = () => {
     )
 }
 
-export default Trending
+export default Search

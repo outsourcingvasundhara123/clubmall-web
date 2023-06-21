@@ -37,9 +37,7 @@ const ProCard = (props) => {
         <>
 
             <div className='cos-width explore-card'>
-
                 <div className='product-card   pointer'>
-
                     <div className='position-relative'>
                         <img src={props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
@@ -51,7 +49,6 @@ const ProCard = (props) => {
                                 <p className='per'>${props.group_price} <span>(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
-
                             {props.is_wishList === 0
                                 &&
                                 <Button className='like-btn' onClick={() => addWishList(props.id, "product-wishlist")} >

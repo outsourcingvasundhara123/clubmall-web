@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Badge, Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
 import {
@@ -23,7 +23,7 @@ import { CartContext } from '../context/CartContext';
 
 const Profile = () => {
 
-    const {  profileOption, setProfileOption, myAddress, getMyAddress, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const { profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -42,14 +42,19 @@ const Profile = () => {
     const [Mymessage, setMyMessage] = useState("");
     const [stateList, setStateList] = useState([]);
     const [countryList, setCountryList] = useState([]);
+    const [orderList, setOrderList] = useState([]);
     const [submitCount, setSubmitCount] = useState(0);
     const serverURL = getServerURL();
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
     const [itemShow, setItemShow] = useState(false);
+    const [orderUrl, setOrderUrl] = useState(false);
+
     const [modelMood, setIModelMood] = useState("add");
     const [show, setShow] = useState(false);
     const [adId, setAdId] = useState("");
+    const player = useRef();
+    const [loading, setLoading] = useState(true);
 
 
     const handleClose = () => {
@@ -59,6 +64,27 @@ const Profile = () => {
         setSubmitCount(0)
         setAdId("")
     }
+    const startAnimation = () => {
+        if (player.current) {
+            player.current.play(); // Check if player.current is not null before accessing play()
+        }
+        setLoading(true)
+    };
+
+    const stopAnimation = () => {
+        setLoading(false);
+    };
+
+    const getOrderList = async () => {
+        startAnimation()
+        try {
+            const res = await api.postWithToken(`${serverURL + "order-manage"}`, { "action": "my-orders-list" })
+            setOrderList(res.data.data)
+            stopAnimation()
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const handleShow = (mood) => {
         setIModelMood(mood)
@@ -79,8 +105,7 @@ const Profile = () => {
             zipcode: data.zipcode,
         })
 
-        //   console.log(values,"values");
-
+        // console.log(values,"values");
         // console.log(myAddress.find((e) => e._id === id),"myAddress");
         // setIModelMood(mood)
         // setShow(true);
@@ -172,72 +197,71 @@ const Profile = () => {
         }
     };
 
-  const deleteAddress = (id) => {
+    const deleteAddress = (id) => {
 
-    try {
+        try {
 
-        let data = {
-            action: "shipping-address-delete",
-            shipping_address_id: id
+            let data = {
+                action: "shipping-address-delete",
+                shipping_address_id: id
+            }
+
+            api.postWithToken(`${serverURL}shipping-address-manage`, data)
+                .then((res) => {
+                    if (res.data.success === true) {
+                        setMyMessage(res.data.message);
+                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                        getMyAddress()
+                        setTimeout(() => {
+                            setValues(initialValues);
+                            handleClose()
+                        }, 1000);
+                        // navigate("/login");
+                        // console.log(updatedValues.email,"updatedValues");
+                    } else {
+                        setMyMessage(res.data.message);
+                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                    }
+                });
+        } catch (error) {
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+            console.error(error);
         }
 
-        api.postWithToken(`${serverURL}shipping-address-manage`, data)
-            .then((res) => {
-                if (res.data.success === true) {
-                    setMyMessage(res.data.message);
-                    setSucessSnackBarOpen(!sucessSnackBarOpen);
-                    getMyAddress()
-                    setTimeout(() => {
-                        setValues(initialValues);
-                        handleClose()
-                    }, 1000);
-                    // navigate("/login");
-                    // console.log(updatedValues.email,"updatedValues");
-                } else {
-                    setMyMessage(res.data.message);
-                    setWarningSnackBarOpen(!warningSnackBarOpen);
-                }
-            });
-    } catch (error) {
-        setWarningSnackBarOpen(!warningSnackBarOpen);
-        console.error(error);
-    }
+    };
 
-};
+    const selectAddress = (id) => {
 
-const selectAddress = (id) => {
+        try {
 
-    try {
+            let data = {
+                action: "shipping-address-default-active",
+                shipping_address_id: id
+            }
 
-        let data = {
-            action: "shipping-address-default-active",
-            shipping_address_id: id
+            api.postWithToken(`${serverURL}shipping-address-manage`, data)
+                .then((res) => {
+                    if (res.data.success === true) {
+                        setMyMessage(res.data.message);
+                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                        getMyAddress()
+                        setTimeout(() => {
+                            setValues(initialValues);
+                            handleClose()
+                        }, 1000);
+                        // navigate("/login");
+                        // console.log(updatedValues.email,"updatedValues");
+                    } else {
+                        setMyMessage(res.data.message);
+                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                    }
+                });
+        } catch (error) {
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+            console.error(error);
         }
 
-        api.postWithToken(`${serverURL}shipping-address-manage`, data)
-            .then((res) => {
-                if (res.data.success === true) {
-                    setMyMessage(res.data.message);
-                    setSucessSnackBarOpen(!sucessSnackBarOpen);
-                    getMyAddress()
-                    setTimeout(() => {
-                        setValues(initialValues);
-                        handleClose()
-                    }, 1000);
-                    // navigate("/login");
-                    // console.log(updatedValues.email,"updatedValues");
-                } else {
-                    setMyMessage(res.data.message);
-                    setWarningSnackBarOpen(!warningSnackBarOpen);
-                }
-            });
-    } catch (error) {
-        setWarningSnackBarOpen(!warningSnackBarOpen);
-        console.error(error);
-    }
-
-};
-
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -255,6 +279,7 @@ const selectAddress = (id) => {
 
         fetchData();
         getMyAddress()
+        getOrderList()
     }, []);
 
     const checkforcounty = async () => {
@@ -274,6 +299,8 @@ const selectAddress = (id) => {
             console.error(error);
         }
     };
+
+    console.log(orderList, "orderList");
 
     return (
         <Layout>
@@ -403,24 +430,37 @@ const selectAddress = (id) => {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <td width={400}>
-                                                                    <div className='d-flex align-items-start gap-2'>
-                                                                        <img src='./img/dummy.png' width="80px" />
-                                                                        <div className='pro-text'>
-                                                                            <h6>A Student Backpack Casual School Bag Lightweight Computer Backpack Water Resistant Travel Backpack Fits 13 Inch Laptop</h6>
-                                                                            <span>ID: #1708</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td><p>1</p></td>
-                                                                <td><p>$15.23</p></td>
-                                                                <td>
-                                                                    <p>cvv,df,6888</p>
-                                                                    <p>258888</p>
-                                                                </td>
-                                                                <td><Badge bg="success">success</Badge></td>
-                                                            </tr>
+                                                            {orderList?.userOrderItems && orderList?.userOrderItems.map((e, i) => {
+                                                                return (
+                                                                    <tr>
+                                                                        <td width={400}>
+                                                                            <div className='d-flex align-items-start gap-2'>
+                                                                                <img src={orderList.productImagePath + e.product_id._id + "/" + e.product_id?.product_images[0]?.file_name}
+                                                                                    width="80px" />
+                                                                                <div className='pro-text'>
+                                                                                    <h6>{e.product_id.name} </h6>
+                                                                                    <span>ID: # {e.order_id.order_display_id}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td><p>{e.qty}</p></td>
+                                                                        <td><p>${e.product_total_price}</p></td>
+                                                                        <td>
+                                                                            <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
+                                                                            <p>{e.order_id.shipping_address_object.contact_no}</p>
+
+                                                                        </td>
+                                                                        <td>
+                                                                            {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
+                                                                            {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
+                                                                            {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
+                                                                            {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
+                                                                            {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>}
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            })}
+
                                                         </tbody>
                                                     </Table>
                                                 </div>
@@ -961,7 +1001,7 @@ const selectAddress = (id) => {
                 </Modal.Body>
             </Modal>
 
-        </Layout>
+        </Layout >
     )
 }
 

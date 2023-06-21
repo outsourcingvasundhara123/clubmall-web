@@ -12,6 +12,7 @@ export const login = (user) => {
     localStorage.removeItem('name');
     localStorage.removeItem('user');
     localStorage.removeItem('profile_image');
+    localStorage.setItem("search");
   };
   
   export const isAuthenticated = () => {
