@@ -108,7 +108,7 @@ const Home = () => {
 
                         <section className='home-first-image'>
                             <div className='container-cos'>
-                                <div className='w-100  pointer ' onClick={() => navigate("/categories")}>
+                                <div className='w-100  pointer ' onClick={() => navigate("/trending")}>
                                     <img src="./img/homePageBg1.png" alt="" width={"100%"} />
                                 </div>
                             </div>
@@ -151,7 +151,7 @@ const Home = () => {
 
                         <section className='home-second-image ' >
                             <div className='container-cos position-relative'>
-                                <div className='w-100 pointer ' onClick={() => navigate("/categories")}>
+                                <div className='w-100 pointer ' onClick={() => navigate("/trending")}>
                                     <img src="./img/homePageBg2.png" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>
@@ -211,7 +211,7 @@ const Home = () => {
                                                         <h5>RJ Jewellery</h5>
                                                         <span className='my-2 d-block'>From $0.29</span>
                                                     </div>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/categories")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/trending")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -225,7 +225,7 @@ const Home = () => {
                                                         <h5>FS - Nike Air Max 270 React </h5>
                                                         <span className='my-2 d-block'>Up to 50% off</span>
                                                     </div>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/categories")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/trending")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -245,7 +245,7 @@ const Home = () => {
                                             <div className='position-relative'>
                                                 <img src='./img/daily-drop-1.png' alt='' />
                                                 <div className='card-text-bottom big-box-daily-drops'>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/categories")}>Shop Now</Button>
+                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/trending")}>Shop Now</Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -328,7 +328,7 @@ const Home = () => {
                                 <div className='title w-100 text-center '>
                                     <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
                                 </div>
-                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => navigate("/categories")}>
+                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => navigate("/trending")}>
                                     <img src="./img/homePageBg1.png" alt="" width={"100%"} />
                                 </div>
                             </div>
@@ -336,7 +336,7 @@ const Home = () => {
 
                         <section className='home-second-image'>
                             <div className='container-cos position-relative'>
-                                <div className='w-100 pointer ' onClick={() => navigate("/categories")}>
+                                <div className='w-100 pointer ' onClick={() => navigate("/trending")}>
                                     <img src="./img/homePageBg2.png" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>

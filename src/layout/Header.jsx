@@ -54,7 +54,8 @@ const Header = () => {
     const handleNewInShow = () => setNewIn(true);
     const [CateData, setCateData] = useState(product_data.FeaturedData);
 
-    const HandelShowData = (name) => {
+    const HandelShowData = (name,e) => {
+        // {console.log(e,"category list")}
         setCateData(product_data[name])
     }
 
@@ -182,7 +183,9 @@ const Header = () => {
 
                                                     {category && category?.productsCategory?.map((e, i) => {
                                                         return (
-                                                            <li key={i} onMouseOver={() => HandelShowData(e.name)}>
+                                                       
+                                                            <li key={i} onMouseOver={() => HandelShowData(e.name,e)}>
+                                                                     
                                                                 <p>{e.name}</p>
                                                                 <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                             </li>

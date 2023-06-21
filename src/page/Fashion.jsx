@@ -112,7 +112,7 @@ const Fashion = () => {
                     <>
                         <section className='home-first-image mb-0'>
                             <div className='container-cos'>
-                                <div className='w-100 position-relative pointer' onClick={() => navigate("/categories")}>
+                                <div className='w-100 position-relative pointer' onClick={() => navigate("/trending")}>
                                     <img alt='' src="./img/new_in/hero-new-in.png" width={"100%"} />
                                     <div className='particular-cate-head'>
                                         <h1>HOT <span>xxx</span> <br />FASHION <p>TREND</p></h1>
@@ -133,25 +133,25 @@ const Fashion = () => {
                                 <div className='shop-trend px-5'>
                                     <Row>
                                         <Col xl={3} lg={4} md={6} sm={12}>
-                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/categories")}>
+                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/trending")}>
                                                 <img alt='' src='./img/new_in/shop1.png' width="100%" />
                                                 <h2 className='brown'>Shop Women</h2>
                                             </div>
                                         </Col>
                                         <Col xl={3} lg={4} md={6} sm={12} className='mt-5 '>
-                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/categories")}>
+                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/trending")}>
                                                 <img alt='' src='./img/new_in/shop2.png' width="100%" />
                                                 <h2 className='dark'>Shop Curve</h2>
                                             </div>
                                         </Col>
                                         <Col xl={3} lg={4} md={6} sm={12} className='mt-5 mt-md-0'>
-                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/categories")}>
+                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/trending")}>
                                                 <img alt='' src='./img/new_in/shop3.png' width="100%" />
                                                 <h2 className='brown-light'>Shop Trends</h2>
                                             </div>
                                         </Col>
                                         <Col xl={3} lg={4} md={6} sm={12} className='mt-5'>
-                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/categories")}>
+                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/trending")}>
                                                 <img alt='' src='./img/new_in/shop4.png' width="100%" />
                                                 <h2 className='green-text'>Shop Kids</h2>
                                             </div>
@@ -219,7 +219,7 @@ const Fashion = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn' onClick={() => handelCategorydata()}>View All</Button>
+                                        <Button className='view-all-btn' onClick={() => navigate("/trending")}>View All</Button>
                                     </div>
                                 </div>
 
@@ -277,7 +277,7 @@ const Fashion = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn view-btn-yellow' onClick={() => handelCategorydata()}>View All</Button>
+                                        <Button className='view-all-btn view-btn-yellow' onClick={() => navigate("/trending")}>View All</Button>
                                     </div>
                                 </div>
 
@@ -341,7 +341,7 @@ const Fashion = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn' onClick={() => handelCategorydata()}>View All</Button>
+                                        <Button className='view-all-btn' onClick={() => navigate("/trending")} >View All</Button>
                                     </div>
                                 </div>
 
@@ -399,7 +399,7 @@ const Fashion = () => {
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
-                                        <Button className='view-all-btn view-btn-red' onClick={() => handelCategorydata()}>View All</Button>
+                                        <Button className='view-all-btn view-btn-red' onClick={() => navigate("/trending")} >View All</Button>
                                     </div>
                                 </div>
                             </div>

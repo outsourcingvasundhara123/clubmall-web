@@ -15,7 +15,6 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(0);
 
   const [wishlistCount, setWishlistCount] = useState(0);
-
   const [Mymessage, setMyMessage] = useState("");
   const [wishlist, setWishList] = useState([]);
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
@@ -84,13 +83,14 @@ export const CartProvider = ({ children }) => {
         if (res.data.success == true) {
           setMyMessage(res.data.message);
           setSucessSnackBarOpen(!sucessSnackBarOpen);
-          getWishList()
-          getProducts()
           getSellProducts()
+          getProducts()
+          getWishList()
         } else {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
+
       } else {
         // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
@@ -128,12 +128,19 @@ export const CartProvider = ({ children }) => {
     try {
       const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, { "action": "shipping-address-list" })
       setMyAddess(res.data.data.userData)
+      console.log('address 0');
       let data = res.data.data?.userData.filter((e) => e.is_default == 1)
-      const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
-        "action": "list",
-        "country_id": data[0].country_id._id
-      })
-      setCorrentAddess({ data: data, shipping_method_id: res2.data.data?.list[0]?._id })
+      console.log(data,'address 1');
+      if(data.length !== 0){
+        const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
+          "action": "list",
+          "country_id": data[0].country_id._id
+        })
+        setCorrentAddess({ data: data, shipping_method_id: res2.data.data?.list[0]?._id })
+      }else{
+        setCorrentAddess("")
+      }
+
       stopAnimation()
     } catch (error) {
       errorResponse(error, setMyMessage);
@@ -151,7 +158,6 @@ export const CartProvider = ({ children }) => {
         apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
         apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
         api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
-
       ]);
 
       const categoryData = categoryResponse.data.data;
@@ -171,12 +177,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const getSellProducts = async () => {
-
-    
     try {
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-
+      console.log("sell called 0");
         const [womenCategory, menCategory, kidCategory, favorites] = await Promise.all([
           apiTyp(`${serverURL + PRODUCTList}`, {
                 product_list_type: "by-categories",
@@ -201,12 +205,10 @@ export const CartProvider = ({ children }) => {
                 page: favoritepage
             })
         ]);
-
         const womanproductData = womenCategory.data.data;
         const manproductData = menCategory.data.data;
         const kidsproductData = kidCategory.data.data;
         const favoriteproductData = favorites.data.data;
-
         // Merge products without repetitions
         const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
             .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
@@ -217,6 +219,7 @@ export const CartProvider = ({ children }) => {
 
         const updatedfavoriteProductList = [...favoriteProductList, ...favoriteproductData.productListArrObj]
             .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+           
 
         setSellProducUrl(womanproductData.productImagePath);
         setWomanProductList(updatedWomanProductList);
@@ -233,7 +236,6 @@ export const CartProvider = ({ children }) => {
 
   const getCategoryWeb = async () => {
 
-    console.log("called");
     startAnimation()
 
     try {
@@ -262,28 +264,6 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-
-
-
-
-
-  // const getCategoryData = async () => {
-  //   startAnimation()
-  //   try {
-  //       const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, {"action":"shipping-address-list"})
-  //       setMyAddess(res.data.data.userData)
-  //       let data = res.data.data?.userData.filter((e) => e.is_default == 1)
-  //       const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
-  //         "action":"list",
-  //         "country_id": data[0].country_id._id
-  //     })
-  //       setCorrentAddess({data:data,shipping_method_id:res2.data.data?.list[0]?._id })
-  //       stopAnimation()
-  //   } catch (error) {
-  //       errorResponse(error, setMyMessage);
-  //       setWarningSnackBarOpen(!warningSnackBarOpen);
-  //   }
-  // };
 
 
   return (
