@@ -25,7 +25,6 @@ const Selling = () => {
     const serverURL = getServerURL();
     const player = useRef(null);
 
-
     useEffect(() => {
         getSellProducts();
         getWishList()
@@ -36,7 +35,6 @@ const Selling = () => {
         getProducts()
     }, []);
 
-    console.log(womanProductList, "womanProductList");
 
     return (
 
@@ -60,7 +58,7 @@ const Selling = () => {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
 
-                        <section className='hero position-relative selling-banner pointer' onClick={() => navigate("/categories")}>
+                        <section className='hero position-relative selling-banner pointer' onClick={() => navigate("/trending")}>
                             <div className='hero-text'>
                                 <h1>Hop Into <br /> Hot Selling</h1>
                             </div>
@@ -74,7 +72,7 @@ const Selling = () => {
                                 <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4 mar-top-0'>
 
                                     {
-                                        categoryWeb.categoryData && categoryWeb.categoryData?.slice(0, 5).map((e) => {
+                                        categoryWeb.categoryData && categoryWeb.categoryData?.slice(0, 6).map((e) => {
                                             return (
                                                 <div className='cate-box text-center pointer' onClick={() => handelCategorydata(e._id)} >
                                                     <div className='cat-img-round'>
@@ -173,7 +171,6 @@ const Selling = () => {
                                                                 off={e.discount_percentage}
                                                                 path={sellProducUrl && sellProducUrl}
                                                                 is_wishList={e.wishList && e.wishList}
-
                                                             />
                                                         )
                                                     })
@@ -256,7 +253,7 @@ const Selling = () => {
                                             <img src='./img/selling/img9.png' alt='' />
                                             <div className='hot-text'>
                                                 <h5>TRENDING <br /> FOR DEALS</h5>
-                                                <Button className='shop-btn mt-3' onClick={() => navigate("/categories")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                <Button className='shop-btn mt-3' onClick={() => navigate("/trending")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                             </div>
                                         </div>
                                     </Col>
@@ -265,7 +262,7 @@ const Selling = () => {
                                             <img src='./img/selling/img10.png' alt='' />
                                             <div className='hot-text'>
                                                 <h5>2<span>FOR</span> $0.98</h5>
-                                                <Button className='shop-btn mt-3' onClick={() => navigate("/categories")}>Save Big <MdKeyboardDoubleArrowRight /></Button>
+                                                <Button className='shop-btn mt-3' onClick={() => navigate("/trending")}>Save Big <MdKeyboardDoubleArrowRight /></Button>
                                             </div>
                                         </div>
                                     </Col>
@@ -277,7 +274,7 @@ const Selling = () => {
                                                     <h5 className='white-text'><span>ALL</span> 50-90</h5>
                                                     <p>% <br /> OFF</p>
                                                 </div>
-                                                <Button className='shop-btn mt-3' onClick={() => navigate("/categories")}>Save Big <MdKeyboardDoubleArrowRight /></Button>
+                                                <Button className='shop-btn mt-3' onClick={() => navigate("/trending")}>Save Big <MdKeyboardDoubleArrowRight /></Button>
                                             </div>
                                         </div>
                                     </Col>
@@ -311,7 +308,7 @@ const Selling = () => {
                                     }
 
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => setFavoritePage(favoritepage + 1)} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setFavoritePage(favoritepage + 1), setViewmoreLoder(true))} > {viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -342,7 +339,7 @@ const Selling = () => {
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => handelCategorydata()} >View More<MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => navigate("/trending")} >View More<MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>

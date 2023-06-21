@@ -267,7 +267,7 @@ const ProductInfo = () => {
                                         <div className='together'>
                                             <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
-                                                <Button > <Link to="/categories" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
+                                                <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
                                             </div>
                                             <div>
                                                 <Swiper

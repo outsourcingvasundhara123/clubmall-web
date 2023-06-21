@@ -23,7 +23,7 @@ import { CartContext } from '../context/CartContext';
 
 const Profile = () => {
 
-    const { profileOption, setProfileOption, myAddress, getMyAddress, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const {  profileOption, setProfileOption, myAddress, getMyAddress, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -35,6 +35,7 @@ const Profile = () => {
         city: "",
         zipcode: "",
     };
+
     const [showPass, setShowPass] = useState(true)
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState({});
@@ -46,30 +47,59 @@ const Profile = () => {
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
     const [itemShow, setItemShow] = useState(false);
+    const [modelMood, setIModelMood] = useState("add");
     const [show, setShow] = useState(false);
+    const [adId, setAdId] = useState("");
+
 
     const handleClose = () => {
         setErrors({})
         setShow(false);
         setValues(initialValues)
         setSubmitCount(0)
+        setAdId("")
     }
-    const handleShow = () => setShow(true);
+
+    const handleShow = (mood) => {
+        setIModelMood(mood)
+        setShow(true);
+    }
+
+    const findAddress = (id) => {
+        setAdId(id)
+        let data = myAddress.find((e) => e._id === id)
+
+        setValues({
+            country_id: data.country_id?._id,
+            state_id: data.state_id?._id,
+            fullname: data.fullname,
+            contact_no: data.contact_no,
+            address: data.address,
+            city: data.city,
+            zipcode: data.zipcode,
+        })
+
+        //   console.log(values,"values");
+
+        // console.log(myAddress.find((e) => e._id === id),"myAddress");
+        // setIModelMood(mood)
+        // setShow(true);
+    }
 
     const handleChange = (e) => {
 
         const { name, value, checked, type } = e.target;
         let newValue = type === "checkbox" ? checked : value;
 
-        if (name === "state_id") {
-            const selectedState = stateList.find((state) => state.name === newValue);
-            newValue = selectedState ? selectedState._id : "";
-        }
+        // if (name === "state_id") {
+        //     const selectedState = stateList.find((state) => state.name === newValue);
+        //     newValue = selectedState ? selectedState._id : "";
+        // }
 
-        if (name === "country_id") {
-            const selectedState = countryList.find((state) => state.name === newValue);
-            newValue = selectedState ? selectedState._id : "";
-        }
+        // if (name === "country_id") {
+        //     const selectedState = countryList.find((state) => state.name === newValue);
+        //     newValue = selectedState ? selectedState._id : "";
+        // }
 
         if (submitCount > 0) {
             const validationErrors = validate({ ...values, [name]: newValue });
@@ -87,8 +117,8 @@ const Profile = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = (mood) => {
+        // e.preventDefault();
 
         setSubmitCount(submitCount + 1)
 
@@ -97,9 +127,9 @@ const Profile = () => {
         const validationErrors = validate(updatedValues);
         setErrors(validationErrors);
 
-        if (updatedValues.contact_no) {
-            updatedValues.contact_no = "+" + updatedValues.contact_no;
-        }
+        // if (updatedValues.contact_no) {
+        //     updatedValues.contact_no = "+" + updatedValues.contact_no;
+        // }
 
         if (updatedValues.first_name && updatedValues.last_name) {
             updatedValues.name = updatedValues.first_name + " " + updatedValues.last_name;
@@ -107,12 +137,20 @@ const Profile = () => {
 
         if (Object.keys(validationErrors).length === 0) {
 
-            console.log(updatedValues, "updatedValues");
 
             try {
-                api.postWithToken(`${serverURL}shipping-address-create`, updatedValues)
+
+                let type = mood == "add" ? "shipping-address-create" : "shipping-address-manage"
+                if (mood == "edit") {
+                    updatedValues.action = "shipping-address-update"
+                    updatedValues.shipping_address_id = adId
+                }
+                api.postWithToken(`${serverURL}${type}`, updatedValues)
                     .then((res) => {
-                        if (res.data.status === 1) {
+
+                        let check = mood == "edit" ? res.data.success === true : res.data.status === 1
+
+                        if (check) {
                             setMyMessage(res.data.message);
                             setSucessSnackBarOpen(!sucessSnackBarOpen);
                             getMyAddress()
@@ -133,6 +171,73 @@ const Profile = () => {
             }
         }
     };
+
+  const deleteAddress = (id) => {
+
+    try {
+
+        let data = {
+            action: "shipping-address-delete",
+            shipping_address_id: id
+        }
+
+        api.postWithToken(`${serverURL}shipping-address-manage`, data)
+            .then((res) => {
+                if (res.data.success === true) {
+                    setMyMessage(res.data.message);
+                    setSucessSnackBarOpen(!sucessSnackBarOpen);
+                    getMyAddress()
+                    setTimeout(() => {
+                        setValues(initialValues);
+                        handleClose()
+                    }, 1000);
+                    // navigate("/login");
+                    // console.log(updatedValues.email,"updatedValues");
+                } else {
+                    setMyMessage(res.data.message);
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                }
+            });
+    } catch (error) {
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+        console.error(error);
+    }
+
+};
+
+const selectAddress = (id) => {
+
+    try {
+
+        let data = {
+            action: "shipping-address-default-active",
+            shipping_address_id: id
+        }
+
+        api.postWithToken(`${serverURL}shipping-address-manage`, data)
+            .then((res) => {
+                if (res.data.success === true) {
+                    setMyMessage(res.data.message);
+                    setSucessSnackBarOpen(!sucessSnackBarOpen);
+                    getMyAddress()
+                    setTimeout(() => {
+                        setValues(initialValues);
+                        handleClose()
+                    }, 1000);
+                    // navigate("/login");
+                    // console.log(updatedValues.email,"updatedValues");
+                } else {
+                    setMyMessage(res.data.message);
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                }
+            });
+    } catch (error) {
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+        console.error(error);
+    }
+
+};
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -197,7 +302,7 @@ const Profile = () => {
                     </div>
 
                     <div className='mt-4 profile-tabs'>
-                        <Tab.Container id="left-tabs-example" defaultActiveKey={profileOption}>
+                        <Tab.Container id="left-tabs-example" defaultActiveKey={profileOption ? profileOption : "user"}>
                             <Row>
                                 <Col xl={3} lg={4} md={6}>
                                     <Nav variant="pills" className="flex-column">
@@ -555,24 +660,24 @@ const Profile = () => {
 
                                         <Tab.Pane eventKey="location">
                                             <div className='location-main'>
-                                                <Button onClick={handleShow}>+ Add a new address</Button>
+                                                <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
 
                                                 {myAddress && myAddress.map((e, i) => {
                                                     return (
                                                         <div className='address-box mt-3'>
                                                             <h5> {e.fullname}</h5>
-                                                            <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
+                                                            <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id?.name},{e.country_id?.name},{e.contact_no} </p>
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <div className='d-flex align-items-center check-options'>
+                                                                <div className='d-flex align-items-center check-options' onClick={() => selectAddress(e._id)}   >
                                                                     <input type='checkbox' id='add-select' checked={e.is_default == 1} />
                                                                     <label htmlFor='add-select'>Default</label>
                                                                 </div>
                                                                 <div className='copy-main'>
                                                                     {/* <Button>Copy</Button> */}
                                                                     {/* <span>I</span> */}
-                                                                    <Button>Edit</Button>
+                                                                    <Button onClick={() => (handleShow("edit"), findAddress(e._id))} >Edit</Button>
                                                                     <span>I</span>
-                                                                    <Button>Delete</Button>
+                                                                    <Button onClick={() => deleteAddress(e._id)} >Delete</Button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -706,7 +811,7 @@ const Profile = () => {
                                             return (
                                                 <ProCard
                                                     img={e.img}
-                                                    name={e.name}
+                                                    name={e?.name}
                                                     per={e.per}
                                                     per2={e.per2}
                                                     sold={e.sold}
@@ -739,7 +844,7 @@ const Profile = () => {
                                     <div className='login-input text-start'>
                                         <label>Ship to Address</label>
                                         <select name='country_id'
-                                            value={values.country}
+                                            value={values.country_id}
                                             onChange={handleChange}
                                             className='select-arrow'>
                                             <option>Select Country</option>
@@ -748,8 +853,7 @@ const Profile = () => {
                                             {
                                                 countryList.map((e, i) =>
                                                 (
-                                                    <option key={i} value={e.name}
-                                                    >{e.name}</option>
+                                                    <option key={i} value={e._id}  >{e?.name}</option>
 
                                                 ))
                                             }
@@ -779,7 +883,6 @@ const Profile = () => {
                                             value={values.contact_no}
                                             onChange={handleChange}
                                         />
-
                                         <div className='error' >{errors?.contact_no}</div>
 
                                     </div>
@@ -801,22 +904,20 @@ const Profile = () => {
                                         <label>State</label>
                                         <select
                                             onClick={checkforcounty} onChange={handleChange}
-                                            value={values.state}
+                                            value={values.state_id}
                                             name='state_id' className='select-arrow'>
                                             <option>Select State</option>
                                             {errors.country_id == undefined && (
                                                 <>
-
                                                     {
                                                         stateList.map((e, i) =>
                                                         (
-                                                            <option key={i}   >{e.name}</option>
+                                                            <option key={i} value={e._id}  >{e?.name}</option>
                                                         ))
                                                     }
                                                     )
                                                 </>
                                             )}
-
 
                                         </select>
                                         <div className='error' >{errors?.state_id}</div>
@@ -842,9 +943,7 @@ const Profile = () => {
                                             name='address'
                                             value={values.address} placeholder='Enter Address'
                                             rows={5}></textarea>
-
                                         <div className='error' >{errors?.address}</div>
-
                                     </div>
                                 </Col>
                             </Row>
@@ -855,7 +954,8 @@ const Profile = () => {
                                 />
                                 <label htmlFor='check_terms' className='pointer'>Make this my default address</label>
                             </div> */}
-                            <button className='submit-btn w-100 mt-3' type='button' onClick={handleSubmit} >Add Address</button>
+                            {modelMood == "edit" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("edit")} >Edit Address</button>}
+                            {modelMood == "add" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("add")} >Add Address</button>}
                         </Form>
                     </div>
                 </Modal.Body>

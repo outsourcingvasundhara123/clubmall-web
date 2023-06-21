@@ -1542,7 +1542,7 @@ del {
 }
 
 .shop-categories .cate-box {
-    width: 250px;
+    width: 213px;
     margin-top: 30px;
 }
 
@@ -1574,7 +1574,7 @@ del {
     align-items: center;
     justify-content: center;
     margin: 0 auto;
-    width: 250px;
+    width: 220px;
     background-color: #d3d3d35c;
     border-radius: 50%;
     overflow: hidden;

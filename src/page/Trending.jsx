@@ -19,35 +19,49 @@ const Trending = () => {
     const [postList, setPostList] = useState([]);
     const serverURL = getServerURL();
     const [page, setPage] = useState(1);
+    const [url, setURL] = useState("");
     const [loading, setLoading] = useState(true);
+    const [viewMoreLodr, setViewmoreLoder] = useState(false);
     const player = useRef();
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
         }
+        setLoading(true)
     };
     const stopAnimation = () => {
         setLoading(false);
     };
 
     const getTrendingProduct = async () => {
-        startAnimation()
         try {
+            startAnimation()
             const [postListResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product", 
+                page: page
+            }),
             ]);
-
             const postsData = postListResponse.data.data;
-            setPostList(postsData);
+            // console.log(postsData,"postsData");
+            const updatedProductList = [...postList, ...postsData.productListArrObj]
+            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+            setPostList(updatedProductList);
+            setURL(postsData.productImagePath)
+            setViewmoreLoder(false)
             stopAnimation()
         } catch (error) {
             console.log(error);
         }
     };
 
+
+
     useEffect(() => {
         getTrendingProduct();
-    }, []);
+    }, [page]);
+
+   console.log(page , "page");
 
     return (
         <Layout>
@@ -67,7 +81,7 @@ const Trending = () => {
 
                                 <div className='mb-0 mt-4 explore-main mar-top-0'>
                                     {
-                                        postList.productListArrObj?.map((e) => {
+                                        postList && postList?.map((e) => {
                                             return (
                                                 <ProCard
                                                     id={e._id}
@@ -78,14 +92,14 @@ const Trending = () => {
                                                     sold={e.total_order}
                                                     secper={e.secper}
                                                     off={e.discount_percentage}
-                                                    path={postList?.productImagePath && postList.productImagePath}
+                                                    path={url && url}
                                                     color={e.sku_attributes.color}
                                                 />
                                             )
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1) , setViewmoreLoder(true)) } >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>

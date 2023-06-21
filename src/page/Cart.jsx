@@ -51,7 +51,7 @@ const WrappedCart = () => {
     const serverURL = getServerURL();
     const [page, setPage] = useState(1);
     const [product_id, setProduct_id] = useState({});
-    const [productColorActive, setProductColorActive] = useState()
+    const [productColorActive, setProductColorActive] = useState();
     const [show, setShow] = useState(false);
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
@@ -72,27 +72,6 @@ const WrappedCart = () => {
         setLoading(false);
     };
 
-    function handleSelectAll(event) {
-        const { checked } = event.target;
-
-        setCheckboxes(prevState => ({
-            ...prevState,
-            checkbox1: checked,
-            checkbox2: checked,
-            checkbox3: checked,
-        }));
-    }
-
-    const handleClose = () => {
-        setProduct_id({})
-        setShow(false)
-    }
-
-    const handleShow = (id) => {
-        setProduct_id(id)
-        setShow(true);
-    }
-
     // create order 
     const handleCheckout = async (event) => {
 
@@ -100,88 +79,90 @@ const WrappedCart = () => {
             // console.log(token, "stripe");
             setIsOpen(!isOpen);
 
-            if (productList.list.length === 0) {
-                setMyMessage("You don't have any product in a cart")
+            if (Object.keys(correntAddess).length === 0) {
+                setMyMessage("Add  or select  Address")
                 setWarningSnackBarOpen(!warningSnackBarOpen);
             } else {
+                if (productList.list.length === 0) {
+                    setMyMessage("You don't have any product in a cart")
+                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                } else {
 
-                if (correntAddess?.data?.length !== 0) {
-
-                    const amountInCents = Math.round(productList?.cartAmountDetails?.net_amount * 100);
-
-                    const data = {
-                        order_items: productList.list,
-                        shipping_address_id: correntAddess.data[0]._id,
-                        shipping_method_id: correntAddess.shipping_method_id
-                    }
-
-                    //validation for card detail
-
-                    const cardElement = elements.getElement(CardElement);
-                    if (cardElement) {
-                        const cardElementState = cardElement._empty;
-
-                        if (cardElementState) {
-                            setMyMessage('Please enter your card details');
-                            setWarningSnackBarOpen(!warningSnackBarOpen);
-                            return;
+                    if (correntAddess?.data?.length !== 0) {
+                        const amountInCents = Math.round(productList?.cartAmountDetails?.net_amount * 100);
+                        const data = {
+                            order_items: productList.list,
+                            shipping_address_id: correntAddess.data[0]._id,
+                            shipping_method_id: correntAddess.shipping_method_id
                         }
-                    }
-
-                    const order = await api.postWithToken(`${serverURL + "order-create"}`, data)
-
-                    if (order.data.success == true) {
-                        setIs_Wait(true)
-                        // create payment intent and get client_secret
-                        const paymentIntentResponse = await api.post(`${serverURL + "create-payment-intent"}`, {
-                            amount: amountInCents,
-                            order_id: order.data.data?.orderObj?._id
-                        });
-
-                        const clientSecret = paymentIntentResponse.data.clientSecret;
-                        if (!stripe || !elements) {
-                            return;
-                        }
+                        //validation for card detail
                         const cardElement = elements.getElement(CardElement);
+                        
+                        if (cardElement) {
+                            const cardElementState = cardElement._empty;
 
-                        if (!cardElement) {
-                            console.log("CardElement not loaded");
-                            return;
+                            if (cardElementState) {
+                                setMyMessage('Please enter your card details');
+                                setWarningSnackBarOpen(!warningSnackBarOpen);
+                                return;
+                            }
                         }
 
-                        const payment = await stripe.confirmCardPayment(clientSecret, {
-                            payment_method: {
-                                card: cardElement,
-                                billing_details: {
+                        const order = await api.postWithToken(`${serverURL + "order-create"}`, data)
+
+                        if (order.data.success == true) {
+                            setIs_Wait(true)
+                            // create payment intent and get client_secret
+                            const paymentIntentResponse = await api.post(`${serverURL + "create-payment-intent"}`, {
+                                amount: amountInCents,
+                                order_id: order.data.data?.orderObj?._id
+                            });
+
+                            const clientSecret = paymentIntentResponse.data.clientSecret;
+                            if (!stripe || !elements) {
+                                return;
+                            }
+                            const cardElement = elements.getElement(CardElement);
+
+                            if (!cardElement) {
+                                console.log("CardElement not loaded");
+                                return;
+                            }
+
+                            const payment = await stripe.confirmCardPayment(clientSecret, {
+                                payment_method: {
+                                    card: cardElement,
+                                    billing_details: {
+                                    },
                                 },
-                            },
-                        });
+                            });
 
-                        const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
-                        if (payment.error) {
-                            setMyMessage(payment.error.message);
-                            setWarningSnackBarOpen(!warningSnackBarOpen);
-                            console.log(payment.error.message);
+                            const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
+                            if (payment.error) {
+                                setMyMessage(payment.error.message);
+                                setWarningSnackBarOpen(!warningSnackBarOpen);
+                                console.log(payment.error.message);
+                            } else {
+                                setMyMessage(paymentStatus.data.message);
+                                setSucessSnackBarOpen(!sucessSnackBarOpen);
+
+                                setTimeout(() => {
+                                    setProfileOption("list")
+                                    navigate("/profile")
+                                }, 1000);
+                                // Continue with the rest of your checkout flow here.
+                            }
+                            setIs_Wait(false)
+                            getCartData()
                         } else {
-                            setMyMessage(paymentStatus.data.message);
-                            setSucessSnackBarOpen(!sucessSnackBarOpen);
-
-                            setTimeout(() => {
-                                setProfileOption("list")
-                                navigate("/profile")
-                            }, 1000);
-                            // Continue with the rest of your checkout flow here.
+                            setMyMessage(order.data.message);
+                            setWarningSnackBarOpen(!warningSnackBarOpen);
                         }
-                        setIs_Wait(false)
-                        getCartData()
+
                     } else {
-                        setMyMessage(order.data.message);
+                        setMyMessage("Add shipping address")
                         setWarningSnackBarOpen(!warningSnackBarOpen);
                     }
-
-                } else {
-                    setMyMessage("Add shipping address")
-                    setWarningSnackBarOpen(!warningSnackBarOpen);
                 }
             }
         } catch (error) {
@@ -298,7 +279,6 @@ const WrappedCart = () => {
                             type="error"
                         />
 
-                        {/* <Elements stripe={stripePromise}> */}
                         <div className='cart-main pt-4 pb-5'>
                             <div className='container-cos'>
 
@@ -539,14 +519,13 @@ const WrappedCart = () => {
 
                                                             {correntAddess.data && correntAddess.data.map((e, i) => {
                                                                 return (
-
                                                                     <div className='address-shipped mt-2'>
                                                                         <h6> {e.fullname}</h6>
-                                                                        <p className='mt-1'>{e.zipcode} , {e.address} <br />{e.state_id.name},{e.country_id.name},{e.contact_no} </p>
+                                                                        <p className='mt-1'>{e.zipcode} , {e.address} <br />{e.state_id?.name},{e.country_id?.name},{e.contact_no} </p>
                                                                     </div>
                                                                 )
                                                             })}
-                                                            {correntAddess.data?.length == 0 && <Button className='change-add' onClick={() => navigate("profile")} >Add</Button>}
+                                                            {Object.keys(correntAddess).length === 0 && <Button className='change-add' onClick={() => (navigate("/profile"), setProfileOption("location"))} >Add</Button>}
                                                         </div>
 
                                                     </div>
@@ -604,7 +583,7 @@ const WrappedCart = () => {
                                                     <ProCard
                                                         id={e._id}
                                                         img={e.product_images[0]?.file_name}
-                                                        name={e.name}
+                                                        name={e?.name}
                                                         group_price={e.group_price}
                                                         individual_price={e.individual_price}
                                                         sold={e.total_order}
@@ -633,6 +612,7 @@ const WrappedCart = () => {
         </Layout >
     )
 }
+
 // Wrap your Cart component with Elements component
 const Cart = () => (
     <Elements stripe={stripePromise}>
