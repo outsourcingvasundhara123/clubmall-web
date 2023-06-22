@@ -74,14 +74,14 @@ const CategoryList = () => {
         startAnimation()
         try {
             const [categoryResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTCATEGORY}`)
+                api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" })
             ]);
             const categoryData = categoryResponse.data.data;
+            console.log(categoryData, "categoryData");
             // Divide the category list into two parts
-            const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
-
-            const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
-            const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
+            const halfwayIndex = Math.ceil(categoryData.productsCategoryList && categoryData?.productsCategoryList.length / 2);
+            const firstHalf = categoryData.productsCategoryList?.slice(0, halfwayIndex);
+            const secondHalf = categoryData.productsCategoryList?.slice(halfwayIndex);
             // Set the first half and second half of categories
             setcategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath });
             stopAnimation()
@@ -115,8 +115,8 @@ const CategoryList = () => {
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
-                                           
-                                            <p>From ${ parseFloat((Math.random() * (10.0 - 1.0) + 1.0).toFixed(2))}</p>
+
+                                            <p>From ${parseFloat((Math.random() * (10.0 - 1.0) + 1.0).toFixed(2))}</p>
                                         </div>
                                     </div>
                                 );

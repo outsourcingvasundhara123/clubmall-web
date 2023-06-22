@@ -11,7 +11,6 @@ import PinkCard from '../components/PinkCard';
 import AddCartModal from '../components/AddCartModal';
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
 import { handelProductDetail, handelCategorydata } from '../helper/constants';
 import { CartContext } from '../context/CartContext';

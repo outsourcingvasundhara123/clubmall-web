@@ -393,7 +393,6 @@ const WrappedCart = () => {
                                                         })
                                                     }
 
-
                                                 </div>
                                             </div>
 
@@ -595,7 +594,7 @@ const WrappedCart = () => {
                                             })
                                         }
                                         <div className='w-100 d-flex justify-content-center'>
-                                            <Button className='shop-btn rotate-img btn-cos-mobile' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
+                                            <Button className='shop-btn rotate-img btn-cos-mobile'  onClick={() => navigate("/trending")} >View More <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
                                     </div>
                                 </div>

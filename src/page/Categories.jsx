@@ -45,15 +45,13 @@ const Categories = () => {
         try {
             startAnimation()
             setLoading(true)
-            let categoryDtata = await api.post(`${serverURL + PRODUCTCATEGORY}`)
+            let categoryDtata = await api.post(`${serverURL + PRODUCTCATEGORY}`, {action : "sub-category"})
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
             setSubCatList(subcat[0]?.child)
-
             if (subCat === null) {
                 setSubCat(subcat[0]?.child[0].name)
             }
-
             setCatName(subcat[0]?.name)
             const [postListResponse] = await Promise.all([
                 api.post(`${serverURL + PRODUCTList}`, {

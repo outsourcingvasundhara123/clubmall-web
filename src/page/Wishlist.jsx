@@ -21,12 +21,12 @@ const Wishlist = () => {
                     <div className='title-wishlist mt-4 pb-3'>
                         <h4>My Wishlist</h4>
                     </div>
-                    <div className='w-100 mt-3'>
+                    {/* <div className='w-100 mt-3'>
                         <div className='search-filed d-flex align-items-center gap-2'>
                             <img src='./img/header/search-icone.png' alt='' className='mt-1' />
                             <input type='text' placeholder='Search Product' className='w-100' />
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className='wishlist-items explore-main justify-content-start'>
                         <div className='product-card explore-card'>
