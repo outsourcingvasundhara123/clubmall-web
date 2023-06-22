@@ -29,7 +29,7 @@ import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 // import { useContext } from 'react'
 const ProductInfo = () => {
-    const { setCart, cart } = useContext(CartContext);
+    const { activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -233,11 +233,10 @@ const ProductInfo = () => {
                                     <Col lg={6} md={12}>
                                         <div className='position-relative'>
                                             <Button className='wishlist-btn'><img src='./img/header/wishlist.png' alt='' width="25px" /></Button>
-                                            <ProductSlider colorProduct={colorProduct} productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
+                                            <ProductSlider  activeImage={activeImage}  colorProduct={colorProduct} productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
                                             <div className='d-flex align-items-center gap-3'>
-
                                                 <h5 className='info-title border-right-cos cos-title'> {Product.productList?.rating_count} shop reviews</h5>
                                                 <div className='rate d-flex align-items-center gap-2'>
                                                     <span className='cos-title'>{Product.productList.rating}</span>
@@ -398,8 +397,7 @@ const ProductInfo = () => {
                                                     {
                                                         Product?.productList?.sku_attributes?.color && Product.productList?.sku_attributes.color?.map((e, i) => {
                                                             return (
-                                                                // <Button className={`color-btn ${productColorActive === e.name ? "active" : ""}`} onClick={() => setProductColorActive(e.name)}>
-                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name) ,setActiveImage(e.imgUrl)) }>
                                                                     <img className='colors' src={e.imgUrl} alt='' />
                                                                 </Button>
                                                             )

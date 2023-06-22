@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 const Header = () => {
 
     const navigate = useNavigate();
-    const { handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const { searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -34,7 +34,6 @@ const Header = () => {
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
-    const [search, setSearch] = useState("");
 
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
@@ -60,10 +59,28 @@ const Header = () => {
         setCateData(product_data[name])
     }
 
-    // // Update the cart count whenever the "cartCountData" changes
-    // useEffect(() => {
-    //     setcarteCount(catrecount);
-    // }, [catrecount]);
+    //for search 
+
+    const typingTimerRef = useRef(null);
+    const typingDelay = 500; // milliseconds
+  
+    const handleKeyUp = () => {
+      clearTimeout(typingTimerRef.current);
+      typingTimerRef.current = setTimeout(() => {
+        // Call handleKeyUp when the user stops typing
+        // Add your logic here
+        handelSearch(searchKeyWord)
+        navigate("/search")
+        getSearchedProduct()
+        // console.log('User stopped typing');
+      }, typingDelay);
+    };
+  
+    const handleChange = (e) => {
+      const value = e.target.value;
+      setSearchKeyWord(value);
+    };
+
 
     function CustomToggle({ children, eventKey }) {
         const decoratedOnClick = useAccordionButton(eventKey, () =>
@@ -125,24 +142,7 @@ const Header = () => {
         getCategory();
     }, []);
 
-    // let handleKeyUp;
 
-    // useEffect(() => {
-    //     const delay = 100; // Adjust the delay (in milliseconds) as needed
-    //     let timeoutId;
-
-    //     handleKeyUp = () => {
-    //         clearTimeout(timeoutId);
-    //         timeoutId = setTimeout(() => {
-    //             handelSearch(search);
-    //             navigate("/search")
-    //         }, delay);
-    //     };
-
-    //     return () => {
-    //         clearTimeout(timeoutId);
-    //     };
-    // }, [search]);
 
 
     return (
@@ -267,9 +267,8 @@ const Header = () => {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
                                 <img src='./img/header/search-icone.png' alt='' />
-                                <input type='text' onChange={(e) => setSearch(e.target.value)}
-                                    // onKeyUp={handleKeyUp}
-                                    placeholder='Search Product' className='w-100' />
+                                <input type="text"   placeholder='Search Product' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
+
                                 {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
                             </div>
                         }

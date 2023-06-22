@@ -23,12 +23,11 @@ import { useLocation } from 'react-router-dom';
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const { setCart, cart } = useContext(CartContext);
+    const { activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
     const serverURL = getServerURL();
-    const [count, setCount] = useState(1)
     const [modelProduct, setModelProduct] = useState({})
     const [show, setShow] = useState(false);
     const [sizeActive, setSizeActive] = useState("")
@@ -95,7 +94,6 @@ const AddCartModal = (props) => {
         return sku ? sku.skuid : null;
     };
 
-
     const handleCart = async (e) => {
 
         e.preventDefault();
@@ -125,7 +123,7 @@ const AddCartModal = (props) => {
                         setProductColorActive(" ")
                         setSizeActive(" ")
                         setTimeout(() => {
-                            if(location.pathname == "/cart"){                                
+                            if (location.pathname == "/cart") {
                                 window.location.reload();
                             }
                             props.handleClose()
@@ -178,7 +176,6 @@ const AddCartModal = (props) => {
                             />
                             <Modal.Body>
 
-
                                 <div className='d-flex justify-content-end mb-2'>
                                     <Button className='close-modal-btn' onClick={props.handleClose}>
                                         <MdOutlineClose />
@@ -187,7 +184,7 @@ const AddCartModal = (props) => {
                                 <Row>
                                     <Col lg={6} md={12}>
                                         <div>
-                                            <ProductSlider colorProduct={colorProduct} productImagePath={modelProduct.productImagePath} productList={modelProduct.productList?.product_images} id={props.product_id} />
+                                            <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={modelProduct.productImagePath} productList={modelProduct.productList?.product_images} id={props.product_id} />
                                         </div>
                                     </Col>
                                     <Col lg={6} md={12} className='mt-3 mt-lg-0'>
@@ -222,8 +219,7 @@ const AddCartModal = (props) => {
                                                     {
                                                         modelProduct?.productList?.sku_attributes?.color && modelProduct.productList?.sku_attributes?.color?.map((e, i) => {
                                                             return (
-                                                                // <Button className={`color-btn ${productColorActive === e.name ? "active" : ""}`} onClick={() => setProductColorActive(e.name)}>
-                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.name)}>
+                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
                                                                     <img className='colors' src={e.imgUrl} alt='' />
                                                                 </Button>
                                                             )
@@ -244,7 +240,6 @@ const AddCartModal = (props) => {
                                                             })
                                                         }
                                                     </div>
-
 
                                                     {/* <div className='qty mt-4 pt-2 d-flex align-items-center gap-3'>
                                         <h5>Qty:</h5>
