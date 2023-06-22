@@ -4,8 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import AddCartModal from './AddCartModal';
 import { handelProductDetail } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
-import SucessSnackBar from "../components/SnackBar";
-import ErrorSnackBar from "../components/SnackBar";
+
 
 const ProCard = (props) => {
 

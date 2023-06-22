@@ -72,7 +72,7 @@ const Header = () => {
         handelSearch(searchKeyWord)
         navigate("/search")
         getSearchedProduct()
-        // console.log('User stopped typing');
+        //console.log('User stopped typing');
       }, typingDelay);
     };
   
@@ -124,7 +124,7 @@ const Header = () => {
         startAnimation()
         try {
 
-            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`)
+            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "category"})
             const categoryData = categoryResponse.data.data;
             setcategory(categoryData);
             stopAnimation()
@@ -143,7 +143,7 @@ const Header = () => {
     }, []);
 
 
-
+console.log(category,"header");
 
     return (
         <Fragment>
@@ -199,7 +199,7 @@ const Header = () => {
                                             <div className='border-right-cos pe-4 h-100'>
                                                 <ul>
 
-                                                    {category && category?.productsCategory?.map((e, i) => {
+                                                    {category && category?.productsCategoryList?.map((e, i) => {
                                                         return (
 
                                                             <li key={i} onMouseOver={() => HandelShowData(e.name, e)}>
@@ -218,7 +218,7 @@ const Header = () => {
                                                 <>
                                                     <Col lg={9} md={6}>
                                                         <div className='mega-product'>
-                                                            {category && category?.productsCategory?.map((e, i) => {
+                                                            {category && category?.productsCategoryList?.map((e, i) => {
                                                                 return (
                                                                     <div className='product_image pointer' onClick={() => handelCategorydata(e._id)} key={i}>
 

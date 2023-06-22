@@ -11,9 +11,7 @@ import ProCard from '../components/ProCard'
 import SaleCard from '../components/SaleCard'
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
-import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import CategoryList from './CategoryList';
 import Loader from '../components/Loader';
 import { handelProductDetail, handelCategory } from '../helper/constants';

@@ -6,14 +6,13 @@ import ProCard from '../components/ProCard'
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
 import { handelCategorydata } from '../helper/constants'
 import { Is_Login } from '../helper/IsLogin';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { CartContext } from '../context/CartContext';
-
+import { PRODUCTCATEGORY } from '../helper/endpoints'
 const Selling = () => {
 
     const { viewMoreLodr, setViewmoreLoder, stopAnimation, startAnimation, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishsellProducUrl, category, currentUser,
@@ -21,9 +20,34 @@ const Selling = () => {
 
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
+    const [sellCategory, setSellCategory] = useState([]);
 
     const serverURL = getServerURL();
     const player = useRef(null);
+
+
+
+    const getCategory = async () => {
+        startAnimation()
+        try {
+            const [categoryResponse] = await Promise.all([
+                api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" })
+            ]);
+            const categoryData = categoryResponse.data.data;
+            console.log(categoryData, "categoryData");
+            // Divide the category list into two parts
+            const halfwayIndex = Math.ceil(categoryData.productsCategoryList && categoryData?.productsCategoryList.length / 2);
+            const firstHalf = categoryData.productsCategoryList?.slice(0, halfwayIndex);
+            const secondHalf = categoryData.productsCategoryList?.slice(halfwayIndex);
+            // Set the first half and second half of categories
+            setSellCategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath });
+            stopAnimation()
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
 
     useEffect(() => {
         getSellProducts();
@@ -33,8 +57,10 @@ const Selling = () => {
     useEffect(() => {
         getCategoryWeb()
         getProducts()
+        getCategory()
     }, []);
 
+    console.log(sellCategory, "sellCategory");
 
     return (
 
@@ -72,7 +98,7 @@ const Selling = () => {
                                 <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4 mar-top-0'>
 
                                     {
-                                        categoryWeb.categoryData && categoryWeb.categoryData?.slice(0, 6).map((e) => {
+                                        sellCategory && sellCategory.firstHalf?.slice(0, 6).map((e) => {
                                             return (
                                                 <div className='cate-box text-center pointer' onClick={() => handelCategorydata(e._id)} >
                                                     <div className='cat-img-round'>
@@ -95,7 +121,7 @@ const Selling = () => {
                                 <Row className='mt-4'>
 
                                     {
-                                        categoryWeb.categoryData && categoryWeb.categoryData?.slice(5, 9).map((e) => {
+                                       sellCategory && sellCategory.secondHalf?.slice(0, 4).map((e) => {
                                             return (
 
                                                 <Col lg={3} md={6} sm={12} className='mt-4'>

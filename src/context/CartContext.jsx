@@ -160,7 +160,7 @@ export const CartProvider = ({ children }) => {
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
       const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
-        api.post(`${serverURL + PRODUCTCATEGORY}`),
+        api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "category"}),
         apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
         apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
         api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
@@ -175,6 +175,58 @@ export const CartProvider = ({ children }) => {
       setProductList(productListData);
       setTrendingProductList(trendingproductData)
       setUserProductList(userproductData)
+
+      stopAnimation()
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCategoryWeb = async () => {
+    startAnimation()
+
+    try {
+      const [categoryResponse] = await Promise.all([
+        api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "sub-category"})
+      ]);
+      const categoryData = categoryResponse.data.data;
+      //for random category
+      const randomIndices = [];
+
+      const maxIndex = categoryData.productsCategoryList.length - 1;
+      
+      while (randomIndices.length < 3) {
+        const randomIndex = Math.floor(Math.random() * maxIndex);
+        if (!randomIndices.includes(randomIndex)) {
+          randomIndices.push(randomIndex);
+        }
+      }
+
+      const sellingCategory = {
+        first: {
+          _id: categoryData.productsCategoryList[randomIndices[0]]?._id,
+          name: categoryData.productsCategoryList[randomIndices[0]]?.child[0]?.name,
+          id: categoryData.productsCategoryList[randomIndices[0]]?.child[0]?._id,
+        },
+        second: {
+          _id: categoryData.productsCategoryList[randomIndices[1]]?._id,
+          name: categoryData.productsCategoryList[randomIndices[1]]?.child[0]?.name,
+          id: categoryData.productsCategoryList[randomIndices[1]]?.child[0]?._id,
+        },
+        third: {
+          _id: categoryData.productsCategoryList[randomIndices[2]]?._id,
+          name: categoryData.productsCategoryList[randomIndices[2]]?.child[0]?.name,
+          id: categoryData.productsCategoryList[randomIndices[2]]?.child[0]?._id,
+        },
+      };
+
+      setSellingCategory(sellingCategory)
+      // Divide the category list into two parts
+      const halfwayIndex = Math.ceil(categoryData.productsCategoryList    && categoryData?.productsCategoryList.length / 2);
+      const firstHalf = categoryData.productsCategoryList?.slice(0, halfwayIndex);
+      const secondHalf = categoryData.productsCategoryList?.slice(halfwayIndex);
+      // Set the first half and second half of categories
+      setCategoryWeb({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath, categoryData: categoryData.productsCategoryList });
 
       stopAnimation()
     } catch (error) {
@@ -240,58 +292,7 @@ export const CartProvider = ({ children }) => {
     }
 };
 
-  const getCategoryWeb = async () => {
 
-    startAnimation()
-
-    try {
-      const [categoryResponse] = await Promise.all([
-        api.post(`${serverURL + PRODUCTCATEGORY}`)
-      ]);
-      const categoryData = categoryResponse.data.data;
-    
-      //for random category
-      const randomIndices = [];
-      const maxIndex = categoryData.productsCategoryList.length - 1;
-      
-      while (randomIndices.length < 3) {
-        const randomIndex = Math.floor(Math.random() * maxIndex);
-        if (!randomIndices.includes(randomIndex)) {
-          randomIndices.push(randomIndex);
-        }
-      }
-
-      const sellingCategory = {
-        first: {
-          _id: categoryData.productsCategoryList[randomIndices[0]]?._id,
-          name: categoryData.productsCategoryList[randomIndices[0]]?.child[0]?.name,
-          id: categoryData.productsCategoryList[randomIndices[0]]?.child[0]?._id,
-        },
-        second: {
-          _id: categoryData.productsCategoryList[randomIndices[1]]?._id,
-          name: categoryData.productsCategoryList[randomIndices[1]]?.child[0]?.name,
-          id: categoryData.productsCategoryList[randomIndices[1]]?.child[0]?._id,
-        },
-        third: {
-          _id: categoryData.productsCategoryList[randomIndices[2]]?._id,
-          name: categoryData.productsCategoryList[randomIndices[2]]?.child[0]?.name,
-          id: categoryData.productsCategoryList[randomIndices[2]]?.child[0]?._id,
-        },
-      };
-
-      setSellingCategory(sellingCategory)
-      // Divide the category list into two parts
-      const halfwayIndex = Math.ceil(categoryData.productsCategory && categoryData?.productsCategory.length / 2);
-      const firstHalf = categoryData.productsCategory?.slice(0, halfwayIndex);
-      const secondHalf = categoryData.productsCategory?.slice(halfwayIndex);
-      // Set the first half and second half of categories
-      setCategoryWeb({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath, categoryData: categoryData.productsCategory });
-
-      stopAnimation()
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const getSearchedProduct = async () => {
     try {
