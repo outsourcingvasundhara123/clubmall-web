@@ -417,10 +417,10 @@ const Header = () => {
                         <div className='menu-main'>
                             <ul className='h-100'>
                                 <li>
-                                    <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/")}>For You</Link>
+                                    <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => { setActive("/"); handleClose() }}>For You</Link>
                                 </li>
                                 <li>
-                                    <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
+                                    <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => { setActive("/home"); handleClose() }}>Home</Link>
                                 </li>
                                 <li>
                                     <Button onClick={() => {
@@ -429,13 +429,13 @@ const Header = () => {
                                     }} className='new-in-btn'>New In</Button>
                                 </li>
                                 <li>
-                                    <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/fashion")}>Fashion</Link>
+                                    <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => { setActive("/fashion"); handleClose() }}>Fashion</Link>
                                 </li>
                                 <li>
-                                    <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => setActive("/selling")}>Hot Selling</Link>
+                                    <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => { setActive("/selling"); handleClose() }}>Hot Selling</Link>
                                 </li>
                                 <li>
-                                    <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => setActive("/trending")}>Trending</Link>
+                                    <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => { setActive("/trending"); handleClose() }}>Trending</Link>
                                 </li>
                                 <li className='position-relative show-body-menu'>
                                     <Link className={`${active === "/categories" ? "active" : ""} `} >
@@ -672,7 +672,7 @@ const Header = () => {
                 </Modal.Body>
             </Modal>
 
-        </Fragment >
+        </Fragment>
     )
 }
 
