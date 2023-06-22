@@ -4,7 +4,7 @@ import { Col, NavLink, Row } from 'react-bootstrap'
 
 const TermsUse = () => {
     return (
-        <Layout>
+        <>
             <div className='about pt-4 pt-lg-0 pb-5'>
                 <div className='clubmall-work space-top'>
                     <div className='container-cos'>
@@ -33,7 +33,7 @@ const TermsUse = () => {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </>
     )
 }
 

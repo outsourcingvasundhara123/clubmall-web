@@ -295,7 +295,7 @@ const LogIn = () => {
   console.log(values, "values");
 
   return (
-    <Layout>
+    <>
 
       <SucessSnackBar
         open={sucessSnackBarOpen}
@@ -515,7 +515,7 @@ const LogIn = () => {
         </Modal.Body>
       </Modal>
 
-    </Layout>
+    </>
   )
 }
 

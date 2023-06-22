@@ -6,8 +6,8 @@ import { IoMdShareAlt } from 'react-icons/io'
 
 const Wishlist = () => {
     return (
-        <Layout>
-            <div className='wishlist pt-4 pb-5'>
+        <>
+            <div className='wishlist pb-5'>
                 <div className='container-cos'>
 
                     <div className='page-path d-flex align-items-center gap-1'>
@@ -33,7 +33,6 @@ const Wishlist = () => {
                             <div className='position-relative'>
                                 <img src='./img/dummy.png' alt='' />
                                 <div className='d-flex align-items-center gap-2 share-del-btn'>
-                                    {/* <Button><IoMdShareAlt /></Button> */}
                                     <Button><MdDelete /></Button>
                                 </div>
                             </div>
@@ -50,7 +49,7 @@ const Wishlist = () => {
 
                 </div>
             </div>
-        </Layout>
+        </>
     )
 }
 

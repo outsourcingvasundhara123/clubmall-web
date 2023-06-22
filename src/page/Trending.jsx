@@ -63,7 +63,7 @@ const Trending = () => {
    console.log(page , "page");
 
     return (
-        <Layout>
+        <>
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -105,7 +105,7 @@ const Trending = () => {
                         </section>
                     </>
                 )}
-        </Layout>
+        </>
     )
 }
 

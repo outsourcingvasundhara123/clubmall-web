@@ -4,8 +4,8 @@ import { NavLink } from 'react-bootstrap'
 
 const Policy = () => {
     return (
-        <Layout>
-            <div className='policy pt-4 pb-5'>
+        <>
+            <div className='policy pb-5'>
                 <div className='container-cos'>
                     <h3>Privacy Policy</h3>
                     <p className='mt-4'>Protecting your private information is our priority. This Statement of Privacy applies to Clubmall, and Clubmall and governs data collection and usage. For the purposes of this Privacy Policy, unless otherwise noted, all references to Clubmall include <NavLink href="" className='red-color'> www.clubmall.com</NavLink>, Clubmall and Clubmall.com. The Clubmall application is a Socal shopping app and e-commerce application. By using the Clubmall application, you consent to the data practices described in this statement.</p>
@@ -100,7 +100,7 @@ const Policy = () => {
                     <NavLink className='red-color'>asouare@clubmall.com</NavLink>
                 </div>
             </div>
-        </Layout>
+        </>
     )
 }
 

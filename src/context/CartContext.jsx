@@ -306,8 +306,7 @@ export const CartProvider = ({ children }) => {
         // // console.log(postsData,"postsData");
         const updatedProductList = [...searchpostList, ...postsData.data]
             .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-            setSearchPostList(updatedProductList);
-        console.log(postsData);
+        setSearchPostList(updatedProductList);
         setSearchURL(postsData.productImagePath)
         setViewmoreLoder(false)
         stopAnimation()

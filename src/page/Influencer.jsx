@@ -4,8 +4,8 @@ import { Button, Col, Row } from 'react-bootstrap'
 
 const Influencer = () => {
     return (
-        <Layout>
-            <div className='influencer pt-4 pb-5'>
+        <>
+            <div className='influencer pb-5'>
                 <div className='container-cos'>
                     <div className='contact-title text-center'>
                         <h1>Influencers</h1>
@@ -138,7 +138,7 @@ const Influencer = () => {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </>
     )
 }
 

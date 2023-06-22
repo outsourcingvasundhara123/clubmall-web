@@ -85,7 +85,7 @@ const Home = () => {
     }
 
     return (
-        <Layout>
+        <>
 
             <SucessSnackBar
                 open={sucessSnackBarOpen}
@@ -415,7 +415,7 @@ const Home = () => {
                         </section>
                     </>
                 )}
-        </Layout>
+        </>
     )
 }
 

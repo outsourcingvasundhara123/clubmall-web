@@ -159,7 +159,7 @@ p {
 }
 
 .mar-cos {
-    margin-top: 70px;
+    margin-top: 100px;
 }
 
 .header .menu-box ul {
@@ -1201,7 +1201,7 @@ del {
 
 
 .home-first-image {
-    margin: 100px 0 40px 0px;
+    margin: 0px 0 40px 0px;
 }
 
 .home-second-image {
@@ -4748,11 +4748,6 @@ input[type='radio'] {
         width: 100%;
     }
 
-    .about .banner-left-box h1 {
-        font-size: 50px;
-        line-height: 60px !important;
-    }
-
     .about .app-download {
         justify-content: center;
     }
@@ -4765,12 +4760,12 @@ input[type='radio'] {
     }
 
     .download-ui p {
-        font-size: 20px !important;
+        font-size: 15px !important;
     }
 
     .about .banner-left-box h1 {
-        font-size: 40px;
-        line-height: 50px !important;
+        font-size: 30px;
+        line-height: 38px !important;
     }
 }
 
@@ -4810,14 +4805,14 @@ input[type='radio'] {
     }
 
     .clubmall-work .clubmall-work-text p {
-        font-size: 20px;
+        font-size: 16px;
         margin-top: 10px;
     }
 }
 
 @media (max-width: 425px) {
     .clubmall-work .clubmall-work-text h2 {
-        font-size: 30px;
+        font-size: 24px;
     }
 }
 
@@ -4941,8 +4936,9 @@ input[type='radio'] {
 
 @media (max-width: 600px) {
     .download-section .section-title {
-        font-size: 24px;
-        line-height: 35px;
+        font-size: 20px;
+        line-height: 30px;
+        margin-bottom: 20px;
     }
 
     .download-section .section-texts::before,
@@ -5003,11 +4999,11 @@ input[type='radio'] {
 
 @media (max-width: 425px) {
     .contact-title h1 {
-        font-size: 40px;
+        font-size: 30px;
     }
 
     .contact-title p {
-        font-size: 20px;
+        font-size: 16px;
     }
 }
 
@@ -5076,7 +5072,7 @@ input[type='radio'] {
     }
 
     .home-first-image {
-        margin: 100px 0 10px 0px;
+        margin: 0px 0 10px 0px;
     }
 
     .home-second-image {
@@ -5616,6 +5612,14 @@ input[type='radio'] {
 
     .order-list {
         padding-top: 0px;
+    }
+
+    .mar-cos {
+        margin-top: 80px;
+    }
+
+    .explore {
+        margin: 80px 0;
     }
 }
 

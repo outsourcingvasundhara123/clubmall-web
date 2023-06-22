@@ -4,7 +4,7 @@ import { Col, NavLink, Row } from 'react-bootstrap'
 
 const About = () => {
     return (
-        <Layout>
+        <>
             <div className='about pt-4 pt-lg-0 pb-5'>
                 <Row className='mx-0'>
                     <Col lg={6} md={12}>
@@ -109,7 +109,7 @@ const About = () => {
                 </div>
 
             </div>
-        </Layout>
+        </>
     )
 }
 

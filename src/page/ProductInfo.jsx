@@ -190,7 +190,7 @@ const ProductInfo = () => {
     };
 
     return (
-        <Layout>
+        <>
 
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
@@ -210,7 +210,7 @@ const ProductInfo = () => {
                             type="error"
                         />
 
-                        <div className='product-info pt-4 pb-5'>
+                        <div className='product-info pb-5'>
                             <div className='container-cos'>
 
                                 <div className='page-path d-flex align-items-center gap-1'>
@@ -792,7 +792,7 @@ const ProductInfo = () => {
                     </>
                 )
             }
-        </Layout >
+        </ >
     )
 }
 

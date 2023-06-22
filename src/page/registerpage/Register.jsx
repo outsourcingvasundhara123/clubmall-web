@@ -275,7 +275,7 @@ function Register() {
 
     return (
 
-        <Layout>
+        <>
 
             <SucessSnackBar
                 open={sucessSnackBarOpen}
@@ -550,7 +550,7 @@ function Register() {
                 </Modal.Body>
             </Modal>
 
-        </Layout>
+        </>
     )
 }
 
