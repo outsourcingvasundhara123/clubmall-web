@@ -115,7 +115,8 @@ const CategoryList = () => {
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
-                                            <p>From ${e.minPrice}</p>
+                                           
+                                            <p>From ${ parseFloat((Math.random() * (10.0 - 1.0) + 1.0).toFixed(2))}</p>
                                         </div>
                                     </div>
                                 );

@@ -1,5 +1,5 @@
 
-import React, { useRef, useState, useEffect , useContext } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
@@ -13,58 +13,32 @@ import { CartContext } from '../context/CartContext';
 
 const Search = () => {
 
-//   const [searchPage, setSearchPage] = useState(1);
-    const { searchUrl,SearchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct,  startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+    //   const [searchPage, setSearchPage] = useState(1);
+    const { setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
-
-    const [active, setActive] = useState("1");
-    // var SearchKeyWord =  localStorage.getItem("search") && localStorage.getItem("search")
-    const handleClick = (event) => {
-        setActive(event.target.id);
-    }
-
-    // const [postList, setPostList] = useState([]);
-    const serverURL = getServerURL();
-    // const [page, setPage] = useState(1);
-    // const [url, setURL] = useState("");
-    const [viewMoreLodr, setViewmoreLoder] = useState(false);
-
-    // const getSearchedProduct = async () => {
-    //     try {
-    //         startAnimation()
-    //         const [postListResponse] = await Promise.all([
-    //             api.postWithToken(`${serverURL + "search"}`, {
-    //                 q: SearchKeyWord,
-    //                 search_type: "product",
-    //                 page: page
-    //             }),
-    //         ]);
-    //         const postsData = postListResponse.data;
-    //         // // console.log(postsData,"postsData");
-    //         const updatedProductList = [...postList, ...postsData.data]
-    //             .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-    //         setPostList(updatedProductList);
-    //         console.log(postsData);
-    //         setURL(postsData.profileImagePath)
-    //         setViewmoreLoder(false)
-    //         stopAnimation()
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
 
     useEffect(() => {
         getSearchedProduct();
-    }, [SearchKeyWord, searchPage]);
+    }, [searchPage, searchKeyWord]);
 
-
-    // console.log(postList,"postList");
 
     return (
         <>
             {
-                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                loading && !viewMoreLodr ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
+
+                        {
+                            searchpostList.length <= 0 &&
+                            <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
+                                <div className='text-center found'>
+                                    <img src='./img/not-found.png' alt='' />
+                                    <p className='mt-3'>The cart is empty</p>
+                                    <Button className='mt-3 submit-btn'>Shop Now</Button>
+                                </div>
+                            </div>
+                        }
+
                         <section className='explore mar-bot-20'>
                             <div className='container-cos'>
                                 {/* <div className='btns mt-5'>
@@ -76,9 +50,9 @@ const Search = () => {
                                     <Button className={active === "6" ? "active" : undefined} id={"6"} onClick={handleClick}>1 year ago</Button>
                                 </div> */}
 
-                                <div className='mb-0 mt-4 explore-main mar-top-0'>
+                                <div className='mb-0 explore-main mar-top-0'>
                                     {
-                                        searchpostList && searchpostList?.map((e) => {
+                                        searchpostList && searchpostList.map((e) => {
                                             return (
 
                                                 <ProCard
@@ -91,14 +65,16 @@ const Search = () => {
                                                     // secper={e.secper && e.secper }
                                                     // off={e.discount_percentage && e.discount_percentage}
                                                     path={searchUrl && searchUrl}
-                                                    // color={e.sku_attributes.color}
+                                                // color={e.sku_attributes.color}
                                                 />
                                             )
                                         })
                                     }
-                                    <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setSearchPage(searchPage + 1), setViewmoreLoder(true))} >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
-                                    </div>
+                                    {searchpostList.length !== 0 &&
+                                        <div className='w-100 d-flex justify-content-center'>
+                                            <Button className='shop-btn btn-cos-mobile' onClick={() => (setSearchPage(searchPage + 1), setViewmoreLoder(true), setIs_search(0))} >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </section>

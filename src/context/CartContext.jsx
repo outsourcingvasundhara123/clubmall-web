@@ -4,7 +4,6 @@ import { getServerURL } from '../helper/envConfig';
 import api from '../helper/api';
 import { Is_Login } from '../helper/IsLogin'
 import { errorResponse, afterLogin } from '../helper/constants';
-import { useNavigate } from 'react-router-dom'
 
 // Create the cart context
 export const CartContext = createContext();
@@ -13,7 +12,6 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const isLoggedIn = Is_Login();
   const [cart, setCart] = useState(0);
-
   const [wishlistCount, setWishlistCount] = useState(0);
   const [Mymessage, setMyMessage] = useState("");
   const [wishlist, setWishList] = useState([]);
@@ -46,13 +44,16 @@ export const CartProvider = ({ children }) => {
   const [viewMoreLodr, setViewmoreLoder] = useState(false);
   const [profileOption, setProfileOption] = useState();
  
-  var SearchKeyWord =  localStorage.getItem("search") && localStorage.getItem("search")
+  const [searchKeyWord, setSearchKeyWord] = useState("");
   const [searchpostList, setSearchPostList] = useState([]);
   const [searchPage, setSearchPage] = useState(1);
   const [searchUrl, setSearchURL] = useState("");
+  const [is_search, setIs_search] = useState(0);
+
 
   const serverURL = getServerURL();
   const player = useRef();
+  const [activeImage, setActiveImage] = useState("")
 
   const startAnimation = () => {
     if (player.current) {
@@ -294,36 +295,53 @@ export const CartProvider = ({ children }) => {
 
   const getSearchedProduct = async () => {
     try {
-        startAnimation()
-        const [postListResponse] = await Promise.all([
-            api.postWithToken(`${serverURL + "search"}`, {
-                q: SearchKeyWord,
-                search_type: "product",
-                page: searchPage
-            }),
-        ]);
-        const postsData = postListResponse.data;
-        // // console.log(postsData,"postsData");
-        const updatedProductList = [...searchpostList, ...postsData.data]
-            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-        setSearchPostList(updatedProductList);
-        setSearchURL(postsData.productImagePath)
-        setViewmoreLoder(false)
-        stopAnimation()
+      setLoading(true)  
+      let search =  searchKeyWord 
+
+      const [postListResponse] = await Promise.all([
+        api.postWithToken(`${serverURL + "search"}`, {
+          q:search ,
+          search_type: "product",
+          page: searchPage,
+        }),
+      ]);
+      const postsData = postListResponse.data;
+      if (postsData && Array.isArray(postsData.data)) {
+        if(is_search !== 1){
+          const updatedProductList = [
+            ...searchpostList,
+            ...postsData.data,
+          ].filter(
+            (product, index, self) =>
+              self.findIndex((p) => p._id === product._id) === index
+          );
+          setSearchPostList(updatedProductList);
+        }else{
+          setSearchPostList(postsData.data);
+        }
+       
+        // console.log(updatedProductList,"postsData");
+        setSearchURL(postsData.productImagePath);
+        setViewmoreLoder(false);
+        setLoading(false)  
+      } else {
+        stopAnimation();
+        // console.log("Invalid data format received");
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-};
+  };
 
  const handelSearch = (search) => {
   localStorage.setItem("search", search);
-  getSearchedProduct()
+  setIs_search(1)
 };
 
   return (
 
     <CartContext.Provider value={{
-      handelSearch,searchUrl,searchPage, SearchKeyWord, searchpostList, setSearchPage,searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      activeImage, setActiveImage, setIs_search,handelSearch,searchUrl,searchPage,searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage,searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>
