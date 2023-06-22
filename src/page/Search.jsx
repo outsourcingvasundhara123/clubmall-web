@@ -27,6 +27,18 @@ const Search = () => {
             {
                 loading && !viewMoreLodr ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
+
+                        {
+                            searchpostList.length <= 0 &&
+                            <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
+                                <div className='text-center found'>
+                                    <img src='./img/not-found.png' alt='' />
+                                    <p className='mt-3'>The cart is empty</p>
+                                    <Button className='mt-3 submit-btn'>Shop Now</Button>
+                                </div>
+                            </div>
+                        }
+
                         <section className='explore mar-bot-20'>
                             <div className='container-cos'>
                                 {/* <div className='btns mt-5'>
@@ -38,18 +50,7 @@ const Search = () => {
                                     <Button className={active === "6" ? "active" : undefined} id={"6"} onClick={handleClick}>1 year ago</Button>
                                 </div> */}
 
-                                {searchpostList.length <= 0 &&
-                                    <div className='d-flex align-items-center justify-content-center h-100'>
-                                        <div className='text-center found'>
-                                            <img src='./img/not-found.png' alt='' />
-                                            <p className='mt-3'>The cart is empty</p>
-                                            <Button className='mt-3 submit-btn'>Shop Now</Button>
-                                        </div>
-                                    </div>
-                                }
-
-                                <div className='mb-0 mt-4 explore-main mar-top-0'>
-
+                                <div className='mb-0 explore-main mar-top-0'>
                                     {
                                         searchpostList && searchpostList.map((e) => {
                                             return (
