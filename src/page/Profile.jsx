@@ -303,7 +303,7 @@ const Profile = () => {
     console.log(orderList, "orderList");
 
     return (
-        <Layout>
+        <>
             <SucessSnackBar
                 open={sucessSnackBarOpen}
                 setOpen={setSucessSnackBarOpen}
@@ -1001,7 +1001,7 @@ const Profile = () => {
                 </Modal.Body>
             </Modal>
 
-        </Layout >
+        </ >
     )
 }
 

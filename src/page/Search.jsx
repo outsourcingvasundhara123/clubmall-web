@@ -61,7 +61,7 @@ const Search = () => {
     // console.log(postList,"postList");
 
     return (
-        <Layout>
+        <>
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -104,7 +104,7 @@ const Search = () => {
                         </section>
                     </>
                 )}
-        </Layout>
+        </>
     )
 }
 

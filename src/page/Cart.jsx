@@ -260,7 +260,7 @@ const WrappedCart = () => {
 
 
     return (
-        <Layout>
+        <>
 
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
@@ -609,7 +609,7 @@ const WrappedCart = () => {
                 )
             }
 
-        </Layout >
+        </ >
     )
 }
 

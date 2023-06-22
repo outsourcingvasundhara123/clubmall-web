@@ -391,7 +391,7 @@ const ForYou = () => {
 
   return (
 
-    <Layout>
+    <>
 
       {
         loading && (
@@ -744,7 +744,7 @@ const ForYou = () => {
         </Modal.Body>
       </Modal>
 
-    </Layout >
+    </>
 
   )
 }

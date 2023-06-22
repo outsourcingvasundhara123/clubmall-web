@@ -42,7 +42,6 @@ const Categories = () => {
 
     const getCategory = async () => {
 
-        // getProducts()
         try {
             startAnimation()
             setLoading(true)
@@ -97,7 +96,7 @@ const Categories = () => {
     }, []);
 
     return (
-        <Layout>
+        <>
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -482,7 +481,7 @@ const Categories = () => {
                         </div>
                     </>
                 )}
-        </Layout>
+        </>
     )
 }
 

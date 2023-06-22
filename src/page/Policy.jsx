@@ -4,7 +4,7 @@ import { NavLink } from 'react-bootstrap'
 
 const Policy = () => {
     return (
-        <Layout>
+        <>
             <div className='policy pt-4 pb-5'>
                 <div className='container-cos'>
                     <h3>Privacy Policy</h3>
@@ -100,7 +100,7 @@ const Policy = () => {
                     <NavLink className='red-color'>asouare@clubmall.com</NavLink>
                 </div>
             </div>
-        </Layout>
+        </>
     )
 }
 

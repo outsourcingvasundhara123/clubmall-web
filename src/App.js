@@ -6,7 +6,8 @@ import 'swiper/css';
 import "./assets/css/App.css"
 import { Button } from 'react-bootstrap';
 import { MdOutlineKeyboardArrowUp } from 'react-icons/md'
-
+import Header from './layout/Header';
+import Footer from './layout/Footer';
 const ScrollToTop = () => {
 
   const { pathname } = useLocation();
@@ -30,19 +31,27 @@ const App = () => {
       </Button>
 
       <ScrollToTop />
+      <div className='page-layout'>
+        <div>
+          <Header />
+          <div className='mar-cos'>
+            <Routes>
+              {route.map((route, index) => {
+                return (
+                  <Route
+                    key={index}
+                    exact
+                    path={route.path}
+                    element={route.element}
+                  />
+                );
+              })}
+            </Routes>
+          </div>
+        </div>
 
-      <Routes>
-        {route.map((route, index) => {
-          return (
-            <Route
-              key={index}
-              exact
-              path={route.path}
-              element={route.element}
-            />
-          );
-        })}
-      </Routes>
+        <Footer />
+      </div>
 
     </BrowserRouter>
   )

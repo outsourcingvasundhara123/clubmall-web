@@ -39,11 +39,6 @@ const Fashion = () => {
         setShow(true);
     }
 
-    // const [category, setcategory] = useState([]);
-    // const [productList, setProductList] = useState([]);
-    // const [trendingProductList, setTrendingProductList] = useState([]);
-    // const [userProductList, setUserProductList] = useState([]);
-    // const [loading, setLoading] = useState(true);
     const player = useRef();
 
     const startAnimation = () => {
@@ -55,35 +50,6 @@ const Fashion = () => {
         setLoading(false);
     };
 
-    // const serverURL = getServerURL();
-
-    // const getCategory = async () => {
-    //     startAnimation()
-
-    //     try {
-    //         const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
-    //             api.post(`${serverURL + PRODUCTCATEGORY}`),
-    //             api.post(`${serverURL + PRODUCTList}`, { product_list_type: "trending-product" }),
-    //             api.post(`${serverURL + PRODUCTList}`, { product_list_type: "flashsale-products" }),
-    //             api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
-
-    //         ]);
-
-    //         const categoryData = categoryResponse.data.data;
-    //         const productListData = productListResponse.data.data;
-    //         const trendingproductData = trendingproductListResponse.data.data
-    //         const userproductData = userProductList.data.data
-
-    //         setcategory(categoryData);
-    //         setProductList(productListData);
-    //         setTrendingProductList(trendingproductData)
-    //         setUserProductList(userproductData)
-    //         stopAnimation()
-
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
 
     useEffect(() => {
         getProducts();
@@ -91,7 +57,7 @@ const Fashion = () => {
     }, [isLoggedIn]);
 
     return (
-        <Layout>
+        <>
 
             <SucessSnackBar
                 open={sucessSnackBarOpen}
@@ -472,7 +438,7 @@ const Fashion = () => {
                 )}
 
             <AddCartModal handleClose={handleClose} show={show} product_id={product_id} />
-        </Layout>
+        </>
     )
 }
 

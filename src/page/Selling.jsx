@@ -38,7 +38,7 @@ const Selling = () => {
 
     return (
 
-        <Layout>
+        <>
 
             <SucessSnackBar
                 open={sucessSnackBarOpen}
@@ -347,7 +347,7 @@ const Selling = () => {
                     </>
                 )
             }
-        </Layout >
+        </ >
     )
 }
 

@@ -6,7 +6,7 @@ import { IoMdShareAlt } from 'react-icons/io'
 
 const Wishlist = () => {
     return (
-        <Layout>
+        <>
             <div className='wishlist pt-4 pb-5'>
                 <div className='container-cos'>
 
@@ -50,7 +50,7 @@ const Wishlist = () => {
 
                 </div>
             </div>
-        </Layout>
+        </>
     )
 }
 

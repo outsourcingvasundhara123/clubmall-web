@@ -190,7 +190,7 @@ const ProductInfo = () => {
     };
 
     return (
-        <Layout>
+        <>
 
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
@@ -792,7 +792,7 @@ const ProductInfo = () => {
                     </>
                 )
             }
-        </Layout >
+        </ >
     )
 }
 
