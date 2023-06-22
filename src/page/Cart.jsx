@@ -97,7 +97,7 @@ const WrappedCart = () => {
                         }
                         //validation for card detail
                         const cardElement = elements.getElement(CardElement);
-                        
+
                         if (cardElement) {
                             const cardElementState = cardElement._empty;
 
@@ -279,7 +279,7 @@ const WrappedCart = () => {
                             type="error"
                         />
 
-                        <div className='cart-main pt-4 pb-5'>
+                        <div className='cart-main pb-5'>
                             <div className='container-cos'>
 
                                 <div className='page-path d-flex align-items-center gap-1'>

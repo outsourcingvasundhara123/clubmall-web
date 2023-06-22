@@ -317,7 +317,7 @@ const Profile = () => {
                 text={Mymessage}
                 type="error"
             />
-            <div className='profile pt-4 pb-5'>
+            <div className='profile pb-5'>
 
                 <div className='container-cos'>
                     <div className='page-path d-flex align-items-center gap-1'>
