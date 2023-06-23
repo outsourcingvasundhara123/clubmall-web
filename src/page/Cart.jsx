@@ -141,7 +141,6 @@ const WrappedCart = () => {
                             if (payment.error) {
                                 setMyMessage(payment.error.message);
                                 setWarningSnackBarOpen(!warningSnackBarOpen);
-                                console.log(payment.error.message);
                             } else {
                                 setMyMessage(paymentStatus.data.message);
                                 setSucessSnackBarOpen(!sucessSnackBarOpen);

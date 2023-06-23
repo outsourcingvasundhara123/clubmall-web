@@ -5801,3 +5801,7 @@ input[type='radio'] {
         font-size: 13px;
     }
 }
+.mega-menu-list{
+max-height: 400px;
+overflow: auto;
+}

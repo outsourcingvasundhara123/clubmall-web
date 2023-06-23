@@ -34,6 +34,8 @@ const Header = () => {
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [subCategory, setSubCategory] = useState([]);
+    const [Url, setUrl] = useState("");
 
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
@@ -55,12 +57,11 @@ const Header = () => {
     const [CateData, setCateData] = useState(product_data.FeaturedData);
 
     const HandelShowData = (name, e) => {
-        // {console.log(e,"category list")}
+        setSubCategory(e.child)
         setCateData(product_data[name])
     }
 
     //for search 
-
     const typingTimerRef = useRef(null);
     const typingDelay = 500; // milliseconds
   
@@ -86,7 +87,6 @@ const Header = () => {
         const decoratedOnClick = useAccordionButton(eventKey, () =>
             console.log('totally custom!'),
         );
-
         return (
             <button
                 type="button"
@@ -103,7 +103,6 @@ const Header = () => {
             api.postWithToken(`${serverURL}logout`)
                 .then((res) => {
                     if (res.data.success === true) {
-                        console.log(res.data, "res.data");
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
                         logout();
@@ -124,8 +123,10 @@ const Header = () => {
         startAnimation()
         try {
 
-            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "category"})
+            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "sub-category"})
             const categoryData = categoryResponse.data.data;
+            setUrl(categoryResponse.data.data.productImagePath)
+            setSubCategory(categoryResponse.data.data?.productsCategoryList[0]?.child)
             setcategory(categoryData);
             stopAnimation()
 
@@ -134,7 +135,7 @@ const Header = () => {
             setCart(cartCountData?.length)
         } catch (error) {
             console.log(error);
-            errorResponse(error, setMyMessage);
+            // errorResponse(error, setMyMessage);
         }
     };
 
@@ -142,8 +143,6 @@ const Header = () => {
         getCategory();
     }, []);
 
-
-console.log(category,"header");
 
     return (
         <Fragment>
@@ -196,20 +195,16 @@ console.log(category,"header");
 
                                     <Row>
                                         <Col lg={3} md={6}>
-                                            <div className='border-right-cos pe-4 h-100'>
+                                            <div className='border-right-cos pe-4 mega-menu-list'>
                                                 <ul>
-
                                                     {category && category?.productsCategoryList?.map((e, i) => {
                                                         return (
-
                                                             <li key={i} onMouseOver={() => HandelShowData(e.name, e)}>
-
                                                                 <p>{e.name}</p>
                                                                 <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                             </li>
                                                         );
                                                     })}
-
                                                 </ul>
                                             </div>
                                         </Col>
@@ -217,13 +212,14 @@ console.log(category,"header");
                                             loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                                                 <>
                                                     <Col lg={9} md={6}>
-                                                        <div className='mega-product'>
-                                                            {category && category?.productsCategoryList?.map((e, i) => {
+                                                        <div className='mega-product mega-menu-list'>
+                                                            {subCategory && subCategory?.map((e, i) => {
                                                                 return (
-                                                                    <div className='product_image pointer' onClick={() => handelCategorydata(e._id)} key={i}>
+                                                                    <div className='product_image pointer' onClick={() => handelCategorydata(e.parent_id)} key={i}>
 
                                                                         <div className='product-box'>
-                                                                            <img width="100%" src={category.productImagePath + e.product_icon} alt='' />
+                                                                       
+                                                                            <img width="100%" src={Url + e.product_icon} alt='' />
                                                                         </div>
                                                                         <h6>{e.name}</h6>
                                                                     </div>

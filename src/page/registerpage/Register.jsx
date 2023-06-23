@@ -147,12 +147,10 @@ function Register() {
 
         try {
             if (values.country_id && errors.country_id == undefined) {
-                console.log("called ");
                 const request1 = api.get(`${serverURL + "/country-list"}`);
                 var id = countryList.find((e => e._id == values.country_id))
                 const request2 = api.get(`${serverURL + `/state-list?country_id=${id.id}`}`);
                 const responses = await Promise.all([request1, request2]);
-                console.log(responses[1].data.data.states, "responses");
                 setStateList(responses[1].data.data.states)
             } else {
                 setMyMessage("Country is required");

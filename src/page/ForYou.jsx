@@ -66,7 +66,6 @@ const ForYou = () => {
   const handleProductShow = (data) => {
     setShowProduct(true);
     setMyModelData(data)
-    console.log(data, "data");
   }
   const handleProductClose = () => {
     setMyModelData("")

@@ -14,6 +14,7 @@ export const login = (user) => {
     localStorage.removeItem('user');
     localStorage.removeItem('profile_image');
     localStorage.removeItem("search");
+    localStorage.removeItem("selectedSubcategories")
     window.location.href = "/login";
 
   };

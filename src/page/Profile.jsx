@@ -300,8 +300,6 @@ const Profile = () => {
         }
     };
 
-    console.log(orderList, "orderList");
-
     return (
         <>
             <SucessSnackBar

@@ -77,7 +77,6 @@ const CategoryList = () => {
                 api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" })
             ]);
             const categoryData = categoryResponse.data.data;
-            console.log(categoryData, "categoryData");
             // Divide the category list into two parts
             const halfwayIndex = Math.ceil(categoryData.productsCategoryList && categoryData?.productsCategoryList.length / 2);
             const firstHalf = categoryData.productsCategoryList?.slice(0, halfwayIndex);
@@ -140,7 +139,7 @@ const CategoryList = () => {
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
-                                            <p>From ${e.minPrice}</p>
+                                            <p>From ${parseFloat((Math.random() * (10.0 - 1.0) + 1.0).toFixed(2))}</p>
                                         </div>
                                     </div>
                                 );
