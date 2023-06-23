@@ -64,22 +64,22 @@ const Header = () => {
     //for search 
     const typingTimerRef = useRef(null);
     const typingDelay = 500; // milliseconds
-  
+
     const handleKeyUp = () => {
-      clearTimeout(typingTimerRef.current);
-      typingTimerRef.current = setTimeout(() => {
-        // Call handleKeyUp when the user stops typing
-        // Add your logic here
-        handelSearch(searchKeyWord)
-        navigate("/search")
-        getSearchedProduct()
-        //console.log('User stopped typing');
-      }, typingDelay);
+        clearTimeout(typingTimerRef.current);
+        typingTimerRef.current = setTimeout(() => {
+            // Call handleKeyUp when the user stops typing
+            // Add your logic here
+            handelSearch(searchKeyWord)
+            navigate("/search")
+            getSearchedProduct()
+            //console.log('User stopped typing');
+        }, typingDelay);
     };
-  
+
     const handleChange = (e) => {
-      const value = e.target.value;
-      setSearchKeyWord(value);
+        const value = e.target.value;
+        setSearchKeyWord(value);
     };
 
 
@@ -123,7 +123,7 @@ const Header = () => {
         startAnimation()
         try {
 
-            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "sub-category"})
+            const categoryResponse = await api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "sub-category" })
             const categoryData = categoryResponse.data.data;
             setUrl(categoryResponse.data.data.productImagePath)
             setSubCategory(categoryResponse.data.data?.productsCategoryList[0]?.child)
@@ -218,7 +218,7 @@ const Header = () => {
                                                                     <div className='product_image pointer' onClick={() => handelCategorydata(e.parent_id)} key={i}>
 
                                                                         <div className='product-box'>
-                                                                       
+
                                                                             <img width="100%" src={Url + e.product_icon} alt='' />
                                                                         </div>
                                                                         <h6>{e.name}</h6>
@@ -263,7 +263,7 @@ const Header = () => {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
                                 <img src='./img/header/search-icone.png' alt='' />
-                                <input type="text"   placeholder='Search Product' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
+                                <input type="text" placeholder='Search Product' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
 
                                 {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
                             </div>
@@ -433,7 +433,7 @@ const Header = () => {
                                     <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => { setActive("/trending"); handleClose() }}>Trending</Link>
                                 </li>
                                 <li className='position-relative show-body-menu'>
-                                    <Link className={`${active === "/categories" ? "active" : ""} `} >
+                                    <Link className={`${active === "/categories" ? "active" : ""} `}>
                                         Categories
                                     </Link>
                                     <Accordion>
@@ -441,75 +441,333 @@ const Header = () => {
                                             <CustomToggle eventKey="0"><MdOutlineKeyboardArrowDown /></CustomToggle>
                                             <Accordion.Collapse eventKey="0">
                                                 <Card.Body>
-                                                    <div className='h-100'>
-                                                        <ul>
-                                                            <li>
-                                                                <p>Featured</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Women’s Clothing</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Home & Kitchen</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Women’s Curve + Plus</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Kid’s Fashion</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Men’s Clothing</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Beauty & Health</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Women’s Shoes</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Jewelary & Accessories</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Toys & Games</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Electronics</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Arts, Crafts & Sewing</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Patio, Lawn & Garden</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Automotive</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>Bags & Luggage</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                            <li>
-                                                                <p>
-                                                                    Women’s Underwear & Sleep
-                                                                </p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                            </li>
-                                                        </ul>
+                                                    <div className='h-100 sub-catagories'>
+                                                        <Accordion >
+                                                            <Accordion.Item eventKey="0">
+                                                                <Accordion.Header>
+                                                                    <li style={{ marginTop: "0px" }}>
+                                                                        <p>Featured</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li></Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    <div className='mobile-menu-cat-box d-flex align-items-center justify-content-center gap-3 flex-wrap'>
+
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+                                                                        <div className='cate-box text-center pointer'>
+                                                                            <div className='cat-img-round'>
+                                                                                <img src="./img/dummy.png" alt='' width="100%" />
+                                                                            </div>
+                                                                            <h5 className='mt-3'>Weddings & Events</h5>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="1">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Women’s Clothing</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="2">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Home & Kitchen</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="3">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Women’s Curve + Plus</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="4">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Kid’s Fashion</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="5">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Men’s Clothing</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="6">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Beauty & Health</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="7">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Women’s Shoes</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="8">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Jewelary & Accessories</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="9">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Toys & Games</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="10">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Electronics</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="11">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Arts, Crafts & Sewing</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="12">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Patio, Lawn & Garden</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="13">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Automotive</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="14">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>Bags & Luggage</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                            <Accordion.Item eventKey="15">
+                                                                <Accordion.Header>
+                                                                    <li>
+                                                                        <p>
+                                                                            Women’s Underwear & Sleep
+                                                                        </p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
+                                                                <Accordion.Body>
+                                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                                                    minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                                                    aliquip ex ea commodo consequat. Duis aute irure dolor in
+                                                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                                                                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                                                                    culpa qui officia deserunt mollit anim id est laborum.
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                        </Accordion>
                                                     </div>
                                                 </Card.Body>
                                             </Accordion.Collapse>

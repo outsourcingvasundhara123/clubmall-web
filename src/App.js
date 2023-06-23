@@ -30,6 +30,10 @@ const App = () => {
         <MdOutlineKeyboardArrowUp />
       </Button>
 
+      {/* <div className='loader-main'>
+
+      </div> */}
+
       <ScrollToTop />
       <div className='page-layout'>
         <div>
