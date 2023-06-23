@@ -34,17 +34,6 @@ const Home = () => {
     const serverURL = getServerURL();
     // const [loading, setLoading] = useState(true);
     const [active, setActive] = useState("1");
-    // const player = useRef();
-
-    // const startAnimation = () => {
-    //     if (player.current) {
-    //         player.current.play(); // Check if player.current is not null before accessing play()
-    //     }
-    // };
-
-    // const stopAnimation = () => {
-    //     setLoading(false);
-    // };
 
     const breakpoints = {
         0: {

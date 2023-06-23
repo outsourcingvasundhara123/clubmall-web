@@ -26,6 +26,7 @@ import { CardElement, Elements, ElementsConsumer } from "@stripe/react-stripe-js
 import { loadStripe } from "@stripe/stripe-js";
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 
+
 // Your public Stripe key
 const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
 
@@ -35,7 +36,7 @@ const WrappedCart = () => {
     const elements = useElements();
 
     const isLoggedIn = Is_Login();
-    const { setProfileOption, getMyAddress, correntAddess, setCart, cart, } = useContext(CartContext);
+    const {sucessSnackBarOpen,setMyMessage, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen , sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart, } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -53,10 +54,10 @@ const WrappedCart = () => {
     const [product_id, setProduct_id] = useState({});
     const [productColorActive, setProductColorActive] = useState();
     const [show, setShow] = useState(false);
-    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    // const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    // const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
     const [couponCode, setCouponCode] = useState("");
-    const [Mymessage, setMyMessage] = useState("");
+    // const [Mymessage, setMyMessage] = useState("");
     const [couponId, setCouponId] = useState([]);
     const [loading, setLoading] = useState(true);
     const [is_Wait, setIs_Wait] = useState(false);
@@ -199,12 +200,14 @@ const WrappedCart = () => {
     const getCartData = async () => {
 
         startAnimation()
+        const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+
         try {
             // if (isLoggedIn) {
             const [poroductResponse, flashProduct] = await Promise.all([
                 api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
-                api.post(`${serverURL + PRODUCTList}`, {
-                    product_list_type: "recommended-products",
+                apiTyp(`${serverURL + PRODUCTList}`, {
+                    product_list_type: "trending-product",
                     page: 1
                 })
             ]);
@@ -216,11 +219,6 @@ const WrappedCart = () => {
             setProductList(poroductData);
             setFleshProductList(flashProductproductListData)
             stopAnimation()
-            // } else {
-            //     // User is not logged in, redirect to the login page
-            //     afterLogin(setMyMessage);
-            //     setWarningSnackBarOpen(!warningSnackBarOpen);
-            //   }
         } catch (error) {
             console.log(error);
             errorResponse(error, setMyMessage);
@@ -255,11 +253,25 @@ const WrappedCart = () => {
     useEffect(() => {
         getCartData();
         getMyAddress()
-    }, []);
+    }, [sellIs_wished,isLoggedIn]);
 
 
     return (
         <>
+
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
 
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
@@ -588,13 +600,14 @@ const WrappedCart = () => {
                                                         secper={e.secper}
                                                         off={e.discount_percentage}
                                                         path={fleshProductList?.productImagePath && fleshProductList.productImagePath}
+                                                        is_wishList={e.wishList && e.wishList}
                                                     />
                                                 )
                                             })
                                         }
-                                        <div className='w-100 d-flex justify-content-center'>
+                                        {/* <div className='w-100 d-flex justify-content-center'>
                                             <Button className='shop-btn rotate-img btn-cos-mobile'  onClick={() => navigate("/trending")} >View More <MdKeyboardDoubleArrowRight /></Button>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
 

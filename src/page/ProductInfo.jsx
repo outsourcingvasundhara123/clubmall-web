@@ -29,13 +29,13 @@ import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 // import { useContext } from 'react'
 const ProductInfo = () => {
-    const { activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { sucessSnackBarOpen, setMyMessage, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
-    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
-    const [Mymessage, setMyMessage] = useState("");
+    // const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    // const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    // const [Mymessage, setMyMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const [drawer, setDrawer] = useState(false);
@@ -95,11 +95,12 @@ const ProductInfo = () => {
 
 
     const getproductlist = async () => {
+        const apiTyp = isLoggedIn ? api.postWithToken : api.post;
 
         try {
             startAnimation()
             const [trendingproductListResponse, favorites] = await Promise.all([
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+                apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
                 api.post(`${serverURL + PRODUCTList}`, {
                     product_list_type: "recommended-products",
                     page: 1
@@ -116,7 +117,7 @@ const ProductInfo = () => {
 
     useEffect(() => {
         getproductlist();
-    }, []);
+    }, [sellIs_wished, isLoggedIn]);
 
 
     const findSKUId = () => {
@@ -192,6 +193,21 @@ const ProductInfo = () => {
     return (
         <>
 
+
+            <SucessSnackBar
+                open={sucessSnackBarOpen}
+                setOpen={setSucessSnackBarOpen}
+                text={Mymessage}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpen}
+                setOpen={setWarningSnackBarOpen}
+                text={Mymessage}
+                type="error"
+            />
+
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -233,7 +249,7 @@ const ProductInfo = () => {
                                     <Col lg={6} md={12}>
                                         <div className='position-relative'>
                                             <Button className='wishlist-btn'><img src='./img/header/wishlist.png' alt='' width="25px" /></Button>
-                                            <ProductSlider  activeImage={activeImage}  colorProduct={colorProduct} productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
+                                            <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
                                             <div className='d-flex align-items-center gap-3'>
@@ -397,7 +413,7 @@ const ProductInfo = () => {
                                                     {
                                                         Product?.productList?.sku_attributes?.color && Product.productList?.sku_attributes.color?.map((e, i) => {
                                                             return (
-                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name) ,setActiveImage(e.imgUrl)) }>
+                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
                                                                     <img className='colors' src={e.imgUrl} alt='' />
                                                                 </Button>
                                                             )
@@ -665,13 +681,15 @@ const ProductInfo = () => {
                                                         secper={e.secper}
                                                         off={e.discount_percentage}
                                                         path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
+                                                        is_wishList={e.wishList && e.wishList}
+
                                                     />
                                                 )
                                             })
                                         }
-                                        <div className='w-100 d-flex justify-content-center'>
+                                        {/* <div className='w-100 d-flex justify-content-center'>
                                             <Button className='shop-btn rotate-img btn-cos-mobile' onClick={() => handelCategorydata()} >View More <MdKeyboardDoubleArrowRight /></Button>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>

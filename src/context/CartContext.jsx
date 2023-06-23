@@ -19,7 +19,6 @@ export const CartProvider = ({ children }) => {
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const [wishProductUrl, setWishProductURL] = useState("");
   const [userProductList, setUserProductList] = useState([]);
-
   const [category, setcategory] = useState([]);
   const [categoryWeb, setCategoryWeb] = useState([]);
   const [sellingCategory, setSellingCategory] = useState({});
@@ -43,7 +42,9 @@ export const CartProvider = ({ children }) => {
   const [sellProducUrl, setSellProducUrl] = useState("");
   const [viewMoreLodr, setViewmoreLoder] = useState(false);
   const [profileOption, setProfileOption] = useState();
- 
+  const [sellIs_wished, setSellIs_wished] = useState(0);
+
+
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const [searchpostList, setSearchPostList] = useState([]);
   const [searchPage, setSearchPage] = useState(1);
@@ -60,6 +61,7 @@ export const CartProvider = ({ children }) => {
       player.current.play(); // Check if player.current is not null before accessing play()
     }
   };
+
   const stopAnimation = () => {
     setLoading(false);
   };
@@ -89,6 +91,7 @@ export const CartProvider = ({ children }) => {
         if (res.data.success == true) {
           setMyMessage(res.data.message);
           setSucessSnackBarOpen(!sucessSnackBarOpen);
+          setSellIs_wished( sellIs_wished + 1)
           getSellProducts()
           getProducts()
           getWishList()
@@ -118,11 +121,6 @@ export const CartProvider = ({ children }) => {
       setWishlistCount(res.data.data.list.length)
       setWishProductURL(res.data.data.productImagePath)
       stopAnimation()
-      // } else {
-      //   // User is not logged in, redirect to the login page
-      //   afterLogin(setMyMessage);
-      //   setWarningSnackBarOpen(!warningSnackBarOpen);
-      // }
     } catch (error) {
       errorResponse(error, setMyMessage);
       setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -135,13 +133,13 @@ export const CartProvider = ({ children }) => {
       const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, { "action": "shipping-address-list" })
       setMyAddess(res.data.data.userData)
       let data = res.data.data?.userData.filter((e) => e.is_default == 1)
-      if(data.length !== 0){
+      if (data.length !== 0) {
         const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
           "action": "list",
           "country_id": data[0].country_id._id
         })
         setCorrentAddess({ data: data, shipping_method_id: res2.data.data?.list[0]?._id })
-      }else{
+      } else {
         setCorrentAddess("")
       }
 
@@ -158,7 +156,7 @@ export const CartProvider = ({ children }) => {
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
       const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
-        api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "category"}),
+        api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" }),
         apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
         apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
         api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
@@ -185,14 +183,14 @@ export const CartProvider = ({ children }) => {
 
     try {
       const [categoryResponse] = await Promise.all([
-        api.post(`${serverURL + PRODUCTCATEGORY}`,{action : "sub-category"})
+        api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "sub-category" })
       ]);
       const categoryData = categoryResponse.data.data;
       //for random category
       const randomIndices = [];
 
       const maxIndex = categoryData.productsCategoryList.length - 1;
-      
+
       while (randomIndices.length < 3) {
         const randomIndex = Math.floor(Math.random() * maxIndex);
         if (!randomIndices.includes(randomIndex)) {
@@ -220,7 +218,7 @@ export const CartProvider = ({ children }) => {
 
       setSellingCategory(sellingCategory)
       // Divide the category list into two parts
-      const halfwayIndex = Math.ceil(categoryData.productsCategoryList    && categoryData?.productsCategoryList.length / 2);
+      const halfwayIndex = Math.ceil(categoryData.productsCategoryList && categoryData?.productsCategoryList.length / 2);
       const firstHalf = categoryData.productsCategoryList?.slice(0, halfwayIndex);
       const secondHalf = categoryData.productsCategoryList?.slice(halfwayIndex);
       // Set the first half and second half of categories
@@ -234,77 +232,84 @@ export const CartProvider = ({ children }) => {
 
   const getSellProducts = async () => {
     try {
+      console.log(sellIs_wished,"sellIs_wished --- called");
+
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-      console.log("sell called 0");
-        const [womenCategory, menCategory, kidCategory, favorites] = await Promise.all([
-          apiTyp(`${serverURL + PRODUCTList}`, {
-                product_list_type: "by-categories",
-                product_category_one_id: sellingCategory?.first?._id,
-                product_category_two_id: sellingCategory?.first?.id,
-                page: womanpage
-            }),
-            apiTyp(`${serverURL + PRODUCTList}`, {
-                product_list_type: "by-categories",
-                product_category_one_id: sellingCategory?.second?._id,
-                product_category_two_id: sellingCategory?.second?.id,
-                page: kidspage
-            }),
-            apiTyp(`${serverURL + PRODUCTList}`, {
-                product_list_type: "by-categories",
-                product_category_one_id: sellingCategory?.third?._id,
-                product_category_two_id: sellingCategory?.third?.id,
-                page: manpage
-            }),
-            apiTyp(`${serverURL + PRODUCTList}`, {
-                product_list_type: "recommended-products",
-                page: favoritepage
-            })
-        ]);
-        const womanproductData = womenCategory.data.data;
-        const manproductData = menCategory.data.data;
-        const kidsproductData = kidCategory.data.data;
-        const favoriteproductData = favorites.data.data;
-        // Merge products without repetitions
-        const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
-            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-        const updatedManProductList = [...manProductList, ...manproductData.productListArrObj]
-            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-        const updatedKidsProductList = [...kidsProductList, ...kidsproductData.productListArrObj]
-            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+      const [womenCategory, menCategory, kidCategory, favorites] = await Promise.all([
+        apiTyp(`${serverURL + PRODUCTList}`, {
+          product_list_type: "by-categories",
+          product_category_one_id: sellingCategory?.first?._id,
+          product_category_two_id: sellingCategory?.first?.id,
+          page: womanpage
+        }),
+        apiTyp(`${serverURL + PRODUCTList}`, {
+          product_list_type: "by-categories",
+          product_category_one_id: sellingCategory?.second?._id,
+          product_category_two_id: sellingCategory?.second?.id,
+          page: kidspage
+        }),
+        apiTyp(`${serverURL + PRODUCTList}`, {
+          product_list_type: "by-categories",
+          product_category_one_id: sellingCategory?.third?._id,
+          product_category_two_id: sellingCategory?.third?.id,
+          page: manpage
+        }),
+        apiTyp(`${serverURL + PRODUCTList}`, {
+          product_list_type: "flashsale-products",
+          page: favoritepage
+        })
+      ]);
+      const womanproductData = womenCategory.data.data;
+      const manproductData = menCategory.data.data;
+      const kidsproductData = kidCategory.data.data;
+      const favoriteproductData = favorites.data.data;
+      setSellProducUrl(womanproductData.productImagePath);
 
-        const updatedfavoriteProductList = [...favoriteProductList, ...favoriteproductData.productListArrObj]
-            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-           
+      // if (sellIs_wished >= 1) {
+        setWomanProductList(womanproductData.productListArrObj);
+        setManProductList(manproductData.productListArrObj);
+        setkidsProductList(kidsproductData.productListArrObj);
+        setFavoriteProductList(favoriteproductData.productListArrObj)
+      // } else if(sellIs_wished === 0){
+      //   // Merge products without repetitions
+      //   const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
+      //     .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+      //   const updatedManProductList = [...manProductList, ...manproductData.productListArrObj]
+      //     .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+      //   const updatedKidsProductList = [...kidsProductList, ...kidsproductData.productListArrObj]
+      //     .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+      //   const updatedfavoriteProductList = [...favoriteProductList, ...favoriteproductData.productListArrObj]
+      //     .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+      //   setWomanProductList(updatedWomanProductList);
+      //   setManProductList(updatedManProductList);
+      //   setkidsProductList(updatedKidsProductList);
+      //   setFavoriteProductList(updatedfavoriteProductList)
+      // }
 
-        setSellProducUrl(womanproductData.productImagePath);
-        setWomanProductList(updatedWomanProductList);
-        setManProductList(updatedManProductList);
-        setkidsProductList(updatedKidsProductList);
-        setFavoriteProductList(updatedfavoriteProductList)
-        setViewmoreLoder(false)
-        stopAnimation()
+      setViewmoreLoder(false)
+      stopAnimation()
 
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-};
+  };
 
   const getSearchedProduct = async () => {
     try {
-      setLoading(true)  
-      let search =  searchKeyWord 
+      setLoading(true)
+      let search = searchKeyWord
 
       const [postListResponse] = await Promise.all([
         api.postWithToken(`${serverURL + "search"}`, {
-          q:search ,
+          q: search,
           search_type: "product",
           page: searchPage,
         }),
       ]);
       const postsData = postListResponse.data;
       if (postsData && Array.isArray(postsData.data)) {
-        if(is_search !== 1){
+        if (is_search !== 1) {
           const updatedProductList = [
             ...searchpostList,
             ...postsData.data,
@@ -313,14 +318,14 @@ export const CartProvider = ({ children }) => {
               self.findIndex((p) => p._id === product._id) === index
           );
           setSearchPostList(updatedProductList);
-        }else{
+        } else {
           setSearchPostList(postsData.data);
         }
-       
+
         // console.log(updatedProductList,"postsData");
         setSearchURL(postsData.productImagePath);
         setViewmoreLoder(false);
-        setLoading(false)  
+        setLoading(false)
       } else {
         stopAnimation();
         // console.log("Invalid data format received");
@@ -330,15 +335,19 @@ export const CartProvider = ({ children }) => {
     }
   };
 
- const handelSearch = (search) => {
-  localStorage.setItem("search", search);
-  setIs_search(1)
-};
+ const handelwishSell = (mood) =>{
+  setSellIs_wished(0)
+  }
+
+  const handelSearch = (search) => {
+    localStorage.setItem("search", search);
+    setIs_search(1)
+  };
 
   return (
 
     <CartContext.Provider value={{
-      activeImage, setActiveImage, setIs_search,handelSearch,searchUrl,searchPage,searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage,searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr,setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage,kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList,getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>
