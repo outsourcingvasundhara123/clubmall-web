@@ -54,13 +54,9 @@ const Trending = () => {
         }
     };
 
-
-
     useEffect(() => {
         getTrendingProduct();
     }, [page]);
-
-   console.log(page , "page");
 
     return (
         <>

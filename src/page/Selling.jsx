@@ -34,7 +34,6 @@ const Selling = () => {
                 api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" })
             ]);
             const categoryData = categoryResponse.data.data;
-            console.log(categoryData, "categoryData");
             // Divide the category list into two parts
             const halfwayIndex = Math.ceil(categoryData.productsCategoryList && categoryData?.productsCategoryList.length / 2);
             const firstHalf = categoryData.productsCategoryList?.slice(0, halfwayIndex);
@@ -59,8 +58,6 @@ const Selling = () => {
         getProducts()
         getCategory()
     }, []);
-
-    console.log(sellCategory, "sellCategory");
 
     return (
 

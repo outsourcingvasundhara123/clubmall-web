@@ -7,7 +7,7 @@ import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { colors, categoriesSliderData } from '../helper/constants'
 import { RangeSlider } from 'rsuite';
-import { PRODUCTList, PRODUCTSEARCH, PRODUCTCATEGORY } from "../helper/endpoints";
+import { PRODUCTList, PRODUCTSEARCH, PRODUCTCATEGORY ,PRODUCTDEPENDENTCATEGORY } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
@@ -31,6 +31,7 @@ const Categories = () => {
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const Categorie_id = localStorage.getItem("selectedcategories") ? localStorage.getItem("selectedcategories") : "Women Apparel"
+    // const selectedSub = localStorage.setItem("selectedSubcategories") 
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -41,11 +42,10 @@ const Categories = () => {
     };
 
     const getCategory = async () => {
-
         try {
             startAnimation()
             setLoading(true)
-            let categoryDtata = await api.post(`${serverURL + PRODUCTCATEGORY}`, {action : "sub-category"})
+            let categoryDtata = await api.post(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
             setSubCatList(subcat[0]?.child)
@@ -70,7 +70,6 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-        getProducts()
     }, [Categorie_id, subCat]);
 
 

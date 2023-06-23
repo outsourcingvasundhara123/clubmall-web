@@ -86,7 +86,6 @@ const LogIn = () => {
         updatedValues.login_type = "4"
         api.post(`${serverURL}login`, updatedValues)
           .then((res) => {
-            console.log(res.data, "res.data");
             if (res.data.success === true) {
               if (res.data.data.user) {
                 setMyMessage(res.data.message);
@@ -205,7 +204,6 @@ const LogIn = () => {
           verification_code: myotp
         })
           .then((res) => {
-            console.log(res.data, "send otp");
             if (res.data.success == true) {
               setValues(initialValues);
               setMyMessage(res.data.message);
@@ -239,7 +237,6 @@ const LogIn = () => {
         api.post(`${serverURL}forgot-password`, {
           email: values.email
         }).then((res) => {
-          console.log(res.data, "send otp");
           if (res.data.success == true) {
             setMyMessage(res.data.message);
             setSucessSnackBarOpen(!sucessSnackBarOpen);
@@ -262,7 +259,6 @@ const LogIn = () => {
   const SubmitResetPassword = (e) => {
 
     e.preventDefault();
-    console.log(errors);
     if (values.email && (!errors.password) && values.password && values.reset_password_otp) {
       try {
         api.post(`${serverURL}reset-password`, {
@@ -291,8 +287,7 @@ const LogIn = () => {
     }
   };
 
-  console.log(otpShow, "otpShow");
-  console.log(values, "values");
+
 
   return (
     <>

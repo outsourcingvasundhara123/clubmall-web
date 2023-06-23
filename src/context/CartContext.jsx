@@ -134,9 +134,7 @@ export const CartProvider = ({ children }) => {
     try {
       const res = await api.postWithToken(`${serverURL + "shipping-address-manage"}`, { "action": "shipping-address-list" })
       setMyAddess(res.data.data.userData)
-      console.log('address 0');
       let data = res.data.data?.userData.filter((e) => e.is_default == 1)
-      console.log(data,'address 1');
       if(data.length !== 0){
         const res2 = await api.postWithToken(`${serverURL + "shipping-method-manage"}`, {
           "action": "list",
@@ -291,8 +289,6 @@ export const CartProvider = ({ children }) => {
         console.log(error);
     }
 };
-
-
 
   const getSearchedProduct = async () => {
     try {
