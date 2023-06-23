@@ -8,7 +8,7 @@ import { CartContext } from '../context/CartContext';
 
 const ProCard = (props) => {
 
-    const {addWishList } = useContext(CartContext);
+    const { handelwishSell, addWishList } = useContext(CartContext);
     const location = useLocation(window.location.pathname);
     const navigate = useNavigate();
     const [product_id, setProduct_id] = useState({});
@@ -38,7 +38,7 @@ const ProCard = (props) => {
 
             <div className='cos-width explore-card'>
                 <div className='product-card   pointer'>
-                <div className='position-relative'>
+                    <div className='position-relative'>
                         {/* Use the local activeImage state here */}
                         <img src={activeImage ? activeImage : props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
@@ -52,13 +52,13 @@ const ProCard = (props) => {
                             </div>
                             {props.is_wishList === 0
                                 &&
-                                <Button className='like-btn' onClick={() => addWishList(props.id, "product-wishlist")} >
+                                <Button className='like-btn' onClick={() => (addWishList(props.id, "product-wishlist"))} >
                                     <img src='./img/new_in/like.png' className='like-size' alt='' />
                                 </Button>
                             }
                             {
                                 props.is_wishList === 1 &&
-                                <Button className='like-btn' onClick={() => addWishList(props.id, "product-delete-wishlist")} >
+                                <Button className='like-btn' onClick={() => (addWishList(props.id, "product-delete-wishlist"))} >
                                     <img src='./img/Vector.png' alt='' />
                                 </Button>
                             }
@@ -75,7 +75,7 @@ const ProCard = (props) => {
                                 {props.color && props.color?.map((e, i) => {
                                     return (
                                         <div>
-                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name),setActiveImage(e.imgUrl)) }>
+                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
                                                 <img alt='' src={e.imgUrl} width="20px" />
                                             </Button>
                                         </div>
@@ -93,7 +93,7 @@ const ProCard = (props) => {
                                 {props.color && props.color?.map((e, i) => {
                                     return (
                                         <div>
-                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name),setActiveImage(e.imgUrl))}>
+                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
                                                 <img alt='' src={e.imgUrl} width="20px" />
                                             </Button>
                                         </div>

@@ -93,7 +93,8 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
-                  navigate("/");
+                  window.location.href = document.referrer
+                  // navigate("");
                 }, 1000);
 
               } else {

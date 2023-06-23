@@ -13,18 +13,17 @@ import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { CartContext } from '../context/CartContext';
 import { PRODUCTCATEGORY } from '../helper/endpoints'
+
 const Selling = () => {
 
-    const { viewMoreLodr, setViewmoreLoder, stopAnimation, startAnimation, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishsellProducUrl, category, currentUser,
+    const { handelwishSell, sellIs_wished, viewMoreLodr, setViewmoreLoder, stopAnimation, startAnimation, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishsellProducUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [sellCategory, setSellCategory] = useState([]);
-
     const serverURL = getServerURL();
     const player = useRef(null);
-
 
 
     const getCategory = async () => {
@@ -46,16 +45,14 @@ const Selling = () => {
         }
     };
 
-
-
     useEffect(() => {
         getSellProducts();
         getWishList()
-    }, [womanpage, manpage, kidspage, favoritepage, sellingCategory, isLoggedIn]);
+        getProducts()
+    }, [womanpage, manpage, kidspage, favoritepage, sellingCategory, sellIs_wished , isLoggedIn]);
 
     useEffect(() => {
         getCategoryWeb()
-        getProducts()
         getCategory()
     }, []);
 
@@ -80,7 +77,6 @@ const Selling = () => {
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
-
                         <section className='hero position-relative selling-banner pointer' onClick={() => navigate("/trending")}>
                             <div className='hero-text'>
                                 <h1>Hop Into <br /> Hot Selling</h1>
@@ -93,7 +89,6 @@ const Selling = () => {
                                     <h2><span>S</span>HOP BY CATEGORY </h2>
                                 </div>
                                 <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4 mar-top-0'>
-
                                     {
                                         sellCategory && sellCategory.firstHalf?.slice(0, 6).map((e) => {
                                             return (
@@ -118,7 +113,7 @@ const Selling = () => {
                                 <Row className='mt-4'>
 
                                     {
-                                       sellCategory && sellCategory.secondHalf?.slice(0, 4).map((e) => {
+                                        sellCategory && sellCategory.secondHalf?.slice(0, 4).map((e) => {
                                             return (
 
                                                 <Col lg={3} md={6} sm={12} className='mt-4'>
@@ -168,14 +163,15 @@ const Selling = () => {
                                                                 off={e.discount_percentage}
                                                                 path={sellProducUrl && sellProducUrl}
                                                                 is_wishList={e.wishList && e.wishList}
+
                                                             />
                                                         )
                                                     })
                                                 }
                                             </div>
-                                            <div className='w-100 d-flex justify-content-center'>
-                                                <Button className='shop-btn' onClick={() => (setWomanPage(womanpage + 1), setViewmoreLoder(true))} >  {viewMoreLodr ? "Loding..." : "View More"}   <MdKeyboardDoubleArrowRight /></Button>
-                                            </div>
+                                            {/* <div className='w-100 d-flex justify-content-center'>
+                                                <Button className='shop-btn' onClick={() => (setWomanPage(womanpage + 1), setViewmoreLoder(true), handelwishSell())} >  {viewMoreLodr ? "Loding..." : "View More"}   <MdKeyboardDoubleArrowRight /></Button>
+                                            </div> */}
                                         </Tab>
                                         <Tab eventKey={sellingCategory?.second?.name} title={sellingCategory?.second?.name}>
                                             <div className='mb-0 mt-4 explore-main'>
@@ -200,9 +196,9 @@ const Selling = () => {
                                                 }
 
                                             </div>
-                                            <div className='w-100 d-flex justify-content-center'>
-                                                <Button className='shop-btn' onClick={() => (setManPage(manpage + 1), setViewmoreLoder(true))}>{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
-                                            </div>
+                                            {/* <div className='w-100 d-flex justify-content-center'>
+                                                <Button className='shop-btn' onClick={() => (setManPage(manpage + 1), setViewmoreLoder(true), handelwishSell())}>{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
+                                            </div> */}
                                         </Tab>
                                         <Tab eventKey={sellingCategory?.third?.name} title={sellingCategory?.third?.name}>
                                             <div className='mb-0 mt-4 explore-main'>
@@ -220,16 +216,14 @@ const Selling = () => {
                                                                 secper={e.secper}
                                                                 off={e.discount_percentage}
                                                                 path={sellProducUrl && sellProducUrl}
-                                                                is_wishList={e.wishList && e.wishList}
-
-                                                            />
+                                                                is_wishList={e.wishList && e.wishList} />
                                                         )
                                                     })
                                                 }
                                             </div>
-                                            <div className='w-100 d-flex justify-content-center'>
-                                                <Button className='shop-btn' onClick={() => (setKidPage(kidspage + 1), setViewmoreLoder(true))} >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
-                                            </div>
+                                            {/* <div className='w-100 d-flex justify-content-center'>
+                                                <Button className='shop-btn' onClick={() => (setKidPage(kidspage + 1), setViewmoreLoder(true), handelwishSell())} >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
+                                            </div> */}
                                         </Tab>
                                     </Tabs>
 
@@ -330,9 +324,9 @@ const Selling = () => {
                                         })
                                     }
 
-                                    <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setFavoritePage(favoritepage + 1), setViewmoreLoder(true))} > {viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
-                                    </div>
+                                    {/* <div className='w-100 d-flex justify-content-center'>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setFavoritePage(favoritepage + 1), setViewmoreLoder(true), handelwishSell())} > {viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
+                                    </div> */}
                                 </div>
                             </div>
                         </section>
@@ -362,7 +356,7 @@ const Selling = () => {
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => navigate("/trending")} >View More<MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (navigate("/trending"), handelwishSell())} >View More<MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>

@@ -14,12 +14,12 @@ import { CartContext } from '../context/CartContext';
 const Search = () => {
 
     //   const [searchPage, setSearchPage] = useState(1);
-    const { setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+    const { sellIs_wished,setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     useEffect(() => {
         getSearchedProduct();
-    }, [searchPage, searchKeyWord]);
+    }, [searchPage, searchKeyWord ]);
 
 
     return (
@@ -33,8 +33,8 @@ const Search = () => {
                             <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
                                 <div className='text-center found'>
                                     <img src='./img/not-found.png' alt='' />
-                                    <p className='mt-3'>The cart is empty</p>
-                                    <Button className='mt-3 submit-btn'>Shop Now</Button>
+                                    <p className='mt-3'> No result found </p>
+                                    {/* <Button className='mt-3 submit-btn'>Shop Now</Button> */}
                                 </div>
                             </div>
                         }

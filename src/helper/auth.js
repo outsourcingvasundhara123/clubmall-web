@@ -5,7 +5,7 @@ export const login = (user) => {
   localStorage.setItem('name', user.name);
   localStorage.setItem('user', user._id);
   localStorage.setItem('profile_image', user.profile_image);
-  window.location.href = "/";
+  // window.location.href = "/";
 };
   
   export const logout = () => {

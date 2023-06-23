@@ -139,6 +139,12 @@ const Header = () => {
         }
     };
 
+    const handelSubCat = (Id) => {
+        localStorage.setItem("selectedSubcategories", Id);
+        window.location.href = "/categories";
+      };
+
+
     useEffect(() => {
         getCategory();
     }, []);
@@ -215,7 +221,7 @@ const Header = () => {
                                                         <div className='mega-product mega-menu-list'>
                                                             {subCategory && subCategory?.map((e, i) => {
                                                                 return (
-                                                                    <div className='product_image pointer' onClick={() => handelCategorydata(e.parent_id)} key={i}>
+                                                                    <div className='product_image pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))} key={i}>
 
                                                                         <div className='product-box'>
 
