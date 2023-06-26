@@ -192,7 +192,7 @@ const Home = () => {
                                     <Col xl={6} lg={6} md={6} sm={12} className='mt-4'>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
-                                                <img src='./img/img4.png' alt='' />
+                                                <img src='./img/img4.webp' alt='' />
                                                 <div className='card-text-bottom big-box'>
                                                     <div className='card-text'>
                                                         <h5>RJ Jewellery</h5>
@@ -206,7 +206,7 @@ const Home = () => {
                                     <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10'>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
-                                                <img src='./img/img5.png' alt='' />
+                                                <img src='./img/img5.webp' alt='' />
                                                 <div className='card-text-bottom big-box'>
                                                     <div className='card-text'>
                                                         <h5>FS - Nike Air Max 270 React </h5>
@@ -230,7 +230,7 @@ const Home = () => {
                                     <Col xl={6} lg={6} md={6} sm={12} className='mt-4'>
                                         <div className='product-s4-card' style={{ borderRadius: "0px 0px 15px 15px" }}>
                                             <div className='position-relative'>
-                                                <img src='./img/daily-drop-1.png' alt='' />
+                                                <img src='./img/daily-drop-1.webp' alt='' />
                                                 <div className='card-text-bottom big-box-daily-drops'>
                                                     <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/trending")}>Shop Now</Button>
                                                 </div>
@@ -240,7 +240,7 @@ const Home = () => {
                                     <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10'>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
-                                                <img src='./img/daily-drop-2.png' alt='' />
+                                                <img src='./img/daily-drop-2.webp' alt='' />
                                             </div>
                                         </div>
                                     </Col>
