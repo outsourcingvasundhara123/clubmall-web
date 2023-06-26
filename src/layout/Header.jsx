@@ -270,7 +270,7 @@ const Header = () => {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
                                 {/* <img src='./img/header/search-icone.png' alt='' /> */}
-                                <input type="text" placeholder='Search' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
+                                <input type="text" placeholder='Search products' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
                                 <Button className='search-icon-btn'><BiSearch /></Button>
 
                                 {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
