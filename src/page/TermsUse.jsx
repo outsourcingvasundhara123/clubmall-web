@@ -10,7 +10,7 @@ const TermsUse = () => {
                     <div className='container-cos'>
                         <Row className='align-items-center'>
                             <Col lg={6} md={12}>
-                                <img src='./img/about/clubmall-work.png' alt='' width="100%" />
+                                <img src='./img/about/clubmall-work.webp' alt='' width="100%" />
                             </Col>
                             <Col lg={6} md={12} className=' mt-5 mt-lg-0'>
                                 <div className='clubmall-work-text'>

@@ -239,10 +239,10 @@ const ProductInfo = () => {
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
                                     <div className='d-flex align-items-center gap-1'>
-                                        <NavLink>{Product.productList?.product_category_keys?.product_category_two.name}</NavLink>
+                                        <NavLink >{Product.productList?.product_category_keys?.product_category_two.name}</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
-                                    <NavLink className='active'>  {Product.productList?.name} </NavLink>
+                                    <NavLink className='active wrap-line-cos'>  {Product.productList?.name} </NavLink>
                                 </div>
 
                                 <Row className='mt-4'>
@@ -279,7 +279,7 @@ const ProductInfo = () => {
                                             </div>
                                         }
 
-                                        <div className='together'>
+                                        <div className='together web-together'>
                                             <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
                                                 <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
@@ -359,8 +359,9 @@ const ProductInfo = () => {
 
                                             </div>
                                         </div>
+
                                     </Col>
-                                    <Col lg={6} md={12} className='mt-5 mt-lg-0'>
+                                    <Col lg={6} md={12} className='mt-4 mt-lg-0'>
                                         <div className='pro-def'>
                                             <h6> {Product.productList?.name}</h6>
 
@@ -662,6 +663,87 @@ const ProductInfo = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div className='together mobile-together'>
+                                    <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
+                                        <h5 className='info-title cos-title'>Frequently bought together</h5>
+                                        <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
+                                    </div>
+                                    <div>
+                                        <Swiper
+                                            slidesPerView={4}
+                                            spaceBetween={30}
+                                            hashNavigation={{
+                                                watchState: true,
+                                            }}
+                                            loop={true}
+                                            breakpoints={{
+                                                0: {
+                                                    slidesPerView: 2,
+                                                    spaceBetween: 10
+                                                },
+                                                425: {
+                                                    slidesPerView: 2,
+                                                    spaceBetween: 10
+                                                },
+                                                650: {
+                                                    slidesPerView: 2,
+                                                    spaceBetween: 10
+                                                },
+                                                991: {
+                                                    slidesPerView: 2,
+                                                    spaceBetween: 20
+                                                },
+                                                1300: {
+                                                    slidesPerView: 3,
+                                                    spaceBetween: 30
+                                                }
+                                            }}
+                                            navigation={true}
+                                            modules={[Pagination, Navigation]}
+                                            className="mySwiper"
+                                        >
+
+                                            {
+
+                                                !favoriteProductList.productListArrObj ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                                                    <>
+                                                        {
+
+                                                            favoriteProductList.productListArrObj
+                                                            && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
+                                                                return (
+                                                                    <SwiperSlide>
+                                                                        <div className='slide-box'>
+                                                                            <div className='position-relative'>
+                                                                                <img src={favoriteProductList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
+                                                                            </div>
+                                                                            <div className='slider-box-per pt-3'>
+
+                                                                                <div className='d-flex align-items-center gap-2 mt-3'>
+                                                                                    <h5>${e.individual_price}</h5>
+                                                                                    <del>${e.group_price}</del>
+                                                                                    <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </SwiperSlide>
+                                                                )
+                                                            })
+                                                        }
+
+                                                    </>
+                                                )}
+
+                                        </Swiper>
+
+                                        {/* <div className='d-flex justify-content-center'>
+                                                    <Button className='add-items' onClick={handleDrawerShow}>Add 3 items to cart: <b>$36.45</b> <del>$534,33</del></Button>
+                                                </div> */}
+
+
                                     </div>
                                 </div>
 

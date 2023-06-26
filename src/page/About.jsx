@@ -24,7 +24,7 @@ const About = () => {
                         </div>
                     </Col>
                     <Col lg={6} md={12} className='pe-0 mt-5 mt-lg-0'>
-                        <img src='./img/about/about-banner.png' alt='' width="100%" />
+                        <img src='./img/about/about-banner.webp' alt='' width="100%" />
                     </Col>
                 </Row>
 
@@ -32,7 +32,7 @@ const About = () => {
                     <div className='container-cos'>
                         <Row className='align-items-center'>
                             <Col lg={6} md={12}>
-                                <img src='./img/about/clubmall-work.png' alt='' width="100%" />
+                                <img src='./img/about/clubmall-work.webp' alt='' width="100%" />
                             </Col>
                             <Col lg={6} md={12} className=' mt-5 mt-lg-0'>
                                 <div className='clubmall-work-text'>
@@ -76,7 +76,7 @@ const About = () => {
                                 </div>
                             </Col>
                             <Col lg={6} md={12} className='order-1 order-lg-2'>
-                                <img src='./img/about/group-buy.png' alt='' width="100%" />
+                                <img src='./img/about/group-buy.webp' alt='' width="100%" />
                             </Col>
                         </Row>
                     </div>
