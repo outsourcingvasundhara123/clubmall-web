@@ -455,7 +455,7 @@ const Header = () => {
                                                             {category && category?.productsCategoryList?.map((e, i) => (
                                                                 <Accordion.Item eventKey={i}>
                                                                     <Accordion.Header>
-                                                                        <li style={{ marginTop: "0px" }} onMouseOver={() => HandelShowData(e.name, e)}>
+                                                                        <li onMouseOver={() => HandelShowData(e.name, e)}>
                                                                             <p>{e.name}</p>
                                                                             <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                                         </li>

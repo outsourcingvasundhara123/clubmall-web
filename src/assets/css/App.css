@@ -767,6 +767,10 @@ p {
     width: 100%;
 }
 
+.mobile-menu .accordion-item:first-child li {
+    margin-top: 0 !important;
+}
+
 .mobile-menu .accordion-item .accordion-button {
     padding-bottom: 0 !important;
     border: none !important;
@@ -1410,7 +1414,7 @@ del {
     position: absolute;
     right: 10px;
     top: 10px;
-    color: #223263;
+    color: #223263 !important;
     font-size: 20px;
     font-weight: 600;
     /* display: flex;
