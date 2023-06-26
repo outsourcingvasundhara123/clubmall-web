@@ -24,7 +24,6 @@ const Wishlist = () => {
         getWishList()
     }, [isLoggedIn]);
 
-    console.log(wishlist, "wishlist");
 
     return (
         <>

@@ -37,6 +37,7 @@ const Categories = () => {
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const Categorie_id = localStorage.getItem("selectedcategories") ? localStorage.getItem("selectedcategories") : "Women Apparel"
+    const [subCatId, setSubCatId] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
 
     // const initial = {
@@ -49,8 +50,8 @@ const Categories = () => {
     //     max_price:""
     // }
 
-    const selectedSub = localStorage.getItem("selectedSubcategories") 
-    
+    const selectedSub = localStorage.getItem("selectedSubcategories")
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -72,12 +73,14 @@ const Categories = () => {
             let categoryDtata = await api.post(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
-            console.log(selectedSub,"selectedSub");
             setSubCatList(subcat[0]?.child)
             if (subCat === null) {
-                setSubCat(subcat[0]?.child[0].name)
+                let cat = subcat[0]?.child.find(e => e._id == selectedSub)
+                setSubCat(cat.name)
+                // setSubCat(subcat[0]?.child[0].name)
             }
             setCatName(subcat[0]?.name)
+            setSubCatId(subCart_id?._id)
             const [postListResponse] = await Promise.all([
                 apiTyp(`${serverURL + PRODUCTList}`, {
                     "product_list_type": "by-categories",
@@ -102,10 +105,33 @@ const Categories = () => {
         }
     };
 
+    // filter-details
+
+//     const getFilterDetails = async () => {
+//         try {
+// console.log(subCatId,"subCatId");
+// console.log(Categorie_id,"Categorie_id");
+
+//             startAnimation()
+//             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+//             let filterlist = await apiTyp(`${serverURL + "filter-details"}`, {
+//                 product_category_one_id: Categorie_id,
+//                 product_category_two_id: subCatId
+//             })
+//             console.log(filterlist, "filterlist");
+//             stopAnimation()
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     };
+
     useEffect(() => {
         getCategory();
-    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled , sellIs_wished  ]);
+    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished]);
 
+    // useEffect(() => {
+    //     getFilterDetails();
+    // }, [subCatId]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -126,7 +152,6 @@ const Categories = () => {
 
     }, []);
 
-    console.log(viewCalled, "viewCalled");
 
     return (
         <>
