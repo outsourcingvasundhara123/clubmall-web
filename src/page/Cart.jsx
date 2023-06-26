@@ -458,7 +458,7 @@ const WrappedCart = () => {
                                                     </div>
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>Item(s) discount: </label>
-                                                        <span>-${productList.cartAmountDetails?.discount_amount ? productList.cartAmountDetails?.discount_amount : 0}</span>
+                                                        <span>{productList.cartAmountDetails?.discount_amount ? "-$" + productList.cartAmountDetails?.discount_amount : 0}</span>
                                                     </div>
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>Item(s) sales tax: </label>

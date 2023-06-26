@@ -16,15 +16,26 @@ import { PRODUCTCATEGORY } from '../helper/endpoints'
 
 const Selling = () => {
 
-    const { handelwishSell, sellIs_wished, viewMoreLodr, setViewmoreLoder, stopAnimation, startAnimation, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, loading, setLoading, wishsellProducUrl, category, currentUser,
+    const {handelwishSell, sellIs_wished, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList,  wishsellProducUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [sellCategory, setSellCategory] = useState([]);
+    const [loading, setLoading] = useState(true);
     const serverURL = getServerURL();
-    const player = useRef(null);
+    const player = useRef();
 
+    const startAnimation = () => {
+        if (player.current) {
+          player.current.play(); // Check if player.current is not null before accessing play()
+        }
+      };
+    
+      const stopAnimation = () => {
+        setLoading(false);
+      };
+    
 
     const getCategory = async () => {
         startAnimation()

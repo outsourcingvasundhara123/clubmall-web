@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef , useEffect } from 'react'
 import Layout from '../../layout/Layout'
 import { Button, Form, Modal, NavLink, } from 'react-bootstrap'
 import "react-phone-input-2/lib/bootstrap.css";
@@ -54,6 +54,7 @@ const LogIn = () => {
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const [otpEmail, SetEmail] = useState("")
   const inputRefs = useRef([]);
+  const [isFirstTime, setIsFirstTime] = useState(true);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -93,7 +94,11 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
-                  window.location.href = document.referrer
+                  if(localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login"){
+                    window.location.href = "/"
+                  }else{
+                    window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
+                  }
                   // navigate("");
                 }, 1000);
 
@@ -288,6 +293,12 @@ const LogIn = () => {
     }
   };
 
+  useEffect(() => {
+    if (isFirstTime && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login" && localStorage.getItem('lastVisitedPath')  !==  "https://clubmall.com/login" ) {
+      localStorage.setItem('lastVisitedPath',  document.referrer);
+      setIsFirstTime(false);
+    }
+  }, [isFirstTime]);
 
 
   return (

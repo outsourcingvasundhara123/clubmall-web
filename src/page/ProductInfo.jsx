@@ -27,15 +27,15 @@ import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
-// import { useContext } from 'react'
+
 const ProductInfo = () => {
-    const { sucessSnackBarOpen, setMyMessage, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
-    // const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-    // const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
-    // const [Mymessage, setMyMessage] = useState("");
+    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [Mymessage, setMyMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const [drawer, setDrawer] = useState(false);
@@ -53,7 +53,7 @@ const ProductInfo = () => {
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
     const product_id = localStorage.getItem("selectedProductId") ? localStorage.getItem("selectedProductId") : "646b6db53c9cae7c199c7740"
-
+   
     const startAnimation = () => {
         if (player.current) {
             player.current.play();
