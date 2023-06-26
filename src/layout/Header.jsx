@@ -270,7 +270,7 @@ const Header = () => {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
                                 {/* <img src='./img/header/search-icone.png' alt='' /> */}
-                                <input type="text" placeholder='Search' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
+                                <input type="text" placeholder='Search products' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
                                 <Button className='search-icon-btn'><BiSearch /></Button>
 
                                 {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
@@ -455,7 +455,7 @@ const Header = () => {
                                                             {category && category?.productsCategoryList?.map((e, i) => (
                                                                 <Accordion.Item eventKey={i}>
                                                                     <Accordion.Header>
-                                                                        <li style={{ marginTop: "0px" }} onMouseOver={() => HandelShowData(e.name, e)}>
+                                                                        <li onMouseOver={() => HandelShowData(e.name, e)}>
                                                                             <p>{e.name}</p>
                                                                             <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                                         </li>

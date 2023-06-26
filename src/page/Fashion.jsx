@@ -78,7 +78,7 @@ const Fashion = () => {
                         <section className='home-first-image mb-0'>
                             <div className='container-cos'>
                                 <div className='w-100 position-relative pointer' onClick={() => navigate("/trending")}>
-                                    <img alt='' src="./img/new_in/vacation-with-babe.webp" width={"100%"} />
+                                    <img alt='' src="./img/new_in/hero-new-in.webp" width={"100%"} />
                                     <div className='particular-cate-head'>
                                         <h1>HOT <span>xxx</span> <br />FASHION <p>TREND</p></h1>
                                     </div>
