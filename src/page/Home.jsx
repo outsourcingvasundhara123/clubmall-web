@@ -96,7 +96,7 @@ const Home = () => {
                         <section className='home-first-image'>
                             <div className='container-cos'>
                                 <div className='w-100  pointer ' onClick={() => navigate("/trending")}>
-                                    <img src="./img/homePageBg1.png" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
                                 </div>
                             </div>
                         </section>
@@ -139,7 +139,7 @@ const Home = () => {
                         <section className='home-second-image ' >
                             <div className='container-cos position-relative'>
                                 <div className='w-100 pointer ' onClick={() => navigate("/trending")}>
-                                    <img src="./img/homePageBg2.png" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg2.webp" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>
                             </div>
@@ -316,7 +316,7 @@ const Home = () => {
                                     <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
                                 </div>
                                 <div className='w-100 mt-5 pointer mar-top-20' onClick={() => navigate("/trending")}>
-                                    <img src="./img/homePageBg1.png" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
                                 </div>
                             </div>
                         </section>
@@ -324,7 +324,7 @@ const Home = () => {
                         <section className='home-second-image'>
                             <div className='container-cos position-relative'>
                                 <div className='w-100 pointer ' onClick={() => navigate("/trending")}>
-                                    <img src="./img/homePageBg2.png" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg2.webp" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>
                             </div>

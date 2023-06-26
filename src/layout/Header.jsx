@@ -16,6 +16,7 @@ import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { logout } from '../helper/auth'
 import { useNavigate } from 'react-router-dom';
+import { BiSearch } from 'react-icons/bi'
 
 const Header = () => {
 
@@ -142,7 +143,7 @@ const Header = () => {
     const handelSubCat = (Id) => {
         localStorage.setItem("selectedSubcategories", Id);
         window.location.href = "/categories";
-      };
+    };
 
 
     useEffect(() => {
@@ -268,8 +269,9 @@ const Header = () => {
                         {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
-                                <img src='./img/header/search-icone.png' alt='' />
+                                {/* <img src='./img/header/search-icone.png' alt='' /> */}
                                 <input type="text" placeholder='Search Product' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
+                                <Button className='search-icon-btn'><BiSearch /></Button>
 
                                 {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
                             </div>
@@ -332,7 +334,7 @@ const Header = () => {
                                             </div>
                                             <Dropdown.Divider />
                                             <Dropdown.Item onClick={() => setProfileOption("list")} >
-                                                <Link to="/profile" className='p-0'>
+                                                <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/list.png' alt='' />
                                                     My orders
                                                 </Link>
@@ -342,7 +344,7 @@ const Header = () => {
                                                 Your reviews
                                             </Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => setProfileOption("user")}>
-                                                <Link to="/profile" className='p-0'>
+                                                <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/user.png' alt='' />
                                                     Your profile
                                                 </Link>
@@ -360,29 +362,29 @@ const Header = () => {
                                                 Followed shops
                                             </Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => setProfileOption("location")}>
-                                                <Link to="/profile" className='p-0'>
+                                                <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/location.png' alt='' />
                                                     Addresses
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Item onClick={() => setProfileOption("security")}>
-                                                <Link to="/profile" className='p-0'>
+                                                <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/security.png' alt='' />
                                                     Account security
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Item className='pb-3' onClick={() => setProfileOption("notification")}>
-                                                <Link to="/profile" className='p-0'>
+                                                <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/notification.png' alt='' />
                                                     Notifications
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item >
+                                            <Dropdown.Item className='w-100'>
                                                 <img src='./img/header/switch.png' alt='' />
                                                 Switch accounts
                                             </Dropdown.Item>
-                                            <Dropdown.Item onClick={handleLogout} >
+                                            <Dropdown.Item onClick={handleLogout} className='w-100'>
                                                 <img src='./img/header/logout.png' alt='' />
                                                 Sign out
                                             </Dropdown.Item>

@@ -78,7 +78,7 @@ const Fashion = () => {
                         <section className='home-first-image mb-0'>
                             <div className='container-cos'>
                                 <div className='w-100 position-relative pointer' onClick={() => navigate("/trending")}>
-                                    <img alt='' src="./img/new_in/hero-new-in.png" width={"100%"} />
+                                    <img alt='' src="./img/new_in/vacation-with-babe.webp" width={"100%"} />
                                     <div className='particular-cate-head'>
                                         <h1>HOT <span>xxx</span> <br />FASHION <p>TREND</p></h1>
                                     </div>
@@ -124,7 +124,7 @@ const Fashion = () => {
                                     </Row>
                                 </div>
 
-                                <img alt='' src='./img/new_in/pink.png' width="100%" className='pink-big-img' />
+                                <img alt='' src='./img/new_in/pink.webp' width="100%" className='pink-big-img' />
                             </div>
                         </section>
 
@@ -188,7 +188,7 @@ const Fashion = () => {
                                     </div>
                                 </div>
 
-                                <img alt='' src='./img/new_in/purple.png' width="100%" />
+                                <img alt='' src='./img/new_in/purple.webp' width="100%" />
 
                                 <div className='pink-slider pt-5'>
                                     <Swiper
@@ -246,7 +246,7 @@ const Fashion = () => {
                                     </div>
                                 </div>
 
-                                <img alt='' src='./img/new_in/blue.png' width="100%" className='pink-big-img' />
+                                <img alt='' src='./img/new_in/blue.webp' width="100%" className='pink-big-img' />
                             </div>
 
                         </section>
@@ -310,7 +310,7 @@ const Fashion = () => {
                                     </div>
                                 </div>
 
-                                <img alt='' src='./img/new_in/green.png' width="100%" />
+                                <img alt='' src='./img/new_in/green.webp' width="100%" />
 
                                 <div className='pink-slider py-5'>
                                     <Swiper
