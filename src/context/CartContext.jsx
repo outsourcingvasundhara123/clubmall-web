@@ -91,7 +91,7 @@ export const CartProvider = ({ children }) => {
         if (res.data.success == true) {
           setMyMessage(res.data.message);
           setSucessSnackBarOpen(!sucessSnackBarOpen);
-          setSellIs_wished( sellIs_wished + 1)
+          setSellIs_wished(sellIs_wished + 1)
           getSellProducts()
           getProducts()
           getWishList()
@@ -120,6 +120,29 @@ export const CartProvider = ({ children }) => {
       setWishList(res.data.data.list)
       setWishlistCount(res.data.data.list.length)
       setWishProductURL(res.data.data.productImagePath)
+      stopAnimation()
+    } catch (error) {
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  };
+
+  const deleteWishList = async (id) => {
+    startAnimation()
+    try {
+      const res = await api.postWithToken(`${serverURL + WISHLIST}`, { "action": "product-delete-wishlist", "product_id": id })
+      if (res.data.success == true) {
+        setMyMessage(res.data.message);
+        setSucessSnackBarOpen(!sucessSnackBarOpen);
+        getWishList()
+        // getProducts()
+      } else {
+        setMyMessage(res.data.message);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
+
+      // setWishList(res.data.data.list)
+
       stopAnimation()
     } catch (error) {
       errorResponse(error, setMyMessage);
@@ -232,7 +255,7 @@ export const CartProvider = ({ children }) => {
 
   const getSellProducts = async () => {
     try {
-      console.log(sellIs_wished,"sellIs_wished --- called");
+      console.log(sellIs_wished, "sellIs_wished --- called");
 
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
@@ -267,10 +290,10 @@ export const CartProvider = ({ children }) => {
       setSellProducUrl(womanproductData.productImagePath);
 
       // if (sellIs_wished >= 1) {
-        setWomanProductList(womanproductData.productListArrObj);
-        setManProductList(manproductData.productListArrObj);
-        setkidsProductList(kidsproductData.productListArrObj);
-        setFavoriteProductList(favoriteproductData.productListArrObj)
+      setWomanProductList(womanproductData.productListArrObj);
+      setManProductList(manproductData.productListArrObj);
+      setkidsProductList(kidsproductData.productListArrObj);
+      setFavoriteProductList(favoriteproductData.productListArrObj)
       // } else if(sellIs_wished === 0){
       //   // Merge products without repetitions
       //   const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
@@ -335,8 +358,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
- const handelwishSell = (mood) =>{
-  setSellIs_wished(0)
+  const handelwishSell = (mood) => {
+    setSellIs_wished(0)
   }
 
   const handelSearch = (search) => {
@@ -347,7 +370,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>
