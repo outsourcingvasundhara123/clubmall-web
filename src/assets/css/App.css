@@ -4754,7 +4754,7 @@ input[type='radio'] {
 
 .wishlist .wishlist-sell span {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 13px;
     color: #223263;
     display: block;
 }
@@ -5933,5 +5933,34 @@ input[type='radio'] {
 
     .web-together {
         display: none;
+    }
+}
+
+.wishlist-card {
+    width: 240px !important;
+}
+
+@media (max-width: 938px) {
+    .wishlist-card {
+        width: 45% !important;
+    }
+
+    .wishlist-items {
+        justify-content: center !important;
+    }
+
+    .wishlist-items .buy-now-items {
+        font-size: 12px !important;
+        height: 30px !important;
+    }
+
+    .mobile-spacing-card-body {
+        padding: 10px !important;
+    }
+}
+
+@media (max-width: 425px) {
+    .wishlist .share-del-btn button {
+        font-size: 14px;
     }
 }

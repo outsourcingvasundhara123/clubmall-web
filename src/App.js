@@ -1,4 +1,4 @@
-import React, { useEffect ,useContext} from 'react'
+import React, { useEffect, useContext } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import route from "./helper/route"
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,6 +10,7 @@ import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Loader from './components/Loader';
 import { CartContext } from './context/CartContext';
+import LoaderMain from './components/LoaderMain';
 
 const ScrollToTop = () => {
 
@@ -23,7 +24,7 @@ const ScrollToTop = () => {
 
 const App = () => {
 
-  const {startAnimation,stopAnimation,player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+  const { startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
   return (
@@ -35,7 +36,7 @@ const App = () => {
       </Button>
 
       {/* <div className='loader-main'>
-        <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
+        <LoaderMain />
       </div> */}
 
       <ScrollToTop />
