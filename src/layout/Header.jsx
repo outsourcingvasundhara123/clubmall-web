@@ -67,15 +67,15 @@ const Header = () => {
     const typingDelay = 500; // milliseconds
 
     const handleKeyUp = () => {
-        clearTimeout(typingTimerRef.current);
-        typingTimerRef.current = setTimeout(() => {
+        // clearTimeout(typingTimerRef.current);
+        // typingTimerRef.current = setTimeout(() => {
             // Call handleKeyUp when the user stops typing
             // Add your logic here
             handelSearch(searchKeyWord)
             navigate("/search")
             getSearchedProduct()
             //console.log('User stopped typing');
-        }, typingDelay);
+        // }, typingDelay);
     };
 
     const handleChange = (e) => {
@@ -270,9 +270,8 @@ const Header = () => {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
                                 {/* <img src='./img/header/search-icone.png' alt='' /> */}
-                                <input type="text" placeholder='Search products' className='w-100' onKeyUp={handleKeyUp} onChange={handleChange} value={searchKeyWord} />
-                                <Button className='search-icon-btn'><BiSearch /></Button>
-
+                                <input type="text" placeholder='Search products' className='w-100'  onChange={handleChange} value={searchKeyWord} />
+                                <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
                                 {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
                             </div>
                         }
