@@ -1890,8 +1890,13 @@ del {
     margin-top: 20px;
 }
 
+
+.check-options {
+    margin-top: 8px;
+}
+
 .check-options label {
-    margin-left: 32px;
+    margin-left: 10px;
     font-weight: 600;
     font-size: 16px;
     color: #223263;
@@ -1911,7 +1916,7 @@ del {
     height: 20px;
     border: 2px solid #223263;
     border-radius: 31px;
-    top: -8px;
+    top: 0px;
 }
 
 .check-options input::after {
@@ -1920,7 +1925,7 @@ del {
     width: 10px;
     height: 10px;
     transform: rotate(45deg);
-    top: -3px;
+    top: 5px;
     left: 5px;
     background: #223263;
     border-radius: 50%;
@@ -1954,12 +1959,12 @@ del {
     border: none;
 }
 
-.cat-color{
+.cat-color {
     padding: 2px;
 }
 
-.cat-color.active{
-border: 1px solid #000;
+.cat-color.active {
+    border: 1px solid #000;
 }
 
 .min-max-per .per-box-min {
