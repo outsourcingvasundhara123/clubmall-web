@@ -198,7 +198,8 @@ const Categories = () => {
                             {
                                 subCatList?.map((e, i) => {
                                     return (
-                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
+                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name), setMyFilter(initial))}>{e.name} </Button>
+                                        // <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
                                     )
                                 })
                             }
@@ -244,7 +245,7 @@ const Categories = () => {
                                                                 filterList[0]?.size?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options '>
-                                                                            <input type='radio' name='size' onChange={handleChange} value={e} id={e} />
+                                                                            <input type='radio' name='size' key={`${subCat}-${e}`} onChange={handleChange} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
@@ -264,7 +265,7 @@ const Categories = () => {
                                                                 filterList[0]?.style?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options'>
-                                                                            <input type='radio' name='style' onChange={handleChange} value={e} id={e} />
+                                                                            <input type='radio' name='style' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
@@ -285,7 +286,7 @@ const Categories = () => {
                                                                 filterList[0]?.type?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options ' >
-                                                                            <input type='radio' name='type' onChange={handleChange} value={e} id={e} />
+                                                                            <input type='radio' name='type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
@@ -305,7 +306,7 @@ const Categories = () => {
                                                                 filterList[0]?.patten_type?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options' >
-                                                                            <input type='radio' name='patten_type' onChange={handleChange} value={e} id={e} />
+                                                                            <input type='radio' name='patten_type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
@@ -327,7 +328,7 @@ const Categories = () => {
                                                                 filterList[0]?.material?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options' >
-                                                                            <input type='radio' name='material' onChange={handleChange} value={e} id={e} />
+                                                                            <input type='radio' name='material' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
