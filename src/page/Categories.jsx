@@ -77,25 +77,21 @@ const Categories = () => {
             }
             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
-            let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e?._id === Categorie_id);
-            var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
+            let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
+            var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
 
             setSubCatList(subcat[0]?.child)
             if (subCat === null) {
-                let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
-                if (cat) {
-                    setSubCat(cat?.name)
-                  }
-                // setSubCat(cat.name)
+                let cat = subcat[0]?.child.find(e => e._id == selectedSub)
+                setSubCat(cat.name)
                 // setSubCat(subcat[0]?.child[0].name)
             }
-
             setCatName(subcat[0]?.name)
             const [postListResponse] = await Promise.all([
                 apiTyp(`${serverURL + PRODUCTList}`, {
                     "product_list_type": "by-filters",
                     product_category_one_id: Categorie_id,
-                    product_category_two_id: subCart_id?._id,
+                    product_category_two_id: subCart_id._id,
                     color: productColorActive,
                     size: myFilter.size,
                     type: myFilter.type,
@@ -174,7 +170,7 @@ const Categories = () => {
     const handleRangeChange = (values) => {
         setRange(values);
     };
-    
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -226,7 +222,7 @@ const Categories = () => {
                             {
                                 subCatList?.map((e, i) => {
                                     return (
-                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name), setMyFilter(initial), setRange([0, 100]), setProductColorActive())}>{e.name} </Button>
+                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name), setMyFilter(initial), setRange([0, 100]), setProductColorActive())}>{e.name} </Button>
                                         // <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
                                     )
                                 })
@@ -440,8 +436,8 @@ const Categories = () => {
                                                 }
 
                                                 {
-                                                    (postList.length <= 0) && (!loading) &&
-                                                    <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
+                                                    postList.length <= 0 &&
+                                                    <div className='d-flex align-items-center justify-content-center h-100 catagories-not-found'>
                                                         <div className='text-center found'>
                                                             <img src='./img/not-found.png' alt='' />
                                                             <p className='mt-3'> No result found </p>

@@ -1519,7 +1519,7 @@ del {
     align-items: flex-start;
     column-gap: 15px;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .explore .btns button {
@@ -5987,5 +5987,11 @@ input[type='radio'] {
 @media (max-width: 767px) {
     .coming-soon {
         height: 100px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .catagories-not-found {
+        height: 200px !important;
     }
 }
