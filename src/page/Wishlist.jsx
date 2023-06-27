@@ -67,20 +67,20 @@ const Wishlist = () => {
                                         wishlist && wishlist?.map((e) => {
                                             return (
                                                 <>
-                                                    <div className='product-card explore-card'>
+                                                    <div className='product-card explore-card wishlist-card'>
                                                         <div className='position-relative'>
                                                             <img src={wishProductUrl + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name} alt='' />
                                                             <div className='d-flex align-items-center gap-2 share-del-btn'>
                                                                 <Button type='button' onClick={() => deleteWishList(e.product_id._id)} ><MdDelete /></Button>
                                                             </div>
                                                         </div>
-                                                        <div className='py-3 px-3' >
+                                                        <div className='py-3 px-3 mobile-spacing-card-body' >
                                                             <h5>{e.product_id?.name}</h5>
                                                             {/* <div className='wishlist-sell mt-1'>
                                                             <span>Free shipping</span>
                                                             <span>shold by clubmall</span>
                                                             </div> */}
-                                                            <Button onClick={() => handelProductDetail(e.product_id._id)} className='submit-btn mt-3 w-100'>Buy item</Button>
+                                                            <Button onClick={() => handelProductDetail(e.product_id._id)} className='submit-btn mt-3 w-100 buy-now-items'>Buy item</Button>
                                                         </div>
                                                     </div>
                                                 </>
