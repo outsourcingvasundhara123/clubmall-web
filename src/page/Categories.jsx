@@ -7,6 +7,7 @@ import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { colors, categoriesSliderData } from '../helper/constants'
 import { RangeSlider } from 'rsuite';
+import 'rsuite/dist/rsuite-no-reset.min.css';
 import { PRODUCTList, PRODUCTSEARCH, PRODUCTCATEGORY, PRODUCTDEPENDENTCATEGORY } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
@@ -23,16 +24,16 @@ const Categories = () => {
     const { handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
-        const initial = {
-            color:"",
-            size:"",
-            type:"",
-            patten_type:"",
-            material:"",
-            min_price:"",
-            max_price:""
-        }
-    
+    const initial = {
+        color: "",
+        size: "",
+        type: "",
+        patten_type: "",
+        material: "",
+        min_price: "",
+        max_price: ""
+    }
+
     const isLoggedIn = Is_Login();
     const [subCat, setSubCat] = useState(null)
     const [url, setUrl] = useState()
@@ -74,7 +75,7 @@ const Categories = () => {
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
-                        console.log(subCart_id,"subCat");
+            console.log(subCart_id, "subCat");
 
             setSubCatList(subcat[0]?.child)
             if (subCat === null) {
@@ -90,11 +91,11 @@ const Categories = () => {
                     product_category_two_id: subCart_id._id,
                     color: myFilter.color,
                     size: myFilter.size,
-                    type:myFilter.type,
-                    patten_type:myFilter.patten_type,
-                    material:myFilter.material,
-                    min_price:myFilter.min_price,
-                    max_price:myFilter.max_price,
+                    type: myFilter.type,
+                    patten_type: myFilter.patten_type,
+                    material: myFilter.material,
+                    min_price: myFilter.min_price,
+                    max_price: myFilter.max_price,
                     page: page
                 }),
             ]);
@@ -134,7 +135,7 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished,subCatId,myFilter]);
+    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished, subCatId, myFilter]);
 
     useEffect(() => {
         getFilterDetails();
@@ -143,10 +144,10 @@ const Categories = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setMyFilter((prevValues) => ({
-          ...prevValues,
-          [name]: value,
+            ...prevValues,
+            [name]: value,
         }));
-      };
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -197,7 +198,7 @@ const Categories = () => {
                             {
                                 subCatList?.map((e, i) => {
                                     return (
-                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
+                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
                                     )
                                 })
                             }
@@ -226,7 +227,7 @@ const Categories = () => {
                                                                 colors?.map((e, i) => {
                                                                     return (
                                                                         <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={(e) => setProductColorActive(e.id)}>
-                                                                          <img src={e.img} alt='' />
+                                                                            <img src={e.img} alt='' />
                                                                         </Button>
                                                                     )
                                                                 })
@@ -243,7 +244,7 @@ const Categories = () => {
                                                                 filterList[0]?.size?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options '>
-                                                                             <input type='radio' name='size' onChange={handleChange}  value={e} id={e} />
+                                                                            <input type='radio' name='size' onChange={handleChange} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
@@ -263,13 +264,13 @@ const Categories = () => {
                                                                 filterList[0]?.style?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options'>
-                                                                            <input type='radio' name='style' onChange={handleChange}  value={e} id={e} />
+                                                                            <input type='radio' name='style' onChange={handleChange} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
                                                                 })
                                                             }
-                                                           
+
                                                         </Accordion.Body>
                                                     </Accordion.Item>
 
@@ -278,13 +279,13 @@ const Categories = () => {
                                                             <h5>Type</h5>
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
-                                                           
-                                                           
-                                                        {
+
+
+                                                            {
                                                                 filterList[0]?.type?.map((e, i) => {
                                                                     return (
-                                                                        <div key={i}  className='d-flex align-items-center check-options ' >
-                                                                             <input type='radio' name='type' onChange={handleChange} value={e} id={e} />
+                                                                        <div key={i} className='d-flex align-items-center check-options ' >
+                                                                            <input type='radio' name='type' onChange={handleChange} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
@@ -300,21 +301,21 @@ const Categories = () => {
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
 
-                                                        {
+                                                            {
                                                                 filterList[0]?.patten_type?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options' >
-                                                                            <input type='radio' name='patten_type' onChange={handleChange}  value={e} id={e} />
+                                                                            <input type='radio' name='patten_type' onChange={handleChange} value={e} id={e} />
                                                                             <label htmlFor={e}>{e}</label>
                                                                         </div>
                                                                     )
                                                                 })
                                                             }
-                                                           
+
                                                         </Accordion.Body>
                                                     </Accordion.Item>
 
-                                                 
+
 
                                                     <Accordion.Item eventKey="7" className='mt-20'>
                                                         <Accordion.Header>
@@ -322,7 +323,7 @@ const Categories = () => {
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
 
-                                                        {
+                                                            {
                                                                 filterList[0]?.material?.map((e, i) => {
                                                                     return (
                                                                         <div key={i} className='d-flex align-items-center check-options' >
@@ -332,11 +333,23 @@ const Categories = () => {
                                                                     )
                                                                 })
                                                             }
-                                                            
-                                                          
-                                                            
+
+
+
                                                         </Accordion.Body>
                                                     </Accordion.Item>
+
+
+                                                    <div className='filter-box mt-20 range'>
+                                                        <h5>Price Range</h5>
+                                                        <div class="price-range-slider mt-4 mb-3">
+                                                            <RangeSlider defaultValue={[0, 100]} />
+                                                            <div className='d-flex align-items-center justify-content-between mt-2'>
+                                                                <span>0</span>
+                                                                <span>10</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
                                                 </Accordion>
                                             </div>
@@ -375,25 +388,25 @@ const Categories = () => {
                                                     })
                                                 }
 
-{
-                            postList.length <= 0 &&
-                            <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
-                                <div className='text-center found'>
-                                    <img src='./img/not-found.png' alt='' />
-                                    <p className='mt-3'> No result found </p>
-                                    {/* <Button className='mt-3 submit-btn'>Shop Now</Button> */}
-                                </div>
-                            </div>
-                        }
-                                             
-                                             
-                                             {postList.length !== 0 &&
-                                        <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn' onClick={() => (setViewmoreLoder(true), handelwishSell(), setPage(page + 1), setViewmoreLoder(true), setViewCalled(true))}  >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
-                                    </div>
-                                    }
+                                                {
+                                                    postList.length <= 0 &&
+                                                    <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
+                                                        <div className='text-center found'>
+                                                            <img src='./img/not-found.png' alt='' />
+                                                            <p className='mt-3'> No result found </p>
+                                                            {/* <Button className='mt-3 submit-btn'>Shop Now</Button> */}
+                                                        </div>
+                                                    </div>
+                                                }
 
-                                                
+
+                                                {postList.length !== 0 &&
+                                                    <div className='w-100 d-flex justify-content-center'>
+                                                        <Button className='shop-btn' onClick={() => (setViewmoreLoder(true), handelwishSell(), setPage(page + 1), setViewmoreLoder(true), setViewCalled(true))}  >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
+                                                    </div>
+                                                }
+
+
                                             </div>
                                         </>
                                     )
