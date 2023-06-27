@@ -18,6 +18,8 @@ import { CartContext } from '../context/CartContext';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { Is_Login } from '../helper/IsLogin'
+import colorNameToHex from 'color-name';
+
 
 const Categories = () => {
 
@@ -44,6 +46,7 @@ const Categories = () => {
     const [productColorActive, setProductColorActive] = useState()
     const [postList, setPostList] = useState([]);
     const [myFilter, setMyFilter] = useState(initial);
+    const [colorList, setColorList] = useState([]);
     const serverURL = getServerURL();
     const [page, setPage] = useState(0);
     const [viewCalled, setViewCalled] = useState(false);
@@ -53,6 +56,7 @@ const Categories = () => {
     const [subCatId, setSubCatId] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
     const selectedSub = localStorage.getItem("selectedSubcategories")
+    const [range, setRange] = useState([0, 100]); // Initial range values
 
     const startAnimation = () => {
         if (player.current) {
@@ -75,7 +79,6 @@ const Categories = () => {
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
-            console.log(subCart_id, "subCat");
 
             setSubCatList(subcat[0]?.child)
             if (subCat === null) {
@@ -89,16 +92,17 @@ const Categories = () => {
                     "product_list_type": "by-filters",
                     product_category_one_id: Categorie_id,
                     product_category_two_id: subCart_id._id,
-                    color: myFilter.color,
+                    color: productColorActive,
                     size: myFilter.size,
                     type: myFilter.type,
                     patten_type: myFilter.patten_type,
                     material: myFilter.material,
-                    min_price: myFilter.min_price,
-                    max_price: myFilter.max_price,
+                    min_price: range[0],
+                    max_price: range[1],
                     page: page
                 }),
             ]);
+            // console.log(postListResponse,"postListResponse");
             setSubCatId(subCart_id?._id)
             const postsData = postListResponse.data.data;
             setUrl(postsData.productImagePath)
@@ -116,8 +120,9 @@ const Categories = () => {
         }
     };
 
-    // filter-details
 
+
+    // filter-details
     const getFilterDetails = async () => {
         try {
             startAnimation()
@@ -126,6 +131,19 @@ const Categories = () => {
                 product_category_one_id: Categorie_id,
                 product_category_two_id: subCatId
             })
+
+            // set color code 
+            const getColorCode = (colorName) => {
+                const colorCode = colorNameToHex[colorName.toLowerCase()];
+                return colorCode ? `${colorCode} ` : null;
+            };
+
+            const colorCodes = filterlist?.data?.filterData[0]?.color?.map((colorName) => ({
+                name: colorName,
+                code: getColorCode(colorName),
+            })).filter((color) => color.code !== null);
+
+            setColorList(colorCodes)
             setFilterList(filterlist.data.filterData)
             stopAnimation()
         } catch (error) {
@@ -135,7 +153,7 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished, subCatId, myFilter]);
+    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished, subCatId, myFilter, range, productColorActive]);
 
     useEffect(() => {
         getFilterDetails();
@@ -148,6 +166,11 @@ const Categories = () => {
             [name]: value,
         }));
     };
+
+    const handleRangeChange = (values) => {
+        setRange(values);
+    };
+    
 
     useEffect(() => {
         const handleResize = () => {
@@ -167,6 +190,7 @@ const Categories = () => {
         };
 
     }, []);
+
 
     return (
         <>
@@ -198,7 +222,7 @@ const Categories = () => {
                             {
                                 subCatList?.map((e, i) => {
                                     return (
-                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name), setMyFilter(initial))}>{e.name} </Button>
+                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name), setMyFilter(initial), setRange([0, 100]), setProductColorActive())}>{e.name} </Button>
                                         // <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
                                     )
                                 })
@@ -221,133 +245,155 @@ const Categories = () => {
                                             <div className='filter-box'>
                                                 <Accordion alwaysOpen>
 
-                                                    <div className='filter-box mt-20 product-color'>
-                                                        <h5>Color</h5>
-                                                        <div className='d-flex align-items-center flex-wrap mt-4 gap-2'>
-                                                            {
-                                                                colors?.map((e, i) => {
-                                                                    return (
-                                                                        <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={(e) => setProductColorActive(e.id)}>
-                                                                            <img src={e.img} alt='' />
-                                                                        </Button>
-                                                                    )
-                                                                })
-                                                            }
+                                                    {colorList?.length === undefined || colorList?.length !== 0 &&
+
+                                                        <div className='filter-box mt-20 product-color'>
+                                                            <h5>Color</h5>
+                                                            <div className='d-flex align-items-center flex-wrap mt-4 gap-2'>
+
+
+                                                                <div className='d-flex align-items-center check-options gap-2 flex-wrap'>
+                                                                    {
+                                                                        colorList && colorList.map((e, i) => {
+                                                                            return (
+                                                                                <div key={i} className={`${productColorActive == e.name ? "active" : ""} pointer cat-color `} style={{ backgroundColor: `rgb(${e.code})`, width: '30px', height: '30px', borderRadius: '50%' }} onClick={() => setProductColorActive(e.name)}>
+                                                                                </div>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </div>
+
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    }
 
-                                                    <Accordion.Item eventKey="3" className='mt-20'>
-                                                        <Accordion.Header>
-                                                            <h5>Size</h5>
-                                                        </Accordion.Header>
-                                                        <Accordion.Body className='px-0'>
-                                                            {
-                                                                filterList[0]?.size?.map((e, i) => {
-                                                                    return (
-                                                                        <div key={i} className='d-flex align-items-center check-options '>
-                                                                            <input type='radio' name='size' key={`${subCat}-${e}`} onChange={handleChange} value={e} id={e} />
-                                                                            <label htmlFor={e}>{e}</label>
-                                                                        </div>
-                                                                    )
-                                                                })
-                                                            }
-
-                                                        </Accordion.Body>
-                                                    </Accordion.Item>
-
-                                                    <Accordion.Item eventKey="1" className='mt-20'>
-                                                        <Accordion.Header>
-                                                            <h5>Style</h5>
-                                                        </Accordion.Header>
-                                                        <Accordion.Body className='px-0'>
-
-                                                            {
-                                                                filterList[0]?.style?.map((e, i) => {
-                                                                    return (
-                                                                        <div key={i} className='d-flex align-items-center check-options'>
-                                                                            <input type='radio' name='style' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
-                                                                            <label htmlFor={e}>{e}</label>
-                                                                        </div>
-                                                                    )
-                                                                })
-                                                            }
-
-                                                        </Accordion.Body>
-                                                    </Accordion.Item>
-
-                                                    <Accordion.Item eventKey="4" className='mt-20'>
-                                                        <Accordion.Header>
-                                                            <h5>Type</h5>
-                                                        </Accordion.Header>
-                                                        <Accordion.Body className='px-0'>
+                                                    {filterList[0]?.size?.length === undefined || filterList[0]?.size?.length !== 0 &&
 
 
-                                                            {
-                                                                filterList[0]?.type?.map((e, i) => {
-                                                                    return (
-                                                                        <div key={i} className='d-flex align-items-center check-options ' >
-                                                                            <input type='radio' name='type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
-                                                                            <label htmlFor={e}>{e}</label>
-                                                                        </div>
-                                                                    )
-                                                                })
-                                                            }
+                                                        <Accordion.Item eventKey="3" className='mt-20'>
+                                                            <Accordion.Header>
+                                                                <h5>Size</h5>
+                                                            </Accordion.Header>
+                                                            <Accordion.Body className='px-0'>
+                                                                {
+                                                                    filterList[0]?.size?.map((e, i) => {
+                                                                        return (
+                                                                            <div key={i} className='d-flex align-items-center check-options '>
+                                                                                <input type='radio' name='size' key={`${subCat}-${e}`} onChange={handleChange} value={e} id={e} />
+                                                                                <label htmlFor={e}>{e}</label>
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
 
-                                                        </Accordion.Body>
-                                                    </Accordion.Item>
+                                                            </Accordion.Body>
+                                                        </Accordion.Item>
+                                                    }
 
-                                                    <Accordion.Item eventKey="2" className='mt-20'>
-                                                        <Accordion.Header>
-                                                            <h5>Pattern Type</h5>
-                                                        </Accordion.Header>
-                                                        <Accordion.Body className='px-0'>
+                                                    {filterList[0]?.style?.length === undefined || filterList[0]?.style?.length !== 0 &&
 
-                                                            {
-                                                                filterList[0]?.patten_type?.map((e, i) => {
-                                                                    return (
-                                                                        <div key={i} className='d-flex align-items-center check-options' >
-                                                                            <input type='radio' name='patten_type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
-                                                                            <label htmlFor={e}>{e}</label>
-                                                                        </div>
-                                                                    )
-                                                                })
-                                                            }
+                                                        <Accordion.Item eventKey="1" className='mt-20 '>
+                                                            <Accordion.Header>
+                                                                <h5>Style</h5>
+                                                            </Accordion.Header>
+                                                            <Accordion.Body className='px-0 '>
 
-                                                        </Accordion.Body>
-                                                    </Accordion.Item>
+                                                                {
+                                                                    filterList[0]?.style?.map((e, i) => {
+                                                                        return (
+                                                                            <div key={i} className='d-flex align-items-center check-options'>
+                                                                                <input type='radio' name='style' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <label htmlFor={e}>{e}</label>
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
 
-
-
-                                                    <Accordion.Item eventKey="7" className='mt-20'>
-                                                        <Accordion.Header>
-                                                            <h5>Material</h5>
-                                                        </Accordion.Header>
-                                                        <Accordion.Body className='px-0'>
-
-                                                            {
-                                                                filterList[0]?.material?.map((e, i) => {
-                                                                    return (
-                                                                        <div key={i} className='d-flex align-items-center check-options' >
-                                                                            <input type='radio' name='material' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
-                                                                            <label htmlFor={e}>{e}</label>
-                                                                        </div>
-                                                                    )
-                                                                })
-                                                            }
+                                                            </Accordion.Body>
+                                                        </Accordion.Item>
 
 
+                                                    }
 
-                                                        </Accordion.Body>
-                                                    </Accordion.Item>
+                                                    {filterList[0]?.type?.length === undefined || filterList[0]?.type?.length !== 0 &&
+                                                        <Accordion.Item eventKey="4" className='mt-20'>
+                                                            <Accordion.Header>
+                                                                <h5>Type</h5>
+                                                            </Accordion.Header>
+                                                            <Accordion.Body className='px-0'>
+
+                                                                {
+                                                                    filterList[0]?.type?.map((e, i) => {
+                                                                        return (
+
+                                                                            <div key={i} className='d-flex align-items-center check-options ' >
+                                                                                <input type='radio' name='type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <label htmlFor={e}>{e}</label>
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
+
+                                                            </Accordion.Body>
+                                                        </Accordion.Item>
+
+                                                    }
 
 
+                                                    {filterList[0]?.patten_type?.length === undefined || filterList[0]?.patten_type?.length !== 0 &&
+
+                                                        <Accordion.Item eventKey="2" className='mt-20'>
+                                                            <Accordion.Header>
+                                                                <h5>Pattern Type</h5>
+                                                            </Accordion.Header>
+                                                            <Accordion.Body className='px-0'>
+
+                                                                {
+                                                                    filterList[0]?.patten_type?.map((e, i) => {
+                                                                        return (
+                                                                            <div key={i} className='d-flex align-items-center check-options' >
+                                                                                <input type='radio' name='patten_type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <label htmlFor={e}>{e}</label>
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
+
+                                                            </Accordion.Body>
+                                                        </Accordion.Item>
+
+                                                    }
+
+                                                    {filterList[0]?.material?.length === undefined || filterList[0]?.material?.length !== 0 &&
+
+                                                        <Accordion.Item eventKey="7" className='mt-20'>
+                                                            <Accordion.Header>
+                                                                <h5>Material</h5>
+                                                            </Accordion.Header>
+                                                            <Accordion.Body className='px-0'>
+
+                                                                {
+                                                                    filterList[0]?.material?.map((e, i) => {
+                                                                        return (
+                                                                            <div key={i} className='d-flex align-items-center check-options' >
+                                                                                <input type='radio' name='material' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <label htmlFor={e}>{e}</label>
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
+
+                                                            </Accordion.Body>
+                                                        </Accordion.Item>
+
+                                                    }
                                                     <div className='filter-box mt-20 range'>
                                                         <h5>Price Range</h5>
                                                         <div class="price-range-slider mt-4 mb-3">
-                                                            <RangeSlider defaultValue={[0, 100]} />
+                                                            <RangeSlider min={0} max={100} value={range} onChange={handleRangeChange} />
                                                             <div className='d-flex align-items-center justify-content-between mt-2'>
-                                                                <span>0</span>
-                                                                <span>10</span>
+                                                                <span> {range[0]}</span>
+                                                                <span>{range[1]}</span>
                                                             </div>
                                                         </div>
                                                     </div>

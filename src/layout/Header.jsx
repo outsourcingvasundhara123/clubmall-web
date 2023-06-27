@@ -207,7 +207,7 @@ const Header = () => {
                                                     {category && category?.productsCategoryList?.map((e, i) => {
                                                         return (
                                                             <li key={i} onMouseOver={() => HandelShowData(e.name, e)}>
-                                                                <p>{e.name}</p>
+                                                                <p  onClick={() => handelCategorydata(e._id)} >{e.name}</p>
                                                                 <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                             </li>
                                                         );

@@ -1954,6 +1954,14 @@ del {
     border: none;
 }
 
+.cat-color{
+    padding: 2px;
+}
+
+.cat-color.active{
+border: 1px solid #000;
+}
+
 .min-max-per .per-box-min {
     border: 1px solid #C5C5C5;
     border-radius: 100px;
