@@ -44,6 +44,8 @@ export const handelProductDetail = (productId) => {
 
 
 export const handelCategorydata = (categorie, navigate) => {
+    
+
     if (categorie == undefined) {
         localStorage.setItem("selectedcategories", "646b3f3a9d6497250b8f17c4");
     } else {

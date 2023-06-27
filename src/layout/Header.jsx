@@ -207,7 +207,7 @@ const Header = () => {
                                                     {category && category?.productsCategoryList?.map((e, i) => {
                                                         return (
                                                             <li key={i} onMouseOver={() => HandelShowData(e.name, e)}>
-                                                                <p  onClick={() => handelCategorydata(e._id)} >{e.name}</p>
+                                                                <p  onClick={() => ( handelCategorydata(e._id) ,localStorage.removeItem("selectedSubcategories") ) } >{e.name}</p>
                                                                 <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                             </li>
                                                         );
@@ -222,7 +222,7 @@ const Header = () => {
                                                         <div className='mega-product mega-menu-list'>
                                                             {subCategory && subCategory?.map((e, i) => {
                                                                 return (
-                                                                    <div className='product_image pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))} key={i}>
+                                                                    <div className='product_image pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id) )} key={i}>
 
                                                                         <div className='product-box'>
 
@@ -466,7 +466,7 @@ const Header = () => {
                                                                                 <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
                                                                                 :
                                                                                 subCategory && subCategory?.map((e, i) => (
-                                                                                    <div key={i} className='cate-box text-center pointer' onClick={() => { handelSubCat(e._id); handelCategorydata(e.parent_id); }}>
+                                                                                    <div key={i} className='cate-box text-center pointer' onClick={() =>  ( handelSubCat(e._id), handelCategorydata(e.parent_id) ) }>
                                                                                         <div className='cat-img-round'>
                                                                                             <img src={Url + e.product_icon} alt='' width="100%" />
                                                                                         </div>
