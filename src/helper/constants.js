@@ -1,5 +1,5 @@
 
-export const errorResponse = (error,setMyMessage,props) => {
+export const errorResponse = (error, setMyMessage, props) => {
 
     if (error.response) {
         const { status, data } = error.response;
@@ -11,12 +11,12 @@ export const errorResponse = (error,setMyMessage,props) => {
                 localStorage.removeItem('user');
                 localStorage.removeItem('profile_image');
             }, 5000);
-        }else{
+        } else {
             setMyMessage(data.message)
-            if (props !== undefined ) {
+            if (props !== undefined) {
                 setTimeout(() => {
                     props.handleClose()
-                }, 1000);    
+                }, 1000);
             }
         }
     } else {
@@ -25,59 +25,59 @@ export const errorResponse = (error,setMyMessage,props) => {
 };
 
 export const afterLogin = (setMyMessage) => {
-       
+
     if (setMyMessage) {
         setMyMessage("login first for access this functionality")
-              setTimeout(() => {
-                  window.location.href = "/login";
-                  sessionStorage.removeItem("token");
-              }, 1000);
-      } else {
-          return { status: 0, message: "try again" };
-      }
-  };
-  
-  export const handelProductDetail = (productId) => {
+        setTimeout(() => {
+            window.location.href = "/login";
+            sessionStorage.removeItem("token");
+        }, 1000);
+    } else {
+        return { status: 0, message: "try again" };
+    }
+};
+
+export const handelProductDetail = (productId) => {
     localStorage.setItem("selectedProductId", productId);
     window.location.href = "/Product-info";
-  };
+};
 
 
-export const handelCategorydata = (categorie,navigate) => {
-    if(categorie == undefined ){
+export const handelCategorydata = (categorie, navigate) => {
+    if (categorie == undefined) {
         localStorage.setItem("selectedcategories", "646b3f3a9d6497250b8f17c4");
-    }else{
+    } else {
         localStorage.setItem("selectedcategories", categorie);
     }
-   if(navigate !== undefined){
-    navigate("/categories");
-   }else{
-    window.location.href = "/categories";
-   } 
-    
+    if (navigate !== undefined) {
+        navigate("/categories");
+    } else {
+        window.location.href = "/categories";
+    }
+
 };
 
 export const colors = [
-    { id: 1, img: "./img/selling/color1.png" },
-    { id: 2, img: "./img/selling/color2.png" },
-    { id: 3, img: "./img/selling/color3.png" },
-    { id: 4, img: "./img/selling/color4.png" },
-    { id: 5, img: "./img/selling/color5.png" },
-    { id: 6, img: "./img/selling/color6.png" },
-    { id: 7, img: "./img/selling/color7.png" },
-    { id: 8, img: "./img/selling/color8.png" },
-    { id: 9, img: "./img/selling/color9.png" },
-    { id: 10, img: "./img/selling/color10.png" },
-    { id: 11, img: "./img/selling/color11.png" },
-    { id: 12, img: "./img/selling/color12.png" },
-    { id: 13, img: "./img/selling/color13.png" },
-    { id: 14, img: "./img/selling/color14.png" },
-    { id: 15, img: "./img/selling/color15.png" },
-    { id: 16, img: "./img/selling/color16.png" },
-    { id: 17, img: "./img/selling/color17.png" },
-    { id: 18, img: "./img/selling/color18.png" },
-    { id: 19, img: "./img/selling/color19.png" },
-    { id: 20, img: "./img/selling/color20.png" },
+    { id: 1, name: "Black", img: "./img/selling/color1.png" },
+    { id: 2, name: "white", img: "./img/selling/color2.png" },
+    { id: 3, name: "pink", img: "./img/selling/color3.png" },
+    { id: 4, name: "red", img: "./img/selling/color4.png" },
+    { id: 5, name: "blue", img: "./img/selling/color5.png" },
+    { id: 6, name: "green", img: "./img/selling/color6.png" },
+    { id: 7, name: "", img: "./img/selling/color7.png" },
+    { id: 8, name: "", img: "./img/selling/color8.png" },
+    { id: 9, name: "", img: "./img/selling/color9.png" },
+    { id: 10, name: "", img: "./img/selling/color10.png" },
+    { id: 11, name: "", img: "./img/selling/color11.png" },
+    { id: 12, name: "", img: "./img/selling/color12.png" },
+    { id: 13, name: "", img: "./img/selling/color13.png" },
+    { id: 14, name: "", img: "./img/selling/color14.png" },
+    { id: 15, name: "", img: "./img/selling/color15.png" },
+    { id: 16, name: "", img: "./img/selling/color16.png" },
+    { id: 17, name: "", img: "./img/selling/color17.png" },
+    { id: 18, name: "", img: "./img/selling/color18.png" },
+    { id: 19, name: "", img: "./img/selling/color19.png" },
+    { id: 20, name: "", img: "./img/selling/color20.png" },
 ]
 
 export const categoriesSliderData = [
@@ -572,7 +572,7 @@ export const cartListData = [
     },
 ]
 
-export  const product_data = {
+export const product_data = {
     FeaturedData: [
         {
             name: "Women’s Jewellary",

@@ -94,17 +94,16 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
-                  if(localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login"){
+                  if(localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login"){
                     window.location.href = "/"
                   }else{
                     window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
                   }
                   // navigate("");
                 }, 1000);
-
               } else {
                 SetOtpShow(true)
-                SetEmail(updatedValues.email)
+                SetEmail(updatedValues.email);
                 setMyMessage(res.data.message);
                 setSucessSnackBarOpen(!sucessSnackBarOpen);
               }

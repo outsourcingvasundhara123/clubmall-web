@@ -23,14 +23,26 @@ const Categories = () => {
     const { handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
+        const initial = {
+            color:"",
+            size:"",
+            type:"",
+            patten_type:"",
+            material:"",
+            min_price:"",
+            max_price:""
+        }
+    
     const isLoggedIn = Is_Login();
     const [subCat, setSubCat] = useState(null)
     const [url, setUrl] = useState()
     const [catName, setCatName] = useState()
     const [subCatList, setSubCatList] = useState([])
     const [filterShow, setFilterShow] = useState(window.innerWidth < 991 ? false : true)
+    const [filterList, setFilterList] = useState([])
     const [productColorActive, setProductColorActive] = useState()
     const [postList, setPostList] = useState([]);
+    const [myFilter, setMyFilter] = useState(initial);
     const serverURL = getServerURL();
     const [page, setPage] = useState(0);
     const [viewCalled, setViewCalled] = useState(false);
@@ -39,17 +51,6 @@ const Categories = () => {
     const Categorie_id = localStorage.getItem("selectedcategories") ? localStorage.getItem("selectedcategories") : "Women Apparel"
     const [subCatId, setSubCatId] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
-
-    // const initial = {
-    //     color:"",
-    //     size:"",
-    //     type:"",
-    //     patten_type:"",
-    //     material:"",
-    //     min_price:"",
-    //     max_price:""
-    // }
-
     const selectedSub = localStorage.getItem("selectedSubcategories")
 
     const startAnimation = () => {
@@ -70,9 +71,11 @@ const Categories = () => {
                 setLoading(true);
             }
             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-            let categoryDtata = await api.post(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
+            let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
+                        console.log(subCart_id,"subCat");
+
             setSubCatList(subcat[0]?.child)
             if (subCat === null) {
                 let cat = subcat[0]?.child.find(e => e._id == selectedSub)
@@ -80,15 +83,22 @@ const Categories = () => {
                 // setSubCat(subcat[0]?.child[0].name)
             }
             setCatName(subcat[0]?.name)
-            setSubCatId(subCart_id?._id)
             const [postListResponse] = await Promise.all([
                 apiTyp(`${serverURL + PRODUCTList}`, {
-                    "product_list_type": "by-categories",
+                    "product_list_type": "by-filters",
                     product_category_one_id: Categorie_id,
                     product_category_two_id: subCart_id._id,
+                    color: myFilter.color,
+                    size: myFilter.size,
+                    type:myFilter.type,
+                    patten_type:myFilter.patten_type,
+                    material:myFilter.material,
+                    min_price:myFilter.min_price,
+                    max_price:myFilter.max_price,
                     page: page
                 }),
             ]);
+            setSubCatId(subCart_id?._id)
             const postsData = postListResponse.data.data;
             setUrl(postsData.productImagePath)
             if (viewCalled === true) {
@@ -107,31 +117,36 @@ const Categories = () => {
 
     // filter-details
 
-//     const getFilterDetails = async () => {
-//         try {
-// console.log(subCatId,"subCatId");
-// console.log(Categorie_id,"Categorie_id");
-
-//             startAnimation()
-//             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-//             let filterlist = await apiTyp(`${serverURL + "filter-details"}`, {
-//                 product_category_one_id: Categorie_id,
-//                 product_category_two_id: subCatId
-//             })
-//             console.log(filterlist, "filterlist");
-//             stopAnimation()
-//         } catch (error) {
-//             console.log(error);
-//         }
-//     };
+    const getFilterDetails = async () => {
+        try {
+            startAnimation()
+            const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+            let filterlist = await apiTyp(`${serverURL + "filter-details"}`, {
+                product_category_one_id: Categorie_id,
+                product_category_two_id: subCatId
+            })
+            setFilterList(filterlist.data.filterData)
+            stopAnimation()
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
         getCategory();
-    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished]);
+    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished,subCatId,myFilter]);
 
-    // useEffect(() => {
-    //     getFilterDetails();
-    // }, [subCatId]);
+    useEffect(() => {
+        getFilterDetails();
+    }, [subCatId]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setMyFilter((prevValues) => ({
+          ...prevValues,
+          [name]: value,
+        }));
+      };
 
     useEffect(() => {
         const handleResize = () => {
@@ -151,7 +166,6 @@ const Categories = () => {
         };
 
     }, []);
-
 
     return (
         <>
@@ -180,12 +194,10 @@ const Categories = () => {
                     <div className='sub-categories-list'>
                         <h3>{catName}</h3>
                         <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-
-
                             {
-                                subCatList.map((e, i) => {
+                                subCatList?.map((e, i) => {
                                     return (
-                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
+                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
                                     )
                                 })
                             }
@@ -211,10 +223,10 @@ const Categories = () => {
                                                         <h5>Color</h5>
                                                         <div className='d-flex align-items-center flex-wrap mt-4 gap-2'>
                                                             {
-                                                                colors.map((e, i) => {
+                                                                colors?.map((e, i) => {
                                                                     return (
-                                                                        <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={() => setProductColorActive(e.id)}>
-                                                                            <img src={e.img} alt='' />
+                                                                        <Button className={`${productColorActive === e.id ? "active" : ""} color-btn`} onClick={(e) => setProductColorActive(e.id)}>
+                                                                          <img src={e.img} alt='' />
                                                                         </Button>
                                                                     )
                                                                 })
@@ -227,107 +239,37 @@ const Categories = () => {
                                                             <h5>Size</h5>
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
-                                                            <div className='d-flex align-items-center check-options '>
-                                                                <input type='checkbox' id='check20' />
-                                                                <label htmlFor='check20'>XS</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check21' />
-                                                                <label htmlFor='check21'>S</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check22' />
-                                                                <label htmlFor='check22'>L</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check23' />
-                                                                <label htmlFor='check23'>M</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check24' />
-                                                                <label htmlFor='check24'>XL</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check25' />
-                                                                <label htmlFor='check25'>XXL</label>
-                                                            </div>
-                                                            <Button className='add-btn'>
-                                                                <img src='./img/selling/add.png' alt='' />
-                                                                View More</Button>
+                                                            {
+                                                                filterList[0]?.size?.map((e, i) => {
+                                                                    return (
+                                                                        <div key={i} className='d-flex align-items-center check-options '>
+                                                                             <input type='radio' name='size' onChange={handleChange}  value={e} id={e} />
+                                                                            <label htmlFor={e}>{e}</label>
+                                                                        </div>
+                                                                    )
+                                                                })
+                                                            }
+
                                                         </Accordion.Body>
                                                     </Accordion.Item>
-                                                    {/* 
-                                                                <Accordion.Item eventKey="0">
-                                                                    <Accordion.Header>
-                                                                        <h5>Category</h5>
-                                                                    </Accordion.Header>
-                                                                    <Accordion.Body className='px-0'>
-                                                                        <div className='d-flex align-items-center check-options'>
-                                                                            <input type='checkbox' id='check1' />
-                                                                            <label htmlFor='check1'>Women’s Jewellary</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check2' />
-                                                                            <label htmlFor='check2'>Car Audio & Video</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check3' />
-                                                                            <label htmlFor='check3'>Home Decor Products</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check4' />
-                                                                            <label htmlFor='check4'>Interior Accessories</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check5' />
-                                                                            <label htmlFor='check5'>Girl’s Sets</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check6' />
-                                                                            <label htmlFor='check6'>Hair Care</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check7' />
-                                                                            <label htmlFor='check7'>Women’s Sleepwear</label>
-                                                                        </div>
-                                                                        <Button className='add-btn'>
-                                                                            <img src='./img/selling/add.png' alt='' />
-                                                                            View More</Button>
-                                                                    </Accordion.Body>
-                                                                </Accordion.Item> */}
 
                                                     <Accordion.Item eventKey="1" className='mt-20'>
                                                         <Accordion.Header>
                                                             <h5>Style</h5>
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
-                                                            <div className='d-flex align-items-center check-options'>
-                                                                <input type='checkbox' id='check8' />
-                                                                <label htmlFor='check8'>Boho</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check9' />
-                                                                <label htmlFor='check9'>Casual</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check10' />
-                                                                <label htmlFor='check10'>Cute</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check11' />
-                                                                <label htmlFor='check11'>Elegant</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check12' />
-                                                                <label htmlFor='check12'>Party</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check13' />
-                                                                <label htmlFor='check13'>Sexy</label>
-                                                            </div>
-                                                            <Button className='add-btn'>
-                                                                <img src='./img/selling/add.png' alt='' />
-                                                                View More</Button>
+
+                                                            {
+                                                                filterList[0]?.style?.map((e, i) => {
+                                                                    return (
+                                                                        <div key={i} className='d-flex align-items-center check-options'>
+                                                                            <input type='radio' name='style' onChange={handleChange}  value={e} id={e} />
+                                                                            <label htmlFor={e}>{e}</label>
+                                                                        </div>
+                                                                    )
+                                                                })
+                                                            }
+                                                           
                                                         </Accordion.Body>
                                                     </Accordion.Item>
 
@@ -336,33 +278,19 @@ const Categories = () => {
                                                             <h5>Type</h5>
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
-                                                            <div className='d-flex align-items-center check-options '>
-                                                                <input type='checkbox' id='check26' />
-                                                                <label htmlFor='check26'>A Line</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check27' />
-                                                                <label htmlFor='check27'>Asymmetrical</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check28' />
-                                                                <label htmlFor='check28'>Biker Shorts</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check29' />
-                                                                <label htmlFor='check29'>Bodycon</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check30' />
-                                                                <label htmlFor='check30'>Cami</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check31' />
-                                                                <label htmlFor='check31'>Fitted</label>
-                                                            </div>
-                                                            <Button className='add-btn'>
-                                                                <img src='./img/selling/add.png' alt='' />
-                                                                View More</Button>
+                                                           
+                                                           
+                                                        {
+                                                                filterList[0]?.type?.map((e, i) => {
+                                                                    return (
+                                                                        <div key={i}  className='d-flex align-items-center check-options ' >
+                                                                             <input type='radio' name='type' onChange={handleChange} value={e} id={e} />
+                                                                            <label htmlFor={e}>{e}</label>
+                                                                        </div>
+                                                                    )
+                                                                })
+                                                            }
+
                                                         </Accordion.Body>
                                                     </Accordion.Item>
 
@@ -371,138 +299,42 @@ const Categories = () => {
                                                             <h5>Pattern Type</h5>
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
-                                                            <div className='d-flex align-items-center check-options'>
-                                                                <input type='checkbox' id='check14' />
-                                                                <label htmlFor='check14'>All Over Print</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check15' />
-                                                                <label htmlFor='check15'>Animal</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check16' />
-                                                                <label htmlFor='check16'>Baroque</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check17' />
-                                                                <label htmlFor='check17'>Butterfly</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check18' />
-                                                                <label htmlFor='check18'>Camo</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check19' />
-                                                                <label htmlFor='check19'>Car</label>
-                                                            </div>
-                                                            <Button className='add-btn'>
-                                                                <img src='./img/selling/add.png' alt='' />
-                                                                View More</Button>
+
+                                                        {
+                                                                filterList[0]?.patten_type?.map((e, i) => {
+                                                                    return (
+                                                                        <div key={i} className='d-flex align-items-center check-options' >
+                                                                            <input type='radio' name='patten_type' onChange={handleChange}  value={e} id={e} />
+                                                                            <label htmlFor={e}>{e}</label>
+                                                                        </div>
+                                                                    )
+                                                                })
+                                                            }
+                                                           
                                                         </Accordion.Body>
                                                     </Accordion.Item>
 
-                                                    {/* <Accordion.Item eventKey="5" className='mt-20'>
-                                                                    <Accordion.Header>
-                                                                        <h5>Length</h5>
-                                                                    </Accordion.Header>
-                                                                    <Accordion.Body className='px-0'>
-                                                                        <div className='d-flex align-items-center check-options '>
-                                                                            <input type='checkbox' id='check32' />
-                                                                            <label htmlFor='check32'>Bermuda shorts</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check33' />
-                                                                            <label htmlFor='check33'>Capris</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check34' />
-                                                                            <label htmlFor='check34'>Crop</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check35' />
-                                                                            <label htmlFor='check35'>Cropped</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check36' />
-                                                                            <label htmlFor='check36'>Extra Long</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check37' />
-                                                                            <label htmlFor='check37'>Knee Length</label>
-                                                                        </div>
-                                                                        <Button className='add-btn'>
-                                                                            <img src='./img/selling/add.png' alt='' />
-                                                                            View More</Button>
-                                                                    </Accordion.Body>
-                                                                </Accordion.Item>
-
-                                                                <Accordion.Item eventKey="6" className='mt-20'>
-                                                                    <Accordion.Header>
-                                                                        <h5>Sleev Length</h5>
-                                                                    </Accordion.Header>
-                                                                    <Accordion.Body className='px-0'>
-                                                                        <div className='d-flex align-items-center check-options'>
-                                                                            <input type='checkbox' id='check38' />
-                                                                            <label htmlFor='check38'>Cap Sleeve</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check39' />
-                                                                            <label htmlFor='check39'>Half Sleeve</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check40' />
-                                                                            <label htmlFor='check40'>Long Sleeve</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check41' />
-                                                                            <label htmlFor='check41'>Short Sleeve</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check42' />
-                                                                            <label htmlFor='check42'>Sleevless</label>
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center check-options mt-3'>
-                                                                            <input type='checkbox' id='check43' />
-                                                                            <label htmlFor='check43'>Three Quarter Length Sleeve</label>
-                                                                        </div>
-                                                                        <Button className='add-btn'>
-                                                                            <img src='./img/selling/add.png' alt='' />
-                                                                            View More</Button>
-                                                                    </Accordion.Body>
-                                                                </Accordion.Item> */}
+                                                 
 
                                                     <Accordion.Item eventKey="7" className='mt-20'>
                                                         <Accordion.Header>
                                                             <h5>Material</h5>
                                                         </Accordion.Header>
                                                         <Accordion.Body className='px-0'>
-                                                            <div className='d-flex align-items-center check-options '>
-                                                                <input type='checkbox' id='check44' />
-                                                                <label htmlFor='check44'>Chiffon</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='chec45' />
-                                                                <label htmlFor='chec45'>Denim</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check46' />
-                                                                <label htmlFor='check46'>Fabric</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check47' />
-                                                                <label htmlFor='check47'>Flannelette</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check48' />
-                                                                <label htmlFor='check48'>knitted Fabric</label>
-                                                            </div>
-                                                            <div className='d-flex align-items-center check-options mt-3'>
-                                                                <input type='checkbox' id='check49' />
-                                                                <label htmlFor='check49'>Lace</label>
-                                                            </div>
-                                                            <Button className='add-btn'>
-                                                                <img src='./img/selling/add.png' alt='' />
-                                                                View More</Button>
+
+                                                        {
+                                                                filterList[0]?.material?.map((e, i) => {
+                                                                    return (
+                                                                        <div key={i} className='d-flex align-items-center check-options' >
+                                                                            <input type='radio' name='material' onChange={handleChange} value={e} id={e} />
+                                                                            <label htmlFor={e}>{e}</label>
+                                                                        </div>
+                                                                    )
+                                                                })
+                                                            }
+                                                            
+                                                          
+                                                            
                                                         </Accordion.Body>
                                                     </Accordion.Item>
 
@@ -542,9 +374,26 @@ const Categories = () => {
                                                         )
                                                     })
                                                 }
-                                                <div className='w-100 d-flex justify-content-center'>
-                                                    <Button className='shop-btn' onClick={() => (setViewmoreLoder(true), handelwishSell(), setPage(page + 1), setViewmoreLoder(true), setViewCalled(true))}  >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
-                                                </div>
+
+{
+                            postList.length <= 0 &&
+                            <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
+                                <div className='text-center found'>
+                                    <img src='./img/not-found.png' alt='' />
+                                    <p className='mt-3'> No result found </p>
+                                    {/* <Button className='mt-3 submit-btn'>Shop Now</Button> */}
+                                </div>
+                            </div>
+                        }
+                                             
+                                             
+                                             {postList.length !== 0 &&
+                                        <div className='w-100 d-flex justify-content-center'>
+                                        <Button className='shop-btn' onClick={() => (setViewmoreLoder(true), handelwishSell(), setPage(page + 1), setViewmoreLoder(true), setViewCalled(true))}  >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
+                                    </div>
+                                    }
+
+                                                
                                             </div>
                                         </>
                                     )
