@@ -48,16 +48,16 @@ const Categories = () => {
     const [myFilter, setMyFilter] = useState(initial);
     const [colorList, setColorList] = useState([]);
     const serverURL = getServerURL();
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [viewCalled, setViewCalled] = useState(false);
     const [loading, setLoading] = useState(true);
     const player = useRef();
-    const Categorie_id = localStorage.getItem("selectedcategories") ? localStorage.getItem("selectedcategories") : "Women Apparel"
+    const Categorie_id = localStorage.getItem("selectedcategories") && localStorage.getItem("selectedcategories") 
     const [subCatId, setSubCatId] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
     const selectedSub = localStorage.getItem("selectedSubcategories")
     const [range, setRange] = useState([0, 100]); // Initial range values
-    const [showButton, setShowButton] = useState(false);
+    const [showButton , setShowButton] = useState(false);
 
     const startAnimation = () => {
         if (player.current) {
@@ -76,24 +76,23 @@ const Categories = () => {
             } else {
                 setLoading(true);
             }
-            setLoading(true)
             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
-            var subCart_id = subcat[0]?.child.find(e => e.name == subCat)
+            var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
 
             setSubCatList(subcat[0]?.child)
-            if (subCat === null) {
-                let cat = subcat[0]?.child.find(e => e._id == selectedSub)
-                setSubCat(cat.name)
-                // setSubCat(subcat[0]?.child[0].name)
-            }
+            // if (subCat === null) {
+            //     let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
+            //     setSubCat(cat?.name)
+            //     // setSubCat(subcat[0]?.child[0].name)
+            // }
             setCatName(subcat[0]?.name)
             const [postListResponse] = await Promise.all([
                 apiTyp(`${serverURL + PRODUCTList}`, {
                     "product_list_type": "by-filters",
                     product_category_one_id: Categorie_id,
-                    product_category_two_id: subCart_id._id,
+                    product_category_two_id: subCart_id?._id,
                     color: productColorActive,
                     size: myFilter.size,
                     type: myFilter.type,
@@ -116,14 +115,11 @@ const Categories = () => {
                 setPostList(postsData.productListArrObj);
             }
             setViewmoreLoder(false)
-            setLoading(false)
             stopAnimation()
         } catch (error) {
             console.log(error);
         }
     };
-
-
 
     // filter-details
     const getFilterDetails = async () => {
@@ -162,18 +158,28 @@ const Categories = () => {
         getFilterDetails();
     }, [subCatId]);
 
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setMyFilter((prevValues) => ({
+    //         ...prevValues,
+    //         [name]: value,
+    //     }));
+    // };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setMyFilter((prevValues) => ({
-            ...prevValues,
-            [name]: value,
-        }));
+    
+        setMyFilter((prevValues) => {
+            return {
+                ...prevValues,
+                [name]: prevValues[name] === value ? "" : value,
+            };
+        });
     };
 
     const handleRangeChange = (values) => {
         setRange(values);
     };
-
 
     useEffect(() => {
         const handleResize = () => {
@@ -201,6 +207,7 @@ const Categories = () => {
 
         return () => clearTimeout(timer); // Clear the timer if the component unmounts
     }, []);
+
 
     return (
         <>
@@ -289,13 +296,12 @@ const Categories = () => {
                                                                     filterList[0]?.size?.map((e, i) => {
                                                                         return (
                                                                             <div key={i} className='d-flex align-items-center check-options '>
-                                                                                <input type='radio' name='size' key={`${subCat}-${e}`} onChange={handleChange} value={e} id={e} />
+                                                                                <input type='radio' name='size' key={`${subCat}-${e}`} checked={myFilter['size'] === e} onClick={handleChange} value={e} id={e} />
                                                                                 <label htmlFor={e}>{e}</label>
                                                                             </div>
                                                                         )
                                                                     })
                                                                 }
-
                                                             </Accordion.Body>
                                                         </Accordion.Item>
                                                     }
@@ -312,7 +318,7 @@ const Categories = () => {
                                                                     filterList[0]?.style?.map((e, i) => {
                                                                         return (
                                                                             <div key={i} className='d-flex align-items-center check-options'>
-                                                                                <input type='radio' name='style' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <input type='radio' name='style'  key={`${subCat}-${e}`} checked={myFilter['style'] === e} onClick={handleChange} value={e} id={e} />
                                                                                 <label htmlFor={e}>{e}</label>
                                                                             </div>
                                                                         )
@@ -337,7 +343,7 @@ const Categories = () => {
                                                                         return (
 
                                                                             <div key={i} className='d-flex align-items-center check-options ' >
-                                                                                <input type='radio' name='type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <input type='radio' name='type' key={`${subCat}-${e}`}  checked={myFilter['type'] === e} onClick={handleChange}  value={e} id={e} />
                                                                                 <label htmlFor={e}>{e}</label>
                                                                             </div>
                                                                         )
@@ -362,7 +368,7 @@ const Categories = () => {
                                                                     filterList[0]?.patten_type?.map((e, i) => {
                                                                         return (
                                                                             <div key={i} className='d-flex align-items-center check-options' >
-                                                                                <input type='radio' name='patten_type' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <input type='radio' name='patten_type' key={`${subCat}-${e}`} checked={myFilter['patten_type'] === e} onClick={handleChange} value={e} id={e} />
                                                                                 <label htmlFor={e}>{e}</label>
                                                                             </div>
                                                                         )
@@ -386,7 +392,7 @@ const Categories = () => {
                                                                     filterList[0]?.material?.map((e, i) => {
                                                                         return (
                                                                             <div key={i} className='d-flex align-items-center check-options' >
-                                                                                <input type='radio' name='material' onChange={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
+                                                                                <input type='radio' name='material' checked={myFilter['material'] === e} onClick={handleChange} key={`${subCat}-${e}`} value={e} id={e} />
                                                                                 <label htmlFor={e}>{e}</label>
                                                                             </div>
                                                                         )
