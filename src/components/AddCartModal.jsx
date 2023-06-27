@@ -67,6 +67,7 @@ const AddCartModal = (props) => {
                 setModelProduct(productData);
                 setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
                 stopAnimation()
+                console.log(productDetail,"productDetail");
                 const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
                 const mergedImages = imageUrls && imageUrls?.map(url => ({
                     thumbnail: url,
