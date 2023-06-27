@@ -80,13 +80,15 @@ const Categories = () => {
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
-
             setSubCatList(subcat[0]?.child)
-            // if (subCat === null) {
-            //     let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
-            //     setSubCat(cat?.name)
-            //     // setSubCat(subcat[0]?.child[0].name)
-            // }
+
+
+            console.log(selectedSub,"selectedSub");
+
+            if (subCat === null) {
+                let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
+                setSubCat(cat?.name)
+            }
             setCatName(subcat[0]?.name)
             const [postListResponse] = await Promise.all([
                 apiTyp(`${serverURL + PRODUCTList}`, {

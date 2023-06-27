@@ -103,7 +103,7 @@ const Selling = () => {
                                     {
                                         sellCategory && sellCategory.firstHalf?.slice(0, 6).map((e) => {
                                             return (
-                                                <div className='cate-box text-center pointer' onClick={() => handelCategorydata(e._id)} >
+                                                <div className='cate-box text-center pointer' onClick={() => ( handelCategorydata(e._id) , localStorage.removeItem("selectedSubcategories")) } >
                                                     <div className='cat-img-round'>
                                                         <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="100%" />
                                                     </div>
@@ -132,7 +132,7 @@ const Selling = () => {
                                                         <h5>{e.name}</h5>
                                                         <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="80%" className='my-4' />
                                                         <div className='d-flex justify-content-center'>
-                                                            <Button className='shop-btn' onClick={() => handelCategorydata(e._id)} >Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                            <Button className='shop-btn' onClick={() => ( handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories")) } >Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                         </div>
                                                     </div>
                                                 </Col>
