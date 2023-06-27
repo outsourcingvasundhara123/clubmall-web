@@ -5964,3 +5964,15 @@ input[type='radio'] {
         font-size: 14px;
     }
 }
+
+.coming-soon h4 {
+    color: #E02E24 !important;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+@media (max-width: 767px) {
+    .coming-soon {
+        height: 100px !important;
+    }
+}
