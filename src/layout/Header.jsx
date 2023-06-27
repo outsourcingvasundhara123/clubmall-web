@@ -501,48 +501,29 @@ const Header = () => {
                         }}>
                             <MdOutlineClose />
                         </Button>
-                        {/* <div className='new-in-box1'>
-                            <div className='sky-box position-relative'>
-                                <img src='./img/new_in/sky1.png' width="100%" alt='' />
-                                <div className='sky-text'>
-                                    <h5>SXY <br />
-                                        <span>STYLE</span></h5>
-                                    <Link to="/categories">Shop Now</Link>
-                                </div>
-                            </div>
-                            <div className='sky-box position-relative mt-2'>
-                                <img src='./img/new_in/sky2.png' width="100%" alt='' />
-                                <div className='sky-text'>
-                                    <h5>SXY <br />
-                                        <span>STYLE</span></h5>
-                                    <Link to="/categories">Shop Now</Link>
-                                </div>
-                            </div>
-                        </div> */}
 
                         <Row>
                             <Col lg={4} md={6} sm={12}>
                                 <div className='new-in-box2'>
                                     <h5>NEW IN TODAY</h5>
                                     <ul>
-                                        <li className='mt-3'>04/18/2023</li>
-                                        <li>04/18/2023</li>
-                                        <li>04/18/2023</li>
-                                        <li>04/18/2023</li>
-                                        <li>04/18/2023</li>
-                                        <li>04/18/2023</li>
-                                        <li>04/18/2023</li>
-                                        <li>04/18/2023</li>
+                                        <li className='mt-3'>20/06/2023</li>
+                                        <li>21/06/2023</li>
+                                        <li>22/06/2023</li>
+                                        <li>23/06/2023</li>
+                                        <li>24/06/2023</li>
+                                        <li>25/06/2023</li>
+                                        <li>26/06/2023</li>
+                                        <li>27/06/2023</li>
                                     </ul>
-
-                                    {/* <div className='mt-4'>
-                                <h5>OUTFIT INSPO</h5>
-                                <NavLink>#sayodoinCLUBAMLL</NavLink>
-                                <NavLink>#MakeHerDay</NavLink>
-                            </div> */}
                                 </div>
                             </Col>
-                            <Col lg={4} md={6} sm={12} className='mt-3 mt-md-0'>
+                            <Col lg={6} md={6} sm={12} className='mt-3 mt-md-0'>
+                                <div className='coming-soon h-100 w-100 d-flex align-items-center justify-content-center'>
+                                    <h4>Coming soon</h4>
+                                </div>
+                            </Col>
+                            {/* <Col lg={4} md={6} sm={12} className='mt-3 mt-md-0'>
                                 <div className='new-in-box3'>
                                     <h5>NEW IN WOMEN’S CLOTHING</h5>
                                     <ul>
@@ -576,63 +557,8 @@ const Header = () => {
                                     <h5><NavLink>NEW IN PETS</NavLink></h5>
                                     <h5><NavLink>NEW IN BEAUTY</NavLink></h5>
                                 </div>
-                            </Col>
+                            </Col> */}
                         </Row>
-
-
-
-
-
-
-                        {/* <div className='new-in-box5'>
-                            <h5 className='mt-0 text-red'><NavLink>MOTF</NavLink></h5>
-                            <h5 className='text-red'><NavLink>ROMWE</NavLink></h5>
-                            <h5><NavLink>EMERY ROSE</NavLink></h5>
-                            <h5 className='text-red'><NavLink>LUVLETTE</NavLink></h5>
-                            <h5><NavLink>DAZY</NavLink></h5>
-                            <h5 className='text-red'><NavLink>DAZY LESS</NavLink></h5>
-                            <h5><NavLink>PETSIN</NavLink></h5>
-                            <h5><NavLink>CUCCOO</NavLink></h5>
-                            <h5><NavLink>GLOWMODE</NavLink></h5>
-                            <h5><NavLink>JMMO</NavLink></h5>
-                        </div>
-                        <div className='new-in-box6'>
-                            <div className='new-in-last'>
-                                <div className='sky-box position-relative m-2 mt-0 ms-0'>
-                                    <img src='./img/new_in/sky3.png' width="100%" alt='' />
-                                    <div className='sky-text'>
-                                        <h5 className='text-white'>SXY <br />
-                                            <span>STYLE</span></h5>
-                                        <Link to="/categories">Shop Now</Link>
-                                    </div>
-                                </div>
-                                <div className='sky-box position-relative'>
-                                    <img src='./img/new_in/sky4.png' width="100%" alt='' />
-                                    <div className='sky-text'>
-                                        <h5>SXY <br />
-                                            <span>STYLE</span></h5>
-                                        <Link to="/categories">Shop Now</Link>
-                                    </div>
-                                </div>
-                                <div className='sky-box position-relative m-2 mt-0 ms-0 top-cos'>
-                                    <img src='./img/new_in/sky5.png' width="100%" alt='' />
-                                    <div className='sky-text'>
-                                        <h5>SXY <br />
-                                            <span>STYLE</span></h5>
-                                        <Link to="/categories">Shop Now</Link>
-                                    </div>
-                                </div>
-                                <div className='sky-box position-relative'>
-                                    <img src='./img/new_in/sky2.png' width="100%" alt='' />
-                                    <div className='sky-text'>
-                                        <h5>SXY <br />
-                                            <span>STYLE</span></h5>
-                                        <Link to="/categories">Shop Now</Link>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div> */}
                     </div>
                 </Modal.Body>
             </Modal>
