@@ -57,6 +57,7 @@ const Categories = () => {
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
     const selectedSub = localStorage.getItem("selectedSubcategories")
     const [range, setRange] = useState([0, 100]); // Initial range values
+    const [showButton, setShowButton] = useState(false);
 
     const startAnimation = () => {
         if (player.current) {
@@ -75,6 +76,7 @@ const Categories = () => {
             } else {
                 setLoading(true);
             }
+            setLoading(true)
             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
@@ -114,6 +116,7 @@ const Categories = () => {
                 setPostList(postsData.productListArrObj);
             }
             setViewmoreLoder(false)
+            setLoading(false)
             stopAnimation()
         } catch (error) {
             console.log(error);
@@ -191,6 +194,13 @@ const Categories = () => {
 
     }, []);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowButton(true);
+        }, 9000); // Delay in milliseconds (e.g., 5000ms = 5 seconds)
+
+        return () => clearTimeout(timer); // Clear the timer if the component unmounts
+    }, []);
 
     return (
         <>
@@ -435,26 +445,25 @@ const Categories = () => {
                                                     })
                                                 }
 
-                                                {
-                                                    postList.length <= 0 &&
-                                                    <div className='d-flex align-items-center justify-content-center h-100 catagories-not-found'>
-                                                        <div className='text-center found'>
-                                                            <img src='./img/not-found.png' alt='' />
-                                                            <p className='mt-3'> No result found </p>
-                                                            {/* <Button className='mt-3 submit-btn'>Shop Now</Button> */}
-                                                        </div>
-                                                    </div>
-                                                }
-
-
-                                                {postList.length !== 0 &&
+                                                {postList.length >= 20 &&
                                                     <div className='w-100 d-flex justify-content-center'>
                                                         <Button className='shop-btn' onClick={() => (setViewmoreLoder(true), handelwishSell(), setPage(page + 1), setViewmoreLoder(true), setViewCalled(true))}  >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
                                                     </div>
                                                 }
 
-
                                             </div>
+
+                                            {
+                                                (postList.length <= 0) && (!loading) && showButton &&
+                                                <div className='d-flex align-items-center justify-content-center h-100  catagories-not-found'>
+                                                    <div className='text-center found'>
+                                                        <img src='./img/not-found.png' alt='' />
+                                                        <p className='mt-3'> No result found </p>
+                                                        {/* <Button className='mt-3 submit-btn'>Shop Now</Button> */}
+                                                    </div>
+                                                </div>
+                                            }
+
                                         </>
                                     )
                                 }

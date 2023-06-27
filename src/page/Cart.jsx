@@ -36,7 +36,7 @@ const WrappedCart = () => {
     const elements = useElements();
 
     const isLoggedIn = Is_Login();
-    const {sucessSnackBarOpen,setMyMessage, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen , sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart, } = useContext(CartContext);
+    const {sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -54,10 +54,10 @@ const WrappedCart = () => {
     const [product_id, setProduct_id] = useState({});
     const [productColorActive, setProductColorActive] = useState();
     const [show, setShow] = useState(false);
-    // const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-    // const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
     const [couponCode, setCouponCode] = useState("");
-    // const [Mymessage, setMyMessage] = useState("");
+    const [Mymessage, setMyMessage] = useState("");
     const [couponId, setCouponId] = useState([]);
     const [loading, setLoading] = useState(true);
     const [is_Wait, setIs_Wait] = useState(false);
