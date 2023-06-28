@@ -11,6 +11,7 @@ import { getServerURL } from '../helper/envConfig';
 import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
 import { handelCategorydata, handelCategory } from '../helper/constants';
+import { Button } from 'react-bootstrap';
 
 const CategoryList = () => {
 
@@ -147,12 +148,12 @@ const CategoryList = () => {
                         </OwlCarousel>
 
                         <div className='slider-controls-cos w-100 d-flex align-items-center justify-content-between'>
-                            <button className="prev-slide-cos" onClick={handlePrev}>
+                            <Button className="prev-slide-cos" onClick={handlePrev}>
                                 <MdOutlineKeyboardArrowLeft />
-                            </button>
-                            <button className="next-slide-cos" onClick={handleNext}>
+                            </Button>
+                            <Button className="next-slide-cos" onClick={handleNext}>
                                 <MdOutlineKeyboardArrowRight />
-                            </button>
+                            </Button>
                         </div>
                     </>
                 )}
