@@ -330,7 +330,7 @@ const Profile = () => {
                         <Tab.Container id="left-tabs-example" defaultActiveKey={profileOption ? profileOption : "user"}>
                             <Row>
                                 <Col xl={3} lg={4} md={6}>
-                                    <Nav variant="pills" className="flex-column">
+                                    <Nav variant="pills" className="flex-column sticky-filter">
                                         <Nav.Item>
                                             <Nav.Link eventKey="list" onClick={() => setItemShow(true)}>
                                                 <img src='./img/header/list.png' alt='' />

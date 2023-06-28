@@ -52,12 +52,12 @@ const Categories = () => {
     const [viewCalled, setViewCalled] = useState(false);
     const [loading, setLoading] = useState(true);
     const player = useRef();
-    const Categorie_id = localStorage.getItem("selectedcategories") && localStorage.getItem("selectedcategories") 
+    const Categorie_id = localStorage.getItem("selectedcategories") && localStorage.getItem("selectedcategories")
     const [subCatId, setSubCatId] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
     const selectedSub = localStorage.getItem("selectedSubcategories")
     const [range, setRange] = useState([0, 100]); // Initial range values
-    const [showButton , setShowButton] = useState(false);
+    const [showButton, setShowButton] = useState(false);
 
     const startAnimation = () => {
         if (player.current) {
@@ -83,7 +83,7 @@ const Categories = () => {
             setSubCatList(subcat[0]?.child)
 
 
-            console.log(selectedSub,"selectedSub");
+            console.log(selectedSub, "selectedSub");
 
             if (subCat === null) {
                 let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
@@ -170,7 +170,7 @@ const Categories = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-    
+
         setMyFilter((prevValues) => {
             return {
                 ...prevValues,
@@ -252,15 +252,15 @@ const Categories = () => {
                     <div className='filter-product pt-4'>
                         <Row>
                             <Col xxl={3} xl={4} lg={5} sm={12}>
-                                <div className='d-flex align-items-center justify-content-between'>
+                                <div className='d-flex align-items-center justify-content-between '>
                                     <div className='fill-title'>
                                         <h5>Filters</h5>
                                     </div>
-                                    <Button className='submit-btn mt-0 filter-show' onClick={() => setFilterShow(!filterShow)} style={{ fontSize: "18px" }}><FiFilter /></Button>
+                                    <Button className='submit-btn filter-show mt-0-cos' onClick={() => setFilterShow(!filterShow)} style={{ fontSize: "18px" }}><FiFilter /></Button>
                                 </div>
                                 {
                                     filterShow ?
-                                        <div className='filter-option p-4 mt-4'>
+                                        <div className='filter-option p-4 mt-4 sticky-filter'>
                                             <div className='filter-box'>
                                                 <Accordion alwaysOpen>
 
@@ -320,7 +320,7 @@ const Categories = () => {
                                                                     filterList[0]?.style?.map((e, i) => {
                                                                         return (
                                                                             <div key={i} className='d-flex align-items-center check-options'>
-                                                                                <input type='radio' name='style'  key={`${subCat}-${e}`} checked={myFilter['style'] === e} onClick={handleChange} value={e} id={e} />
+                                                                                <input type='radio' name='style' key={`${subCat}-${e}`} checked={myFilter['style'] === e} onClick={handleChange} value={e} id={e} />
                                                                                 <label htmlFor={e}>{e}</label>
                                                                             </div>
                                                                         )
@@ -345,7 +345,7 @@ const Categories = () => {
                                                                         return (
 
                                                                             <div key={i} className='d-flex align-items-center check-options ' >
-                                                                                <input type='radio' name='type' key={`${subCat}-${e}`}  checked={myFilter['type'] === e} onClick={handleChange}  value={e} id={e} />
+                                                                                <input type='radio' name='type' key={`${subCat}-${e}`} checked={myFilter['type'] === e} onClick={handleChange} value={e} id={e} />
                                                                                 <label htmlFor={e}>{e}</label>
                                                                             </div>
                                                                         )
@@ -463,7 +463,7 @@ const Categories = () => {
 
                                             {
                                                 (postList.length <= 0) && (!loading) && showButton &&
-                                                <div className='d-flex align-items-center justify-content-center h-100  catagories-not-found'>
+                                                <div className='d-flex align-items-center justify-content-center  catagories-not-found' style={{ marginTop: "100px" }}>
                                                     <div className='text-center found'>
                                                         <img src='./img/not-found.png' alt='' />
                                                         <p className='mt-3'> No result found </p>

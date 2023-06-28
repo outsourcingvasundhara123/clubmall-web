@@ -1172,14 +1172,14 @@ del {
     color: #E02E24 !important;
 }
 
-.slider-controls {
+.slider-controls-cos {
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
     z-index: 99;
 }
 
-.slider-controls button {
+.slider-controls-cos button {
     width: 42px !important;
     height: 42px !important;
     background-color: #fff;
@@ -1840,6 +1840,12 @@ del {
 
 .categories .filter-option {
     background: #FFF8F8;
+
+}
+
+.sticky-filter {
+    position: sticky;
+    top: 100px;
 }
 
 .categories .filter-box h5 {
@@ -5218,7 +5224,7 @@ input[type='radio'] {
         margin-top: 20px !important;
     }
 
-    .slider-controls button {
+    .slider-controls-cos button {
         width: 30px !important;
         height: 30px !important;
     }
@@ -5994,4 +6000,8 @@ input[type='radio'] {
     .catagories-not-found {
         height: 200px !important;
     }
+}
+
+.mt-0-cos {
+    margin-top: 0 !important;
 }
