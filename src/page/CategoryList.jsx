@@ -109,7 +109,7 @@ const CategoryList = () => {
                             {category && category.firstHalf && category.firstHalf.map((e, i) => {
                                 return (
                                     <div className='item' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => ( handelCategorydata(e._id) , localStorage.removeItem("selectedSubcategories")) } >
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >
                                             <div className='categories-slider-img '>   {/* "active-catagories" use this class to active catagories */}
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
                                             </div>
@@ -133,7 +133,7 @@ const CategoryList = () => {
                         >
                             {category && category.secondHalf && category.secondHalf.map((e, i) => {
                                 return (
-                                    <div className='item ' key={i} onClick={() => ( handelCategorydata(e._id) , localStorage.removeItem("selectedSubcategories")) } >
+                                    <div className='item ' key={i} onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >
                                         <div className='cate-slider-box text-center px-0 px-md-3 pointer'  >
                                             <div className='categories-slider-img'  >
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
@@ -146,11 +146,11 @@ const CategoryList = () => {
                             })}
                         </OwlCarousel>
 
-                        <div className='slider-controls w-100 d-flex align-items-center justify-content-between'>
-                            <button className="prev" onClick={handlePrev}>
+                        <div className='slider-controls-cos w-100 d-flex align-items-center justify-content-between'>
+                            <button className="prev-slide-cos" onClick={handlePrev}>
                                 <MdOutlineKeyboardArrowLeft />
                             </button>
-                            <button className="next" onClick={handleNext}>
+                            <button className="next-slide-cos" onClick={handleNext}>
                                 <MdOutlineKeyboardArrowRight />
                             </button>
                         </div>
