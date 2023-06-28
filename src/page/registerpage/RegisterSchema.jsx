@@ -5,18 +5,22 @@ export const validate = (values) => {
   // Validate name field
   if (!values.first_name) {
     errors.first_name = "First name is required";
+  }else if (values.first_name.length > 20) {
+    errors.first_name = "First name can not be more than 20 character";
   }
 
   // Validate last name field
   if (!values.last_name) {
     errors.last_name = "Last name is required";
+  }else if ( values.last_name.length > 20) {
+    errors.last_name = " Last name can not be more than 20 character";
   }
 
 // Validate username field
 if (!values.username) {
   errors.username = "Username is required";
-} else if (values.username.length < 3 || values.username.length > 12) {
-  errors.username = "Username must be between 3 and 12 characters";
+} else if (values.username.length < 3 ) {
+  errors.username = "Username must be under 3 ";
 }
 
   // Validate email field

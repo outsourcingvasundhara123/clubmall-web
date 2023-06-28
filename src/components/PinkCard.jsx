@@ -6,9 +6,9 @@ import { handelProductDetail } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 
 const PinkCard = (props) => {
-
+    const [isWishlist, setIsWishlist] = useState(!!props.img.wishList); // We use !! to convert to a boolean
     const navigate = useNavigate();
-    const { addWishList } = useContext(CartContext);
+    const {addWishList } = useContext(CartContext);
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setProduct_id({})
@@ -19,6 +19,19 @@ const PinkCard = (props) => {
     const handleShow = (id) => {
         setProduct_id(id)
         setShow(true);
+    }
+
+    // new function for wishlist on dome 
+    const handleWishlistClick = async () => {
+        const newWishlistStatus = !isWishlist;
+        setIsWishlist(newWishlistStatus); // We first update the local state
+
+        // Then we update the context or the backend asynchronously
+        if (newWishlistStatus) {
+            await addWishList(props.img._id, "product-wishlist"); // Add to wishlist
+        } else {
+            await addWishList(props.img._id, "product-delete-wishlist"); // Remove from wishlist
+        }
     }
 
     return (
@@ -33,7 +46,7 @@ const PinkCard = (props) => {
                         <h5>${props.img.individual_price}</h5>
                         <p>Group Price: <b>${props.img.group_price}</b></p>
                     </div>
-                    {props.img.wishList === 0
+                    {/* {props.img.wishList === 0
                         &&
                         <Button className='like-btn' onClick={() => addWishList(props.img._id, "product-wishlist")} >
                             <img src='./img/new_in/like.png' className='like-size' alt='' />
@@ -42,6 +55,19 @@ const PinkCard = (props) => {
                     {
                         props.img.wishList === 1 &&
                         <Button className='like-btn' onClick={() => addWishList(props.img._id, "product-delete-wishlist")} >
+                            <img src='./img/Vector.png' alt='' />
+                        </Button>
+                    } */}
+
+                    {isWishlist === false
+                        &&
+                        <Button className='like-btn' onClick={handleWishlistClick} >
+                            <img src='./img/new_in/like.png' className='like-size' alt='' />
+                        </Button>
+                    }
+                    {
+                        isWishlist === true &&
+                        <Button className='like-btn' onClick={handleWishlistClick} >
                             <img src='./img/Vector.png' alt='' />
                         </Button>
                     }

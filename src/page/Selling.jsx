@@ -144,7 +144,6 @@ const Selling = () => {
                             </div>
                         </section>
 
-
                         <section className='tabs-cos'>
                             <div className='container-cos'>
                                 <div className='title w-100 text-center'>

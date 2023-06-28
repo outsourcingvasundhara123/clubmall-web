@@ -4,6 +4,7 @@ import { getServerURL } from '../helper/envConfig';
 import api from '../helper/api';
 import { Is_Login } from '../helper/IsLogin'
 import { errorResponse, afterLogin } from '../helper/constants';
+import { data } from 'jquery';
 
 // Create the cart context
 export const CartContext = createContext();
@@ -15,6 +16,9 @@ export const CartProvider = ({ children }) => {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [Mymessage, setMyMessage] = useState("");
   const [wishlist, setWishList] = useState([]);
+  // Initialize your state and other values...
+  // const [isWishlist, setIsWishlist] = useState(false); // Initialize the state as false or as per your requirement
+
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const [wishProductUrl, setWishProductURL] = useState("");
@@ -43,14 +47,13 @@ export const CartProvider = ({ children }) => {
   const [viewMoreLodr, setViewmoreLoder] = useState(false);
   const [profileOption, setProfileOption] = useState();
   const [sellIs_wished, setSellIs_wished] = useState(0);
-
+  const [add_wished_Called, setAdd_wished_Called] = useState(false);
 
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const [searchpostList, setSearchPostList] = useState([]);
   const [searchPage, setSearchPage] = useState(1);
   const [searchUrl, setSearchURL] = useState("");
   const [is_search, setIs_search] = useState(0);
-
 
   const serverURL = getServerURL();
   const player = useRef();
@@ -92,6 +95,7 @@ export const CartProvider = ({ children }) => {
           setMyMessage(res.data.message);
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setSellIs_wished(sellIs_wished + 1)
+          setAdd_wished_Called(true)
           getSellProducts()
           getProducts()
           getWishList()
@@ -126,6 +130,18 @@ export const CartProvider = ({ children }) => {
       setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
+
+  // const handleWishlistClick = async (productId) => {
+  //   const newWishlistStatus = !isWishlist;
+  //   setIsWishlist(newWishlistStatus); // Update the local state
+
+  //   // Then update the context or the backend asynchronously
+  //   if (newWishlistStatus) {
+  //     await addWishList(productId, "product-wishlist"); // Add to wishlist
+  //   } else {
+  //     await addWishList(productId, "product-delete-wishlist"); // Remove from wishlist
+  //   }
+  // }
 
   const deleteWishList = async (id) => {
     startAnimation()
@@ -322,7 +338,7 @@ export const CartProvider = ({ children }) => {
     try {
       setLoading(true)
       let search = searchKeyWord
-
+      handelSearch(search)
       const [postListResponse] = await Promise.all([
         api.postWithToken(`${serverURL + "search"}`, {
           q: search,
@@ -332,7 +348,7 @@ export const CartProvider = ({ children }) => {
       ]);
       const postsData = postListResponse.data;
       if (postsData && Array.isArray(postsData.data)) {
-        if (is_search !== 1) {
+        if (is_search === 0) {
           const updatedProductList = [
             ...searchpostList,
             ...postsData.data,
@@ -341,10 +357,9 @@ export const CartProvider = ({ children }) => {
               self.findIndex((p) => p._id === product._id) === index
           );
           setSearchPostList(updatedProductList);
-        } else {
+        } else{
           setSearchPostList(postsData.data);
         }
-
         // console.log(updatedProductList,"postsData");
         setSearchURL(postsData.productImagePath);
         setViewmoreLoder(false);
@@ -367,10 +382,11 @@ export const CartProvider = ({ children }) => {
     setIs_search(1)
   };
 
+
   return (
 
     <CartContext.Provider value={{
-      deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>

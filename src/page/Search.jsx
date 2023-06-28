@@ -14,12 +14,12 @@ import { CartContext } from '../context/CartContext';
 const Search = () => {
 
     //   const [searchPage, setSearchPage] = useState(1);
-    const { sellIs_wished,setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+    const {is_search, sellIs_wished,setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     useEffect(() => {
         getSearchedProduct();
-    }, [searchPage, searchKeyWord ]);
+    }, [searchPage,is_search]);
 
 
     return (
@@ -54,7 +54,6 @@ const Search = () => {
                                     {
                                         searchpostList && searchpostList.map((e) => {
                                             return (
-
                                                 <ProCard
                                                     id={e._id}
                                                     img={e.product_images[0]?.file_name}
@@ -65,7 +64,7 @@ const Search = () => {
                                                     // secper={e.secper && e.secper }
                                                     // off={e.discount_percentage && e.discount_percentage}
                                                     path={searchUrl && searchUrl}
-                                                // color={e.sku_attributes.color}
+                                                    // color={e.sku_attributes.color}
                                                 />
                                             )
                                         })

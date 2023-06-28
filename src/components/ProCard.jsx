@@ -8,6 +8,7 @@ import { CartContext } from '../context/CartContext';
 
 const ProCard = (props) => {
 
+    const [isWishlist, setIsWishlist] = useState(!!props.is_wishList); // We use !! to convert to a boolean
     const { handelwishSell, addWishList } = useContext(CartContext);
     const location = useLocation(window.location.pathname);
     const navigate = useNavigate();
@@ -20,9 +21,23 @@ const ProCard = (props) => {
         setProduct_id({})
         setShow(false)
     }
+
     const handleShow = (id) => {
         setProduct_id(id)
         setShow(true);
+    }
+
+    // new function for wishlist on dome 
+    const handleWishlistClick = async () => {
+        const newWishlistStatus = !isWishlist;
+        setIsWishlist(newWishlistStatus); // We first update the local state
+
+        // Then we update the context or the backend asynchronously
+        if (newWishlistStatus) {
+            await addWishList(props.id, "product-wishlist"); // Add to wishlist
+        } else {
+            await addWishList(props.id, "product-delete-wishlist"); // Remove from wishlist
+        }
     }
 
     useEffect(() => {
@@ -50,7 +65,8 @@ const ProCard = (props) => {
                                 <p className='per'>${props.group_price} <span>(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
-                            {props.is_wishList === 0
+                            
+                            {/* {props.is_wishList === 0
                                 &&
                                 <Button className='like-btn' onClick={() => (addWishList(props.id, "product-wishlist"))} >
                                     <img src='./img/new_in/like.png' className='like-size' alt='' />
@@ -61,7 +77,21 @@ const ProCard = (props) => {
                                 <Button className='like-btn' onClick={() => (addWishList(props.id, "product-delete-wishlist"))} >
                                     <img src='./img/Vector.png' alt='' />
                                 </Button>
-                            }
+                            } */}
+                       
+                                    {(isWishlist === false ) && (location.pathname !== "/trending" && location.pathname !== "/search") &&
+
+                                        <Button className='like-btn' onClick={handleWishlistClick} >
+                                            <img src='./img/new_in/like.png' className='like-size' alt='' />
+                                        </Button>
+                                    }
+                                    {
+                                       ( isWishlist === true) &&  (location.pathname !== "/trending" && location.pathname !== "/search") &&
+                                        <Button className='like-btn' onClick={handleWishlistClick} >
+                                            <img src='./img/Vector.png' alt='' />
+                                        </Button>
+                                    }
+                    
 
                         </div>
                     </div>

@@ -29,13 +29,13 @@ import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 
 const ProductInfo = () => {
-    const { sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
-    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
-    const [Mymessage, setMyMessage] = useState("");
+    const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
+    const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
+    const [MymessageProductDtl, setMyMessageProductDtl] = useState("");
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const [drawer, setDrawer] = useState(false);
@@ -53,7 +53,7 @@ const ProductInfo = () => {
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
     const product_id = localStorage.getItem("selectedProductId") ? localStorage.getItem("selectedProductId") : "646b6db53c9cae7c199c7740"
-   
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play();
@@ -117,14 +117,13 @@ const ProductInfo = () => {
 
     useEffect(() => {
         getproductlist();
-    }, [sellIs_wished, isLoggedIn]);
+    }, [sellIs_wished, isLoggedIn , add_wished_Called ]);
 
 
     const findSKUId = () => {
         const sku = Product.productList.sku_details.find((sku) => {
             return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
         });
-
         return sku ? sku.skuid : null;
     };
 
@@ -151,31 +150,30 @@ const ProductInfo = () => {
 
                     if (res.data.success == true) {
                         setCart(cart + 1)
-                        setSucessSnackBarOpen(!sucessSnackBarOpen);
-                        setMyMessage(res.data.message);
+                        setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
+                        setMyMessageProductDtl(res.data.message);
                         setProductColorActive(" ")
                         setSizeActive(" ")
                     } else if (res.data.success === false) {
-                        setMyMessage(res.data.message);
-                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                        setMyMessageProductDtl(res.data.message);
+                        setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                     }
                 } else {
                     // User is not logged in, redirect to the login page
-                    afterLogin(setMyMessage)
-                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                    afterLogin(setMyMessageProductDtl)
+                    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                 }
             } else {
-                setMyMessage("select color and size  of the product");
-                setWarningSnackBarOpen(!warningSnackBarOpen);
+                setMyMessageProductDtl("select color and size  of the product");
+                setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
             }
         } catch (error) {
             setProductColorActive(" ")
             setSizeActive(" ")
-            errorResponse(error, setMyMessage)
-            setWarningSnackBarOpen(!warningSnackBarOpen);
+            errorResponse(error, setMyMessageProductDtl)
+            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }
     };
-
 
     const textRef = useRef(null);
 
@@ -190,8 +188,25 @@ const ProductInfo = () => {
         }
     };
 
+   console.log(add_wished_Called,"add_wished_Called");
+
     return (
         <>
+
+
+            <SucessSnackBar
+                open={sucessSnackBarOpenProductDtl}
+                setOpen={setSucessSnackBarOpenProductDtl}
+                text={MymessageProductDtl}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpenProductDtl}
+                setOpen={setWarningSnackBarOpenProductDtl}
+                text={MymessageProductDtl}
+                type="error"
+            />
 
 
             <SucessSnackBar
@@ -211,20 +226,6 @@ const ProductInfo = () => {
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
-
-                        <SucessSnackBar
-                            open={sucessSnackBarOpen}
-                            setOpen={setSucessSnackBarOpen}
-                            text={Mymessage}
-                            type="success"
-                        />
-
-                        <ErrorSnackBar
-                            open={warningSnackBarOpen}
-                            setOpen={setWarningSnackBarOpen}
-                            text={Mymessage}
-                            type="error"
-                        />
 
                         <div className='product-info pb-5'>
                             <div className='container-cos'>

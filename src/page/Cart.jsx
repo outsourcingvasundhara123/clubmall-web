@@ -36,7 +36,7 @@ const WrappedCart = () => {
     const elements = useElements();
 
     const isLoggedIn = Is_Login();
-    const {sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
+    const {add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen,warningSnackBarOpen,setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -54,10 +54,10 @@ const WrappedCart = () => {
     const [product_id, setProduct_id] = useState({});
     const [productColorActive, setProductColorActive] = useState();
     const [show, setShow] = useState(false);
-    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+    const [sucessSnackBarOpenCart, setSucessSnackBarOpenCart] = useState(false);
+    const [warningSnackBarOpenCart, setWarningSnackBarOpenCart] = useState(false);
     const [couponCode, setCouponCode] = useState("");
-    const [Mymessage, setMyMessage] = useState("");
+    const [MymessageCart, setMyMessageCart] = useState("");
     const [couponId, setCouponId] = useState([]);
     const [loading, setLoading] = useState(true);
     const [is_Wait, setIs_Wait] = useState(false);
@@ -81,12 +81,12 @@ const WrappedCart = () => {
             setIsOpen(!isOpen);
 
             if (Object.keys(correntAddess).length === 0) {
-                setMyMessage("Add  or select  Address")
-                setWarningSnackBarOpen(!warningSnackBarOpen);
+                setMyMessageCart("Add  or select  Address")
+                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             } else {
                 if (productList.list.length === 0) {
-                    setMyMessage("You don't have any product in a cart")
-                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                    setMyMessageCart("You don't have any product in a cart")
+                    setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
                 } else {
 
                     if (correntAddess?.data?.length !== 0) {
@@ -103,8 +103,8 @@ const WrappedCart = () => {
                             const cardElementState = cardElement._empty;
 
                             if (cardElementState) {
-                                setMyMessage('Please enter your card details');
-                                setWarningSnackBarOpen(!warningSnackBarOpen);
+                                setMyMessageCart('Please enter your card details');
+                                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
                                 return;
                             }
                         }
@@ -140,11 +140,11 @@ const WrappedCart = () => {
 
                             const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
                             if (payment.error) {
-                                setMyMessage(payment.error.message);
-                                setWarningSnackBarOpen(!warningSnackBarOpen);
+                                setMyMessageCart(payment.error.message);
+                                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
                             } else {
-                                setMyMessage(paymentStatus.data.message);
-                                setSucessSnackBarOpen(!sucessSnackBarOpen);
+                                setMyMessageCart(paymentStatus.data.message);
+                                setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
 
                                 setTimeout(() => {
                                     setProfileOption("list")
@@ -155,20 +155,20 @@ const WrappedCart = () => {
                             setIs_Wait(false)
                             getCartData()
                         } else {
-                            setMyMessage(order.data.message);
-                            setWarningSnackBarOpen(!warningSnackBarOpen);
+                            setMyMessageCart(order.data.message);
+                            setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
                         }
 
                     } else {
-                        setMyMessage("Add shipping address")
-                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                        setMyMessageCart("Add shipping address")
+                        setWarningSnackBarOpen(!warningSnackBarOpenCart);
                     }
                 }
             }
         } catch (error) {
             console.log(error);
-            errorResponse(error, setMyMessage);
-            setWarningSnackBarOpen(!warningSnackBarOpen);
+            errorResponse(error, setMyMessageCart);
+            setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
         }
     };
 
@@ -186,11 +186,11 @@ const WrappedCart = () => {
             if (res.data.success === true) {
                 getCartData()
                 setCart(cart - 1)
-                setMyMessage(res.data.message);
-                setSucessSnackBarOpen(!sucessSnackBarOpen);
+                setMyMessageCart(res.data.message);
+                setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
             } else {
-                setMyMessage(res.data.message);
-                setWarningSnackBarOpen(!warningSnackBarOpen);
+                setMyMessageCart(res.data.message);
+                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             }
         } catch (error) {
             console.log(error);
@@ -221,8 +221,8 @@ const WrappedCart = () => {
             stopAnimation()
         } catch (error) {
             console.log(error);
-            errorResponse(error, setMyMessage);
-            setWarningSnackBarOpen(!warningSnackBarOpen);
+            errorResponse(error, setMyMessageCart);
+            setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
         }
     };
 
@@ -238,12 +238,12 @@ const WrappedCart = () => {
 
             if (res.data.success === true) {
                 getCartData()
-                setMyMessage(res.data.message);
-                setSucessSnackBarOpen(!sucessSnackBarOpen);
+                setMyMessageCart(res.data.message);
+                setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
                 setCouponCode("")
             } else if (res.data.success === false) {
-                setMyMessage(res.data.message);
-                setWarningSnackBarOpen(!warningSnackBarOpen);
+                setMyMessageCart(res.data.message);
+                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             }
         } catch (error) {
             console.log(error, "error");
@@ -253,11 +253,27 @@ const WrappedCart = () => {
     useEffect(() => {
         getCartData();
         getMyAddress()
-    }, [sellIs_wished,isLoggedIn]);
+    }, [sellIs_wished, isLoggedIn ,add_wished_Called]);
 
 
     return (
         <>
+
+
+            <SucessSnackBar
+                open={sucessSnackBarOpenCart}
+                setOpen={setSucessSnackBarOpenCart}
+                text={MymessageCart}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpenCart}
+                setOpen={setWarningSnackBarOpenCart}
+                text={MymessageCart}
+                type="error"
+            />
+
 
             <SucessSnackBar
                 open={sucessSnackBarOpen}

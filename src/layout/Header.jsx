@@ -37,7 +37,6 @@ const Header = () => {
     const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
     const [subCategory, setSubCategory] = useState([]);
     const [Url, setUrl] = useState("");
-
     const serverURL = getServerURL();
     const [loading, setLoading] = useState(true);
     const player = useRef();
@@ -62,27 +61,23 @@ const Header = () => {
         setCateData(product_data[name])
     }
 
-    //for search 
-    const typingTimerRef = useRef(null);
-    const typingDelay = 500; // milliseconds
-
     const handleKeyUp = () => {
-        // clearTimeout(typingTimerRef.current);
-        // typingTimerRef.current = setTimeout(() => {
-        // Call handleKeyUp when the user stops typing
-        // Add your logic here
-        handelSearch(searchKeyWord)
-        navigate("/search")
-        getSearchedProduct()
-        //console.log('User stopped typing');
-        // }, typingDelay);
+
+            handelSearch(searchKeyWord)
+            navigate("/search")
+            getSearchedProduct()
+
+    };
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleKeyUp();
+        }
     };
 
     const handleChange = (e) => {
         const value = e.target.value;
         setSearchKeyWord(value);
     };
-
 
     function CustomToggle({ children, eventKey }) {
         const decoratedOnClick = useAccordionButton(eventKey, () =>
@@ -269,15 +264,12 @@ const Header = () => {
                         {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
-                                {/* <img src='./img/header/search-icone.png' alt='' /> */}
-                                <input type="text" placeholder='Search products' className='w-100' onChange={handleChange} value={searchKeyWord} />
+                                <input type="text"  onKeyDown={handleKeyPress}  placeholder='Search products' className='w-100'  onChange={handleChange} value={searchKeyWord} />
                                 <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
-                                {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
                             </div>
                         }
                     </div>
                     <div className='account d-flex align-items-center gap-3 gap-sm-4'>
-
                         {
                             isLoggedIn ?
                                 <>
