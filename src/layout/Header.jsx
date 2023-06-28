@@ -69,12 +69,12 @@ const Header = () => {
     const handleKeyUp = () => {
         // clearTimeout(typingTimerRef.current);
         // typingTimerRef.current = setTimeout(() => {
-            // Call handleKeyUp when the user stops typing
-            // Add your logic here
-            handelSearch(searchKeyWord)
-            navigate("/search")
-            getSearchedProduct()
-            //console.log('User stopped typing');
+        // Call handleKeyUp when the user stops typing
+        // Add your logic here
+        handelSearch(searchKeyWord)
+        navigate("/search")
+        getSearchedProduct()
+        //console.log('User stopped typing');
         // }, typingDelay);
     };
 
@@ -207,7 +207,7 @@ const Header = () => {
                                                     {category && category?.productsCategoryList?.map((e, i) => {
                                                         return (
                                                             <li key={i} onMouseOver={() => HandelShowData(e.name, e)}>
-                                                                <p  onClick={() => ( handelCategorydata(e._id) ,localStorage.removeItem("selectedSubcategories") ) } >{e.name}</p>
+                                                                <p onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >{e.name}</p>
                                                                 <img src='./img/header/mega-menu-arrow.png' alt='' />
                                                             </li>
                                                         );
@@ -222,7 +222,7 @@ const Header = () => {
                                                         <div className='mega-product mega-menu-list'>
                                                             {subCategory && subCategory?.map((e, i) => {
                                                                 return (
-                                                                    <div className='product_image pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id) )} key={i}>
+                                                                    <div className='product_image pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))} key={i}>
 
                                                                         <div className='product-box'>
 
@@ -270,7 +270,7 @@ const Header = () => {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
                                 {/* <img src='./img/header/search-icone.png' alt='' /> */}
-                                <input type="text" placeholder='Search products' className='w-100'  onChange={handleChange} value={searchKeyWord} />
+                                <input type="text" placeholder='Search products' className='w-100' onChange={handleChange} value={searchKeyWord} />
                                 <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
                                 {/* <Button className='shop-btn mt-0 mt-3' onClick={() => (handelSearch(search),navigate("/search"))}>Search</Button> */}
                             </div>
@@ -466,7 +466,7 @@ const Header = () => {
                                                                                 <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
                                                                                 :
                                                                                 subCategory && subCategory?.map((e, i) => (
-                                                                                    <div key={i} className='cate-box text-center pointer' onClick={() =>  ( handelSubCat(e._id), handelCategorydata(e.parent_id) ) }>
+                                                                                    <div key={i} className='cate-box text-center pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))}>
                                                                                         <div className='cat-img-round'>
                                                                                             <img src={Url + e.product_icon} alt='' width="100%" />
                                                                                         </div>
@@ -506,14 +506,14 @@ const Header = () => {
                                 <div className='new-in-box2'>
                                     <h5>NEW IN TODAY</h5>
                                     <ul>
-                                        <li className='mt-3'>20/06/2023</li>
-                                        <li>21/06/2023</li>
-                                        <li>22/06/2023</li>
-                                        <li>23/06/2023</li>
-                                        <li>24/06/2023</li>
-                                        <li>25/06/2023</li>
+                                        <li className='mt-3'>27/06/2023</li>
                                         <li>26/06/2023</li>
-                                        <li>27/06/2023</li>
+                                        <li>25/06/2023</li>
+                                        <li>24/06/2023</li>
+                                        <li>23/06/2023</li>
+                                        <li>22/06/2023</li>
+                                        <li>21/06/2023</li>
+                                        <li>20/06/2023</li>
                                     </ul>
                                 </div>
                             </Col>
