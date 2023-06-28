@@ -23,7 +23,7 @@ import { CartContext } from '../context/CartContext';
 
 const Profile = () => {
 
-    const { profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
+    const {sucessSnackBarOpenCart ,setwarningSnackBarOpen,setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen,warningSnackBarOpen,setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -39,14 +39,15 @@ const Profile = () => {
     const [showPass, setShowPass] = useState(true)
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState({});
-    const [Mymessage, setMyMessage] = useState("");
-    const [stateList, setStateList] = useState([]);
+    const [MymessageProfile, setMymessageProfileProfile] = useState("");
+    const [sucessSnackBarOpenProfile, setsucessSnackBarOpenProfile] = useState(false);
+    const [warningSnackBarOpenProfile, setwarningSnackBarOpenProfile] = useState(false);
+    const [stateList, setStateList] = useState([]); 
     const [countryList, setCountryList] = useState([]);
     const [orderList, setOrderList] = useState([]);
     const [submitCount, setSubmitCount] = useState(0);
     const serverURL = getServerURL();
-    const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-    const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
+
     const [itemShow, setItemShow] = useState(false);
     const [orderUrl, setOrderUrl] = useState(false);
 
@@ -55,7 +56,6 @@ const Profile = () => {
     const [adId, setAdId] = useState("");
     const player = useRef();
     const [loading, setLoading] = useState(true);
-
 
     const handleClose = () => {
         setErrors({})
@@ -93,7 +93,7 @@ const Profile = () => {
 
     const findAddress = (id) => {
         setAdId(id)
-        let data = myAddress.find((e) => e._id === id)
+        let data = myAddress.find((e) => e?._id === id)
 
         setValues({
             country_id: data.country_id?._id,
@@ -120,7 +120,7 @@ const Profile = () => {
         //     const selectedState = stateList.find((state) => state.name === newValue);
         //     newValue = selectedState ? selectedState._id : "";
         // }
-
+        
         // if (name === "country_id") {
         //     const selectedState = countryList.find((state) => state.name === newValue);
         //     newValue = selectedState ? selectedState._id : "";
@@ -176,8 +176,8 @@ const Profile = () => {
                         let check = mood == "edit" ? res.data.success === true : res.data.status === 1
 
                         if (check) {
-                            setMyMessage(res.data.message);
-                            setSucessSnackBarOpen(!sucessSnackBarOpen);
+                            setMymessageProfileProfile(res.data.message);
+                            setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
                             getMyAddress()
                             setTimeout(() => {
                                 setValues(initialValues);
@@ -186,12 +186,12 @@ const Profile = () => {
                             // navigate("/login");
                             // console.log(updatedValues.email,"updatedValues");
                         } else {
-                            setMyMessage(res.data.message);
-                            setWarningSnackBarOpen(!warningSnackBarOpen);
+                            setMymessageProfileProfile(res.data.message);
+                            setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                         }
                     });
             } catch (error) {
-                setWarningSnackBarOpen(!warningSnackBarOpen);
+                setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                 console.error(error);
             }
         }
@@ -209,8 +209,8 @@ const Profile = () => {
             api.postWithToken(`${serverURL}shipping-address-manage`, data)
                 .then((res) => {
                     if (res.data.success === true) {
-                        setMyMessage(res.data.message);
-                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                        setMymessageProfileProfile(res.data.message);
+                        setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
                         getMyAddress()
                         setTimeout(() => {
                             setValues(initialValues);
@@ -219,12 +219,12 @@ const Profile = () => {
                         // navigate("/login");
                         // console.log(updatedValues.email,"updatedValues");
                     } else {
-                        setMyMessage(res.data.message);
-                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                        setMymessageProfileProfile(res.data.message);
+                        setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                     }
                 });
         } catch (error) {
-            setWarningSnackBarOpen(!warningSnackBarOpen);
+            setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             console.error(error);
         }
 
@@ -242,8 +242,8 @@ const Profile = () => {
             api.postWithToken(`${serverURL}shipping-address-manage`, data)
                 .then((res) => {
                     if (res.data.success === true) {
-                        setMyMessage(res.data.message);
-                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                        setMymessageProfileProfile(res.data.message);
+                        setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
                         getMyAddress()
                         setTimeout(() => {
                             setValues(initialValues);
@@ -252,12 +252,12 @@ const Profile = () => {
                         // navigate("/login");
                         // console.log(updatedValues.email,"updatedValues");
                     } else {
-                        setMyMessage(res.data.message);
-                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                        setMymessageProfileProfile(res.data.message);
+                        setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                     }
                 });
         } catch (error) {
-            setWarningSnackBarOpen(!warningSnackBarOpen);
+            setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             console.error(error);
         }
 
@@ -287,13 +287,13 @@ const Profile = () => {
         try {
             if (values.country_id && errors.country_id == undefined) {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
-                var id = countryList.find((e => e._id == values.country_id))
+                var id = countryList.find((e => e?._id == values.country_id))
                 const request2 = api.get(`${serverURL + `/state-list?country_id=${id.id}`}`);
                 const responses = await Promise.all([request1, request2]);
                 setStateList(responses[1].data.data.states)
             } else {
-                setMyMessage("Country is required");
-                setWarningSnackBarOpen(!warningSnackBarOpen);
+                setMymessageProfileProfile("Country is required");
+                setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             }
         } catch (error) {
             console.error(error);
@@ -303,15 +303,29 @@ const Profile = () => {
     return (
         <>
             <SucessSnackBar
+                open={sucessSnackBarOpenProfile}
+                setOpen={setsucessSnackBarOpenProfile}
+                text={MymessageProfile}
+                type="success"
+            />
+
+            <ErrorSnackBar
+                open={warningSnackBarOpenProfile}
+                setOpen={setwarningSnackBarOpenProfile}
+                text={MymessageProfile}
+                type="error"
+            />
+
+            <SucessSnackBar
                 open={sucessSnackBarOpen}
-                setOpen={setSucessSnackBarOpen}
+                setOpen={setsucessSnackBarOpen}
                 text={Mymessage}
                 type="success"
             />
 
             <ErrorSnackBar
                 open={warningSnackBarOpen}
-                setOpen={setWarningSnackBarOpen}
+                setOpen={setwarningSnackBarOpen}
                 text={Mymessage}
                 type="error"
             />
@@ -433,10 +447,10 @@ const Profile = () => {
                                                                     <tr>
                                                                         <td width={400}>
                                                                             <div className='d-flex align-items-start gap-2'>
-                                                                                <img src={orderList.productImagePath + e.product_id._id + "/" + e.product_id?.product_images[0]?.file_name}
+                                                                                <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
                                                                                     width="80px" />
                                                                                 <div className='pro-text'>
-                                                                                    <h6>{e.product_id.name} </h6>
+                                                                                    <h6>{e.product_id?.name} </h6>
                                                                                     <span>ID: # {e.order_id.order_display_id}</span>
                                                                                 </div>
                                                                             </div>
@@ -706,16 +720,16 @@ const Profile = () => {
                                                             <h5> {e.fullname}</h5>
                                                             <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id?.name},{e.country_id?.name},{e.contact_no} </p>
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <div className='d-flex align-items-center check-options' onClick={() => selectAddress(e._id)}   >
+                                                                <div className='d-flex align-items-center check-options' onClick={() => selectAddress(e?._id)}   >
                                                                     <input type='checkbox' id='add-select' checked={e.is_default == 1} />
                                                                     <label htmlFor='add-select'>Default</label>
                                                                 </div>
                                                                 <div className='copy-main'>
                                                                     {/* <Button>Copy</Button> */}
                                                                     {/* <span>I</span> */}
-                                                                    <Button onClick={() => (handleShow("edit"), findAddress(e._id))} >Edit</Button>
+                                                                    <Button onClick={() => (handleShow("edit"), findAddress(e?._id))} >Edit</Button>
                                                                     <span>I</span>
-                                                                    <Button onClick={() => deleteAddress(e._id)} >Delete</Button>
+                                                                    <Button onClick={() => deleteAddress(e?._id)} >Delete</Button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -844,21 +858,25 @@ const Profile = () => {
                             <div className='recent-view product-info mt-5'>
                                 <h4>Based on your recently viewed</h4>
                                 <div className='mb-0 explore-main'>
-                                    {
-                                        data.slice(0, 10).map((e) => {
-                                            return (
-                                                <ProCard
-                                                    img={e.img}
-                                                    name={e?.name}
-                                                    per={e.per}
-                                                    per2={e.per2}
-                                                    sold={e.sold}
-                                                    secper={e.secper}
-                                                    off={e.off}
-                                                />
-                                            )
-                                        })
-                                    }
+                                {
+                                            trendingProductList?.productListArrObj?.slice(0, 5).map((e) => {
+                                                return (
+
+                                                        <ProCard
+                                                            id={e?._id}
+                                                            img={e.product_images[0]?.file_name}
+                                                            name={e?.name}
+                                                            group_price={e.group_price}
+                                                            individual_price={e.individual_price}
+                                                            sold={e.total_order}
+                                                            secper={e.secper}
+                                                            off={e.discount_percentage}
+                                                            path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
+                                                            is_wishList={e.wishList && e.wishList}
+                                                        />
+                                                )
+                                            })
+                                        }
                                     {/* <div className='w-100 d-flex justify-content-center'>
                                         <Button className='shop-btn rotate-img'  >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div> */}
@@ -891,7 +909,7 @@ const Profile = () => {
                                             {
                                                 countryList.map((e, i) =>
                                                 (
-                                                    <option key={i} value={e._id}  >{e?.name}</option>
+                                                    <option key={i} value={e?._id}  >{e?.name}</option>
 
                                                 ))
                                             }
@@ -950,7 +968,7 @@ const Profile = () => {
                                                     {
                                                         stateList.map((e, i) =>
                                                         (
-                                                            <option key={i} value={e._id}  >{e?.name}</option>
+                                                            <option key={i} value={e?._id}  >{e?.name}</option>
                                                         ))
                                                     }
                                                     )

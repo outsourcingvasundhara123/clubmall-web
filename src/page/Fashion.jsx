@@ -17,6 +17,7 @@ import { CartContext } from '../context/CartContext';
 import { Is_Login } from '../helper/IsLogin';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
+import ProductCard from './ProductCard';
 
 const Fashion = () => {
 
@@ -25,7 +26,7 @@ const Fashion = () => {
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const navigate = useNavigate();
-
+    const [isWishlist, setIsWishlist] = useState(); // We use !! to convert to a boolean
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setProduct_id({})
@@ -36,7 +37,8 @@ const Fashion = () => {
     const handleShow = (id) => {
         setProduct_id(id)
         setShow(true);
-    }
+    } 
+
 
     const player = useRef();
 
@@ -397,38 +399,9 @@ const Fashion = () => {
 
                                 <div className='mb-0 mt-4 explore-main particular-product-items mar-top-0'>
                                     {
-                                        productList.productListArrObj && productList.productListArrObj?.slice(0, 20).map((e) => {
-                                            return (
-                                                <div className='product-card explore-card  pointer' >
-                                                    <div className='position-relative'  >
-                                                        <img onClick={() => handelProductDetail(e._id)} alt={e.name} src={productList?.productImagePath && productList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} className='img-fluid' />
-                                                        <Button className='add-to-card-btn' onClick={() => handleShow(e._id)} >Add to Cart</Button>
-                                                    </div>
-                                                    <div className='py-3 px-3 space-card'  >
-                                                        <h5>{e.name}</h5>
-                                                        <div className='d-flex align-items-center justify-content-between'>
-                                                            <div>
-                                                                <p className='per'>${e.group_price} <span>(Group Price)</span></p>
-                                                                <span className='sub-per'>${e.individual_price} (Individual Price)</span>
-                                                            </div>
-                                                            {e.wishList === 0
-                                                                &&
-                                                                <Button className='like-btn' onClick={() => addWishList(e._id, "product-wishlist")} >
-                                                                    <img src='./img/new_in/like.png' className='like-size' alt='' />
-                                                                </Button>
-                                                            }
-
-                                                            {
-                                                                e.wishList === 1 &&
-                                                                <Button className='like-btn' onClick={() => addWishList(e._id, "product-delete-wishlist")} >
-                                                                    <img src='./img/Vector.png' alt='' />
-                                                                </Button>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
+                                        productList.productListArrObj && productList.productListArrObj?.slice(0, 20).map((product) => (
+                                            <ProductCard product={product} productImagePath={productList.productImagePath} handleShow={handleShow} />
+                                        ))
                                     }
                                 </div>
                             </div>

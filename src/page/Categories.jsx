@@ -23,7 +23,7 @@ import colorNameToHex from 'color-name';
 
 const Categories = () => {
 
-    const { handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+    const {setAdd_wished_Called, add_wished_Called, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const initial = {
@@ -70,20 +70,22 @@ const Categories = () => {
 
     const getCategory = async () => {
         try {
-            startAnimation()
-            if (viewCalled === true) {
+            if (add_wished_Called === false) {
+                startAnimation()
+            }
+
+            if (   add_wished_Called === true || viewCalled === true ) {
                 setLoading(false);
             } else {
                 setLoading(true);
             }
+
+
             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
             var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
             setSubCatList(subcat[0]?.child)
-
-
-            console.log(selectedSub, "selectedSub");
 
             if (subCat === null) {
                 let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
@@ -154,7 +156,7 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-    }, [Categorie_id, subCat, sellIs_wished, page, viewCalled, sellIs_wished, subCatId, myFilter, range, productColorActive]);
+    }, [Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive,add_wished_Called]);
 
     useEffect(() => {
         getFilterDetails();
@@ -170,7 +172,7 @@ const Categories = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
+        setAdd_wished_Called(false)
         setMyFilter((prevValues) => {
             return {
                 ...prevValues,
@@ -180,6 +182,7 @@ const Categories = () => {
     };
 
     const handleRangeChange = (values) => {
+        setAdd_wished_Called(false)
         setRange(values);
     };
 
@@ -241,7 +244,7 @@ const Categories = () => {
                             {
                                 subCatList?.map((e, i) => {
                                     return (
-                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name), setMyFilter(initial), setRange([0, 100]), setProductColorActive())}>{e.name} </Button>
+                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name), setMyFilter(initial), setRange([0, 100]), setProductColorActive(),setAdd_wished_Called(false))}>{e.name} </Button>
                                         // <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
                                     )
                                 })
@@ -275,7 +278,7 @@ const Categories = () => {
                                                                     {
                                                                         colorList && colorList.map((e, i) => {
                                                                             return (
-                                                                                <div key={i} className={`${productColorActive == e.name ? "active" : ""} pointer cat-color `} style={{ backgroundColor: `rgb(${e.code})`, width: '30px', height: '30px', borderRadius: '50%' }} onClick={() => setProductColorActive(e.name)}>
+                                                                                <div key={i} className={`${productColorActive == e.name ? "active" : ""} pointer cat-color `} style={{ backgroundColor: `rgb(${e.code})`, width: '30px', height: '30px', borderRadius: '50%' }} onClick={() => (setProductColorActive(e.name), setAdd_wished_Called(false))}>
                                                                                 </div>
                                                                             )
                                                                         })

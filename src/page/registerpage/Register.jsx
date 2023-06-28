@@ -115,7 +115,12 @@ function Register() {
                             SetEmail(updatedValues.email)
                             // console.log(updatedValues.email,"updatedValues");
                         } else {
-                            setMyMessage(res.data.message);
+                            console.log(res, "res.data.message");
+                            if (res.data.message === "Duplicate field value entered") {
+                                setMyMessage("This User Name is already exist");
+                            } else {
+                                setMyMessage(res.data.message);
+                            }
                             setWarningSnackBarOpen(!warningSnackBarOpen);
                         }
                     });

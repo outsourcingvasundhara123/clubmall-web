@@ -90,6 +90,7 @@ const Trending = () => {
                                                     off={e.discount_percentage}
                                                     path={url && url}
                                                     color={e.sku_attributes.color}
+                                                    // is_wishList={e.wishList && e.wishList}
                                                 />
                                             )
                                         })
