@@ -1,4 +1,4 @@
-import React, { useState, useRef , useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Layout from '../../layout/Layout'
 import { Button, Form, Modal, NavLink, } from 'react-bootstrap'
 import "react-phone-input-2/lib/bootstrap.css";
@@ -94,9 +94,9 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
-                  if(localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login"){
+                  if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
                     window.location.href = "/"
-                  }else{
+                  } else {
                     window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
                   }
                   // navigate("");
@@ -293,8 +293,8 @@ const LogIn = () => {
   };
 
   useEffect(() => {
-    if (isFirstTime && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login" && localStorage.getItem('lastVisitedPath')  !==  "https://clubmall.com/login" ) {
-      localStorage.setItem('lastVisitedPath',  document.referrer);
+    if (isFirstTime && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login" && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login") {
+      localStorage.setItem('lastVisitedPath', document.referrer);
       setIsFirstTime(false);
     }
   }, [isFirstTime]);
@@ -352,7 +352,7 @@ const LogIn = () => {
                   name="terms_and_condition"
                   checked={values.terms_and_condition}
                 />
-                <label htmlFor='check_terms' className='pointer'>I accept to the <Link to="/privacy-policy">Privacy Policy</Link> & <NavLink>Terms & Condition</NavLink></label>
+                <label htmlFor='check_terms' className='pointer'>I accept to the <Link to="/privacy-policy">Privacy Policy</Link> & <Link to="/terms-use">Terms & Condition</Link></label>
               </div>
               <div className='error d-flex align-items-start check-terms gap-2 mt-1' >{errors?.terms_and_condition}</div>
 
