@@ -36,8 +36,15 @@ const Profile = () => {
         zipcode: "",
     };
 
+    const initialValue_2 = {
+        bio: "",
+        name: "",
+        gender: "",
+    };
+
     const [showPass, setShowPass] = useState(true)
     const [values, setValues] = useState(initialValues);
+    const [values_2, setValues_2] = useState(initialValue_2);
     const [errors, setErrors] = useState({});
     const [MymessageProfile, setMymessageProfileProfile] = useState("");
     const [sucessSnackBarOpenProfile, setsucessSnackBarOpenProfile] = useState(false);
@@ -47,7 +54,6 @@ const Profile = () => {
     const [orderList, setOrderList] = useState([]);
     const [submitCount, setSubmitCount] = useState(0);
     const serverURL = getServerURL();
-
     const [itemShow, setItemShow] = useState(false);
     const [orderUrl, setOrderUrl] = useState(false);
 
@@ -120,7 +126,7 @@ const Profile = () => {
         //     const selectedState = stateList.find((state) => state.name === newValue);
         //     newValue = selectedState ? selectedState._id : "";
         // }
-        
+
         // if (name === "country_id") {
         //     const selectedState = countryList.find((state) => state.name === newValue);
         //     newValue = selectedState ? selectedState._id : "";
@@ -579,7 +585,8 @@ const Profile = () => {
                                                         <Form>
                                                             <div className='input-filed mt-4'>
                                                                 <label>Name</label>
-                                                                <input type='text' />
+                                                                <input type='text'
+                                                                 />
                                                             </div>
                                                             <div className='input-filed mt-3'>
                                                                 <label>Bio</label>
@@ -910,7 +917,6 @@ const Profile = () => {
                                                 countryList.map((e, i) =>
                                                 (
                                                     <option key={i} value={e?._id}  >{e?.name}</option>
-
                                                 ))
                                             }
                                         </select>
@@ -940,7 +946,6 @@ const Profile = () => {
                                             onChange={handleChange}
                                         />
                                         <div className='error' >{errors?.contact_no}</div>
-
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>

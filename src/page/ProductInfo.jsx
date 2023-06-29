@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
-import { Button, Col, Modal, NavLink, Offcanvas, Row } from 'react-bootstrap'
+import { Button, Col, Form, Modal, NavLink, Offcanvas, Row } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdOutlineKeyboardArrowDown,
@@ -29,7 +29,7 @@ import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 
 const ProductInfo = () => {
-    const {add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -53,6 +53,10 @@ const ProductInfo = () => {
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
     const product_id = localStorage.getItem("selectedProductId") ? localStorage.getItem("selectedProductId") : "646b6db53c9cae7c199c7740"
+
+    const [reviewShow, setreviewShow] = useState(false);
+    const handlereviewShow = () => setreviewShow(true);
+    const handlereviewClose = () => setreviewShow(false);
 
     const startAnimation = () => {
         if (player.current) {
@@ -117,7 +121,7 @@ const ProductInfo = () => {
 
     useEffect(() => {
         getproductlist();
-    }, [sellIs_wished, isLoggedIn , add_wished_Called ]);
+    }, [sellIs_wished, isLoggedIn, add_wished_Called]);
 
 
     const findSKUId = () => {
@@ -188,7 +192,7 @@ const ProductInfo = () => {
         }
     };
 
-   console.log(add_wished_Called,"add_wished_Called");
+    console.log(add_wished_Called, "add_wished_Called");
 
     return (
         <>
@@ -604,7 +608,12 @@ const ProductInfo = () => {
                                 </Row>
 
                                 <div className='review mt-5 mar-top-20'>
-                                    <h4 className='info-title'>All Reviews (6)</h4>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <h4 className='info-title'>All Reviews (6)</h4>
+                                        <Button onClick={handlereviewShow} className='write-review'>
+                                            Write a review
+                                        </Button>
+                                    </div>
                                     <div className=''>
                                         <div className='d-flex align-items-start review-box gap-3 mt-4'>
                                             <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' />
@@ -883,6 +892,31 @@ const ProductInfo = () => {
                                                 <img src='./img/app.png' alt='' />
                                             </NavLink>
                                         </div>
+                                    </div>
+                                </Modal.Body>
+                            </Modal>
+
+                            <Modal show={reviewShow} onHide={handlereviewClose} centered className='for_you-modal'>
+                                <Modal.Body>
+                                    <div className='comment-modal position-relative'>
+                                        <Button className='close-modal-btn forgot-pass-close' onClick={handlereviewClose}>
+                                            <MdOutlineClose />
+                                        </Button>
+                                        <h5>Write a review</h5>
+                                        <Form className='mt-3'>
+                                            <div className='login-input text-start'>
+                                                <label>You Name</label>
+                                                <input type='text' />
+                                            </div>
+                                            <div className='login-input text-start mt-3'>
+                                                <label>Comments</label>
+                                                <textarea placeholder='Type your review here' rows={5} />
+                                            </div>
+                                            <div className='mt-3 review-file'>
+                                                <input type='file' />
+                                            </div>
+                                            <Button className='submit-btn mt-3 w-100' >Publish Review</Button>
+                                        </Form>
                                     </div>
                                 </Modal.Body>
                             </Modal>
