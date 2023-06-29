@@ -27,11 +27,13 @@ import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
+import { Rating } from '@mui/material'
 
 const ProductInfo = () => {
-    const { add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getWishList,add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
+    const defaultProfile = `./img/for_you/defaultuser.png`
     const [perActive, setPerActive] = useState('Individual');
     const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
     const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
@@ -46,14 +48,13 @@ const ProductInfo = () => {
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
     const [Product, setProduct] = useState({})
-    const [productList, setProductList] = useState([]);
+    // const [productList, setProductList] = useState([]);
     const [favoriteProductList, setFavoriteProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
     const [sizeActive, setSizeActive] = useState("")
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
     const product_id = localStorage.getItem("selectedProductId") ? localStorage.getItem("selectedProductId") : "646b6db53c9cae7c199c7740"
-
     const [reviewShow, setreviewShow] = useState(false);
     const handlereviewShow = () => setreviewShow(true);
     const handlereviewClose = () => setreviewShow(false);
@@ -77,7 +78,7 @@ const ProductInfo = () => {
                 ]);
                 const productData = productDetail.data.data;
                 setProduct(productData);
-                setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
+                setProductColorActive(productDetail.data.data?.productList?.sku_attributes?.color[0]?.name && productDetail.data.data?.productList?.sku_attributes?.color[0]?.name)
                 stopAnimation()
                 const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
                 const mergedImages = imageUrls && imageUrls?.map(url => ({
@@ -93,7 +94,43 @@ const ProductInfo = () => {
         }
     };
 
+
+    // const getProductReview = async () => {
+    //     startAnimation()
+    //     const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+
+    //     try {
+    //         if (product_id) {
+    //             const [productReview] = await Promise.all([
+    //                 apiTyp(`${serverURL + "product-review-list"}`, {
+    //                     "action": "list",
+    //                     "filter_by": [],
+    //                     "rating_value": [],
+    //                     "sort_by": "rating",
+    //                     product_id: product_id, page: "1"
+    //                 })
+    //             ]);
+    //             console.log(productReview, "productReview");
+    //             // const productData = productDetail.data.data;
+    //             // setProduct(productData);
+    //             // setProductColorActive(productDetail.data.data?.productList?.sku_attributes?.color[0]?.name && productDetail.data.data?.productList?.sku_attributes?.color[0]?.name)
+    //             // stopAnimation()
+    //             // const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
+    //             // const mergedImages = imageUrls && imageUrls?.map(url => ({
+    //             //     thumbnail: url,
+    //             //     original: url,
+    //             // }));
+    //             // setColorProduct(mergedImages)
+    //         }
+
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+
+
     useEffect(() => {
+        // getProductReview()
         getProductDetail();
     }, []);
 
@@ -121,11 +158,12 @@ const ProductInfo = () => {
 
     useEffect(() => {
         getproductlist();
+        getWishList()
     }, [sellIs_wished, isLoggedIn, add_wished_Called]);
 
 
     const findSKUId = () => {
-        const sku = Product.productList.sku_details.find((sku) => {
+        const sku = Product?.productList.sku_details.find((sku) => {
             return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
         });
         return sku ? sku.skuid : null;
@@ -136,14 +174,14 @@ const ProductInfo = () => {
 
         try {
 
-            if (productColorActive && (sizeActive || Product.productList?.sku_attributes.size == undefined)) {
+            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes.size == undefined)) {
 
                 if (isLoggedIn) {
                     let data = {
                         action: "add-to-cart-product",
-                        seller_id: Product.productList.user_id._id,
-                        product_id: Product.productList._id,
-                        product_price: Product.productList.individual_price,
+                        seller_id: Product?.productList?.user_id?._id,
+                        product_id: Product?.productList?._id,
+                        product_price: Product?.productList.individual_price,
                         product_price_type: 1,
                         product_tax: 0,
                         group_id: null,
@@ -183,6 +221,8 @@ const ProductInfo = () => {
 
     const handleCopy = () => {
         if (textRef.current) {
+            setMyMessageProductDtl("Item id copyed");
+            setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
             const range = document.createRange();
             range.selectNode(textRef.current);
             window.getSelection().removeAllRanges();
@@ -192,11 +232,8 @@ const ProductInfo = () => {
         }
     };
 
-    console.log(add_wished_Called, "add_wished_Called");
-
     return (
         <>
-
 
             <SucessSnackBar
                 open={sucessSnackBarOpenProductDtl}
@@ -240,33 +277,29 @@ const ProductInfo = () => {
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
                                     <div className='d-flex align-items-center gap-1'>
-                                        <NavLink> {Product.productList?.product_category_keys?.product_category_one.name} Kid’s Fashion</NavLink>
+                                        <NavLink> {Product?.productList?.product_category_keys?.product_category_one.name} Kid’s Fashion</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
                                     <div className='d-flex align-items-center gap-1'>
-                                        <NavLink >{Product.productList?.product_category_keys?.product_category_two.name}</NavLink>
+                                        <NavLink >{Product?.productList?.product_category_keys?.product_category_two.name}</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
-                                    <NavLink className='active wrap-line-cos'>  {Product.productList?.name} </NavLink>
+                                    <NavLink className='active wrap-line-cos'>  {Product?.productList?.name} </NavLink>
                                 </div>
 
                                 <Row className='mt-4'>
                                     <Col lg={6} md={12}>
                                         <div className='position-relative'>
-                                            <Button className='wishlist-btn'><img src='./img/header/wishlist.png' alt='' width="25px" /></Button>
-                                            <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product.productImagePath} productList={Product.productList?.product_images} id={Product.productList?._id && Product.productList?._id} />
+                                            {/* <Button className='wishlist-btn'><img src='./img/header/wishlist.png' alt='' width="25px" /></Button> */}
+                                            <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
                                             <div className='d-flex align-items-center gap-3'>
-                                                <h5 className='info-title border-right-cos cos-title'> {Product.productList?.rating_count} shop reviews</h5>
+                                                <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
                                                 <div className='rate d-flex align-items-center gap-2'>
-                                                    <span className='cos-title'>{Product.productList.rating}</span>
+                                                    <span className='cos-title'>{Product?.productList.rating}</span>
                                                     <div className='d-flex align-items-center gap-1'>
-                                                        <img src='./img/selling/black-star.png' alt='' />
-                                                        <img src='./img/selling/black-star.png' alt='' />
-                                                        <img src='./img/selling/black-star.png' alt='' />
-                                                        <img src='./img/selling/black-star.png' alt='' />
-                                                        <img src='./img/selling/black-star.png' alt='' />
+                                                        <Rating name="read-only" value={Product?.productList.rating} readOnly />
                                                     </div>
                                                 </div>
                                             </div>
@@ -275,15 +308,12 @@ const ProductInfo = () => {
                                                 <span>All reviews are from verified buyers</span>
                                             </div>
                                         </div>
-
-
-                                        {Product.productList?.rating_count == 0 &&
+                                        {Product?.productList?.rating_count == 0 &&
                                             <div className='no-review py-4'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
-                                                <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p>
+                                                {/* <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p> */}
                                             </div>
                                         }
-
                                         <div className='together web-together'>
                                             <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
@@ -336,7 +366,7 @@ const ProductInfo = () => {
                                                                             <SwiperSlide>
                                                                                 <div className='slide-box'>
                                                                                     <div className='position-relative'>
-                                                                                        <img src={favoriteProductList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
+                                                                                        <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
                                                                                     </div>
                                                                                     <div className='slider-box-per pt-3'>
 
@@ -368,26 +398,26 @@ const ProductInfo = () => {
                                     </Col>
                                     <Col lg={6} md={12} className='mt-4 mt-lg-0'>
                                         <div className='pro-def'>
-                                            <h6> {Product.productList?.name}</h6>
+                                            <h6> {Product?.productList?.name}</h6>
 
                                             {/* <div className='brand my-3'>
                                                 <p><span>By</span> <img src='./img/product_def/uppack.png' alt='' />  {Product.stockData?.recent_bought_name} ({Product.stockData?.order_count}K + sold)</p>
                                             </div> */}
 
                                             <div className='per-pro d-flex align-items-end gap-2 mt-2'>
-                                                <h3> ${Product.productList?.individual_price}</h3>
-                                                <del>${Product.productList?.group_price}</del>
-                                                <span>{Math.round(Product.productList?.group_price * 100 / Product.productList?.individual_price)}% Off</span>
+                                                <h3> ${Product?.productList?.individual_price}</h3>
+                                                <del>${Product?.productList?.group_price}</del>
+                                                <span>{Math.round(Product?.productList?.group_price * 100 / Product?.productList?.individual_price)}% Off</span>
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
                                                 <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
-                                                    ${Product.productList?.individual_price}</Button>
+                                                    ${Product?.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     handleShow();
                                                     setPerActive('Group')
                                                 }}>Group Price: <br />
-                                                    ${Product.productList?.group_price}</Button>
+                                                    ${Product?.productList?.group_price}</Button>
                                             </div>
 
                                             {/* <p className='interest mt-3'>4 interest-free installments of <span>$4.25</span> with
@@ -417,7 +447,7 @@ const ProductInfo = () => {
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                                     {
-                                                        Product?.productList?.sku_attributes?.color && Product.productList?.sku_attributes.color?.map((e, i) => {
+                                                        Product?.productList?.sku_attributes?.color && Product?.productList?.sku_attributes.color?.map((e, i) => {
                                                             return (
                                                                 <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
                                                                     <img className='colors' src={e.imgUrl} alt='' />
@@ -428,10 +458,10 @@ const ProductInfo = () => {
                                                 </div>
 
                                                 <div className='size mt-4'>
-                                                    {Product.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
+                                                    {Product?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
-                                                            Product.productList?.sku_attributes.size?.map((e, i) => {
+                                                            Product?.productList?.sku_attributes.size?.map((e, i) => {
                                                                 return (
                                                                     <Button className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
                                                                         {e.name}
@@ -589,7 +619,7 @@ const ProductInfo = () => {
                                                     <span>Item ID: {Product.productList?.attributes["Product ID"][0]} </span>
                                                     <Button className='copy-btn'>Copy</Button>
                                                 </div> */}
-                                                {Object.entries(Product.productList?.attributes || {})?.map(([key, value], index) => (
+                                                {Object.entries(Product?.productList?.attributes || {})?.map(([key, value], index) => (
                                                     <div key={index}>
                                                         {key === "Product ID" ? (
                                                             <div className='d-flex align-items-center copy-div gap-3'>
@@ -608,71 +638,44 @@ const ProductInfo = () => {
                                 </Row>
 
                                 <div className='review mt-5 mar-top-20'>
-                                    <div className='d-flex align-items-center justify-content-between'>
-                                        <h4 className='info-title'>All Reviews (6)</h4>
-                                        <Button onClick={handlereviewShow} className='write-review'>
-                                            Write a review
-                                        </Button>
-                                    </div>
+                                  {Product?.productReviewList.length === 0 ? " " : <h4 className='info-title'>All Reviews ({Product?.productReviewList.length})</h4>  }  
                                     <div className=''>
-                                        <div className='d-flex align-items-start review-box gap-3 mt-4'>
-                                            <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' />
-                                            <div className='review-items-def w-100 d-flex align-items-start justify-content-between'>
-                                                <div className='review-text'>
-                                                    <h5>Me ha gustado mucho Fresquita parecido a la bambula Uso S pero me pido M para que cuelgue un poco</h5>
-                                                    <span>16 May, 2023</span>
-                                                    <div className='d-flex align-items-center gap-1'>
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/nonrate.png' alt='' />
-                                                    </div>
-                                                    <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
-                                                        <p><b>Overall Fit:</b> True to Size</p>
-                                                        <p><b>Color:</b> Olive Green</p>
-                                                        <p><b>Size:</b> M</p>
-                                                    </div>
-                                                </div>
-                                                <div className='d-flex align-items-center gap-3 review-like'>
+                                        {
+                                            Product?.productReviewList?.map((e, i) => {
+                                                return (
+                                                    <div className='d-flex align-items-start review-box gap-3 mt-4'>
+                                                        {/* <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' /> */}
+                                                        <div className='review-items-def w-100 d-flex align-items-start justify-content-between pb-4'>
+                                                            <div className='review-text'>
+                                                                <div className='d-flex align-items-center gap-2'>
+                                                                    <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
+                                                                    <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
+                                                                </div>
+
+                                                                <span className='date_pro_info'>{e.content}</span>
+                                                                <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
+                                                                <div className='d-flex align-items-center gap-1'>
+                                                                    <Rating name="read-only" value={e.rating} readOnly />
+                                                                </div>
+                                                                {/* <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
+                                                                    <p><b>Overall Fit:</b> True to Size</p>
+                                                                    <p><b>Color:</b> Olive Green</p>
+                                                                    <p><b>Size:</b> M</p>
+                                                                </div> */}
+                                                            </div>
+                                                            {/* <div className='d-flex align-items-center gap-3 review-like'>
                                                     <Button>
                                                         <img src='./img/for_you/like.png' alt='' />
                                                     </Button>
                                                     <Button>
                                                         <BsThreeDots />
                                                     </Button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='d-flex align-items-start review-box gap-3 mt-4'>
-                                            <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' />
-                                            <div className='review-items-def w-100 d-flex align-items-start justify-content-between'>
-                                                <div className='review-text'>
-                                                    <h5>Me ha gustado mucho Fresquita parecido a la bambula Uso S pero me pido M para que cuelgue un poco</h5>
-                                                    <span>16 May, 2023</span>
-                                                    <div className='d-flex align-items-center gap-1'>
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/rate.png' alt='' />
-                                                        <img src='./img/product_def/nonrate.png' alt='' />
+                                                </div> */}
+                                                        </div>
                                                     </div>
-                                                    <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
-                                                        <p><b>Overall Fit:</b> True to Size</p>
-                                                        <p><b>Color:</b> Olive Green</p>
-                                                        <p><b>Size:</b> M</p>
-                                                    </div>
-                                                </div>
-                                                <div className='d-flex align-items-center gap-3 review-like'>
-                                                    <Button>
-                                                        <img src='./img/for_you/like.png' alt='' />
-                                                    </Button>
-                                                    <Button>
-                                                        <BsThreeDots />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                )
+                                            })
+                                        }
                                     </div>
                                 </div>
 
@@ -728,7 +731,7 @@ const ProductInfo = () => {
                                                                     <SwiperSlide>
                                                                         <div className='slide-box'>
                                                                             <div className='position-relative'>
-                                                                                <img src={favoriteProductList.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
+                                                                                <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
                                                                             </div>
                                                                             <div className='slider-box-per pt-3'>
 
@@ -772,7 +775,7 @@ const ProductInfo = () => {
                                                         sold={e.total_order}
                                                         secper={e.secper}
                                                         off={e.discount_percentage}
-                                                        path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
+                                                        path={trendingProductList?.productImagePath && trendingProductList?.productImagePath}
                                                         is_wishList={e.wishList && e.wishList}
 
                                                     />
