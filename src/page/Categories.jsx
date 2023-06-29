@@ -73,14 +73,11 @@ const Categories = () => {
             if (add_wished_Called === false) {
                 startAnimation()
             }
-
             if (   add_wished_Called === true || viewCalled === true ) {
                 setLoading(false);
             } else {
                 setLoading(true);
             }
-
-
             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);

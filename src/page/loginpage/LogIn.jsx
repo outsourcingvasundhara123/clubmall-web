@@ -94,7 +94,8 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
-                  if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+                  console.log(localStorage.getItem("lastVisitedPath"),"localStorage.getItem");
+                  if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || (!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login" ) {
                     window.location.href = "/"
                   } else {
                     window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
