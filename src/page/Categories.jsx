@@ -331,7 +331,6 @@ const Categories = () => {
                                                             </Accordion.Body>
                                                         </Accordion.Item>
 
-
                                                     }
 
                                                     {filterList[0]?.type?.length === undefined || filterList[0]?.type?.length !== 0 &&
@@ -355,9 +354,7 @@ const Categories = () => {
 
                                                             </Accordion.Body>
                                                         </Accordion.Item>
-
                                                     }
-
 
                                                     {filterList[0]?.patten_type?.length === undefined || filterList[0]?.patten_type?.length !== 0 &&
 
@@ -409,7 +406,6 @@ const Categories = () => {
                                                     <div className='filter-box mt-20 range'>
                                                         <h5>Price Range</h5>
                                                         <div class="price-range-slider mt-4 mb-3">
-                                                            {/* <RangeSlider min={0} max={100} value={range} onChange={handleRangeChange} /> */}
                                                             <Slider range min={0} max={100} value={range} onChange={handleRangeChange} />
                                                             <div className='d-flex align-items-center justify-content-between mt-2'>
                                                                 <span> {range[0]}</span>

@@ -69,7 +69,7 @@ const Search = () => {
                                             )
                                         })
                                     }
-                                    {searchpostList.length !== 0 &&
+                                    {searchpostList.length !== 0 || searchpostList.length >= 20 &&
                                         <div className='w-100 d-flex justify-content-center'>
                                             <Button className='shop-btn btn-cos-mobile' onClick={() => (setSearchPage(searchPage + 1), setViewmoreLoder(true), setIs_search(0))} >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
