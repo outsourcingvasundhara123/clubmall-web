@@ -6,8 +6,6 @@ import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
 import { colors, categoriesSliderData } from '../helper/constants'
-import { RangeSlider } from 'rsuite';
-import 'rsuite/dist/rsuite-no-reset.min.css';
 import { PRODUCTList, PRODUCTSEARCH, PRODUCTCATEGORY, PRODUCTDEPENDENTCATEGORY } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
@@ -21,9 +19,12 @@ import { Is_Login } from '../helper/IsLogin'
 import colorNameToHex from 'color-name';
 
 
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
 const Categories = () => {
 
-    const {setAdd_wished_Called, add_wished_Called, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+    const { setAdd_wished_Called, add_wished_Called, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const initial = {
@@ -73,7 +74,7 @@ const Categories = () => {
             if (add_wished_Called === false) {
                 startAnimation()
             }
-            if (   add_wished_Called === true || viewCalled === true ) {
+            if (add_wished_Called === true || viewCalled === true) {
                 setLoading(false);
             } else {
                 setLoading(true);
@@ -153,7 +154,7 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-    }, [Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive,add_wished_Called]);
+    }, [Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive, add_wished_Called]);
 
     useEffect(() => {
         getFilterDetails();
@@ -241,7 +242,7 @@ const Categories = () => {
                             {
                                 subCatList?.map((e, i) => {
                                     return (
-                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name), setMyFilter(initial), setRange([0, 100]), setProductColorActive(),setAdd_wished_Called(false))}>{e.name} </Button>
+                                        <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => (setViewCalled(false), setSubCat(e.name), setMyFilter(initial), setRange([0, 100]), setProductColorActive(), setAdd_wished_Called(false))}>{e.name} </Button>
                                         // <Button key={i} className={`${subCat === e.name ? "active" : ""}`} onClick={() => ( setViewCalled(false), setSubCat(e.name))}>{e.name} </Button>
                                     )
                                 })
@@ -408,12 +409,14 @@ const Categories = () => {
                                                     <div className='filter-box mt-20 range'>
                                                         <h5>Price Range</h5>
                                                         <div class="price-range-slider mt-4 mb-3">
-                                                            <RangeSlider min={0} max={100} value={range} onChange={handleRangeChange} />
+                                                            {/* <RangeSlider min={0} max={100} value={range} onChange={handleRangeChange} /> */}
+                                                            <Slider range min={0} max={100} value={range} onChange={handleRangeChange} />
                                                             <div className='d-flex align-items-center justify-content-between mt-2'>
                                                                 <span> {range[0]}</span>
                                                                 <span>{range[1]}</span>
                                                             </div>
                                                         </div>
+
                                                     </div>
 
                                                 </Accordion>

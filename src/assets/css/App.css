@@ -4320,16 +4320,28 @@ input[type='radio'] {
     }
 }
 
-.price-range-slider .rs-slider-progress-bar {
+.price-range-slider .rc-slider-track {
     background-color: #223263;
 }
 
-.rs-slider-handle::before {
+.rc-slider-handle {
     background-color: #FEBDBD;
     border-color: #FEBDBD;
     width: 16px;
     height: 16px;
-    top: -4px;
+    top: 3px;
+    opacity: 1;
+}
+
+.rc-slider-handle:hover,
+.rc-slider-handle:active {
+    border-color: #FEBDBD;
+    box-shadow: 0 0 5px #FEBDBD;
+}
+
+.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging {
+    border-color: #FEBDBD !important;
+    box-shadow: 0 0 5px #FEBDBD !important;
 }
 
 .rs-slider-bar {
