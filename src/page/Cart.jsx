@@ -36,7 +36,7 @@ const WrappedCart = () => {
     const elements = useElements();
 
     const isLoggedIn = Is_Login();
-    const {add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen,warningSnackBarOpen,setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
+    const {getCartData,setCartList,couponId,setCouponId,cartList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen,warningSnackBarOpen,setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -47,7 +47,6 @@ const WrappedCart = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
-    const [productList, setProductList] = useState([]);
     const [fleshProductList, setFleshProductList] = useState([]);
     const serverURL = getServerURL();
     const [page, setPage] = useState(1);
@@ -58,7 +57,6 @@ const WrappedCart = () => {
     const [warningSnackBarOpenCart, setWarningSnackBarOpenCart] = useState(false);
     const [couponCode, setCouponCode] = useState("");
     const [MymessageCart, setMyMessageCart] = useState("");
-    const [couponId, setCouponId] = useState([]);
     const [loading, setLoading] = useState(true);
     const [is_Wait, setIs_Wait] = useState(false);
     const player = useRef();
@@ -80,19 +78,19 @@ const WrappedCart = () => {
             // console.log(token, "stripe");
             setIsOpen(!isOpen);
 
-            if (Object.keys(correntAddess).length === 0) {
+            if (Object.keys(correntAddess)?.length === 0) {
                 setMyMessageCart("Add  or select  Address")
                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             } else {
-                if (productList.list.length === 0) {
+                if (cartList.list?.length === 0) {
                     setMyMessageCart("You don't have any product in a cart")
                     setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
                 } else {
 
                     if (correntAddess?.data?.length !== 0) {
-                        const amountInCents = Math.round(productList?.cartAmountDetails?.net_amount * 100);
+                        const amountInCents = Math.round(cartList?.cartAmountDetails?.net_amount * 100);
                         const data = {
-                            order_items: productList.list,
+                            order_items: cartList.list,
                             shipping_address_id: correntAddess.data[0]._id,
                             shipping_method_id: correntAddess.shipping_method_id
                         }
@@ -185,7 +183,6 @@ const WrappedCart = () => {
 
             if (res.data.success === true) {
                 getCartData()
-                setCart(cart - 1)
                 setMyMessageCart(res.data.message);
                 setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
             } else {
@@ -197,26 +194,21 @@ const WrappedCart = () => {
         }
     };
 
-    const getCartData = async () => {
+    const getFleshData = async () => {
 
         startAnimation()
         const apiTyp = isLoggedIn ? api.postWithToken : api.post;
 
         try {
             // if (isLoggedIn) {
-            const [poroductResponse, flashProduct] = await Promise.all([
-                api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
+            const [ flashProduct] = await Promise.all([
                 apiTyp(`${serverURL + PRODUCTList}`, {
                     product_list_type: "trending-product",
                     page: 1
                 })
             ]);
 
-            const poroductData = poroductResponse.data.data;
             const flashProductproductListData = flashProduct.data.data;
-            let ids = poroductData.list?.map((e) => e._id)
-            setCouponId(ids)
-            setProductList(poroductData);
             setFleshProductList(flashProductproductListData)
             stopAnimation()
         } catch (error) {
@@ -252,6 +244,7 @@ const WrappedCart = () => {
 
     useEffect(() => {
         getCartData();
+        getFleshData()
         getMyAddress()
     }, [sellIs_wished, isLoggedIn ,add_wished_Called]);
 
@@ -320,7 +313,7 @@ const WrappedCart = () => {
 
                                 <Row className='mt-3'>
                                     <Col lg={7} md={12}>
-                                        {productList.list.length <= 0 &&
+                                        {cartList.list?.length <= 0 &&
                                             <div className='d-flex align-items-center justify-content-center h-100'>
                                                 <div className='text-center found'>
                                                     <img src='./img/not-found.png' alt='' />
@@ -367,7 +360,7 @@ const WrappedCart = () => {
                                                 <div className='mt-3'>
 
                                                     {
-                                                        productList.list && productList.list?.map((e, i) => {
+                                                        cartList.list && cartList.list?.map((e, i) => {
                                                             return (
                                                                 <div className='cart-items' key={i} >
                                                                     <div className='items-img select-all d-flex align-items-center'>
@@ -470,30 +463,30 @@ const WrappedCart = () => {
                                                 <div className='total-list mt-3'>
                                                     <div className='d-flex align-items-center justify-content-between'>
                                                         <label>Item(s) total: </label>
-                                                        <span>${productList.cartAmountDetails?.total_amount ? productList.cartAmountDetails?.total_amount : 0}</span>
+                                                        <span>${cartList.cartAmountDetails?.total_amount ? cartList.cartAmountDetails?.total_amount : 0}</span>
                                                     </div>
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>Item(s) discount: </label>
-                                                        <span>{productList.cartAmountDetails?.discount_amount ? "-$" + productList.cartAmountDetails?.discount_amount : 0}</span>
+                                                        <span>{cartList.cartAmountDetails?.discount_amount ? "-$" + cartList.cartAmountDetails?.discount_amount : 0}</span>
                                                     </div>
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>Item(s) sales tax: </label>
-                                                        <span>${productList.cartAmountDetails?.sales_tax ? productList.cartAmountDetails?.sales_tax : 0}</span>
+                                                        <span>${cartList.cartAmountDetails?.sales_tax ? cartList.cartAmountDetails?.sales_tax : 0}</span>
                                                     </div>
 
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>Item(s) shipping charge: </label>
-                                                        <span>${productList.cartAmountDetails?.shipping_charge ? productList.cartAmountDetails?.shipping_charge : 0}</span>
+                                                        <span>${cartList.cartAmountDetails?.shipping_charge ? cartList.cartAmountDetails?.shipping_charge : 0}</span>
                                                     </div>
                                                     <div className='d-flex align-items-center justify-content-end mt-3'>
-                                                        <h5>${productList.cartAmountDetails?.net_amount ? productList.cartAmountDetails?.net_amount : 0}</h5>
+                                                        <h5>${cartList.cartAmountDetails?.net_amount ? cartList.cartAmountDetails?.net_amount : 0}</h5>
                                                     </div>
                                                 </div>
 
                                                 <div className='total'>
                                                     <div className='d-flex align-items-center justify-content-between'>
-                                                        <h5>Estimated total ({productList.list?.length} items)</h5>
-                                                        <h5>${productList.cartAmountDetails?.net_amount ? productList.cartAmountDetails?.net_amount : 0}</h5>
+                                                        <h5>Estimated total ({cartList.list?.length} items)</h5>
+                                                        <h5>${cartList.cartAmountDetails?.net_amount ? cartList.cartAmountDetails?.net_amount : 0}</h5>
                                                     </div>
                                                     {/* <p>Taxes and delivery fees are calculated on the next page.</p> */}
                                                 </div>
@@ -504,13 +497,13 @@ const WrappedCart = () => {
                                                         <div className='login-input text-start'>
                                                             <label>Coupon Code</label>
 
-                                                            {productList.cartDiscount?.coupon_id?.coupon_title ?
+                                                            {cartList.cartDiscount?.coupon_id?.coupon_title ?
                                                                 <div>
                                                                     <div className='coupne-code d-flex align-items-center gap-2 mt-2'>
-                                                                        <span>{productList.cartDiscount.coupon_id?.coupon_title}</span>
-                                                                        <Button onClick={() => handleCoupon("remove", productList?.cartDiscount.coupon_id?.coupon_title)} ><AiFillCloseCircle /></Button>
+                                                                        <span>{cartList.cartDiscount.coupon_id?.coupon_title}</span>
+                                                                        <Button onClick={() => handleCoupon("remove", cartList?.cartDiscount.coupon_id?.coupon_title)} ><AiFillCloseCircle /></Button>
                                                                     </div>
-                                                                    <p>{productList.cartDiscount?.coupon_id?.coupon_description}</p>
+                                                                    <p>{cartList.cartDiscount?.coupon_id?.coupon_description}</p>
                                                                 </div> :
                                                                 <div className='d-flex align-items-center gap-2'>
                                                                     <input className='mt-0' placeholder='Enter coupon code ' value={couponCode} onChange={(e) => setCouponCode(e.target.value)} type='text' />
@@ -551,7 +544,7 @@ const WrappedCart = () => {
                                                                     </div>
                                                                 )
                                                             })}
-                                                            {Object.keys(correntAddess).length === 0 && <Button className='change-add' onClick={() => (navigate("/profile"), setProfileOption("location"))} >Add</Button>}
+                                                            {Object.keys(correntAddess)?.length === 0 && <Button className='change-add' onClick={() => (navigate("/profile"), setProfileOption("location"))} >Add</Button>}
                                                         </div>
 
                                                     </div>

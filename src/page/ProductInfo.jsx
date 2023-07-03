@@ -22,15 +22,16 @@ import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse, afterLogin, handelCategorydata } from '../helper/constants'
+import { errorResponse, afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 import { Rating } from '@mui/material'
+import { handelCategorydata  } from '../helper/constants'
 
 const ProductInfo = () => {
-    const { getWishList,add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getCartData, getWishList,add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const defaultProfile = `./img/for_you/defaultuser.png`
@@ -54,10 +55,16 @@ const ProductInfo = () => {
     const [sizeActive, setSizeActive] = useState("")
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
-    const product_id = localStorage.getItem("selectedProductId") ? localStorage.getItem("selectedProductId") : "646b6db53c9cae7c199c7740"
+    const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")  
     const [reviewShow, setreviewShow] = useState(false);
     const handlereviewShow = () => setreviewShow(true);
     const handlereviewClose = () => setreviewShow(false);
+
+
+    const handelSubCat = (Id) => {
+        localStorage.setItem("selectedSubcategories", Id);
+        window.location.href = "/categories";
+    };
 
     const startAnimation = () => {
         if (player.current) {
@@ -70,12 +77,12 @@ const ProductInfo = () => {
 
     const getProductDetail = async () => {
         startAnimation()
-
         try {
-            if (product_id) {
+            if (product_id && product_id !== undefined) {
                 const [productDetail] = await Promise.all([
                     api.get(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
                 ]);
+                console.log(productDetail,"productDetail");
                 const productData = productDetail.data.data;
                 setProduct(productData);
                 setProductColorActive(productDetail.data.data?.productList?.sku_attributes?.color[0]?.name && productDetail.data.data?.productList?.sku_attributes?.color[0]?.name)
@@ -87,10 +94,13 @@ const ProductInfo = () => {
                 }));
 
                 setColorProduct(mergedImages)
+            }else{
+                navigate("/")
             }
 
         } catch (error) {
-            console.log(error);
+            console.log(error,"error");
+            navigate("/")
         }
     };
 
@@ -132,7 +142,7 @@ const ProductInfo = () => {
     useEffect(() => {
         // getProductReview()
         getProductDetail();
-    }, []);
+    }, [product_id]);
 
 
     const getproductlist = async () => {
@@ -191,7 +201,7 @@ const ProductInfo = () => {
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
 
                     if (res.data.success == true) {
-                        setCart(cart + 1)
+                        getCartData()
                         setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
                         setMyMessageProductDtl(res.data.message);
                         setProductColorActive(" ")
@@ -221,7 +231,7 @@ const ProductInfo = () => {
 
     const handleCopy = () => {
         if (textRef.current) {
-            setMyMessageProductDtl("Item id copyed");
+            setMyMessageProductDtl("Item id copyed successfully");
             setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
             const range = document.createRange();
             range.selectNode(textRef.current);
@@ -231,6 +241,7 @@ const ProductInfo = () => {
             window.getSelection().removeAllRanges();
         }
     };
+
 
     return (
         <>
@@ -276,11 +287,11 @@ const ProductInfo = () => {
                                         <NavLink>Home</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
-                                    <div className='d-flex align-items-center gap-1'>
-                                        <NavLink> {Product?.productList?.product_category_keys?.product_category_one.name} Kid’s Fashion</NavLink>
+                                    <div  onClick={() => (handelCategorydata(Product?.productList?.product_category_keys?.product_category_one?._id), localStorage.removeItem("selectedSubcategories"))} className='d-flex align-items-center gap-1'>
+                                        <NavLink> {Product?.productList?.product_category_keys?.product_category_one.name}</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
-                                    <div className='d-flex align-items-center gap-1'>
+                                    <div onClick={() => (handelSubCat(Product?.productList?.product_category_keys?.product_category_two._id))} className='d-flex align-items-center gap-1'>
                                         <NavLink >{Product?.productList?.product_category_keys?.product_category_two.name}</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
@@ -297,9 +308,9 @@ const ProductInfo = () => {
                                             <div className='d-flex align-items-center gap-3'>
                                                 <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
                                                 <div className='rate d-flex align-items-center gap-2'>
-                                                    <span className='cos-title'>{Product?.productList.rating}</span>
+                                                    <span className='cos-title'>{Product?.productList?.rating}</span>
                                                     <div className='d-flex align-items-center gap-1'>
-                                                        <Rating name="read-only" value={Product?.productList.rating} readOnly />
+                                                        <Rating name="read-only" value={Product?.productList?.rating} readOnly />
                                                     </div>
                                                 </div>
                                             </div>
@@ -638,7 +649,7 @@ const ProductInfo = () => {
                                 </Row>
 
                                 <div className='review mt-5 mar-top-20'>
-                                  {Product?.productReviewList.length === 0 ? " " : <h4 className='info-title'>All Reviews ({Product?.productReviewList.length})</h4>  }  
+                                  {Product?.productReviewList?.length === 0 ? " " : <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>  }  
                                     <div className=''>
                                         {
                                             Product?.productReviewList?.map((e, i) => {
@@ -655,7 +666,7 @@ const ProductInfo = () => {
                                                                 <span className='date_pro_info'>{e.content}</span>
                                                                 <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
                                                                 <div className='d-flex align-items-center gap-1'>
-                                                                    <Rating name="read-only" value={e.rating} readOnly />
+                                                                    <Rating name="read-only" value={e?.rating} readOnly />
                                                                 </div>
                                                                 {/* <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
                                                                     <p><b>Overall Fit:</b> True to Size</p>

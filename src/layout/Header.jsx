@@ -21,7 +21,7 @@ import { BiSearch } from 'react-icons/bi'
 const Header = () => {
 
     const navigate = useNavigate();
-    const { searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const {getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -126,9 +126,9 @@ const Header = () => {
             setcategory(categoryData);
             stopAnimation()
 
-            const cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })
-            const cartCountData = cartListresponse.data.data.list
-            setCart(cartCountData?.length)
+            // const cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })
+            // const cartCountData = cartListresponse.data.data.list
+            // setCart(cartCountData?.length)
         } catch (error) {
             console.log(error);
             // errorResponse(error, setMyMessage);
@@ -143,6 +143,7 @@ const Header = () => {
 
     useEffect(() => {
         getCategory();
+        getCartData();
     }, []);
 
 

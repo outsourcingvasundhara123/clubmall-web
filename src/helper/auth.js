@@ -1,7 +1,9 @@
 // auth.js
 
 export const login = (user) => {
-  localStorage.setItem('token', user.token);
+  if(user?.token){
+    localStorage.setItem('token', user?.token);
+  }
   localStorage.setItem('name', user.name);
   localStorage.setItem('user', user._id);
   localStorage.setItem('profile_image', user.profile_image);

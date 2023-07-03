@@ -23,7 +23,7 @@ import { useLocation } from 'react-router-dom';
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const { activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -120,7 +120,7 @@ const AddCartModal = (props) => {
                     if (res.data.success == true) {
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
-                        setCart(cart + 1)
+                        getCartData()
                         setProductColorActive(" ")
                         setSizeActive(" ")
                         setTimeout(() => {

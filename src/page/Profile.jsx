@@ -19,11 +19,12 @@ import { useNavigate } from 'react-router-dom'
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import axios from 'axios';
+import Loader from '../components/Loader'
 import { CartContext } from '../context/CartContext';
-
+import { login } from '../helper/auth'
 const Profile = () => {
 
-    const {sucessSnackBarOpenCart ,setwarningSnackBarOpen,setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen,warningSnackBarOpen,setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
+    const { sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -40,16 +41,18 @@ const Profile = () => {
         bio: "",
         name: "",
         gender: "",
+        profile_image: ""
     };
 
     const [showPass, setShowPass] = useState(true)
+    const [showloderUrl, setShowloderUrl] = useState(false)
     const [values, setValues] = useState(initialValues);
     const [values_2, setValues_2] = useState(initialValue_2);
     const [errors, setErrors] = useState({});
     const [MymessageProfile, setMymessageProfileProfile] = useState("");
     const [sucessSnackBarOpenProfile, setsucessSnackBarOpenProfile] = useState(false);
     const [warningSnackBarOpenProfile, setwarningSnackBarOpenProfile] = useState(false);
-    const [stateList, setStateList] = useState([]); 
+    const [stateList, setStateList] = useState([]);
     const [countryList, setCountryList] = useState([]);
     const [orderList, setOrderList] = useState([]);
     const [submitCount, setSubmitCount] = useState(0);
@@ -62,6 +65,7 @@ const Profile = () => {
     const [adId, setAdId] = useState("");
     const player = useRef();
     const [loading, setLoading] = useState(true);
+    const [imagePreview, setImagePreview] = useState(null);
 
     const handleClose = () => {
         setErrors({})
@@ -147,6 +151,59 @@ const Profile = () => {
             [name]: newValue,
         }));
     };
+
+    const handleChange_2 = (e) => {
+
+        const { name, value, checked, type } = e.target;
+        setValues_2((prevValues) => ({
+            ...prevValues,
+            [name]: value,
+        }));
+    };
+
+
+    const handlePhoto = (e) => {
+
+        const file = e.target.files[0];
+        setValues_2({ ...values_2, [e.target.name]: e.target.files[0] });
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result);
+            setLoading(false);
+        };
+        reader.readAsDataURL(file);
+
+    };
+
+    const submitProfile = async (e) => {
+        e.preventDefault();
+        try {
+
+            if (values_2.bio && values_2.name && values_2.gender && values_2.profile_image) {
+                const formData = new FormData();
+                formData.append('bio', values_2.bio);
+                formData.append('name', values_2.name);
+                formData.append('gender', values_2.gender);
+                formData.append('profile_image', values_2.profile_image);
+                const response = await Promise.all([
+                    api.postWithToken(`${serverURL}profile-update`, formData)
+                ]);
+                login(response[0]?.data.data?.user)
+                setMymessageProfileProfile(response[0].data.message);
+                setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
+                window.location.reload()
+            } else {
+                setMymessageProfileProfile("please fill out all required fields");
+                setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
+            }
+
+            // Additional actions after successful submission
+        } catch (error) {
+            console.error('Error posting profile data:', error);
+            // Handle error scenario
+        }
+    }
 
     const handleSubmit = (mood) => {
         // e.preventDefault();
@@ -306,6 +363,8 @@ const Profile = () => {
         }
     };
 
+    // console.log(values_2, "values_2");
+
     return (
         <>
             <SucessSnackBar
@@ -450,32 +509,36 @@ const Profile = () => {
                                                         <tbody>
                                                             {orderList?.userOrderItems && orderList?.userOrderItems.map((e, i) => {
                                                                 return (
-                                                                    <tr>
-                                                                        <td width={400}>
-                                                                            <div className='d-flex align-items-start gap-2'>
-                                                                                <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
-                                                                                    width="80px" />
-                                                                                <div className='pro-text'>
-                                                                                    <h6>{e.product_id?.name} </h6>
-                                                                                    <span>ID: # {e.order_id.order_display_id}</span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td><p>{e.qty}</p></td>
-                                                                        <td><p>${e.product_total_price}</p></td>
-                                                                        <td>
-                                                                            <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
-                                                                            <p>{e.order_id.shipping_address_object.contact_no}</p>
 
-                                                                        </td>
-                                                                        <td>
-                                                                            {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
-                                                                            {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
-                                                                            {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
-                                                                            {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
-                                                                            {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>}
-                                                                        </td>
-                                                                    </tr>
+                                                                    <>
+                                                                        {e.product_id &&
+                                                                            <tr>
+                                                                                <td width={400}>
+                                                                                    <div className='d-flex align-items-start gap-2'>
+                                                                                        <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
+                                                                                            width="80px" />
+                                                                                        <div className='pro-text'>
+                                                                                            <h6>{e.product_id?.name} </h6>
+                                                                                            <span>ID: # {e.order_id.order_display_id}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td><p>{e.qty}</p></td>
+                                                                                <td><p>${e.product_total_price}</p></td>
+                                                                                <td>
+                                                                                    <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
+                                                                                    <p>{e.order_id.shipping_address_object.contact_no}</p>
+                                                                                </td>
+                                                                                <td>
+                                                                                    {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
+                                                                                    {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
+                                                                                    {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
+                                                                                    {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
+                                                                                    {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>}
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    </>
                                                                 )
                                                             })}
 
@@ -569,52 +632,77 @@ const Profile = () => {
                                             </div>
                                         </Tab.Pane> */}
 
-                                        <Tab.Pane eventKey="user">
-                                            <div className='user-main'>
-                                                <Row>
-                                                    <Col xl={4} lg={6} md={12}>
-                                                        <div className='select-img'>
-                                                            <div className='preview position-relative'>
-                                                                <img src='./img/profile/selected-img.png' alt='' width="80px" />
-                                                                <input type="file" id='file' />
-                                                                <label htmlFor='file' className='file-label'>
-                                                                    <img src='./img/profile/select-btn.png' alt='' />
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <Form>
-                                                            <div className='input-filed mt-4'>
-                                                                <label>Name</label>
-                                                                <input type='text'
-                                                                 />
-                                                            </div>
-                                                            <div className='input-filed mt-3'>
-                                                                <label>Bio</label>
-                                                                <textarea type='text' placeholder='Tell people a little about yourself' rows={3} />
-                                                            </div>
-                                                            <div className='input-filed mt-3'>
-                                                                <label>Gender</label>
-                                                                <div className='d-flex align-items-center gap-4 w-fit mt-2 gap-mobile'>
-                                                                    <div className='d-flex align-items-center gap-2 w-fit gender'>
-                                                                        <input type='radio' name='gender' id='female' />
-                                                                        <label htmlFor='female'>Female</label>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 w-fit gender'>
-                                                                        <input type='radio' name='gender' id='male' />
-                                                                        <label htmlFor='male'>Male</label>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 w-fit gender'>
-                                                                        <input type='radio' name='gender' id='other' />
-                                                                        <label htmlFor='other'>Rather not say</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <Button className='save-btn'>Save</Button>
-                                                        </Form>
-                                                    </Col>
-                                                </Row>
-                                            </div>
+                                        <Tab.Pane eventKey="user">
+                                            {
+                                                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                                                    <>
+                                                        <div className='user-main'>
+                                                            <Row>
+                                                                <Col xl={4} lg={6} md={12}>
+                                                                    <div className='select-img'>
+                                                                        <div className='preview position-relative'>
+                                                                            <img src={imagePreview || './img/profile/selected-img.png'} alt='' width="80px" />
+                                                                            <input type="file" name='profile_image' onChange={handlePhoto} id='file' />
+                                                                            <label htmlFor='file' className='file-label'>
+                                                                                <img src='./img/profile/select-btn.png' alt='' />
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <Form>
+                                                                        <div className='input-filed mt-4'>
+                                                                            <label>Name</label>
+                                                                            <input type='text'
+                                                                                name='name'
+                                                                                value={values_2.name}
+                                                                                onChange={handleChange_2}
+                                                                            />
+                                                                        </div>
+                                                                        <div className='input-filed mt-3'>
+                                                                            <label>Bio</label>
+                                                                            <textarea type='text' placeholder='Tell people a little about yourself'
+                                                                                name='bio'
+                                                                                value={values_2.bio}
+                                                                                onChange={handleChange_2}
+                                                                                rows={3} />
+                                                                        </div>
+                                                                        <div className='input-filed mt-3'>
+                                                                            <label>Gender</label>
+                                                                            <div className='d-flex align-items-center gap-4 w-fit mt-2 gap-mobile'>
+                                                                                <div className='d-flex align-items-center gap-2 w-fit gender'>
+                                                                                    <input type='radio'
+                                                                                        name='gender'
+                                                                                        value="Female"
+                                                                                        onChange={handleChange_2}
+                                                                                        id='female' />
+                                                                                    <label htmlFor='female'>Female</label>
+                                                                                </div>
+                                                                                <div className='d-flex align-items-center gap-2 w-fit gender'>
+                                                                                    <input type='radio' id='male'
+                                                                                        name='gender'
+                                                                                        value="Male"
+                                                                                        onChange={handleChange_2}
+                                                                                    />
+                                                                                    <label htmlFor='male'>Male</label>
+                                                                                </div>
+                                                                                <div className='d-flex align-items-center gap-2 w-fit gender'>
+                                                                                    <input type='radio' id='other'
+                                                                                        name='gender'
+                                                                                        value="Other"
+                                                                                        onChange={handleChange_2}
+                                                                                    />
+                                                                                    <label htmlFor='other'>Rather not say</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <Button type='button' onClick={submitProfile} className='save-btn'>Save</Button>
+                                                                    </Form>
+                                                                </Col>
+                                                            </Row>
+                                                        </div>
+                                                    </>
+                                                )}
                                         </Tab.Pane>
 
                                         {/* <Tab.Pane eventKey="shop">
@@ -865,25 +953,25 @@ const Profile = () => {
                             <div className='recent-view product-info mt-5'>
                                 <h4>Based on your recently viewed</h4>
                                 <div className='mb-0 explore-main'>
-                                {
-                                            trendingProductList?.productListArrObj?.slice(0, 5).map((e) => {
-                                                return (
+                                    {
+                                        trendingProductList?.productListArrObj?.slice(0, 5).map((e) => {
+                                            return (
 
-                                                        <ProCard
-                                                            id={e?._id}
-                                                            img={e.product_images[0]?.file_name}
-                                                            name={e?.name}
-                                                            group_price={e.group_price}
-                                                            individual_price={e.individual_price}
-                                                            sold={e.total_order}
-                                                            secper={e.secper}
-                                                            off={e.discount_percentage}
-                                                            path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
-                                                            is_wishList={e.wishList && e.wishList}
-                                                        />
-                                                )
-                                            })
-                                        }
+                                                <ProCard
+                                                    id={e?._id}
+                                                    img={e.product_images[0]?.file_name}
+                                                    name={e?.name}
+                                                    group_price={e.group_price}
+                                                    individual_price={e.individual_price}
+                                                    sold={e.total_order}
+                                                    secper={e.secper}
+                                                    off={e.discount_percentage}
+                                                    path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
+                                                    is_wishList={e.wishList && e.wishList}
+                                                />
+                                            )
+                                        })
+                                    }
                                     {/* <div className='w-100 d-flex justify-content-center'>
                                         <Button className='shop-btn rotate-img'  >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div> */}

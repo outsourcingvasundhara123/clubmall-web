@@ -47,7 +47,6 @@ const ProCard = (props) => {
         }
     }, []);
 
-
     return (
         <>
 
