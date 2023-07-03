@@ -19,7 +19,7 @@ export const validate = (values) => {
     // Validate contact_no field
     if (!values.contact_no) {
       errors.contact_no = "Contact number is required";
-    } else if (values.contact_no.length < 3 || values.contact_no.length > 12) {
+    } else if (values.contact_no?.length < 3 || values.contact_no.length > 12) {
       errors.contact_no = "Contact number must be between 3 and 12 digits";
     }
   

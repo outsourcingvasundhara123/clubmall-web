@@ -55,6 +55,8 @@ const Trending = () => {
         }
     };
 
+console.log(postList,"postList");
+
     useEffect(() => {
         getTrendingProduct();
     }, [page]);

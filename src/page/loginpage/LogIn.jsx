@@ -113,7 +113,7 @@ const LogIn = () => {
             }
           });
       } catch (error) {
-        setWarningSnackBarOpen(!warningSnackBarOpen);
+        // setWarningSnackBarOpen(!warningSnackBarOpen);
         console.error(error);
       }
     }
