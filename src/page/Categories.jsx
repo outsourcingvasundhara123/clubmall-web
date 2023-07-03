@@ -42,7 +42,7 @@ const Categories = () => {
     const [url, setUrl] = useState()
     const [catName, setCatName] = useState()
     const [subCatList, setSubCatList] = useState([])
-    const [filterShow, setFilterShow] = useState(window.innerWidth < 991 ? false : true)
+    const [filterShow, setFilterShow] = useState(window.innerWidth < 991 ? false : true)                  // 
     const [filterList, setFilterList] = useState([])
     const [productColorActive, setProductColorActive] = useState()
     const [postList, setPostList] = useState([]);
@@ -184,24 +184,23 @@ const Categories = () => {
         setRange(values);
     };
 
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 991) {
-                setFilterShow(false);
-            } else {
-                setFilterShow(true);
-            }
-        };
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         if (window.innerWidth < 991) {
+    //             setFilterShow(false);
+    //         } else {
+    //             setFilterShow(true);
+    //         }
+    //     };
 
-        // Attach event listener on component mount
-        window.addEventListener('resize', handleResize);
+    //     window.addEventListener('resize', handleResize);
 
-        // Clean up the event listener on component unmount
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
+    //     return () => {
+    //         window.removeEventListener('resize', handleResize);
+    //     };
 
-    }, []);
+    // }, []);
+
 
     useEffect(() => {
         const timer = setTimeout(() => {
