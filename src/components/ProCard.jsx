@@ -40,12 +40,23 @@ const ProCard = (props) => {
         }
     }
 
+    const uniqueColors = (colors) => {
+        const unique = [];
+        colors.forEach(color => {
+            if (!unique.find(c => c.attrs[0].color === color.attrs[0].color)) {
+                unique.push(color);
+            }
+        });
+        return unique;
+    }
+
     useEffect(() => {
         if (props?.color && props.color.length > 0) {
             setProductColorActive(props.color[0]?.name);
-            setActiveImage(props.color[0]?.imgUrl); // Set the default activeImage here
+            setActiveImage(props.path + props.id + "/" + props.colorUrl[0]?.file_name); // Set the default activeImage here
         }
     }, []);
+
 
     return (
         <>
@@ -64,7 +75,7 @@ const ProCard = (props) => {
                                 <p className='per'>${props.group_price} <span>(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
-                            
+
                             {/* {props.is_wishList === 0
                                 &&
                                 <Button className='like-btn' onClick={() => (addWishList(props.id, "product-wishlist"))} >
@@ -77,58 +88,58 @@ const ProCard = (props) => {
                                     <img src='./img/Vector.png' alt='' />
                                 </Button>
                             } */}
-                       
-                                    {(isWishlist === false ) && (location.pathname !== "/trending" && location.pathname !== "/search") &&
 
-                                        <Button className='like-btn' onClick={handleWishlistClick} >
-                                            <img src='./img/new_in/like.png' className='like-size' alt='' />
-                                        </Button>
-                                    }
-                                    {
-                                       ( isWishlist === true) &&  (location.pathname !== "/trending" && location.pathname !== "/search") &&
-                                        <Button className='like-btn' onClick={handleWishlistClick} >
-                                            <img src='./img/Vector.png' alt='' />
-                                        </Button>
-                                    }
-                    
+                            {(isWishlist === false) && (location.pathname !== "/trending" && location.pathname !== "/search") &&
+
+                                <Button className='like-btn' onClick={handleWishlistClick} >
+                                    <img src='./img/new_in/like.png' className='like-size' alt='' />
+                                </Button>
+                            }
+                            {
+                                (isWishlist === true) && (location.pathname !== "/trending" && location.pathname !== "/search") &&
+                                <Button className='like-btn' onClick={handleWishlistClick} >
+                                    <img src='./img/Vector.png' alt='' />
+                                </Button>
+                            }
+
 
                         </div>
                     </div>
                 </div>
 
                 {
-                    location.pathname === "/trending" ?
-                        <>
-                            <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
-
-                                {props.color && props.color?.map((e, i) => {
-                                    return (
-                                        <div>
-                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
-                                                <img alt='' src={e.imgUrl} width="20px" />
-                                            </Button>
-                                        </div>
-                                    )
-                                })
-                                }
-
-                            </div>
-                        </> : ""
+                    location.pathname === "/trending" &&
+                    <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
+                        {
+                            props.colorUrl &&
+                            uniqueColors(props.colorUrl).map((e, i) => {
+                                return (
+                                    <div key={i}>
+                                        <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(props.path + props.id + "/" + e.file_name))}>
+                                            <img alt='' src={props.path + props.id + "/" + e.file_name} width="20px" />
+                                        </Button>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                 }
                 {
                     location.pathname === "/categories" ?
                         <>
                             <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
-                                {props.color && props.color?.map((e, i) => {
-                                    return (
-                                        <div>
-                                            <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
-                                                <img alt='' src={e.imgUrl} width="20px" />
-                                            </Button>
-                                        </div>
-                                    )
-                                })
-                                }
+                            {
+                            props.colorUrl &&
+                            uniqueColors(props.colorUrl).map((e, i) => {
+                                return (
+                                    <div key={i}>
+                                        <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(props.path + props.id + "/" + e.file_name))}>
+                                            <img alt='' src={props.path + props.id + "/" + e.file_name} width="20px" />
+                                        </Button>
+                                    </div>
+                                )
+                            })
+                        }
                             </div>
                         </> : ""
                 }

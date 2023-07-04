@@ -21,7 +21,7 @@ import { BiSearch } from 'react-icons/bi'
 const Header = () => {
 
     const navigate = useNavigate();
-    const {getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const {itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -141,10 +141,18 @@ const Header = () => {
     };
 
 
+
+    const handelProfile = (page) => {
+        setProfileOption(page)
+        navigate("/profile")
+    };
+
+
     useEffect(() => {
         getCategory();
         getCartData();
     }, []);
+
 
 
     return (
@@ -325,7 +333,7 @@ const Header = () => {
                                                 </div>
                                             </div>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item onClick={() => setProfileOption("list")} >
+                                            <Dropdown.Item onClick={() => (handelProfile("list"),setItemShow(true))} >
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/list.png' alt='' />
                                                     My orders
@@ -335,7 +343,7 @@ const Header = () => {
                                                 <img src='./img/header/review.png' alt='' />
                                                 Your reviews
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => setProfileOption("user")}>
+                                            <Dropdown.Item onClick={() => (handelProfile("user"),setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/user.png' alt='' />
                                                     Your profile
@@ -353,19 +361,19 @@ const Header = () => {
                                                 <img src='./img/header/shop.png' alt='' />
                                                 Followed shops
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => setProfileOption("location")}>
-                                                <Link to="/profile" className='p-0 w-100'>
+                                            <Dropdown.Item onClick={() => (handelProfile("location"),setItemShow(false))}>
+                                                <Link to="/profile"  className='p-0 w-100'>
                                                     <img src='./img/header/location.png' alt='' />
                                                     Addresses
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item onClick={() => setProfileOption("security")}>
+                                            <Dropdown.Item onClick={() => (handelProfile("security"),setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/security.png' alt='' />
                                                     Account security
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item className='pb-3' onClick={() => setProfileOption("notification")}>
+                                            <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"),setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/notification.png' alt='' />
                                                     Notifications

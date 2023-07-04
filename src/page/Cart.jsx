@@ -36,7 +36,7 @@ const WrappedCart = () => {
     const elements = useElements();
 
     const isLoggedIn = Is_Login();
-    const {getCartData,setCartList,couponId,setCouponId,cartList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen,warningSnackBarOpen,setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
+    const { getCartData, setCartList, couponId, setCouponId, cartList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -201,7 +201,7 @@ const WrappedCart = () => {
 
         try {
             // if (isLoggedIn) {
-            const [ flashProduct] = await Promise.all([
+            const [flashProduct] = await Promise.all([
                 apiTyp(`${serverURL + PRODUCTList}`, {
                     product_list_type: "trending-product",
                     page: 1
@@ -246,7 +246,7 @@ const WrappedCart = () => {
         getCartData();
         getFleshData()
         getMyAddress()
-    }, [sellIs_wished, isLoggedIn ,add_wished_Called]);
+    }, [sellIs_wished, isLoggedIn, add_wished_Called]);
 
 
     return (
@@ -307,7 +307,7 @@ const WrappedCart = () => {
                                         <NavLink>Home</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
-                                    <NavLink className='active'>cart</NavLink>
+                                    <NavLink className='active'>Cart</NavLink>
 
                                 </div>
 
@@ -462,30 +462,39 @@ const WrappedCart = () => {
 
                                                 <div className='total-list mt-3'>
                                                     <div className='d-flex align-items-center justify-content-between'>
-                                                        <label>Item(s) total: </label>
-                                                        <span>${cartList.cartAmountDetails?.total_amount ? cartList.cartAmountDetails?.total_amount : 0}</span>
-                                                    </div>
-                                                    <div className='d-flex align-items-center justify-content-between mt-2'>
-                                                        <label>Item(s) discount: </label>
-                                                        <span>{cartList.cartAmountDetails?.discount_amount ? "-$" + cartList.cartAmountDetails?.discount_amount : 0}</span>
-                                                    </div>
-                                                    <div className='d-flex align-items-center justify-content-between mt-2'>
-                                                        <label>Item(s) sales tax: </label>
-                                                        <span>${cartList.cartAmountDetails?.sales_tax ? cartList.cartAmountDetails?.sales_tax : 0}</span>
+                                                        <label>TOTAL ITEM VALUE </label>
+                                                        <h5>${cartList.cartAmountDetails?.total_amount ? cartList.cartAmountDetails?.total_amount : 0}</h5>
                                                     </div>
 
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
-                                                        <label>Item(s) shipping charge: </label>
-                                                        <span>${cartList.cartAmountDetails?.shipping_charge ? cartList.cartAmountDetails?.shipping_charge : 0}</span>
+                                                        <label>SHIPPING CHARGE </label>
+                                                        {/* {console.log(cartList.cartAmountDetails?.shipping_charge,"cartList.cartAmountDetails?.shipping_charge")} */}
+                                                        {
+                                                            cartList.cartAmountDetails?.shipping_charge
+                                                                ? <h5>$ {cartList.cartAmountDetails?.shipping_charge}</h5>
+                                                                : <div className='d-flex align-items-center gap-2'>
+                                                                    <del> $5.00 </del>
+                                                                    <h5>(FREE)</h5>
+                                                                </div>
+                                                        }
+
                                                     </div>
-                                                    <div className='d-flex align-items-center justify-content-end mt-3'>
-                                                        <h5>${cartList.cartAmountDetails?.net_amount ? cartList.cartAmountDetails?.net_amount : 0}</h5>
+
+                                                    <div className='d-flex align-items-center justify-content-between mt-2'>
+                                                        <label>SALES TEX </label>
+                                                        <h5>${cartList.cartAmountDetails?.sales_tax ? cartList.cartAmountDetails?.sales_tax : 0}</h5>
                                                     </div>
+
+                                                    <div className='d-flex align-items-center justify-content-between mt-2'>
+                                                        <span>DISCOUNT </span>
+                                                        <span>${cartList.cartAmountDetails?.discount_amount ? "-$" + cartList.cartAmountDetails?.discount_amount : 0}</span>
+                                                    </div>
+
                                                 </div>
 
-                                                <div className='total'>
+                                                <div className='total mt-3'>
                                                     <div className='d-flex align-items-center justify-content-between'>
-                                                        <h5>Estimated total ({cartList.list?.length} items)</h5>
+                                                        <h5>NET PAYABLE ({cartList.list?.length} items)</h5>
                                                         <h5>${cartList.cartAmountDetails?.net_amount ? cartList.cartAmountDetails?.net_amount : 0}</h5>
                                                     </div>
                                                     {/* <p>Taxes and delivery fees are calculated on the next page.</p> */}

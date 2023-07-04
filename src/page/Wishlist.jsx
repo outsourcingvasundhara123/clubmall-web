@@ -22,6 +22,9 @@ const Wishlist = () => {
     }, [isLoggedIn]);
 
 
+    console.log(wishlist, "wishlist");
+
+
     return (
         <>
             <SucessSnackBar
@@ -37,7 +40,7 @@ const Wishlist = () => {
                 text={Mymessage}
                 type="error"
             />
-            <div className='wishlist pb-5'>
+            <div className='wishlist pb-5 h-100'>
                 <div className='container-cos'>
 
                     <div className='page-path d-flex align-items-center gap-1'>
@@ -62,41 +65,51 @@ const Wishlist = () => {
 
                         loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                             <>
+
+
                                 <div className='wishlist-items explore-main justify-content-start'>
                                     {
-                                        wishlist && wishlist?.map((e) => {
-                                            return (
-                                                <>
-                                                    {e?.product_id &&
-                                                        <div className='product-card explore-card wishlist-card'>
-                                                            <div className='position-relative'>
-                                                                <img src={wishProductUrl + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name} alt='' />
-                                                                <div className='d-flex align-items-center gap-2 share-del-btn'>
-                                                                    <Button type='button' onClick={() => deleteWishList(e.product_id._id)} ><MdDelete /></Button>
-                                                                </div>
-                                                            </div>
-                                                            <div className='py-3 px-3 mobile-spacing-card-body' >
-                                                                <h5>{e.product_id?.name}</h5>
-                                                                {/* <div className='wishlist-sell mt-1'>
-                                                     <span>Free shipping</span>
-                                                     <span>shold by clubmall</span>
-                                                     </div> */}
-                                                                <Button onClick={() => handelProductDetail(e.product_id._id)} className='submit-btn mt-3 w-100 buy-now-items'>Buy item</Button>
+                                        wishlist && wishlist
+                                            .filter((e) => e.product_id !== null)
+                                            .map((e, i) => {
+                                                return (
+                                                    <div className='product-card explore-card wishlist-card'>
+                                                        <div className='position-relative'>
+                                                            <img src={wishProductUrl + e.product_id._id + "/" + e.product_id.product_images[0]?.file_name} alt='' />
+                                                            <div className='d-flex align-items-center gap-2 share-del-btn'>
+                                                                <Button type='button' onClick={() => deleteWishList(e.product_id._id)} ><MdDelete /></Button>
                                                             </div>
                                                         </div>
-                                                    }
+                                                        <div className='py-3 px-3 mobile-spacing-card-body' >
+                                                            <h5>{e.product_id?.name}</h5>
+                                                            <Button onClick={() => handelProductDetail(e.product_id._id)} className='submit-btn mt-3 w-100 buy-now-items'>Buy item</Button>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })
+                                    }
 
-                                                </>
-                                            )
-                                        })}
+                                    {
+                                        wishlist && wishlist.every(e => e.product_id === null) &&
+                                        <div className='d-flex align-items-center justify-content-center w-100 h-100 '>
+                                            <div className='text-center found'>
+                                                <img src='./img/not-found.png' alt='' />
+                                                <p className='mt-3'> No products are there </p>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
+
                             </>
 
                         )
                     }
 
+
+
+
                 </div>
-            </div>
+            </div >
         </>
     )
 }

@@ -446,6 +446,7 @@ const Categories = () => {
                                                                 path={url && url}
                                                                 color={e.sku_attributes.color}
                                                                 is_wishList={e.wishList && e.wishList}
+                                                                colorUrl = {e.sku_details}
                                                             />
                                                         )
                                                     })

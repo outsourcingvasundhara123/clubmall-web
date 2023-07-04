@@ -29,6 +29,7 @@ import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 import { Rating } from '@mui/material'
 import { handelCategorydata  } from '../helper/constants'
+import { handelProductDetail } from '../helper/constants'
 
 const ProductInfo = () => {
     const { getCartData, getWishList,add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
@@ -41,6 +42,7 @@ const ProductInfo = () => {
     const [MymessageProductDtl, setMyMessageProductDtl] = useState("");
     const [loading, setLoading] = useState(true);
     const player = useRef();
+    const [url, setUrl] = useState("");
     const [drawer, setDrawer] = useState(false);
     const handleDrawerClose = () => setDrawer(false);
     const handleDrawerShow = () => setDrawer(true);
@@ -75,6 +77,16 @@ const ProductInfo = () => {
         setLoading(false);
     };
 
+    const uniqueColors = (colors) => {
+        const unique = [];
+        colors.forEach(color => {
+            if (!unique.find(c => c.attrs[0].color === color.attrs[0].color)) {
+                unique.push(color);
+            }
+        });
+        return unique;
+    }
+
     const getProductDetail = async () => {
         startAnimation()
         try {
@@ -85,58 +97,50 @@ const ProductInfo = () => {
                 console.log(productDetail,"productDetail");
                 const productData = productDetail.data.data;
                 setProduct(productData);
-                setProductColorActive(productDetail.data.data?.productList?.sku_attributes?.color[0]?.name && productDetail.data.data?.productList?.sku_attributes?.color[0]?.name)
+                setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
                 stopAnimation()
-                const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
-                const mergedImages = imageUrls && imageUrls?.map(url => ({
+                setUrl(productData.productImagePath)
+                const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
+    
+                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath   + productData.productList._id + "/" + e.file_name}`);
+        
+                const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
                 }));
-
                 setColorProduct(mergedImages)
             }else{
                 navigate("/")
             }
-
+    
         } catch (error) {
             console.log(error,"error");
             navigate("/")
         }
     };
 
+    const getProductReview = async () => {
+        startAnimation()
+        const apiTyp = isLoggedIn ? api.postWithToken : api.post;
 
-    // const getProductReview = async () => {
-    //     startAnimation()
-    //     const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+        try {
+            if (product_id) {
+                const [productReview] = await Promise.all([
+                    apiTyp(`${serverURL + "product-review-list"}`, {
+                        "action": "list",
+                        "filter_by": [],
+                        "rating_value": [],
+                        "sort_by": "rating",
+                        product_id: product_id, page: "1"
+                    })
+                ]);
 
-    //     try {
-    //         if (product_id) {
-    //             const [productReview] = await Promise.all([
-    //                 apiTyp(`${serverURL + "product-review-list"}`, {
-    //                     "action": "list",
-    //                     "filter_by": [],
-    //                     "rating_value": [],
-    //                     "sort_by": "rating",
-    //                     product_id: product_id, page: "1"
-    //                 })
-    //             ]);
-    //             console.log(productReview, "productReview");
-    //             // const productData = productDetail.data.data;
-    //             // setProduct(productData);
-    //             // setProductColorActive(productDetail.data.data?.productList?.sku_attributes?.color[0]?.name && productDetail.data.data?.productList?.sku_attributes?.color[0]?.name)
-    //             // stopAnimation()
-    //             // const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
-    //             // const mergedImages = imageUrls && imageUrls?.map(url => ({
-    //             //     thumbnail: url,
-    //             //     original: url,
-    //             // }));
-    //             // setColorProduct(mergedImages)
-    //         }
+            }
 
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
 
     useEffect(() => {
@@ -184,7 +188,7 @@ const ProductInfo = () => {
 
         try {
 
-            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes.size == undefined)) {
+            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -328,7 +332,7 @@ const ProductInfo = () => {
                                         <div className='together web-together'>
                                             <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
-                                                <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
+                                                {/* <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button> */}
                                             </div>
                                             <div>
                                                 <Swiper
@@ -375,7 +379,7 @@ const ProductInfo = () => {
                                                                     && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
                                                                         return (
                                                                             <SwiperSlide>
-                                                                                <div className='slide-box'>
+                                                                                <div className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
                                                                                     <div className='position-relative'>
                                                                                         <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
                                                                                     </div>
@@ -458,10 +462,10 @@ const ProductInfo = () => {
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                                     {
-                                                        Product?.productList?.sku_attributes?.color && Product?.productList?.sku_attributes.color?.map((e, i) => {
+                                                        Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => {
                                                             return (
-                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
-                                                                    <img className='colors' src={e.imgUrl} alt='' />
+                                                                <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(url + Product.productList?._id + "/" + e.file_name))}>
+                                                                    <img className='colors' src={url + Product.productList?._id + "/" + e.file_name} alt='' />
                                                                 </Button>
                                                             )
                                                         })
@@ -740,8 +744,8 @@ const ProductInfo = () => {
                                                             && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
                                                                 return (
                                                                     <SwiperSlide>
-                                                                        <div className='slide-box'>
-                                                                            <div className='position-relative'>
+                                                                        <div className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
+                                                                            <div className='position-relative'   >
                                                                                 <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
                                                                             </div>
                                                                             <div className='slider-box-per pt-3'>

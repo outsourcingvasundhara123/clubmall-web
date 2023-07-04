@@ -38,6 +38,7 @@ const AddCartModal = (props) => {
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const [colorProduct, setColorProduct] = useState()
+    const [url, setUrl] = useState("");
 
     const handleClose = () => {
         setShow(false);
@@ -55,6 +56,17 @@ const AddCartModal = (props) => {
     };
 
 
+    const uniqueColors = (colors) => {
+        const unique = [];
+        colors.forEach(color => {
+            if (!unique.find(c => c.attrs[0].color === color.attrs[0].color)) {
+                unique.push(color);
+            }
+        });
+        return unique;
+    }
+
+
     const getProductDetail = async () => {
         startAnimation()
 
@@ -67,13 +79,15 @@ const AddCartModal = (props) => {
                 setModelProduct(productData);
                 setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
                 stopAnimation()
-                console.log(productDetail,"productDetail");
-                const imageUrls = (productData?.productList?.sku_attributes?.color && productData?.productList?.sku_attributes?.color?.map(e => e.imgUrl))
-                const mergedImages = imageUrls && imageUrls?.map(url => ({
+                setUrl(productData.productImagePath)
+                const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
+    
+                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath   + productData.productList._id + "/" + e.file_name}`);
+        
+                const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
                 }));
-
                 setColorProduct(mergedImages)
             }
 
@@ -101,7 +115,7 @@ const AddCartModal = (props) => {
 
         try {
 
-            if (productColorActive && sizeActive) {
+            if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size == undefined)) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -215,13 +229,13 @@ const AddCartModal = (props) => {
 
 
                                             <div className='product-color mt-4'>
-                                                <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
+                                            <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                                     {
-                                                        modelProduct?.productList?.sku_attributes?.color && modelProduct.productList?.sku_attributes?.color?.map((e, i) => {
+                                                        modelProduct?.productList?.sku_details && uniqueColors(modelProduct?.productList?.sku_details)?.map((e, i) => {
                                                             return (
-                                                                <Button className={`${productColorActive === e.name ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.name), setActiveImage(e.imgUrl))}>
-                                                                    <img className='colors' src={e.imgUrl} alt='' />
+                                                                <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(url + modelProduct.productList?._id + "/" + e.file_name))}>
+                                                                    <img className='colors' src={url + modelProduct.productList?._id + "/" + e.file_name} alt='' />
                                                                 </Button>
                                                             )
                                                         })
@@ -229,7 +243,8 @@ const AddCartModal = (props) => {
                                                 </div>
 
                                                 <div className='size mt-4'>
-                                                    <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                                                {modelProduct?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
+                                                    {/* <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5> */}
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
                                                             modelProduct.productList?.sku_attributes.size?.map((e, i) => {
