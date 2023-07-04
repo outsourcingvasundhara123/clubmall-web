@@ -24,7 +24,7 @@ import { CartContext } from '../context/CartContext';
 import { login } from '../helper/auth'
 const Profile = () => {
 
-    const { sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
+    const { itemShow, setItemShow, sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -57,15 +57,16 @@ const Profile = () => {
     const [orderList, setOrderList] = useState([]);
     const [submitCount, setSubmitCount] = useState(0);
     const serverURL = getServerURL();
-    const [itemShow, setItemShow] = useState(false);
     const [orderUrl, setOrderUrl] = useState(false);
-
+    const [page, setPage] = useState(1);
+    const [viewMoreLodr, setViewmoreLoder] = useState(false);
     const [modelMood, setIModelMood] = useState("add");
     const [show, setShow] = useState(false);
     const [adId, setAdId] = useState("");
     const player = useRef();
     const [loading, setLoading] = useState(true);
     const [imagePreview, setImagePreview] = useState(null);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
 
     const handleClose = () => {
         setErrors({})
@@ -88,6 +89,7 @@ const Profile = () => {
     const getOrderList = async () => {
         startAnimation()
         try {
+
             const res = await api.postWithToken(`${serverURL + "order-manage"}`, { "action": "my-orders-list" })
             setOrderList(res.data.data)
             stopAnimation()
@@ -343,7 +345,7 @@ const Profile = () => {
         fetchData();
         getMyAddress()
         getOrderList()
-    }, []);
+    }, [page]);
 
     const checkforcounty = async () => {
 
@@ -363,7 +365,8 @@ const Profile = () => {
         }
     };
 
-    // console.log(values_2, "values_2");
+    console.log(profileOption, " profile page ");
+    console.log(itemShow, "itemShow");
 
     return (
         <>
@@ -406,7 +409,8 @@ const Profile = () => {
                     </div>
 
                     <div className='mt-4 profile-tabs'>
-                        <Tab.Container id="left-tabs-example" defaultActiveKey={profileOption ? profileOption : "user"}>
+                        <Tab.Container id="left-tabs-example" activeKey={profileOption || "user"} onSelect={key => setProfileOption(key)}>
+
                             <Row>
                                 <Col xl={3} lg={4} md={6}>
                                     <Nav variant="pills" className="flex-column sticky-filter">
@@ -541,7 +545,11 @@ const Profile = () => {
                                                                     </>
                                                                 )
                                                             })}
-
+                                                            {/* {orderList?.userOrderItems?.length > 0 &&
+                                                                <div className='w-100 d-flex justify-content-center'>
+                                                                    <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
+                                                                </div>
+                                                            } */}
                                                         </tbody>
                                                     </Table>
                                                 </div>
@@ -949,7 +957,7 @@ const Profile = () => {
                     </div>
 
                     {
-                        itemShow ?
+                        itemShow && trendingProductList.productListArrObj?.length > 0 ?
                             <div className='recent-view product-info mt-5'>
                                 <h4>Based on your recently viewed</h4>
                                 <div className='mb-0 explore-main'>
@@ -976,8 +984,7 @@ const Profile = () => {
                                         <Button className='shop-btn rotate-img'  >View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div> */}
                                 </div>
-                            </div> : <></>
-                    }
+                            </div> : ""}
 
                 </div>
             </div>

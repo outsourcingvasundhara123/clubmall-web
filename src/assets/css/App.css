@@ -171,7 +171,7 @@ p {
 
 .mar-cos {
     margin-top: 100px;
-    /* min-height: calc(100vh - 460px); */
+    min-height: calc(100vh - 460px);
 }
 
 .header .menu-box ul {
