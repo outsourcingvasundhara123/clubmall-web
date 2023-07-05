@@ -21,7 +21,7 @@ import { BiSearch } from 'react-icons/bi'
 const Header = () => {
 
     const navigate = useNavigate();
-    const {itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const { itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
@@ -63,9 +63,9 @@ const Header = () => {
 
     const handleKeyUp = () => {
 
-            handelSearch(searchKeyWord)
-            navigate("/search")
-            getSearchedProduct()
+        handelSearch(searchKeyWord)
+        navigate("/search")
+        getSearchedProduct()
 
     };
     const handleKeyPress = (e) => {
@@ -273,7 +273,7 @@ const Header = () => {
                         {
                             isLoggedIn &&
                             <div className='search-filed d-flex align-items-center gap-2'>
-                                <input type="text"  onKeyDown={handleKeyPress}  placeholder='Search products' className='w-100'  onChange={handleChange} value={searchKeyWord} />
+                                <input type="text" onKeyDown={handleKeyPress} placeholder='Search products' className='w-100' onChange={handleChange} value={searchKeyWord} />
                                 <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
                             </div>
                         }
@@ -333,7 +333,7 @@ const Header = () => {
                                                 </div>
                                             </div>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item onClick={() => (handelProfile("list"),setItemShow(true))} >
+                                            <Dropdown.Item onClick={() => (handelProfile("list"), setItemShow(true))} >
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/list.png' alt='' />
                                                     My orders
@@ -343,7 +343,7 @@ const Header = () => {
                                                 <img src='./img/header/review.png' alt='' />
                                                 Your reviews
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => (handelProfile("user"),setItemShow(false))}>
+                                            <Dropdown.Item onClick={() => (handelProfile("user"), setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/user.png' alt='' />
                                                     Your profile
@@ -361,19 +361,19 @@ const Header = () => {
                                                 <img src='./img/header/shop.png' alt='' />
                                                 Followed shops
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => (handelProfile("location"),setItemShow(false))}>
-                                                <Link to="/profile"  className='p-0 w-100'>
+                                            <Dropdown.Item onClick={() => (handelProfile("location"), setItemShow(false))}>
+                                                <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/location.png' alt='' />
                                                     Addresses
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item onClick={() => (handelProfile("security"),setItemShow(false))}>
+                                            <Dropdown.Item onClick={() => (handelProfile("security"), setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/security.png' alt='' />
                                                     Account security
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"),setItemShow(false))}>
+                                            <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"), setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='./img/header/notification.png' alt='' />
                                                     Notifications
@@ -441,49 +441,50 @@ const Header = () => {
                                     <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => { setActive("/trending"); handleClose() }}>Trending</Link>
                                 </li>
                                 <li className='position-relative show-body-menu'>
-                                    <Link className={`${active === "/categories" ? "active" : ""} `}>
-                                        Categories
-                                    </Link>
-                                    <Accordion>
-                                        <Card>
-                                            <CustomToggle eventKey="0"><MdOutlineKeyboardArrowDown /></CustomToggle>
-                                            <Accordion.Collapse eventKey="0">
-                                                <Card.Body>
-                                                    <div className='h-100 sub-catagories'>
-                                                        <Accordion >
+                                    <Accordion defaultActiveKey="0">
+                                        <Accordion.Item eventKey="1">
+                                            <Accordion.Header>
+                                                <Link className={`${active === "/categories" ? "active" : ""} `}>
+                                                    Categories
+                                                </Link>
+                                                <MdOutlineKeyboardArrowDown />
+                                            </Accordion.Header>
+                                            <Accordion.Body>
+                                                <div className='h-100 sub-catagories'>
+                                                    <Accordion defaultActiveKey="0">
 
-                                                            {category && category?.productsCategoryList?.map((e, i) => (
-                                                                <Accordion.Item eventKey={i}>
-                                                                    <Accordion.Header>
-                                                                        <li onMouseOver={() => HandelShowData(e.name, e)}>
-                                                                            <p>{e.name}</p>
-                                                                            <img src='./img/header/mega-menu-arrow.png' alt='' />
-                                                                        </li>
-                                                                    </Accordion.Header>
+                                                        {category && category?.productsCategoryList?.map((e, i) => (
+                                                            <Accordion.Item eventKey={i}>
+                                                                <Accordion.Header>
+                                                                    <li onClick={() => HandelShowData(e.name, e)}>
+                                                                        <p>{e.name}</p>
+                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                    </li>
+                                                                </Accordion.Header>
 
-                                                                    <Accordion.Body>
-                                                                        <div className='mobile-menu-cat-box d-flex align-items-center justify-content-center gap-3 flex-wrap'>
-                                                                            {loading ?
-                                                                                <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
-                                                                                :
-                                                                                subCategory && subCategory?.map((e, i) => (
-                                                                                    <div key={i} className='cate-box text-center pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))}>
-                                                                                        <div className='cat-img-round'>
-                                                                                            <img src={Url + e.product_icon} alt='' width="100%" />
-                                                                                        </div>
-                                                                                        <h5 className='mt-3'>{e.name}</h5>
+                                                                <Accordion.Body>
+                                                                    <div className='mobile-menu-cat-box d-flex align-items-center justify-content-center gap-3 flex-wrap'>
+                                                                        {loading ?
+                                                                            <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
+                                                                            :
+                                                                            subCategory && subCategory?.map((e, i) => (
+                                                                                <div key={i} className='cate-box text-center pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))}>
+                                                                                    <div className='cat-img-round'>
+                                                                                        <img src={Url + e.product_icon} alt='' width="100%" />
                                                                                     </div>
-                                                                                ))
-                                                                            }
-                                                                        </div>
-                                                                    </Accordion.Body>
-                                                                </Accordion.Item>
-                                                            ))}
-                                                        </Accordion>
-                                                    </div>
-                                                </Card.Body>
-                                            </Accordion.Collapse>
-                                        </Card>
+                                                                                    <h5 className='mt-3'>{e.name}</h5>
+                                                                                </div>
+                                                                            ))
+                                                                        }
+                                                                    </div>
+                                                                </Accordion.Body>
+                                                            </Accordion.Item>
+                                                        ))}
+                                                    </Accordion>
+                                                </div>
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+
                                     </Accordion>
                                 </li>
                             </ul>

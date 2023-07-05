@@ -749,26 +749,29 @@ p {
     border: none;
 }
 
-.mobile-menu .show-body-menu .card {
+.mobile-menu .sub-catagories {
     border: none;
-    margin-top: 10px;
+    padding: 10px;
     background-color: rgba(211, 211, 211, 0.336);
+    border-radius: 5px;
 }
 
-.mobile-menu .show-body-menu .card .sub-catagories li {
+.mobile-menu .sub-catagories .accordion-item:first-child li {
+    margin-top: 0 !important;
+}
+
+.mobile-menu .show-body-menu .sub-catagories li {
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     color: #223263;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 10px !important;
     width: 100%;
 }
 
-.mobile-menu .accordion-item:first-child li {
-    margin-top: 0 !important;
-}
+
 
 .mobile-menu .accordion-item .accordion-button {
     padding-bottom: 0 !important;
