@@ -22,7 +22,6 @@ const Wishlist = () => {
     }, [isLoggedIn]);
 
 
-    console.log(wishlist, "wishlist");
 
 
     return (
@@ -91,7 +90,7 @@ const Wishlist = () => {
 
                                     {
                                         wishlist && wishlist.every(e => e.product_id === null) &&
-                                        <div className='d-flex align-items-center justify-content-center w-100 h-100 '>
+                                        <div className='d-flex align-items-center justify-content-center w-100 h-100 empty-wishlist'>
                                             <div className='text-center found'>
                                                 <img src='./img/not-found.png' alt='' />
                                                 <p className='mt-3'> No products are there </p>

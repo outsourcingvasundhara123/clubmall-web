@@ -2959,8 +2959,15 @@ del {
     display: none;
 }
 
-.profile .preview {
+.profile .preview{
     width: fit-content;
+}
+
+.profile .preview .preview_profile {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .profile .file-label {
@@ -6039,6 +6046,23 @@ input[type='radio'] {
     padding: 0;
     color: #E02E24 !important;
     font-weight: 600;
+}
+
+.empty-wishlist{
+    margin-top: 130px;
+}
+
+@media (max-width:512px) {
+    .empty-wishlist{
+        margin-top: 50px;
+    }
+}
+
+.delete-comment{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-top: 0 !important;
 }
 
 .clear-all-filter {

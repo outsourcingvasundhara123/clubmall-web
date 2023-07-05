@@ -21,7 +21,7 @@ import { RiSendPlaneFill } from "react-icons/ri"
 import InstallApp from '../components/InstallApp';
 import { MdOutlineClose } from 'react-icons/md'
 import { Rating } from '@mui/material';
-
+import { MdDelete } from 'react-icons/md'
 
 const ForYou = () => {
   const [perActive, setPerActive] = useState('Individual');
@@ -475,7 +475,7 @@ const ForYou = () => {
                     <div className='reel-items'>
                       <p onClick={() => handleProductShow(e.products_obj)} className='pointer'>{e.products_obj.length}+ More Products</p>
                       <div className='items-box p-2 mt-2'>
-                        <img alt='' src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0].product_id.product_images[0]?.file_name} width="100%" />
+                        <img alt='' src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%" />
                         <del>${e.products_obj[0]?.product_id?.group_price}</del>
                       </div>
                     </div>
@@ -618,18 +618,20 @@ const ForYou = () => {
                 {isFetching ? <p> Loding..... </p> :
                   modelData && modelData?.map((e, i) => (
                     <li>
-                      <div className='d-flex align-items-center gap-3'>
-                        <div className='comment-user'>
-                          <img className='myprofile' src={e.user_id?.profile_image ? profilUrl + e.user_id?.profile_image : `${defaultProfile}`}
-                            alt='' width="30px" />
-                        </div>
-                        <div className='comments-user-name'>
-                          <h6> {e.user_id?.username}</h6>
-                          <span>{e.content}</span>
+                      <div className='d-flex align-items-center justify-content-between gap-3'>
+                        <div className='d-flex align-items-center  gap-3'>
+                          <div className='comment-user'>
+                            <img className='myprofile' src={e.user_id?.profile_image ? profilUrl + e.user_id?.profile_image : `${defaultProfile}`}
+                              alt='' width="30px" />
+                          </div>
+                          <div className='comments-user-name'>
+                            <h6> {e.user_id?.username}</h6>
+                            <span>{e.content}</span>
+                          </div>
                         </div>
                         {UserId === e.user_id?._id &&
-                          <Button onClick={() => DeleteComment(e?._id)} className='delete-btn'>
-                            <img src='./img/cart/delete.png' alt='' />
+                          <Button onClick={() => DeleteComment(e?._id)} className='submit-btn delete-comment'>
+                            <MdDelete />
                           </Button>
                         }
                       </div>
@@ -716,23 +718,23 @@ const ForYou = () => {
 
                   <div className='for_you_product d-flex align-items-start gap-3 mt-2'>
                     <div className='cos-img-size'>
-                      <img src={postlUrl + e.product_id?._id + "/" + e.product_id.product_images[0]?.file_name}
+                      <img src={postlUrl + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
 
                         className='for-you-product-img' />
                     </div>
                     <div className='for-you-product-text w-100'>
-                      <h6>  {e.product_id.name} </h6>
+                      <h6>  {e.product_id?.name} </h6>
 
                       <div className='d-flex align-items-center gap-1 my-2'>
 
-                        <Rating name="read-only" value={e.product_id.rating} readOnly />
+                        <Rating name="read-only" value={e.product_id?.rating} readOnly />
 
                       </div>
                       <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
                         <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
-                          $ {e.product_id.individual_price} </Button>
+                          $ {e.product_id?.individual_price} </Button>
                         <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => (handleAppDownloadShow(), setPerActive('Group'))}>Group Price <br />
-                          ${e.product_id.group_price} </Button>
+                          ${e.product_id?.group_price} </Button>
                       </div>
                     </div>
                   </div>

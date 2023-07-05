@@ -17,20 +17,19 @@ import ErrorSnackBar from "../components/SnackBar";
 import { logout } from '../helper/auth'
 import { useNavigate } from 'react-router-dom';
 import { BiSearch } from 'react-icons/bi'
-
 const Header = () => {
 
     const navigate = useNavigate();
     const { itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
-    const [selectedFlag, setSelectedFlag] = useState("./img/header/ind.svg");
+    const [selectedFlag, setSelectedFlag] = useState("../img/header/ind.svg");
     const [active, setActive] = useState(window.location.pathname);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [category, setcategory] = useState([]);
     const UserName = localStorage.getItem("name") ? localStorage.getItem("name") : "undefail"
-    const defaultProfile = `./img/for_you/defaultuser.png`
+    const defaultProfile = `../img/for_you/defaultuser.png`
     const Userprofile = localStorage.getItem("profile_image") ? localStorage.getItem("profile_image") : defaultProfile
     const [Mymessage, setMyMessage] = useState("");
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
@@ -125,7 +124,6 @@ const Header = () => {
             setSubCategory(categoryResponse.data.data?.productsCategoryList[0]?.child)
             setcategory(categoryData);
             stopAnimation()
-
             // const cartListresponse = await api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" })
             // const cartCountData = cartListresponse.data.data.list
             // setCart(cartCountData?.length)
@@ -174,7 +172,7 @@ const Header = () => {
             <div className='header-main'>
                 <div className='header d-flex align-items-center gap-5 position-relative'>
                     <div className='logo'>
-                        <Link to="/home" className='py-0'><img src='./img/logo.png' alt='' /></Link>
+                        <Link to="/home" className='py-0'><img src='../img/logo.png' alt='' /></Link>
                     </div>
                     <div className='menu-box h-100'>
                         <ul className='h-100'>
@@ -212,7 +210,7 @@ const Header = () => {
                                                         return (
                                                             <li key={i} onMouseOver={() => HandelShowData(e.name, e)}>
                                                                 <p onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >{e.name}</p>
-                                                                <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                <img src='../img/header/mega-menu-arrow.png' alt='' />
                                                             </li>
                                                         );
                                                     })}
@@ -251,7 +249,7 @@ const Header = () => {
                         <NavLink>
                             <Button className='pre-label-btn'>
                                 <div className='d-flex align-items-center gap-2'>
-                                    <img src='./img//header/pri-label.png' alt='' />
+                                    <img src='../img//header/pri-label.png' alt='' />
                                     <div className='price-text text-start'>
                                         <h6>Price Adjustment</h6>
                                         <span>Within a 30 days</span>
@@ -262,7 +260,7 @@ const Header = () => {
                         <NavLink>
                             <Button className='pre-label-btn'>
                                 <div className='d-flex align-items-center gap-2'>
-                                    <img src='./img/header/free.png' alt='' />
+                                    <img src='../img/header/free.png' alt='' />
                                     <div className='price-text text-start'>
                                         <h6>Free Return</h6>
                                         <span>Within a 20 days</span>
@@ -335,69 +333,69 @@ const Header = () => {
                                             <Dropdown.Divider />
                                             <Dropdown.Item onClick={() => (handelProfile("list"), setItemShow(true))} >
                                                 <Link to="/profile" className='p-0 w-100'>
-                                                    <img src='./img/header/list.png' alt='' />
+                                                    <img src='../img/header/list.png' alt='' />
                                                     My orders
                                                 </Link>
                                             </Dropdown.Item>
                                             {/* <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/review.png' alt='' />
+                                                <img src='../img/header/review.png' alt='' />
                                                 Your reviews
                                             </Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => (handelProfile("user"), setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
-                                                    <img src='./img/header/user.png' alt='' />
+                                                    <img src='../img/header/user.png' alt='' />
                                                     Your profile
                                                 </Link>
                                             </Dropdown.Item>
                                             {/* <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/offer.png' alt='' />
+                                                <img src='../img/header/offer.png' alt='' />
                                                 Coupon & offers
                                             </Dropdown.Item>
                                             <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/balance.png' alt='' />
+                                                <img src='../img/header/balance.png' alt='' />
                                                 Credit balance
                                             </Dropdown.Item>
                                             <Dropdown.Item href="#/action-1">
-                                                <img src='./img/header/shop.png' alt='' />
+                                                <img src='../img/header/shop.png' alt='' />
                                                 Followed shops
                                             </Dropdown.Item> */}
                                             <Dropdown.Item onClick={() => (handelProfile("location"), setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
-                                                    <img src='./img/header/location.png' alt='' />
+                                                    <img src='../img/header/location.png' alt='' />
                                                     Addresses
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Item onClick={() => (handelProfile("security"), setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
-                                                    <img src='./img/header/security.png' alt='' />
+                                                    <img src='../img/header/security.png' alt='' />
                                                     Account security
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"), setItemShow(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
-                                                    <img src='./img/header/notification.png' alt='' />
+                                                    <img src='../img/header/notification.png' alt='' />
                                                     Notifications
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
                                             <Dropdown.Item className='w-100'>
-                                                <img src='./img/header/switch.png' alt='' />
+                                                <img src='../img/header/switch.png' alt='' />
                                                 Switch accounts
                                             </Dropdown.Item>
                                             <Dropdown.Item onClick={handleLogout} className='w-100'>
-                                                <img src='./img/header/logout.png' alt='' />
+                                                <img src='../img/header/logout.png' alt='' />
                                                 Sign out
                                             </Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
 
                                     <Link to="/wishlist" className='cart position-relative flag-selector order-2'>
-                                        <img src='./img/header/wishlist.png' className='header-icon' alt='' width="25px" />
+                                        <img src='../img/header/wishlist.png' className='header-icon' alt='' width="25px" />
                                         <span className='cart-items-count'>{wishlistCount}</span>
                                     </Link>
 
                                     <Link to="/cart" className='cart position-relative flag-selector order-3'>
-                                        <img src='./img/header/cart.png' className='header-icon' alt='' width="25px" />
+                                        <img src='../img/header/cart.png' className='header-icon' alt='' width="25px" />
                                         <span className='cart-items-count'>{cart && cart}</span>
                                     </Link>
 
@@ -458,7 +456,7 @@ const Header = () => {
                                                                 <Accordion.Header>
                                                                     <li onClick={() => HandelShowData(e.name, e)}>
                                                                         <p>{e.name}</p>
-                                                                        <img src='./img/header/mega-menu-arrow.png' alt='' />
+                                                                        <img src='../img/header/mega-menu-arrow.png' alt='' />
                                                                     </li>
                                                                 </Accordion.Header>
 

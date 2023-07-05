@@ -39,6 +39,10 @@ export default [
     element: <Categories />,
   },
   {
+    path: "/product-info/:id",
+    element: <ProductInfo />,
+  },
+  {
     path: "/product-info",
     element: <ProductInfo />,
   },

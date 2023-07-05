@@ -82,7 +82,7 @@ const AddCartModal = (props) => {
                 setUrl(productData.productImagePath)
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
     
-                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath   + productData.productList._id + "/" + e.file_name}`);
+                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath   + productData?.productList?._id + "/" + e?.file_name}`);
         
                 const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,

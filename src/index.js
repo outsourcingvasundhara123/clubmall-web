@@ -10,7 +10,8 @@ ReactDOM.render(
   <React.StrictMode>
     <GoogleOAuthProvider 
     clientId={
-      process.env.REACT_APP_CLIEN_ID
+            "402818709804-jko21qbevepmsnhqd8ev5dnk3rr7ucvr.apps.googleusercontent.com"
+      // process.env.REACT_APP_CLIEN_ID
     }
     >
       <CartProvider>

@@ -30,14 +30,15 @@ import { CartContext } from '../context/CartContext'
 import { Rating } from '@mui/material'
 import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
-import { FiUpload } from 'react-icons/fi'
+import { useParams } from 'react-router-dom';
 import { RWebShare } from "react-web-share";
+import { FiUpload } from 'react-icons/fi'
 
 const ProductInfo = () => {
     const { getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
-    const defaultProfile = `./img/for_you/defaultuser.png`
+    const defaultProfile = `../img/for_you/defaultuser.png`
     const [perActive, setPerActive] = useState('Individual');
     const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
     const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
@@ -59,10 +60,12 @@ const ProductInfo = () => {
     const [sizeActive, setSizeActive] = useState("")
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
-    const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")
+    // const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")  
     const [reviewShow, setreviewShow] = useState(false);
     const handlereviewShow = () => setreviewShow(true);
     const handlereviewClose = () => setreviewShow(false);
+    const { id } = useParams();
+    const product_id = id
 
 
     const handelSubCat = (Id) => {
@@ -310,14 +313,20 @@ const ProductInfo = () => {
                                             <RWebShare
                                                 data={{
                                                     text: "Like humans, flamingos make friends for life",
-                                                    url: "https://on.natgeo.com/2zHaNup",
+                                                    url:  window.location.href,
                                                     title: "Flamingos",
                                                 }}
-                                                onClick={() => console.log("shared successfully!")}
+                                                sites={[
+                                                    "facebook",
+                                                    "twitter",
+                                                    "whatsapp",
+                                                    "telegram",
+                                                    "linkedin",
+                                                  ]}                                               
+                                                   onClick={() => console.log("shared successfully!")}
                                             >
                                                 <Button className='wishlist-btn'><FiUpload /></Button>
                                             </RWebShare>
-
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>

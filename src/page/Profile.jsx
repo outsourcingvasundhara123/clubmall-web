@@ -22,6 +22,8 @@ import axios from 'axios';
 import Loader from '../components/Loader'
 import { CartContext } from '../context/CartContext';
 import { login } from '../helper/auth'
+import { Is_Login } from '../helper/IsLogin'
+import { handelProductDetail } from '../helper/constants'
 const Profile = () => {
 
     const { itemShow, setItemShow, sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
@@ -39,11 +41,13 @@ const Profile = () => {
 
     const initialValue_2 = {
         bio: "",
-        name: "",
+        first_name: "",
+        last_name: "",
         gender: "",
         profile_image: ""
     };
 
+    const isLoggedIn = Is_Login();
     const [showPass, setShowPass] = useState(true)
     const [showloderUrl, setShowloderUrl] = useState(false)
     const [values, setValues] = useState(initialValues);
@@ -55,10 +59,12 @@ const Profile = () => {
     const [stateList, setStateList] = useState([]);
     const [countryList, setCountryList] = useState([]);
     const [orderList, setOrderList] = useState([]);
+    const [notificationList, setNotificationList] = useState([]);
     const [submitCount, setSubmitCount] = useState(0);
     const serverURL = getServerURL();
     const [orderUrl, setOrderUrl] = useState(false);
     const [page, setPage] = useState(1);
+    const [pageNotification, setPageNotification] = useState(1);
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
     const [modelMood, setIModelMood] = useState("add");
     const [show, setShow] = useState(false);
@@ -66,7 +72,10 @@ const Profile = () => {
     const player = useRef();
     const [loading, setLoading] = useState(true);
     const [imagePreview, setImagePreview] = useState(null);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
+    const [is_lastItem, setIs_lastItem] = useState();
+    const [displayedOrders, setDisplayedOrders] = useState([]);
+    // const [page, setPage] = useState(1);
+    const itemsPerPage = 5; // Set the number of items you want to show on one page
 
     const handleClose = () => {
         setErrors({})
@@ -75,6 +84,7 @@ const Profile = () => {
         setSubmitCount(0)
         setAdId("")
     }
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -87,16 +97,36 @@ const Profile = () => {
     };
 
     const getOrderList = async () => {
-        startAnimation()
-        try {
 
+        startAnimation()
+
+        try {
             const res = await api.postWithToken(`${serverURL + "order-manage"}`, { "action": "my-orders-list" })
             setOrderList(res.data.data)
+            setIs_lastItem(res.data.data?.userOrderItems.length)
             stopAnimation()
         } catch (error) {
             console.log(error);
         }
     };
+
+    const getUserProfile = async () => {
+
+        startAnimation()
+
+        try {
+            const res = await api.postWithToken(`${serverURL + "profile-view"}`)
+            console.log(res, "user details");
+            setValues_2(res.data.data.user)
+            // setOrderList(res.data.data)
+            // setIs_lastItem(res.data.data?.userOrderItems.length)
+            stopAnimation()
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
 
     const handleShow = (mood) => {
         setIModelMood(mood)
@@ -182,10 +212,11 @@ const Profile = () => {
         e.preventDefault();
         try {
 
-            if (values_2.bio && values_2.name && values_2.gender && values_2.profile_image) {
+            if (values_2.bio && values_2.first_name && values_2.last_name && values_2.gender && values_2.profile_image) {
                 const formData = new FormData();
                 formData.append('bio', values_2.bio);
-                formData.append('name', values_2.name);
+                formData.append('first_name', values_2.first_name);
+                formData.append('last_name', values_2.last_name);
                 formData.append('gender', values_2.gender);
                 formData.append('profile_image', values_2.profile_image);
                 const response = await Promise.all([
@@ -328,13 +359,28 @@ const Profile = () => {
 
     };
 
+    const getNotificationList = async () => {
+
+        startAnimation()
+        try {
+            const res = await api.postWithToken(`${serverURL + "notification-manage"}`, {
+                "action": "list",
+                page: pageNotification
+            })
+            const updatedList = [...notificationList, ...res.data.data?.list].filter((product, index, self) => self.findIndex(p => p.id === product.id) === index);
+            setNotificationList(updatedList)
+            stopAnimation()
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
                 const request2 = api.get(`${serverURL + "/state-list"}`);
                 const responses = await Promise.all([request1, request2]);
-                // console.log(responses[0].data.data.country, "responses[0].data.data.country");
                 setCountryList(responses[0].data.data.country);
                 // setStateList(responses[1].data.data.states);
             } catch (error) {
@@ -345,7 +391,19 @@ const Profile = () => {
         fetchData();
         getMyAddress()
         getOrderList()
-    }, [page]);
+        getWishList()
+        getUserProfile()
+    }, [isLoggedIn]);
+
+
+    useEffect(() => {
+        startAnimation()
+        const start = 0; // Always start from the beginning
+        const end = page * itemsPerPage; // End at the last item of current page
+        setDisplayedOrders(orderList.userOrderItems?.slice(start, end));
+        stopAnimation()
+
+    }, [page, orderList]);
 
     const checkforcounty = async () => {
 
@@ -365,8 +423,10 @@ const Profile = () => {
         }
     };
 
-    console.log(profileOption, " profile page ");
-    console.log(itemShow, "itemShow");
+
+    useEffect(() => {
+        getNotificationList()
+    }, [pageNotification]);
 
     return (
         <>
@@ -511,47 +571,56 @@ const Profile = () => {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {orderList?.userOrderItems && orderList?.userOrderItems.map((e, i) => {
-                                                                return (
 
+                                                            {
+                                                                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                                                                     <>
-                                                                        {e.product_id &&
-                                                                            <tr>
-                                                                                <td width={400}>
-                                                                                    <div className='d-flex align-items-start gap-2'>
-                                                                                        <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
-                                                                                            width="80px" />
-                                                                                        <div className='pro-text'>
-                                                                                            <h6>{e.product_id?.name} </h6>
-                                                                                            <span>ID: # {e.order_id.order_display_id}</span>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td><p>{e.qty}</p></td>
-                                                                                <td><p>${e.product_total_price}</p></td>
-                                                                                <td>
-                                                                                    <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
-                                                                                    <p>{e.order_id.shipping_address_object.contact_no}</p>
-                                                                                </td>
-                                                                                <td>
-                                                                                    {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
-                                                                                    {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
-                                                                                    {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
-                                                                                    {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
-                                                                                    {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>}
-                                                                                </td>
-                                                                            </tr>
-                                                                        }
+
+                                                                        {displayedOrders && displayedOrders.map((e, i) => {
+                                                                            return (
+
+                                                                                <>
+                                                                                    {e.product_id &&
+                                                                                        <tr className=' pointer' onClick={() => handelProductDetail(e.product_id?._id)}>
+                                                                                            <td width={400}>
+                                                                                                <div className='d-flex align-items-start gap-2'>
+                                                                                                    <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
+                                                                                                        width="80px" />
+                                                                                                    <div className='pro-text'>
+                                                                                                        <h6>{e.product_id?.name} </h6>
+                                                                                                        <span>ID: # {e.order_id.order_display_id}</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                            <td><p>{e.qty}</p></td>
+                                                                                            <td><p>${e.product_total_price}</p></td>
+                                                                                            <td>
+                                                                                                <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
+                                                                                                <p>{e.order_id.shipping_address_object.contact_no}</p>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
+                                                                                                {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
+                                                                                                {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
+                                                                                                {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
+                                                                                                {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>}
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                </>
+                                                                            )
+                                                                        })}
+
                                                                     </>
-                                                                )
-                                                            })}
-                                                            {/* {orderList?.userOrderItems?.length > 0 &&
-                                                                <div className='w-100 d-flex justify-content-center'>
-                                                                    <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
-                                                                </div>
-                                                            } */}
+                                                                )}
                                                         </tbody>
+
                                                     </Table>
+                                                    {displayedOrders?.length > 0 && displayedOrders?.length !== is_lastItem &&
+                                                        <div className='w-100 d-flex justify-content-center'>
+                                                            <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} > View More <MdKeyboardDoubleArrowRight /></Button>
+                                                        </div>
+                                                    }
                                                 </div>
 
                                                 {/* <div className='error'>
@@ -650,7 +719,7 @@ const Profile = () => {
                                                                 <Col xl={4} lg={6} md={12}>
                                                                     <div className='select-img'>
                                                                         <div className='preview position-relative'>
-                                                                            <img src={imagePreview || './img/profile/selected-img.png'} alt='' width="80px" />
+                                                                            <img src={imagePreview || values_2.profile_image} alt='' className=' preview_profile ' />
                                                                             <input type="file" name='profile_image' onChange={handlePhoto} id='file' />
                                                                             <label htmlFor='file' className='file-label'>
                                                                                 <img src='./img/profile/select-btn.png' alt='' />
@@ -659,13 +728,23 @@ const Profile = () => {
                                                                     </div>
                                                                     <Form>
                                                                         <div className='input-filed mt-4'>
-                                                                            <label>Name</label>
+                                                                            <label>First Name</label>
                                                                             <input type='text'
-                                                                                name='name'
-                                                                                value={values_2.name}
+                                                                                name='first_name'
+                                                                                value={values_2.first_name}
                                                                                 onChange={handleChange_2}
                                                                             />
                                                                         </div>
+
+                                                                        <div className='input-filed mt-4'>
+                                                                            <label>Last Name</label>
+                                                                            <input type='text'
+                                                                                name='last_name'
+                                                                                value={values_2.last_name}
+                                                                                onChange={handleChange_2}
+                                                                            />
+                                                                        </div>
+
                                                                         <div className='input-filed mt-3'>
                                                                             <label>Bio</label>
                                                                             <textarea type='text' placeholder='Tell people a little about yourself'
@@ -680,6 +759,7 @@ const Profile = () => {
                                                                                 <div className='d-flex align-items-center gap-2 w-fit gender'>
                                                                                     <input type='radio'
                                                                                         name='gender'
+                                                                                        checked={values_2.gender === 'Female'}
                                                                                         value="Female"
                                                                                         onChange={handleChange_2}
                                                                                         id='female' />
@@ -689,6 +769,7 @@ const Profile = () => {
                                                                                     <input type='radio' id='male'
                                                                                         name='gender'
                                                                                         value="Male"
+                                                                                        checked={values_2.gender === 'Male'}
                                                                                         onChange={handleChange_2}
                                                                                     />
                                                                                     <label htmlFor='male'>Male</label>
@@ -697,6 +778,7 @@ const Profile = () => {
                                                                                     <input type='radio' id='other'
                                                                                         name='gender'
                                                                                         value="Other"
+                                                                                        checked={values_2.gender === 'Other'}
                                                                                         onChange={handleChange_2}
                                                                                     />
                                                                                     <label htmlFor='other'>Rather not say</label>
@@ -814,34 +896,41 @@ const Profile = () => {
                                         </Tab.Pane> */}
 
                                         <Tab.Pane eventKey="location">
-                                            <div className='location-main'>
-                                                <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
 
-                                                {myAddress && myAddress.map((e, i) => {
-                                                    return (
-                                                        <div className='address-box mt-3'>
-                                                            <h5> {e.fullname}</h5>
-                                                            <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id?.name},{e.country_id?.name},{e.contact_no} </p>
-                                                            <div className='d-flex align-items-center justify-content-between'>
-                                                                <div className='d-flex align-items-center check-options' onClick={() => selectAddress(e?._id)}   >
-                                                                    <input type='checkbox' id='add-select' checked={e.is_default == 1} />
-                                                                    <label htmlFor='add-select'>Default</label>
-                                                                </div>
-                                                                <div className='copy-main'>
-                                                                    {/* <Button>Copy</Button> */}
-                                                                    {/* <span>I</span> */}
-                                                                    <Button onClick={() => (handleShow("edit"), findAddress(e?._id))} >Edit</Button>
-                                                                    <span>I</span>
-                                                                    <Button onClick={() => deleteAddress(e?._id)} >Delete</Button>
-                                                                </div>
-                                                            </div>
+                                            {
+                                                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                                                    <>
+                                                        <div className='location-main'>
+                                                            <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
+
+                                                            {myAddress && myAddress.map((e, i) => {
+                                                                return (
+                                                                    <div className='address-box mt-3'>
+                                                                        <h5> {e.fullname}</h5>
+                                                                        <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id?.name},{e.country_id?.name},{e.contact_no} </p>
+                                                                        <div className='d-flex align-items-center justify-content-between'>
+                                                                            <div className='d-flex align-items-center check-options' onClick={() => selectAddress(e?._id)}   >
+                                                                                <input type='checkbox' id='add-select' checked={e.is_default == 1} />
+                                                                                <label htmlFor='add-select'>Default</label>
+                                                                            </div>
+                                                                            <div className='copy-main'>
+                                                                                {/* <Button>Copy</Button> */}
+                                                                                {/* <span>I</span> */}
+                                                                                <Button onClick={() => (handleShow("edit"), findAddress(e?._id))} >Edit</Button>
+                                                                                <span>I</span>
+                                                                                <Button onClick={() => deleteAddress(e?._id)} >Delete</Button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )
+                                                            })}
+
                                                         </div>
-                                                    )
-                                                })}
-
-                                            </div>
-
+                                                    </>
+                                                )}
                                         </Tab.Pane>
+
+
 
                                         <Tab.Pane eventKey="security">
                                             <div className='security-main'>
@@ -896,40 +985,54 @@ const Profile = () => {
                                             <Button className='delete-account'>Delete your Clubmall account <MdKeyboardArrowRight /></Button>
                                         </Tab.Pane>
 
-                                        <Tab.Pane eventKey="notification">
-                                            <div className='security-main'>
-                                                <Row>
-                                                    <Col xl={12} lg={12} md={12}>
-                                                        <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd'>
-                                                            <div>
-                                                                <h5>Promotions</h5>
-                                                                <p>On: Email  I  off: SMS</p>
-                                                            </div>
-                                                            {/* <Button>Edit</Button> */}
-                                                        </div>
-                                                        <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
-                                                            <div>
-                                                                <h5>Order updates</h5>
-                                                                <p>On: Email  I  off: SMS</p>
-                                                            </div>
-                                                            {/* <Button>Edit</Button> */}
-                                                        </div>
-                                                        <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
-                                                            <div>
-                                                                <h5>Chat messages</h5>
-                                                                <p>On: Email</p>
-                                                            </div>
-                                                            {/* <Button>Edit</Button> */}
-                                                        </div>
-                                                        <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
+
+                                        {
+                                            loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                                                <>
+
+
+                                                    <Tab.Pane eventKey="notification">
+                                                        <div className='security-main'>
+                                                            <Row>
+                                                                <Col xl={12} lg={12} md={12}>
+
+
+                                                                    {/* {notificationList} */}
+
+
+                                                                    {notificationList && notificationList.map((e, i) => {
+                                                                        return (
+
+                                                                            <div key={i} className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
+                                                                                <div>
+                                                                                    <h5>{e.message_sent_to.name}</h5>
+                                                                                    <p>{e.message}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        )
+                                                                    })}
+                                                                    {/* <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
                                                             <div>
                                                                 <h5>Your recommendations</h5>
                                                                 <p>On: Email  I  off: SMS</p>
                                                             </div>
-                                                            {/* <Button>Edit</Button> */}
-                                                        </div>
-                                                    </Col>
-                                                    {/* <Col xl={4} lg={6} md={12} className='mt-4 mt-lg-0'>
+                                                        </div> */}
+                                                                </Col>
+
+                                                                {/* {notificationList.length > 0 &&
+                                                  <div className='w-100 d-flex justify-content-center'>
+                                                  <Button className='shop-btn btn-cos-mobile' onClick={() => (setPageNotification(pageNotification + 1), setViewmoreLoder(true))} > View More <MdKeyboardDoubleArrowRight /></Button>
+                                                  </div>
+                                                  }   */}
+
+
+
+                                                                {/* {displayedOrders?.length > 0 && displayedOrders?.length !== is_lastItem &&
+                                                                <div className='w-100 d-flex justify-content-center'>
+                                                                    <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} > View More <MdKeyboardDoubleArrowRight /></Button>
+                                                                </div>
+                                                    } */}
+                                                                {/* <Col xl={4} lg={6} md={12} className='mt-4 mt-lg-0'>
                                                         <div className='receive'>
                                                             <h5>Receive SMS notifications</h5>
                                                             <p className='mt-2'>Message and data rates may apply. Message frequency varies. Text STOP to opt out and HELP for help. <NavLink>Terms of Use</NavLink> and <NavLink>Privacy & Cookie Policy</NavLink>.</p>
@@ -946,10 +1049,11 @@ const Profile = () => {
                                                             <Button className='submit-btn-receive mt-4'>Submit</Button>
                                                         </div>
                                                     </Col> */}
-                                                </Row>
-                                            </div>
-                                        </Tab.Pane>
 
+                                                            </Row>
+                                                        </div>
+                                                    </Tab.Pane>
+                                                </>)}
                                     </Tab.Content>
                                 </Col>
                             </Row>
