@@ -28,11 +28,12 @@ import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
 import { Rating } from '@mui/material'
-import { handelCategorydata  } from '../helper/constants'
+import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
+import { FiUpload } from 'react-icons/fi'
 
 const ProductInfo = () => {
-    const { getCartData, getWishList,add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const defaultProfile = `./img/for_you/defaultuser.png`
@@ -57,7 +58,7 @@ const ProductInfo = () => {
     const [sizeActive, setSizeActive] = useState("")
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
-    const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")  
+    const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")
     const [reviewShow, setreviewShow] = useState(false);
     const handlereviewShow = () => setreviewShow(true);
     const handlereviewClose = () => setreviewShow(false);
@@ -94,27 +95,27 @@ const ProductInfo = () => {
                 const [productDetail] = await Promise.all([
                     api.get(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
                 ]);
-                console.log(productDetail,"productDetail");
+                console.log(productDetail, "productDetail");
                 const productData = productDetail.data.data;
                 setProduct(productData);
                 setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
                 stopAnimation()
                 setUrl(productData.productImagePath)
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
-    
-                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath   + productData.productList._id + "/" + e.file_name}`);
-        
+
+                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath + productData.productList._id + "/" + e.file_name}`);
+
                 const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
                 }));
                 setColorProduct(mergedImages)
-            }else{
+            } else {
                 navigate("/")
             }
-    
+
         } catch (error) {
-            console.log(error,"error");
+            console.log(error, "error");
             navigate("/")
         }
     };
@@ -291,7 +292,7 @@ const ProductInfo = () => {
                                         <NavLink>Home</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
-                                    <div  onClick={() => (handelCategorydata(Product?.productList?.product_category_keys?.product_category_one?._id), localStorage.removeItem("selectedSubcategories"))} className='d-flex align-items-center gap-1'>
+                                    <div onClick={() => (handelCategorydata(Product?.productList?.product_category_keys?.product_category_one?._id), localStorage.removeItem("selectedSubcategories"))} className='d-flex align-items-center gap-1'>
                                         <NavLink> {Product?.productList?.product_category_keys?.product_category_one.name}</NavLink>
                                         <MdOutlineKeyboardArrowRight />
                                     </div>
@@ -305,7 +306,7 @@ const ProductInfo = () => {
                                 <Row className='mt-4'>
                                     <Col lg={6} md={12}>
                                         <div className='position-relative'>
-                                            {/* <Button className='wishlist-btn'><img src='./img/header/wishlist.png' alt='' width="25px" /></Button> */}
+                                            <Button className='wishlist-btn'><FiUpload /></Button>
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
@@ -653,7 +654,7 @@ const ProductInfo = () => {
                                 </Row>
 
                                 <div className='review mt-5 mar-top-20'>
-                                  {Product?.productReviewList?.length === 0 ? " " : <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>  }  
+                                    {Product?.productReviewList?.length === 0 ? " " : <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>}
                                     <div className=''>
                                         {
                                             Product?.productReviewList?.map((e, i) => {
