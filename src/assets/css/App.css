@@ -6040,3 +6040,9 @@ input[type='radio'] {
     color: #E02E24 !important;
     font-weight: 600;
 }
+
+.clear-all-filter {
+    background-color: #E02E24 !important;
+    border: none;
+    color: #fff !important;
+}

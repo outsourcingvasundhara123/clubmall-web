@@ -261,6 +261,9 @@ const Categories = () => {
                                 {
                                     filterShow ?
                                         <div className='filter-option p-4 mt-4 sticky-filter'>
+                                            <div className='d-flex align-items-center justify-content-end'>
+                                                <Button className='clear-all-filter'>Clear all</Button>
+                                            </div>
                                             <div className='filter-box'>
                                                 <Accordion alwaysOpen>
 
@@ -446,7 +449,7 @@ const Categories = () => {
                                                                 path={url && url}
                                                                 color={e.sku_attributes.color}
                                                                 is_wishList={e.wishList && e.wishList}
-                                                                colorUrl = {e.sku_details}
+                                                                colorUrl={e.sku_details}
                                                             />
                                                         )
                                                     })
