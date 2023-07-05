@@ -18,7 +18,6 @@ export const CartProvider = ({ children }) => {
   const [wishlist, setWishList] = useState([]);
   // Initialize your state and other values...
   // const [isWishlist, setIsWishlist] = useState(false); // Initialize the state as false or as per your requirement
-
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const [wishProductUrl, setWishProductURL] = useState("");

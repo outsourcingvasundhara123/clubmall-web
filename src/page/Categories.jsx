@@ -17,8 +17,7 @@ import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { Is_Login } from '../helper/IsLogin'
 import colorNameToHex from 'color-name';
-
-
+import { errorResponse } from '../helper/constants'
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -36,7 +35,7 @@ const Categories = () => {
         min_price: "",
         max_price: ""
     }
-
+    const navigate = useNavigate();
     const isLoggedIn = Is_Login();
     const [subCat, setSubCat] = useState(null)
     const [url, setUrl] = useState()
@@ -53,6 +52,7 @@ const Categories = () => {
     const [viewCalled, setViewCalled] = useState(false);
     const [loading, setLoading] = useState(true);
     const player = useRef();
+    const [message, setMyMessage] = useState("");
     const Categorie_id = localStorage.getItem("selectedcategories") && localStorage.getItem("selectedcategories")
     const [subCatId, setSubCatId] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
@@ -79,6 +79,7 @@ const Categories = () => {
             } else {
                 setLoading(true);
             }
+        if(Categorie_id){
             const apiTyp = isLoggedIn ? api.postWithToken : api.post;
             let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
             let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
@@ -118,7 +119,11 @@ const Categories = () => {
             }
             setViewmoreLoder(false)
             stopAnimation()
+        }else{
+            navigate("/")
+        }   
         } catch (error) {
+            errorResponse(error, setMyMessage);
             console.log(error);
         }
     };
@@ -148,12 +153,14 @@ const Categories = () => {
             setFilterList(filterlist.data.filterData)
             stopAnimation()
         } catch (error) {
+            errorResponse(error, setMyMessage);
             console.log(error);
         }
     };
 
     useEffect(() => {
         getCategory();
+        getWishList()
     }, [Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive, add_wished_Called]);
 
     useEffect(() => {
