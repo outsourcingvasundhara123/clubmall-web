@@ -31,6 +31,7 @@ import { Rating } from '@mui/material'
 import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
 import { FiUpload } from 'react-icons/fi'
+import { RWebShare } from "react-web-share";
 
 const ProductInfo = () => {
     const { getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
@@ -306,7 +307,17 @@ const ProductInfo = () => {
                                 <Row className='mt-4'>
                                     <Col lg={6} md={12}>
                                         <div className='position-relative'>
-                                            <Button className='wishlist-btn'><FiUpload /></Button>
+                                            <RWebShare
+                                                data={{
+                                                    text: "Like humans, flamingos make friends for life",
+                                                    url: "https://on.natgeo.com/2zHaNup",
+                                                    title: "Flamingos",
+                                                }}
+                                                onClick={() => console.log("shared successfully!")}
+                                            >
+                                                <Button className='wishlist-btn'><FiUpload /></Button>
+                                            </RWebShare>
+
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
                                         </div>
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>

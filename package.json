@@ -36,6 +36,7 @@
     "react-scripts": "5.0.1",
     "react-stripe-checkout": "^2.6.3",
     "react-stripe-js": "^1.1.5",
+    "react-web-share": "^2.0.2",
     "stripe": "^12.9.0",
     "swiper": "^9.2.0",
     "tinycolor2": "^1.6.0",
