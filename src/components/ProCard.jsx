@@ -6,8 +6,11 @@ import { handelProductDetail } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 
 
+
+
 const ProCard = (props) => {
 
+  
     const [isWishlist, setIsWishlist] = useState(!!props.is_wishList); // We use !! to convert to a boolean
     const { handelwishSell, addWishList } = useContext(CartContext);
     const location = useLocation(window.location.pathname);
@@ -50,6 +53,7 @@ const ProCard = (props) => {
         return unique;
     }
 
+
     useEffect(() => {
         if (props?.color && props.color.length > 0) {
             setProductColorActive(props.color[0]?.name);
@@ -71,8 +75,8 @@ const ProCard = (props) => {
                     <div className='py-3 px-3 space-card'>
                         <h5>{props.name}</h5>
                         <div className='d-flex align-items-center justify-content-between'>
-                            <div>
-                                <p className='per'>${props.group_price} <span>(Group Price)</span></p>
+                            <div >
+                                <p className='per' >${props.group_price} <span    >(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
 

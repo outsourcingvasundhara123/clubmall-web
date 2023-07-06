@@ -248,78 +248,78 @@ const Home = () => {
                     </div>
                 </section>
 
-                <section className='stylist mb-5'>
-                    <div className='container-cos'>
-                        <div className='mt-5 mar-top-10'>
-                            <Swiper
-                                slidesPerView={4}
-                                spaceBetween={30}
-                                hashNavigation={{
-                                    watchState: true,
-                                }}
-                                loop={true}
-                                breakpoints={{
-                                    0: {
-                                        slidesPerView: 3,
-                                        spaceBetween: 10
-                                    },
-                                    600: {
-                                        slidesPerView: 3,
-                                        spaceBetween: 10
-                                    },
-                                    991: {
-                                        slidesPerView: 3,
-                                        spaceBetween: 10
-                                    },
-                                    1140: {
-                                        slidesPerView: 4,
-                                        spaceBetween: 20
-                                    },
-                                    1300: {
-                                        slidesPerView: 5,
-                                        spaceBetween: 20
-                                    },
-                                }}
-                                navigation={true}
-                                modules={[Pagination, Navigation]}
-                                className="mySwiper"
-                            >
-                                {
-                                    trendingProductList.productListArrObj?.slice(0, 5).map((e) => {
-                                        return (
+                        <section className='stylist mb-5'>
+                            <div className='container-cos'>
+                                <div className='mt-5 mar-top-10'>
+                                    <Swiper
+                                        slidesPerView={4}
+                                        spaceBetween={30}
+                                        hashNavigation={{
+                                            watchState: true,
+                                        }}
+                                        loop={true}
+                                        breakpoints={{
+                                            0: {
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
+                                            },
+                                            600: {
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
+                                            },
+                                            991: {
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
+                                            },
+                                            1140: {
+                                                slidesPerView: 4,
+                                                spaceBetween: 20
+                                            },
+                                            1300: {
+                                                slidesPerView: 5,
+                                                spaceBetween: 20
+                                            },
+                                        }}
+                                        navigation={true}
+                                        modules={[Pagination, Navigation]}
+                                        className="mySwiper"
+                                    >
+                                        {
+                                            trendingProductList.productListArrObj?.slice(0, 5).map((e) => {
+                                                return (
 
-                                            <SwiperSlide>
-                                                <ProCard
-                                                    id={e._id}
-                                                    img={e.product_images[0]?.file_name}
-                                                    name={e.name}
-                                                    group_price={e.group_price}
-                                                    individual_price={e.individual_price}
-                                                    sold={e.total_order}
-                                                    secper={e.secper}
-                                                    off={e.discount_percentage}
-                                                    path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
-                                                    is_wishList={e.wishList && e.wishList}
-                                                />
-                                            </SwiperSlide>
-                                        )
-                                    })
-                                }
-                            </Swiper>
-                        </div>
-                    </div>
-                </section>
+                                                    <SwiperSlide>
+                                                        <ProCard
+                                                            id={e._id}
+                                                            img={e.product_images[0]?.file_name}
+                                                            name={e.name}
+                                                            group_price={e.group_price}
+                                                            individual_price={e.individual_price}
+                                                            sold={e.total_order}
+                                                            secper={e.secper}
+                                                            off={e.discount_percentage}
+                                                            path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
+                                                            is_wishList={e.wishList && e.wishList}
+                                                        />
+                                                    </SwiperSlide>
+                                                )
+                                            })
+                                        }
+                                    </Swiper>
+                                </div>
+                            </div>
+                        </section>
 
-                <section className='home-first-image mar-top-10' >
-                    <div className='container-cos'>
-                        <div className='title w-100 text-center '>
-                            <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
-                        </div>
-                        <div className='w-100 mt-5 pointer mar-top-20' onClick={() => navigate("/trending")}>
-                            <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
-                        </div>
-                    </div>
-                </section>
+                        <section className='home-first-image mar-top-10' >
+                            <div className='container-cos'>
+                                <div className='title w-100 text-center '>
+                                    <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
+                                </div>
+                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => navigate("/trending")}>
+                                    <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
+                                </div>
+                            </div>
+                        </section>
 
                 <section className='home-second-image'>
                     <div className='container-cos position-relative'>

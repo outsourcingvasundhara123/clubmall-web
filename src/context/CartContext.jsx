@@ -48,7 +48,6 @@ export const CartProvider = ({ children }) => {
   const [sellIs_wished, setSellIs_wished] = useState(0);
   const [add_wished_Called, setAdd_wished_Called] = useState(false);
   const [itemShow, setItemShow] = useState(false);
-
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const [searchpostList, setSearchPostList] = useState([]);
   const [searchPage, setSearchPage] = useState(1);
@@ -340,36 +339,44 @@ export const CartProvider = ({ children }) => {
   const getSearchedProduct = async () => {
     try {
       setLoading(true)
-      let search = searchKeyWord
-      handelSearch(search)
-      const [postListResponse] = await Promise.all([
-        api.postWithToken(`${serverURL + "search"}`, {
-          q: search,
-          search_type: "product",
-          page: searchPage,
-        }),
-      ]);
-      const postsData = postListResponse.data;
-      if (postsData && Array.isArray(postsData.data)) {
-        if (is_search === 0) {
-          const updatedProductList = [
-            ...searchpostList,
-            ...postsData.data,
-          ].filter(
-            (product, index, self) =>
-              self.findIndex((p) => p._id === product._id) === index
-          );
-          setSearchPostList(updatedProductList);
-        } else{
-          setSearchPostList(postsData.data);
+      if(searchKeyWord){
+        let search = searchKeyWord 
+        handelSearch(search)
+        const [postListResponse] = await Promise.all([
+          api.postWithToken(`${serverURL + "search"}`, {
+            q: search,
+            search_type: "product",
+            page: searchPage,
+          }),
+        ]);
+        const postsData = postListResponse.data;
+        if (postsData && Array.isArray(postsData.data)) {
+          if (is_search === 0) {
+            const updatedProductList = [
+              ...searchpostList,
+              ...postsData.data,
+            ].filter(
+              (product, index, self) =>
+                self.findIndex((p) => p._id === product._id) === index
+            );
+            setSearchPostList(updatedProductList);
+          } else{
+            setSearchPostList(postsData.data);
+          }
+          // console.log(updatedProductList,"postsData");
+          setSearchURL(postsData.productImagePath);
+          setViewmoreLoder(false);
+          setLoading(false)
+    
+        } else {
+          stopAnimation();
+          // console.log("Invalid data format received");
         }
-        // console.log(updatedProductList,"postsData");
-        setSearchURL(postsData.productImagePath);
+      }else{
+        setSearchPostList([])
+        setSearchURL()
         setViewmoreLoder(false);
         setLoading(false)
-      } else {
-        stopAnimation();
-        // console.log("Invalid data format received");
       }
     } catch (error) {
       console.log(error);
@@ -408,10 +415,6 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("search", search);
     setIs_search(1)
   };
-
-
-
-
 
   return (
 
