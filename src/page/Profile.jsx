@@ -118,15 +118,11 @@ const Profile = () => {
             const res = await api.postWithToken(`${serverURL + "profile-view"}`)
             console.log(res, "user details");
             setValues_2(res.data.data.user)
-            // setOrderList(res.data.data)
-            // setIs_lastItem(res.data.data?.userOrderItems.length)
             stopAnimation()
         } catch (error) {
             console.log(error);
         }
     };
-
-
 
     const handleShow = (mood) => {
         setIModelMood(mood)
@@ -301,7 +297,6 @@ const Profile = () => {
                 action: "shipping-address-delete",
                 shipping_address_id: id
             }
-
             api.postWithToken(`${serverURL}shipping-address-manage`, data)
                 .then((res) => {
                     if (res.data.success === true) {
@@ -327,14 +322,11 @@ const Profile = () => {
     };
 
     const selectAddress = (id) => {
-
         try {
-
             let data = {
                 action: "shipping-address-default-active",
                 shipping_address_id: id
             }
-
             api.postWithToken(`${serverURL}shipping-address-manage`, data)
                 .then((res) => {
                     if (res.data.success === true) {

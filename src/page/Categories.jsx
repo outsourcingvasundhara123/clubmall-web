@@ -269,7 +269,7 @@ const Categories = () => {
                                     filterShow ?
                                         <div className='filter-option p-4 mt-4 sticky-filter'>
                                             <div className='d-flex align-items-center justify-content-end'>
-                                                <Button className='clear-all-filter'>Clear all</Button>
+                                                <Button className='clear-all-filter' onClick={ () => ( setMyFilter(initial), setRange([0, 100]), setProductColorActive())} >Clear all</Button>
                                             </div>
                                             <div className='filter-box'>
                                                 <Accordion alwaysOpen>
@@ -297,7 +297,6 @@ const Categories = () => {
                                                     }
 
                                                     {filterList[0]?.size?.length === undefined || filterList[0]?.size?.length !== 0 &&
-
 
                                                         <Accordion.Item eventKey="3" className='mt-20'>
                                                             <Accordion.Header>
