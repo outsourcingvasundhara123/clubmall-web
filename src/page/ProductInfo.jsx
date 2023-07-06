@@ -33,8 +33,13 @@ import { handelProductDetail } from '../helper/constants'
 import { useParams } from 'react-router-dom';
 import { RWebShare } from "react-web-share";
 import { FiUpload } from 'react-icons/fi'
+import { isMobile } from 'react-device-detect';
+import { firebaseInstance } from '../firebase';
+
 
 const ProductInfo = () => {
+
+
     const { getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
@@ -66,6 +71,7 @@ const ProductInfo = () => {
     const handlereviewClose = () => setreviewShow(false);
     const { id } = useParams();
     const product_id = id
+    const [shareLink, setShareLink] = useState('');
 
 
     const handelSubCat = (Id) => {
@@ -99,7 +105,6 @@ const ProductInfo = () => {
                 const [productDetail] = await Promise.all([
                     api.get(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
                 ]);
-                console.log(productDetail, "productDetail");
                 const productData = productDetail.data.data;
                 setProduct(productData);
                 setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
@@ -124,28 +129,28 @@ const ProductInfo = () => {
         }
     };
 
-    const getProductReview = async () => {
-        startAnimation()
-        const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+    // const getProductReview = async () => {
+    //     startAnimation()
+    //     const apiTyp = isLoggedIn ? api.postWithToken : api.post;
 
-        try {
-            if (product_id) {
-                const [productReview] = await Promise.all([
-                    apiTyp(`${serverURL + "product-review-list"}`, {
-                        "action": "list",
-                        "filter_by": [],
-                        "rating_value": [],
-                        "sort_by": "rating",
-                        product_id: product_id, page: "1"
-                    })
-                ]);
+    //     try {
+    //         if (product_id) {
+    //             const [productReview] = await Promise.all([
+    //                 apiTyp(`${serverURL + "product-review-list"}`, {
+    //                     "action": "list",
+    //                     "filter_by": [],
+    //                     "rating_value": [],
+    //                     "sort_by": "rating",
+    //                     product_id: product_id, page: "1"
+    //                 })
+    //             ]);
 
-            }
+    //         }
 
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
 
     useEffect(() => {
@@ -191,9 +196,11 @@ const ProductInfo = () => {
 
     const handleCart = async (e) => {
 
+        // console.log(productColorActive,"productColorActive");
+
         try {
 
-            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
+            if ( productColorActive || (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -251,6 +258,49 @@ const ProductInfo = () => {
         }
     };
 
+    const call = (link) => {
+
+        if (isMobile) {
+            window.open(link, '_blank');
+        } else {
+            // If the device is not mobile, log 'false' to the console
+            console.log("web");
+            handleShow();
+            setPerActive('Group')
+        }
+
+    };
+
+    const generateDynamicLink = async (productId) => {
+        
+        const response = await api.post(
+            'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
+            {
+              "dynamicLinkInfo": {
+                "domainUriPrefix": "https://clubmall.page.link",
+                "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
+                "androidInfo": {
+                  "androidPackageName": "com.clubmall"
+                },
+                "iosInfo": {
+                  "iosBundleId": "com.clubmall"
+                }
+              },
+              "suffix": {
+                "option": "SHORT"
+              }
+            }
+          );
+      
+
+          call(response.data.shortLink)
+
+          console.log('Short dynamic link:', response.data.shortLink);
+      };
+
+    const groupPriceShare = (id) => {
+        generateDynamicLink(id)
+    }
 
     return (
         <>
@@ -312,9 +362,9 @@ const ProductInfo = () => {
                                         <div className='position-relative'>
                                             <RWebShare
                                                 data={{
-                                                    text: "Like humans, flamingos make friends for life",
-                                                    url:  window.location.href,
-                                                    title: "Flamingos",
+                                                    text: "Hy Check out this product on Clubmall you will get a big discount",
+                                                    url: window.location.href,
+                                                    title: "Clubmall",
                                                 }}
                                                 sites={[
                                                     "facebook",
@@ -322,8 +372,9 @@ const ProductInfo = () => {
                                                     "whatsapp",
                                                     "telegram",
                                                     "linkedin",
-                                                  ]}                                               
-                                                   onClick={() => console.log("shared successfully!")}
+                                                    "instagram"
+                                                ]}
+                                                onClick={() => console.log("shared successfully!")}
                                             >
                                                 <Button className='wishlist-btn'><FiUpload /></Button>
                                             </RWebShare>
@@ -340,7 +391,7 @@ const ProductInfo = () => {
                                                 </div>
                                             </div>
                                             <div className='d-flex align-items-center gap-2 verified'>
-                                                <img src='./img/product_def/verified.png' alt='' />
+                                                <img src='../img/product_def/verified.png' alt='' />
                                                 <span>All reviews are from verified buyers</span>
                                             </div>
                                         </div>
@@ -450,11 +501,12 @@ const ProductInfo = () => {
                                                 <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
                                                     ${Product?.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
-                                                    handleShow();
-                                                    setPerActive('Group')
+                                                    groupPriceShare(Product?.productList?._id)
+                                                   
                                                 }}>Group Price: <br />
                                                     ${Product?.productList?.group_price}</Button>
                                             </div>
+                                        
 
                                             {/* <p className='interest mt-3'>4 interest-free installments of <span>$4.25</span> with
                                                 <img src='./img/after.png' alt='' />
@@ -635,7 +687,7 @@ const ProductInfo = () => {
 
                                             <div className='shipping-def mt-4'>
                                                 <h5 className='info-title mt-4 mb-2'>Shop with confidence</h5>
-                                                <p className='security-line'><img src='./img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
+                                                <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
                                                 <ul>
                                                     <div>
                                                         <li>Safe payment</li>
@@ -919,16 +971,16 @@ const ProductInfo = () => {
                             <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
                                 <Modal.Body>
                                     <div className='text-center p-3 p-sm-4'>
-                                        <img src='./img/modal-logo.png' alt='' />
+                                        <img src='../img/modal-logo.png' alt='' />
                                         <h5 className='my-3'>Get the full experience on <br /> the app</h5>
                                         <p>Follow you favoritevendor accounts,
                                             explore new product and message the <br /> vendor</p>
                                         <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
                                             <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
-                                                <img src='./img/playstore.png' alt='' />
+                                                <img src='../img/playstore.png' alt='' />
                                             </NavLink>
                                             <NavLink href='https://apps.apple.com/us/app/clubmall/id6444752184' target='_blank'>
-                                                <img src='./img/app.png' alt='' />
+                                                <img src='../img/app.png' alt='' />
                                             </NavLink>
                                         </div>
                                     </div>

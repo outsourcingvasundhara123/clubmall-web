@@ -379,9 +379,9 @@ const WrappedCart = () => {
                                                             cartList.list && cartList.list?.map((e, i) => {
                                                                 return (
 
-                                                                    <div className='cart-items pointer' onClick={() => handelProductDetail(e.product_details._id)} key={i} >
+                                                                    <div className='cart-items ' key={i} >
 
-                                                                        <div className='items-img select-all d-flex align-items-center'>
+                                                                        <div onClick={() => handelProductDetail(e.product_details._id)}  className='pointer items-img select-all d-flex align-items-center'>
                                                                             {/* <input
                                                                             id='select-all'
                                                                             type='checkbox'
