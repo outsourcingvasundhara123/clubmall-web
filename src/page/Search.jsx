@@ -14,16 +14,17 @@ import { CartContext } from '../context/CartContext';
 const Search = () => {
 
     //   const [searchPage, setSearchPage] = useState(1);
-    const {is_search, sellIs_wished,setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+    const { is_search, sellIs_wished, setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     useEffect(() => {
         getSearchedProduct();
-    }, [searchPage,is_search]);
+    }, [searchPage, is_search]);
 
 
     return (
         <>
+            <h1 className='d-none'></h1>
             {
                 loading && !viewMoreLodr ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -64,7 +65,7 @@ const Search = () => {
                                                     // secper={e.secper && e.secper }
                                                     // off={e.discount_percentage && e.discount_percentage}
                                                     path={searchUrl && searchUrl}
-                                                    // color={e.sku_attributes.color}
+                                                // color={e.sku_attributes.color}
                                                 />
                                             )
                                         })

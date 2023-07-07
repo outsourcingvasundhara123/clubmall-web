@@ -94,7 +94,7 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
-                  if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || (!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login" ) {
+                  if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || (!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
                     window.location.href = "/"
                   } else {
                     window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
@@ -129,7 +129,7 @@ const LogIn = () => {
   const googlelogin = useGoogleLogin({
 
     onSuccess: async (respose) => {
-      console.log(respose,"respose");
+      console.log(respose, "respose");
       try {
         const res = await axios.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -153,7 +153,7 @@ const LogIn = () => {
             login(res.data.data.user);
             setTimeout(() => {
               setValues(initialValues);
-              if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || (!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login" ) {
+              if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || (!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
                 window.location.href = "/"
               } else {
                 window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
@@ -308,6 +308,7 @@ const LogIn = () => {
 
   return (
     <>
+      <h1 className='d-none'></h1>
 
       <SucessSnackBar
         open={sucessSnackBarOpen}

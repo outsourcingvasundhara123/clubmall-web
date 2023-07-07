@@ -2959,7 +2959,7 @@ del {
     display: none;
 }
 
-.profile .preview{
+.profile .preview {
     width: fit-content;
 }
 
@@ -5170,6 +5170,13 @@ input[type='radio'] {
     font-size: 20px;
 }
 
+@media (max-width: 668px) {
+    .wishlist-btn {
+        bottom: 78px;
+        font-size: 15px;
+    }
+}
+
 .filter-show {
     display: none;
 }
@@ -6048,17 +6055,17 @@ input[type='radio'] {
     font-weight: 600;
 }
 
-.empty-wishlist{
+.empty-wishlist {
     margin-top: 130px;
 }
 
 @media (max-width:512px) {
-    .empty-wishlist{
+    .empty-wishlist {
         margin-top: 50px;
     }
 }
 
-.delete-comment{
+.delete-comment {
     font-size: 20px;
     display: flex;
     align-items: center;

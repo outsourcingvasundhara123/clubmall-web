@@ -79,49 +79,49 @@ const Categories = () => {
             } else {
                 setLoading(true);
             }
-        if(Categorie_id){
-            const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-            let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
-            let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
-            var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
-            setSubCatList(subcat[0]?.child)
+            if (Categorie_id) {
+                const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+                let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
+                let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
+                var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
+                setSubCatList(subcat[0]?.child)
 
-            if (subCat === null) {
-                let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
-                setSubCat(cat?.name)
-            }
-            setCatName(subcat[0]?.name)
-            const [postListResponse] = await Promise.all([
-                apiTyp(`${serverURL + PRODUCTList}`, {
-                    "product_list_type": "by-filters",
-                    product_category_one_id: Categorie_id,
-                    product_category_two_id: subCart_id?._id,
-                    color: productColorActive,
-                    size: myFilter.size,
-                    type: myFilter.type,
-                    patten_type: myFilter.patten_type,
-                    material: myFilter.material,
-                    min_price: range[0],
-                    max_price: range[1],
-                    page: page
-                }),
-            ]);
-            // console.log(postListResponse,"postListResponse");
-            setSubCatId(subCart_id?._id)
-            const postsData = postListResponse.data.data;
-            setUrl(postsData.productImagePath)
-            if (viewCalled === true) {
-                const updateProductList = [...postList, ...postsData.productListArrObj]
-                    .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-                setPostList(updateProductList);
+                if (subCat === null) {
+                    let cat = subcat[0]?.child.find(e => e?._id == selectedSub)
+                    setSubCat(cat?.name)
+                }
+                setCatName(subcat[0]?.name)
+                const [postListResponse] = await Promise.all([
+                    apiTyp(`${serverURL + PRODUCTList}`, {
+                        "product_list_type": "by-filters",
+                        product_category_one_id: Categorie_id,
+                        product_category_two_id: subCart_id?._id,
+                        color: productColorActive,
+                        size: myFilter.size,
+                        type: myFilter.type,
+                        patten_type: myFilter.patten_type,
+                        material: myFilter.material,
+                        min_price: range[0],
+                        max_price: range[1],
+                        page: page
+                    }),
+                ]);
+                // console.log(postListResponse,"postListResponse");
+                setSubCatId(subCart_id?._id)
+                const postsData = postListResponse.data.data;
+                setUrl(postsData.productImagePath)
+                if (viewCalled === true) {
+                    const updateProductList = [...postList, ...postsData.productListArrObj]
+                        .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+                    setPostList(updateProductList);
+                } else {
+                    setPostList(postsData.productListArrObj);
+                }
+                setViewmoreLoder(false)
+                stopAnimation()
             } else {
-                setPostList(postsData.productListArrObj);
+                navigate("/")
             }
-            setViewmoreLoder(false)
-            stopAnimation()
-        }else{
-            navigate("/")
-        }   
         } catch (error) {
             errorResponse(error, setMyMessage);
             console.log(error);
@@ -220,7 +220,7 @@ const Categories = () => {
 
     return (
         <>
-
+            <h1 className='d-none'></h1>
 
             <SucessSnackBar
                 open={sucessSnackBarOpen}
@@ -269,7 +269,7 @@ const Categories = () => {
                                     filterShow ?
                                         <div className='filter-option p-4 mt-4 sticky-filter'>
                                             <div className='d-flex align-items-center justify-content-end'>
-                                                <Button className='clear-all-filter' onClick={ () => ( setMyFilter(initial), setRange([0, 100]), setProductColorActive())} >Clear all</Button>
+                                                <Button className='clear-all-filter' onClick={() => (setMyFilter(initial), setRange([0, 100]), setProductColorActive())} >Clear all</Button>
                                             </div>
                                             <div className='filter-box'>
                                                 <Accordion alwaysOpen>

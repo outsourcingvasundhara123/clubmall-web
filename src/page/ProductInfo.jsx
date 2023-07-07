@@ -39,7 +39,7 @@ import { isMobile } from 'react-device-detect';
 const ProductInfo = () => {
 
 
-    const { groupPriceShare,handleShow,setShow,show,perActive,setPerActive,handleClose, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { groupPriceShare, handleShow, setShow, show, perActive, setPerActive, handleClose, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const defaultProfile = `../img/for_you/defaultuser.png`
@@ -196,7 +196,7 @@ const ProductInfo = () => {
 
         try {
 
-            if ( productColorActive || (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
+            if (productColorActive || (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -268,7 +268,7 @@ const ProductInfo = () => {
     // };
 
     // const generateDynamicLink = async (productId) => {
-        
+
     //     const response = await api.post(
     //         'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
     //         {
@@ -287,7 +287,7 @@ const ProductInfo = () => {
     //           }
     //         }
     //       );
-      
+
 
     //       call(response.data.shortLink)
 
@@ -300,7 +300,7 @@ const ProductInfo = () => {
 
     return (
         <>
-
+            <h1 className='d-none'></h1>
             <SucessSnackBar
                 open={sucessSnackBarOpenProductDtl}
                 setOpen={setSucessSnackBarOpenProductDtl}
@@ -498,11 +498,11 @@ const ProductInfo = () => {
                                                     ${Product?.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(Product?.productList?._id)
-                                                   
+
                                                 }}>Group Price: <br />
                                                     ${Product?.productList?.group_price}</Button>
                                             </div>
-                                        
+
 
                                             {/* <p className='interest mt-3'>4 interest-free installments of <span>$4.25</span> with
                                                 <img src='./img/after.png' alt='' />

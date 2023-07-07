@@ -37,14 +37,15 @@ const Trending = () => {
         try {
             startAnimation()
             const [postListResponse] = await Promise.all([
-                api.post(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product", 
-                page: page
-            }),
+                api.post(`${serverURL + PRODUCTList}`, {
+                    "product_list_type": "trending-product",
+                    page: page
+                }),
             ]);
             const postsData = postListResponse.data.data;
             // console.log(postsData,"postsData");
             const updatedProductList = [...postList, ...postsData.productListArrObj]
-            .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+                .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
             setPostList(updatedProductList);
             // console.log(postsData,"postsData");
             setURL(postsData.productImagePath)
@@ -55,7 +56,7 @@ const Trending = () => {
         }
     };
 
-    console.log(postList,"postList");
+    console.log(postList, "postList");
 
     useEffect(() => {
         getTrendingProduct();
@@ -63,6 +64,7 @@ const Trending = () => {
 
     return (
         <>
+            <h1 className='d-none'></h1>
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
@@ -92,14 +94,14 @@ const Trending = () => {
                                                     off={e.discount_percentage}
                                                     path={url && url}
                                                     color={e.sku_attributes.color}
-                                                    colorUrl = {e.sku_details}
-                                                    // is_wishList={e.wishList && e.wishList}
+                                                    colorUrl={e.sku_details}
+                                                // is_wishList={e.wishList && e.wishList}
                                                 />
                                             )
                                         })
                                     }
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1) , setViewmoreLoder(true)) } >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} >{viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>

@@ -5,6 +5,7 @@ import { NavLink } from 'react-bootstrap'
 const Policy = () => {
     return (
         <>
+            <h1 className='d-none'></h1>
             <div className='policy pb-5'>
                 <div className='container-cos'>
                     <h3>Privacy Policy</h3>

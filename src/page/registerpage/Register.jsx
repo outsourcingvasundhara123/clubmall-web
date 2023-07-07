@@ -279,7 +279,7 @@ function Register() {
     return (
 
         <>
-
+            <h1 className='d-none'></h1>
             <SucessSnackBar
                 open={sucessSnackBarOpen}
                 setOpen={setSucessSnackBarOpen}

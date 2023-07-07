@@ -391,7 +391,7 @@ const ForYou = () => {
   return (
 
     <>
-
+      <h1 className='d-none'></h1>
       {
         loading && (
           <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />

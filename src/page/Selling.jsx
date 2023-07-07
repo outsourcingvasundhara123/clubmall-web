@@ -16,7 +16,7 @@ import { PRODUCTCATEGORY } from '../helper/endpoints'
 
 const Selling = () => {
 
-    const {handelwishSell, sellIs_wished,setLoading,loading, viewMoreLodr,startAnimation,stopAnimation,player, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList,  wishsellProducUrl, category, currentUser,
+    const { handelwishSell, sellIs_wished, setLoading, loading, viewMoreLodr, startAnimation, stopAnimation, player, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, wishsellProducUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const isLoggedIn = Is_Login();
@@ -31,12 +31,12 @@ const Selling = () => {
     //       player.current.play(); // Check if player.current is not null before accessing play()
     //     }
     //   };
-    
+
     //   const stopAnimation = () => {
     //     setLoading(false);
-        
+
     //   };
-    
+
 
     const getCategory = async () => {
         startAnimation()
@@ -62,7 +62,7 @@ const Selling = () => {
         getSellProducts();
         getWishList()
         getProducts()
-    }, [womanpage, manpage, kidspage, favoritepage, sellingCategory, sellIs_wished , isLoggedIn]);
+    }, [womanpage, manpage, kidspage, favoritepage, sellingCategory, sellIs_wished, isLoggedIn]);
 
     useEffect(() => {
         getCategoryWeb()
@@ -72,6 +72,7 @@ const Selling = () => {
     return (
 
         <>
+            <h1 className='d-none'></h1>
 
             <SucessSnackBar
                 open={sucessSnackBarOpen}
@@ -105,7 +106,7 @@ const Selling = () => {
                                     {
                                         sellCategory && sellCategory.firstHalf?.slice(0, 6).map((e) => {
                                             return (
-                                                <div className='cate-box text-center pointer' onClick={() => ( handelCategorydata(e._id) , localStorage.removeItem("selectedSubcategories")) } >
+                                                <div className='cate-box text-center pointer' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >
                                                     <div className='cat-img-round'>
                                                         <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="100%" />
                                                     </div>
@@ -134,7 +135,7 @@ const Selling = () => {
                                                         <h5>{e.name}</h5>
                                                         <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="80%" className='my-4' />
                                                         <div className='d-flex justify-content-center'>
-                                                            <Button className='shop-btn' onClick={() => ( handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories")) } >Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                            <Button className='shop-btn' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                         </div>
                                                     </div>
                                                 </Col>

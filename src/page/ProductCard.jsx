@@ -28,6 +28,7 @@ const ProductCard = ({ product, productImagePath, handleShow }) => {
 
     return (
         <div className='product-card explore-card  pointer'>
+            <h1 className='d-none'></h1>
             <div className='position-relative'>
                 <img onClick={() => handelProductDetail(product._id)} alt={product.name} src={productImagePath + product._id + "/" + product.product_images[0]?.file_name} className='img-fluid' />
                 <Button className='add-to-card-btn' onClick={() => handleShow(product._id)} >Add to Cart</Button>
@@ -59,4 +60,3 @@ const ProductCard = ({ product, productImagePath, handleShow }) => {
 
 export default ProductCard
 
-   
