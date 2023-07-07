@@ -9,7 +9,7 @@ const InstallApp = (props) => {
             <Modal show={props.show} onHide={props.Hide} centered className='welcome-modal'>
                 <Modal.Body>
                     <div className='text-center p-3 p-sm-4'>
-                        <img src='./img/modal-logo.png' alt='' />
+                        <img src='../img/modal-logo.png' alt='' />
                         <h5 className='my-3'>Get the full experience on <br /> the app</h5>
                         <p>Follow you favorite vendor accounts,
                             explore new product and message the <br /> vendor</p>
