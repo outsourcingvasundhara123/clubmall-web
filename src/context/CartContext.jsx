@@ -5,6 +5,7 @@ import api from '../helper/api';
 import { Is_Login } from '../helper/IsLogin'
 import { errorResponse, afterLogin } from '../helper/constants';
 import { data } from 'jquery';
+import { isMobile } from 'react-device-detect';
 
 // Create the cart context
 export const CartContext = createContext();
@@ -60,6 +61,13 @@ export const CartProvider = ({ children }) => {
 
   const [couponId, setCouponId] = useState([]);
   const [cartList, setCartList] = useState([]);
+
+  //group price state
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+  const [perActive, setPerActive] = useState('Individual');
+
 
   const startAnimation = () => {
     if (player.current) {
@@ -416,9 +424,59 @@ export const CartProvider = ({ children }) => {
     setIs_search(1)
   };
 
+// dynamic link functions 
+
+const call = (link) => {
+
+  if (isMobile) {
+      window.open(link, '_blank');
+  } else {
+      // If the device is not mobile, log 'false' to the console
+      console.log("web");
+      handleShow();
+      setPerActive('Group')
+  }
+
+};
+
+const generateDynamicLink = async (productId) => {
+  
+  const response = await api.post(
+      'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
+      {
+        "dynamicLinkInfo": {
+          "domainUriPrefix": "https://clubmall.page.link",
+          "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
+          "androidInfo": {
+            "androidPackageName": "com.clubmall"
+          },
+          "iosInfo": {
+            "iosBundleId": "com.clubmall"
+          }
+        },
+        "suffix": {
+          "option": "SHORT"
+        }
+      }
+    );
+
+
+    call(response.data.shortLink)
+
+    console.log('Short dynamic link:', response.data.shortLink);
+};
+
+const groupPriceShare = (id) => {
+  generateDynamicLink(id)
+}
+
+// dynamic link functions ---- end -----
+
+
   return (
 
     <CartContext.Provider value={{
+      groupPriceShare,handleShow,perActive,setPerActive,handleClose,show,setShow,
       itemShow, setItemShow, getCartData,setCartList,setCouponId,cartList,couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
