@@ -39,11 +39,11 @@ import { isMobile } from 'react-device-detect';
 const ProductInfo = () => {
 
 
-    const { groupPriceShare, handleShow, setShow, show, perActive, setPerActive, handleClose, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const defaultProfile = `../img/for_you/defaultuser.png`
-    // const [perActive, setPerActive] = useState('Individual');
+    const [perActive, setPerActive] = useState('Individual');
     const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
     const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
     const [MymessageProductDtl, setMyMessageProductDtl] = useState("");
@@ -54,9 +54,9 @@ const ProductInfo = () => {
     const handleDrawerClose = () => setDrawer(false);
     const handleDrawerShow = () => setDrawer(true);
     const serverURL = getServerURL();
-    // const [show, setShow] = useState(false);
-    // const handleShow = () => setShow(true);
-    // const handleClose = () => setShow(false);
+    const [show, setShow] = useState(false);
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
     const [Product, setProduct] = useState({})
     // const [productList, setProductList] = useState([]);
     const [favoriteProductList, setFavoriteProductList] = useState([]);
@@ -71,6 +71,26 @@ const ProductInfo = () => {
     const { id } = useParams();
     const product_id = id
     const [shareLink, setShareLink] = useState('');
+
+    // wishlist 
+    const [isWishlist, setIsWishlist] = useState(Product.isWishList === 1);
+
+    useEffect(() => {
+        setIsWishlist(Product.isWishList === 1);
+    }, [Product.isWishList]);
+
+    const handleWishlistClick = async () => {
+        const newWishlistStatus = !isWishlist;
+        setIsWishlist(newWishlistStatus);
+
+        if (newWishlistStatus) {
+            await addWishList(Product.productList?._id, "product-wishlist");
+        } else {
+            await addWishList(Product.productList?._id, "product-delete-wishlist");
+        }
+    }
+
+
 
     const handelSubCat = (Id) => {
         localStorage.setItem("selectedSubcategories", Id);
@@ -99,9 +119,10 @@ const ProductInfo = () => {
     const getProductDetail = async () => {
         startAnimation()
         try {
+            const apiTyp = isLoggedIn ? api.getWithToken : api.get;
             if (product_id && product_id !== undefined) {
                 const [productDetail] = await Promise.all([
-                    api.get(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
+                    apiTyp(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
                 ]);
                 const productData = productDetail.data.data;
                 setProduct(productData);
@@ -130,7 +151,6 @@ const ProductInfo = () => {
     // const getProductReview = async () => {
     //     startAnimation()
     //     const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-
     //     try {
     //         if (product_id) {
     //             const [productReview] = await Promise.all([
@@ -142,7 +162,6 @@ const ProductInfo = () => {
     //                     product_id: product_id, page: "1"
     //                 })
     //             ]);
-
     //         }
 
     //     } catch (error) {
@@ -150,11 +169,10 @@ const ProductInfo = () => {
     //     }
     // };
 
-
     useEffect(() => {
         // getProductReview()
         getProductDetail();
-    }, [product_id]);
+    }, [product_id, isLoggedIn, isWishlist, add_wished_Called]);
 
 
     const getproductlist = async () => {
@@ -254,50 +272,18 @@ const ProductInfo = () => {
         }
     };
 
-    // const call = (link) => {
+    const groupPriceShare = (id) => {
+        if (isMobile) {
+            generateDynamicLink(id)
+        } else {
+            // If the device is not mobile, log 'false' to the console
+            handleShow();
+            setPerActive('Group')
+        }
+    }
 
-    //     if (isMobile) {
-    //         window.open(link, '_blank');
-    //     } else {
-    //         // If the device is not mobile, log 'false' to the console
-    //         console.log("web");
-    //         handleShow();
-    //         setPerActive('Group')
-    //     }
-
-    // };
-
-    // const generateDynamicLink = async (productId) => {
-
-    //     const response = await api.post(
-    //         'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
-    //         {
-    //           "dynamicLinkInfo": {
-    //             "domainUriPrefix": "https://clubmall.page.link",
-    //             "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
-    //             "androidInfo": {
-    //               "androidPackageName": "com.clubmall"
-    //             },
-    //             "iosInfo": {
-    //               "iosBundleId": "com.clubmall"
-    //             }
-    //           },
-    //           "suffix": {
-    //             "option": "SHORT"
-    //           }
-    //         }
-    //       );
-
-
-    //       call(response.data.shortLink)
-
-    //       console.log('Short dynamic link:', response.data.shortLink);
-    //   };
-
-    // const groupPriceShare = (id) => {
-    //     generateDynamicLink(id)
-    // }
-
+    console.log(Product.isWishList, "Product.isWishList");
+    console.log(isWishlist, "isWishlist");
     return (
         <>
             <h1 className='d-none'></h1>
@@ -355,7 +341,18 @@ const ProductInfo = () => {
 
                                 <Row className='mt-4'>
                                     <Col lg={6} md={12}>
+
                                         <div className='position-relative'>
+
+                                            {
+                                                isWishlist === false &&
+                                                <Button onClick={handleWishlistClick} className='wishlist-btn-cos'><img src='../img/header/wishlist.png' alt='' width="20px" /></Button>
+                                            }
+                                            {
+                                                isWishlist === true &&
+                                                <Button onClick={handleWishlistClick} className='wishlist-btn-cos'><img src='../img/Vector.png' alt='' /></Button>
+                                            }
+
                                             <RWebShare
                                                 data={{
                                                     text: "Hy Check out this product on Clubmall you will get a big discount",
@@ -376,6 +373,7 @@ const ProductInfo = () => {
                                             </RWebShare>
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
                                         </div>
+
                                         <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
                                             <div className='d-flex align-items-center gap-3'>
                                                 <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
@@ -969,7 +967,7 @@ const ProductInfo = () => {
                                     <div className='text-center p-3 p-sm-4'>
                                         <img src='../img/modal-logo.png' alt='' />
                                         <h5 className='my-3'>Get the full experience on <br /> the app</h5>
-                                        <p>Follow you favoritevendor accounts,
+                                        <p>Follow you favorite vendor accounts,
                                             explore new product and message the <br /> vendor</p>
                                         <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
                                             <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>

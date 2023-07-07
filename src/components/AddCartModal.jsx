@@ -20,10 +20,11 @@ import { handelProductDetail } from '../helper/constants';
 import InstallApp from '../components/InstallApp';
 import { CartContext } from '../context/CartContext'
 import { useLocation } from 'react-router-dom';
+import { isMobile } from 'react-device-detect';
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const {getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {generateDynamicLink,  getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -45,6 +46,7 @@ const AddCartModal = (props) => {
     }
 
     const handleShow = () => setShow(true);
+
     // setProductColorActive()
     const startAnimation = () => {
         if (player.current) {
@@ -164,6 +166,18 @@ const AddCartModal = (props) => {
         }
     };
 
+    const groupPriceShare = (id) => {
+        console.log(isMobile,"isMobile");
+        if (isMobile) {
+          generateDynamicLink(id)
+        }  else {
+          // If the device is not mobile, log 'false' to the console
+          handleShow();
+          setPerActive('Group')
+        }
+      }
+    
+
     return (
         <>
             <Modal
@@ -220,13 +234,11 @@ const AddCartModal = (props) => {
                                                 <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
                                                     ${modelProduct.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
-                                                    handleShow();
-                                                    setPerActive('Group')
+                                                    groupPriceShare(modelProduct.productList?._id)
                                                     props.handleClose()
                                                 }}>Group Price: <br />
                                                     ${modelProduct.productList?.group_price} </Button>
                                             </div>
-
 
                                             <div className='product-color mt-4'>
                                             <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>

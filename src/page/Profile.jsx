@@ -924,7 +924,6 @@ const Profile = () => {
                                         </Tab.Pane>
 
 
-
                                         <Tab.Pane eventKey="security">
                                             <div className='security-main'>
                                                 <div className='d-flex align-items-center justify-content-between pb-4 total-usd'>
@@ -1102,7 +1101,7 @@ const Profile = () => {
                                             value={values.country_id}
                                             onChange={handleChange}
                                             className='select-arrow'>
-                                            <option>Select Country</option>
+                                            <option value="" >Select Country</option>
                                             {(countryList.length <= 0) && <option
                                             >loding....</option>}
                                             {
@@ -1159,7 +1158,7 @@ const Profile = () => {
                                             onClick={checkforcounty} onChange={handleChange}
                                             value={values.state_id}
                                             name='state_id' className='select-arrow'>
-                                            <option>Select State</option>
+                                            <option value="" >Select State</option>
                                             {errors.country_id == undefined && (
                                                 <>
                                                     {

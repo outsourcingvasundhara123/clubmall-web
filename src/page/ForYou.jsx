@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
 import { Button, Dropdown, Form, Modal, NavLink } from 'react-bootstrap'
 import { POSTSList } from "../helper/endpoints";
@@ -22,8 +22,12 @@ import InstallApp from '../components/InstallApp';
 import { MdOutlineClose } from 'react-icons/md'
 import { Rating } from '@mui/material';
 import { MdDelete } from 'react-icons/md'
+import { CartContext } from '../context/CartContext'
+import { isMobile } from 'react-device-detect';
 
 const ForYou = () => {
+  
+  const { generateDynamicLink, handleShowhandleClose, getCartData, getWishList, add_wished_Called, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
   const navigate = useNavigate();
@@ -368,7 +372,6 @@ const ForYou = () => {
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
 
-
       } else {
         // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
@@ -383,6 +386,18 @@ const ForYou = () => {
   useEffect(() => {
     getPosts();
   }, [page, isLoggedIn]);
+
+
+  const groupPriceShare = (id) => {
+    console.log(isMobile,"isMobile");
+    if (isMobile) {
+      generateDynamicLink(id)
+    }  else {
+      // If the device is not mobile, log 'false' to the console
+      handleShow();
+      setPerActive('Group')
+    }
+  }
 
 
   // console.log(modelData, "modelData");
@@ -468,7 +483,8 @@ const ForYou = () => {
                     <div className='price'>
                       <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} >Individual Price <br />
                         ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
-                      <Button onClick={handleAppDownloadShow}>Group Price: <br />
+                      <Button onClick={() => 
+                        groupPriceShare(e.products_obj[0]?.product_id?._id)} >Group Price: <br />
                         ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
                     </div>
 
@@ -733,7 +749,7 @@ const ForYou = () => {
                       <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
                         <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
                           $ {e.product_id?.individual_price} </Button>
-                        <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => (handleAppDownloadShow(), setPerActive('Group'))}>Group Price <br />
+                        <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => groupPriceShare(e.product_id?._id)}>Group Price <br />
                           ${e.product_id?.group_price} </Button>
                       </div>
                     </div>

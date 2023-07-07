@@ -425,15 +425,11 @@ export const CartProvider = ({ children }) => {
   };
 
   // dynamic link functions 
-
   const call = (link) => {
-
     window.open(link, '_blank');
-
   };
 
   const generateDynamicLink = async (productId) => {
-
     const response = await api.post(
       'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
       {
@@ -452,22 +448,8 @@ export const CartProvider = ({ children }) => {
         }
       }
     );
-
-
     call(response.data.shortLink)
   };
-
-  const groupPriceShare = (id) => {
-
-    if (isMobile) {
-      generateDynamicLink(id)
-    } else {
-      // If the device is not mobile, log 'false' to the console
-      handleShow();
-      setPerActive('Group')
-    }
-
-  }
 
   // dynamic link functions ---- end -----
 
@@ -475,7 +457,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      groupPriceShare, handleShow, perActive, setPerActive, handleClose, show, setShow,
+      generateDynamicLink,
       itemShow, setItemShow, getCartData, setCartList, setCouponId, cartList, couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb

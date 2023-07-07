@@ -5176,6 +5176,22 @@ input[type='radio'] {
         font-size: 15px;
     }
 }
+.wishlist-btn-cos{
+    border: none;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 99;
+    width: 40px;
+    height: 40px;
+    background-color: #FFF2F2 !important;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
 
 .filter-show {
     display: none;
