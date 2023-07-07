@@ -96,6 +96,7 @@ const CategoryList = () => {
 
     return (
         <div className='categories-slider mt-5 position-relative'>
+            <h1 className='d-none'></h1>
             {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>

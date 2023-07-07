@@ -422,6 +422,7 @@ const Profile = () => {
 
     return (
         <>
+            <h1 className='d-none'></h1>
             <SucessSnackBar
                 open={sucessSnackBarOpenProfile}
                 setOpen={setsucessSnackBarOpenProfile}

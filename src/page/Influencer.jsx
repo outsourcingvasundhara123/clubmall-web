@@ -5,6 +5,7 @@ import { Button, Col, Row } from 'react-bootstrap'
 const Influencer = () => {
     return (
         <>
+            <h1 className='d-none'></h1>
             <div className='influencer pb-5'>
                 <div className='container-cos'>
                     <div className='contact-title text-center'>

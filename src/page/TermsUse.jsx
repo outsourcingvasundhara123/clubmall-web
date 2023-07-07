@@ -5,6 +5,7 @@ import { Col, NavLink, Row } from 'react-bootstrap'
 const TermsUse = () => {
     return (
         <>
+            <h1 className='d-none'></h1>
             <div className='about pt-4 pt-lg-0 pb-5'>
                 <div className='clubmall-work space-top'>
                     <div className='container-cos'>

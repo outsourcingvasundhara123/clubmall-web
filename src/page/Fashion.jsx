@@ -37,7 +37,7 @@ const Fashion = () => {
     const handleShow = (id) => {
         setProduct_id(id)
         setShow(true);
-    } 
+    }
 
 
     const player = useRef();
@@ -59,7 +59,7 @@ const Fashion = () => {
 
     return (
         <>
-
+            <h1 className='d-none'></h1>
             <SucessSnackBar
                 open={sucessSnackBarOpen}
                 setOpen={setSucessSnackBarOpen}
