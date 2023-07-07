@@ -451,7 +451,6 @@ export const CartProvider = ({ children }) => {
     call(response.data.shortLink)
   };
 
-
   // dynamic link functions ---- end -----
 
 

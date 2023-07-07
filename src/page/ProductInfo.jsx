@@ -39,7 +39,7 @@ import { isMobile } from 'react-device-detect';
 const ProductInfo = () => {
 
 
-    const { generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const defaultProfile = `../img/for_you/defaultuser.png`
@@ -72,6 +72,26 @@ const ProductInfo = () => {
     const product_id = id
     const [shareLink, setShareLink] = useState('');
 
+    // wishlist 
+    const [isWishlist, setIsWishlist] = useState(Product.isWishList === 1);
+
+    useEffect(() => {
+        setIsWishlist(Product.isWishList === 1);
+    }, [Product.isWishList]);
+
+    const handleWishlistClick = async () => {
+        const newWishlistStatus = !isWishlist;
+        setIsWishlist(newWishlistStatus);
+
+        if (newWishlistStatus) {
+            await addWishList(Product.productList?._id, "product-wishlist");
+        } else {
+            await addWishList(Product.productList?._id, "product-delete-wishlist");
+        }
+    }
+
+
+
     const handelSubCat = (Id) => {
         localStorage.setItem("selectedSubcategories", Id);
         window.location.href = "/categories";
@@ -99,9 +119,10 @@ const ProductInfo = () => {
     const getProductDetail = async () => {
         startAnimation()
         try {
+            const apiTyp = isLoggedIn ? api.getWithToken : api.get;
             if (product_id && product_id !== undefined) {
                 const [productDetail] = await Promise.all([
-                    api.get(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
+                    apiTyp(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
                 ]);
                 const productData = productDetail.data.data;
                 setProduct(productData);
@@ -151,7 +172,7 @@ const ProductInfo = () => {
     useEffect(() => {
         // getProductReview()
         getProductDetail();
-    }, [product_id]);
+    }, [product_id, isLoggedIn, isWishlist, add_wished_Called]);
 
 
     const getproductlist = async () => {
@@ -251,60 +272,18 @@ const ProductInfo = () => {
         }
     };
 
-    // const call = (link) => {
-
-    //     if (isMobile) {
-    //         window.open(link, '_blank');
-    //     } else {
-    //         // If the device is not mobile, log 'false' to the console
-    //         console.log("web");
-    //         handleShow();
-    //         setPerActive('Group')
-    //     }
-
-    // };
-
-    // const generateDynamicLink = async (productId) => {
-
-    //     const response = await api.post(
-    //         'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
-    //         {
-    //           "dynamicLinkInfo": {
-    //             "domainUriPrefix": "https://clubmall.page.link",
-    //             "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
-    //             "androidInfo": {
-    //               "androidPackageName": "com.clubmall"
-    //             },
-    //             "iosInfo": {
-    //               "iosBundleId": "com.clubmall"
-    //             }
-    //           },
-    //           "suffix": {
-    //             "option": "SHORT"
-    //           }
-    //         }
-    //       );
-
-    //       call(response.data.shortLink)
-
-    //       console.log('Short dynamic link:', response.data.shortLink);
-    //   };
-
-    // const groupPriceShare = (id) => {
-    //     generateDynamicLink(id)
-    // }
-    
-  const groupPriceShare = (id) => {
-    console.log(isMobile,"isMobile");
-    if (isMobile) {
-      generateDynamicLink(id)
-    }  else {
-      // If the device is not mobile, log 'false' to the console
-      handleShow();
-      setPerActive('Group')
+    const groupPriceShare = (id) => {
+        if (isMobile) {
+            generateDynamicLink(id)
+        } else {
+            // If the device is not mobile, log 'false' to the console
+            handleShow();
+            setPerActive('Group')
+        }
     }
-  }
 
+    console.log(Product.isWishList, "Product.isWishList");
+    console.log(isWishlist, "isWishlist");
     return (
         <>
             <h1 className='d-none'></h1>
@@ -365,9 +344,14 @@ const ProductInfo = () => {
 
                                         <div className='position-relative'>
 
-                                            <Button className='wishlist-btn-cos'><img src='../img/header/wishlist.png' alt='' width="20px" /></Button>
-
-                                            <Button className='wishlist-btn-cos'><img src='../img/Vector.png' alt='' /></Button>
+                                            {
+                                                isWishlist === false &&
+                                                <Button onClick={handleWishlistClick} className='wishlist-btn-cos'><img src='../img/header/wishlist.png' alt='' width="20px" /></Button>
+                                            }
+                                            {
+                                                isWishlist === true &&
+                                                <Button onClick={handleWishlistClick} className='wishlist-btn-cos'><img src='../img/Vector.png' alt='' /></Button>
+                                            }
 
                                             <RWebShare
                                                 data={{
