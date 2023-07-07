@@ -34,17 +34,16 @@ import { useParams } from 'react-router-dom';
 import { RWebShare } from "react-web-share";
 import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
-import { firebaseInstance } from '../firebase';
 
 
 const ProductInfo = () => {
 
 
-    const { getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { groupPriceShare,handleShow,setShow,show,perActive,setPerActive,handleClose, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const defaultProfile = `../img/for_you/defaultuser.png`
-    const [perActive, setPerActive] = useState('Individual');
+    // const [perActive, setPerActive] = useState('Individual');
     const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
     const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
     const [MymessageProductDtl, setMyMessageProductDtl] = useState("");
@@ -55,9 +54,9 @@ const ProductInfo = () => {
     const handleDrawerClose = () => setDrawer(false);
     const handleDrawerShow = () => setDrawer(true);
     const serverURL = getServerURL();
-    const [show, setShow] = useState(false);
-    const handleShow = () => setShow(true);
-    const handleClose = () => setShow(false);
+    // const [show, setShow] = useState(false);
+    // const handleShow = () => setShow(true);
+    // const handleClose = () => setShow(false);
     const [Product, setProduct] = useState({})
     // const [productList, setProductList] = useState([]);
     const [favoriteProductList, setFavoriteProductList] = useState([]);
@@ -72,7 +71,6 @@ const ProductInfo = () => {
     const { id } = useParams();
     const product_id = id
     const [shareLink, setShareLink] = useState('');
-
 
     const handelSubCat = (Id) => {
         localStorage.setItem("selectedSubcategories", Id);
@@ -196,8 +194,6 @@ const ProductInfo = () => {
 
     const handleCart = async (e) => {
 
-        // console.log(productColorActive,"productColorActive");
-
         try {
 
             if ( productColorActive || (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
@@ -247,7 +243,7 @@ const ProductInfo = () => {
 
     const handleCopy = () => {
         if (textRef.current) {
-            setMyMessageProductDtl("Item id copyed successfully");
+            setMyMessageProductDtl("Item id copied successfully");
             setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
             const range = document.createRange();
             range.selectNode(textRef.current);
@@ -258,49 +254,49 @@ const ProductInfo = () => {
         }
     };
 
-    const call = (link) => {
+    // const call = (link) => {
 
-        if (isMobile) {
-            window.open(link, '_blank');
-        } else {
-            // If the device is not mobile, log 'false' to the console
-            console.log("web");
-            handleShow();
-            setPerActive('Group')
-        }
+    //     if (isMobile) {
+    //         window.open(link, '_blank');
+    //     } else {
+    //         // If the device is not mobile, log 'false' to the console
+    //         console.log("web");
+    //         handleShow();
+    //         setPerActive('Group')
+    //     }
 
-    };
+    // };
 
-    const generateDynamicLink = async (productId) => {
+    // const generateDynamicLink = async (productId) => {
         
-        const response = await api.post(
-            'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
-            {
-              "dynamicLinkInfo": {
-                "domainUriPrefix": "https://clubmall.page.link",
-                "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
-                "androidInfo": {
-                  "androidPackageName": "com.clubmall"
-                },
-                "iosInfo": {
-                  "iosBundleId": "com.clubmall"
-                }
-              },
-              "suffix": {
-                "option": "SHORT"
-              }
-            }
-          );
+    //     const response = await api.post(
+    //         'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
+    //         {
+    //           "dynamicLinkInfo": {
+    //             "domainUriPrefix": "https://clubmall.page.link",
+    //             "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
+    //             "androidInfo": {
+    //               "androidPackageName": "com.clubmall"
+    //             },
+    //             "iosInfo": {
+    //               "iosBundleId": "com.clubmall"
+    //             }
+    //           },
+    //           "suffix": {
+    //             "option": "SHORT"
+    //           }
+    //         }
+    //       );
       
 
-          call(response.data.shortLink)
+    //       call(response.data.shortLink)
 
-          console.log('Short dynamic link:', response.data.shortLink);
-      };
+    //       console.log('Short dynamic link:', response.data.shortLink);
+    //   };
 
-    const groupPriceShare = (id) => {
-        generateDynamicLink(id)
-    }
+    // const groupPriceShare = (id) => {
+    //     generateDynamicLink(id)
+    // }
 
     return (
         <>
