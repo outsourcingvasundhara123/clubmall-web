@@ -243,7 +243,7 @@ const ProductInfo = () => {
 
     const handleCopy = () => {
         if (textRef.current) {
-            setMyMessageProductDtl("Item id copyed successfully");
+            setMyMessageProductDtl("Item id copied successfully");
             setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
             const range = document.createRange();
             range.selectNode(textRef.current);

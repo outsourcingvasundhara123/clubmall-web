@@ -1,5 +1,5 @@
 import React, { useRef, createContext, useState } from 'react';
-import { WISHLIST, PRODUCTCATEGORY, PRODUCTList , ADDTOCART } from '../helper/endpoints';
+import { WISHLIST, PRODUCTCATEGORY, PRODUCTList, ADDTOCART } from '../helper/endpoints';
 import { getServerURL } from '../helper/envConfig';
 import api from '../helper/api';
 import { Is_Login } from '../helper/IsLogin'
@@ -347,8 +347,8 @@ export const CartProvider = ({ children }) => {
   const getSearchedProduct = async () => {
     try {
       setLoading(true)
-      if(searchKeyWord){
-        let search = searchKeyWord 
+      if (searchKeyWord) {
+        let search = searchKeyWord
         handelSearch(search)
         const [postListResponse] = await Promise.all([
           api.postWithToken(`${serverURL + "search"}`, {
@@ -368,19 +368,19 @@ export const CartProvider = ({ children }) => {
                 self.findIndex((p) => p._id === product._id) === index
             );
             setSearchPostList(updatedProductList);
-          } else{
+          } else {
             setSearchPostList(postsData.data);
           }
           // console.log(updatedProductList,"postsData");
           setSearchURL(postsData.productImagePath);
           setViewmoreLoder(false);
           setLoading(false)
-    
+
         } else {
           stopAnimation();
           // console.log("Invalid data format received");
         }
-      }else{
+      } else {
         setSearchPostList([])
         setSearchURL()
         setViewmoreLoder(false);
@@ -400,48 +400,41 @@ export const CartProvider = ({ children }) => {
     startAnimation()
 
     try {
-        // if (isLoggedIn) {
-        const [poroductResponse] = await Promise.all([
-            api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
+      // if (isLoggedIn) {
+      const [poroductResponse] = await Promise.all([
+        api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
 
-        ]);
+      ]);
 
-        const poroductData = poroductResponse.data.data;
-        setCart(poroductResponse.data.data.list?.length)
-        let ids = poroductData.list?.map((e) => e._id)
-        setCouponId(ids)
-        setCartList(poroductData);
-        stopAnimation()
+      const poroductData = poroductResponse.data.data;
+      setCart(poroductResponse.data.data.list?.length)
+      let ids = poroductData.list?.map((e) => e._id)
+      setCouponId(ids)
+      setCartList(poroductData);
+      stopAnimation()
     } catch (error) {
-        console.log(error);
-        errorResponse(error, setMyMessage);
-        setWarningSnackBarOpen(!warningSnackBarOpen);
+      console.log(error);
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
     }
-};
+  };
 
   const handelSearch = (search) => {
     localStorage.setItem("search", search);
     setIs_search(1)
   };
 
-// dynamic link functions 
+  // dynamic link functions 
 
-const call = (link) => {
+  const call = (link) => {
 
-  if (isMobile) {
-      window.open(link, '_blank');
-  } else {
-      // If the device is not mobile, log 'false' to the console
-      console.log("web");
-      handleShow();
-      setPerActive('Group')
-  }
+    window.open(link, '_blank');
 
-};
+  };
 
-const generateDynamicLink = async (productId) => {
-  
-  const response = await api.post(
+  const generateDynamicLink = async (productId) => {
+
+    const response = await api.post(
       'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
       {
         "dynamicLinkInfo": {
@@ -462,22 +455,28 @@ const generateDynamicLink = async (productId) => {
 
 
     call(response.data.shortLink)
+  };
 
-    console.log('Short dynamic link:', response.data.shortLink);
-};
+  const groupPriceShare = (id) => {
 
-const groupPriceShare = (id) => {
-  generateDynamicLink(id)
-}
+    if (isMobile) {
+      generateDynamicLink(id)
+    } else {
+      // If the device is not mobile, log 'false' to the console
+      handleShow();
+      setPerActive('Group')
+    }
 
-// dynamic link functions ---- end -----
+  }
+
+  // dynamic link functions ---- end -----
 
 
   return (
 
     <CartContext.Provider value={{
-      groupPriceShare,handleShow,perActive,setPerActive,handleClose,show,setShow,
-      itemShow, setItemShow, getCartData,setCartList,setCouponId,cartList,couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
+      groupPriceShare, handleShow, perActive, setPerActive, handleClose, show, setShow,
+      itemShow, setItemShow, getCartData, setCartList, setCouponId, cartList, couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
     }}>
