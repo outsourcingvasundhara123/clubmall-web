@@ -116,7 +116,6 @@ const Profile = () => {
 
         try {
             const res = await api.postWithToken(`${serverURL + "profile-view"}`)
-            console.log(res, "user details");
             setValues_2(res.data.data.user)
             stopAnimation()
         } catch (error) {
@@ -159,10 +158,12 @@ const Profile = () => {
         //     newValue = selectedState ? selectedState._id : "";
         // }
 
-        // if (name === "country_id") {
-        //     const selectedState = countryList.find((state) => state.name === newValue);
-        //     newValue = selectedState ? selectedState._id : "";
-        // }
+        if (name === "country_id") {
+            console.log("chnaged");
+            setValues((prevValues) => ({
+                ...prevValues,
+                ["state_id"]: "",
+            }));        }
 
         if (submitCount > 0) {
             const validationErrors = validate({ ...values, [name]: newValue });
@@ -419,6 +420,8 @@ const Profile = () => {
     useEffect(() => {
         getNotificationList()
     }, [pageNotification]);
+
+console.log(values,"values");
 
     return (
         <>

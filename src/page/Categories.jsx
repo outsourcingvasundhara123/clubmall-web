@@ -81,6 +81,7 @@ const Categories = () => {
             }
             if (Categorie_id) {
                 const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+                console.log(apiTyp,"isLoggedIn");
                 let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
                 let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
                 var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
@@ -160,8 +161,12 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
+    }, [ Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive]);
+
+
+    useEffect(() => {
         getWishList()
-    }, [Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive, add_wished_Called]);
+    }, [ add_wished_Called]);
 
     useEffect(() => {
         getFilterDetails();

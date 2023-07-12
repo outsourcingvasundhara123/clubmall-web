@@ -40,8 +40,20 @@ const ProductInfo = () => {
 
 
     const { addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const name = localStorage.getItem("name")
+    const initialValues = {
+        action: "create",
+        product_id: "",
+        content: "",
+        rating: "",
+        title: name,
+        vendor_id: "",
+        review_type: "",
+        review_files: ""
+    };
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
+    const [values, setValues] = useState(initialValues);
     const defaultProfile = `../img/for_you/defaultuser.png`
     const [perActive, setPerActive] = useState('Individual');
     const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
@@ -55,7 +67,9 @@ const ProductInfo = () => {
     const handleDrawerShow = () => setDrawer(true);
     const serverURL = getServerURL();
     const [show, setShow] = useState(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        setShow(true);
+    }
     const handleClose = () => setShow(false);
     const [Product, setProduct] = useState({})
     // const [productList, setProductList] = useState([]);
@@ -66,11 +80,21 @@ const ProductInfo = () => {
     const [colorProduct, setColorProduct] = useState()
     // const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")  
     const [reviewShow, setreviewShow] = useState(false);
-    const handlereviewShow = () => setreviewShow(true);
+    const handlereviewShow = () => {
+        if (isLoggedIn) {
+            setreviewShow(true);
+        } else {
+            // User is not logged in, redirect to the login page
+            afterLogin(setMyMessageProductDtl)
+            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+        }
+
+    }
     const handlereviewClose = () => setreviewShow(false);
     const { id } = useParams();
     const product_id = id
     const [shareLink, setShareLink] = useState('');
+    const [imagePreview, setImagePreview] = useState([]);
 
     // wishlist 
     const [isWishlist, setIsWishlist] = useState(Product.isWishList === 1);
@@ -89,7 +113,6 @@ const ProductInfo = () => {
             await addWishList(Product.productList?._id, "product-delete-wishlist");
         }
     }
-
 
 
     const handelSubCat = (Id) => {
@@ -214,7 +237,7 @@ const ProductInfo = () => {
 
         try {
 
-            if (productColorActive || (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
+            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
 
                 if (isLoggedIn) {
                     let data = {
@@ -282,8 +305,131 @@ const ProductInfo = () => {
         }
     }
 
-    console.log(Product.isWishList, "Product.isWishList");
-    console.log(isWishlist, "isWishlist");
+    const handleChange = (e) => {
+
+        const { name, value, checked, type } = e.target;
+        let newValue = type === "checkbox" ? checked : value;
+
+
+        setValues((prevValues) => ({
+            ...prevValues,
+            [name]: newValue,
+        }));
+    };
+
+    const handlePhoto = (e) => {
+
+        // const file = e.target.files[0];
+        // setValues({ ...values, [e.target.name]: e.target.files });
+
+        let files = e.target.files;
+        if (files.length > 5) {
+            setMyMessageProductDtl("You can select up to 5 files only!");
+            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+            e.target.value = ""; // clear selected files
+            setValues({ ...values, ["review_files"]: "" });
+        } else {
+            setValues({ ...values, [e.target.name]: files });
+        }
+
+    };
+
+
+    // const submitReviews = async (e) => {
+    //     e.preventDefault();
+    //     try {
+
+    //         if (product_id && product_id !== undefined && Product.productList.user_id?._id) {
+    //             if (values.title && values.content && values.rating) {
+    //                 const formData = new FormData();
+    //                 formData.append('action', "create");
+    //                 formData.append('product_id', product_id);
+    //                 formData.append('vendor_id', Product.productList.user_id?._id );
+    //                 formData.append('content', values.content);
+    //                 formData.append('rating', values.rating);
+    //                 formData.append('title', values.title);
+
+    //                 formData.append('review_files', values.review_files);
+    //                 formData.append('review_type', "");
+
+    //                 const response = await Promise.all([
+    //                     api.postWithToken(`${serverURL}profile-update`, formData)
+    //                 ]);
+    //                 setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
+    //                 window.location.reload()
+    //             } else {
+    //                 setMymessageProfileProfile("please fill out all required fields");
+    //                 setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
+    //             }
+    //         } else {
+    //             navigate("/")
+    //         }
+
+    //         // Additional actions after successful submission
+    //     } catch (error) {
+    //         console.error('Error posting profile data:', error);
+    //         // Handle error scenario
+    //     }
+    // }
+
+
+    const submitReviews = async (e) => {
+        e.preventDefault();
+        try {
+            if (product_id && product_id !== undefined && Product.productList.user_id?._id) {
+                if (values.title && values.content && values.rating) {
+                    const formData = new FormData();
+                    formData.append('action', "create");
+                    formData.append('product_id', product_id);
+                    formData.append('vendor_id', Product.productList.user_id?._id);
+                    formData.append('content', values.content);
+                    formData.append('rating', values.rating);
+                    formData.append('title', values.title);
+
+                    let isImage = false;
+                    let isVideo = false;
+
+                    for (let i = 0; i < values.review_files.length; i++) {
+                        formData.append('review_files', values.review_files[i]);
+                        if (values.review_files[i].type.startsWith('image/')) {
+                            isImage = true;
+                        }
+                        if (values.review_files[i].type.startsWith('video/')) {
+                            isVideo = true;
+                        }
+                    }
+
+                    let reviewType = 0; // default value
+                    if (isImage && isVideo) {
+                        reviewType = 3; // for both image and video
+                    } else if (isImage) {
+                        reviewType = 1; // for image review
+                    } else if (isVideo) {
+                        reviewType = 2; // for video review
+                    }
+                    formData.append('review_type', reviewType);
+
+                    const response = await Promise.all([
+                        api.postWithToken(`${serverURL}profile-update`, formData)
+                    ]);
+                    // setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
+                    // window.location.reload()
+                } else {
+                    setMyMessageProductDtl("please fill out all required fields!");
+                    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                }
+            } else {
+                navigate("/")
+            }
+        } catch (error) {
+            console.error('Error posting profile data:', error);
+        }
+    }
+
+
+    // console.log(   ,"Product");
+    console.log(values, "values");
+
     return (
         <>
             <h1 className='d-none'></h1>
@@ -390,8 +536,11 @@ const ProductInfo = () => {
                                             </div>
                                         </div>
                                         {Product?.productList?.rating_count == 0 &&
-                                            <div className='no-review py-4'>
+                                            <div className='no-review py-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
+                                                {/* <Button onClick={handlereviewShow} className='write-review'>
+                                                    Write a review
+                                                </Button> */}
                                                 {/* <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p> */}
                                             </div>
                                         }
@@ -450,8 +599,8 @@ const ProductInfo = () => {
                                                                                         <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
                                                                                     </div>
                                                                                     <div className='slider-box-per pt-3'>
-
-                                                                                        <div className='d-flex align-items-center gap-2 mt-3'>
+                                                                                        <h5 className='text_frequently'>{e.name}</h5>
+                                                                                        <div className='d-flex align-items-center gap-2 mt-2'>
                                                                                             <h5>${e.individual_price}</h5>
                                                                                             <del>${e.group_price}</del>
                                                                                             <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span>
@@ -487,8 +636,8 @@ const ProductInfo = () => {
 
                                             <div className='per-pro d-flex align-items-end gap-2 mt-2'>
                                                 <h3> ${Product?.productList?.individual_price}</h3>
-                                                <del>${Product?.productList?.group_price}</del>
-                                                <span>{Math.round(Product?.productList?.group_price * 100 / Product?.productList?.individual_price)}% Off</span>
+                                                {/* <del>${Product?.productList?.group_price}</del> */}
+                                                {/* <span>{Math.round(Product?.productList?.group_price * 100 / Product?.productList?.individual_price)}% Off</span> */}
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
@@ -720,7 +869,14 @@ const ProductInfo = () => {
                                 </Row>
 
                                 <div className='review mt-5 mar-top-20'>
-                                    {Product?.productReviewList?.length === 0 ? " " : <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>}
+                                    {Product?.productReviewList?.length === 0 ? " " :
+                                        <div className='d-flex align-items-center justify-content-between'>
+                                            <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
+                                            {/* <Button onClick={handlereviewShow} className='write-review'>
+                                                Write a review
+                                            </Button> */}
+                                        </div>
+                                    }
                                     <div className=''>
                                         {
                                             Product?.productReviewList?.map((e, i) => {
@@ -816,7 +972,7 @@ const ProductInfo = () => {
                                                                                 <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
                                                                             </div>
                                                                             <div className='slider-box-per pt-3'>
-
+                                                                                <h5 className='text_frequently'>{e.name}</h5>
                                                                                 <div className='d-flex align-items-center gap-2 mt-3'>
                                                                                     <h5>${e.individual_price}</h5>
                                                                                     <del>${e.group_price}</del>
@@ -990,17 +1146,23 @@ const ProductInfo = () => {
                                         <h5>Write a review</h5>
                                         <Form className='mt-3'>
                                             <div className='login-input text-start'>
-                                                <label>You Name</label>
-                                                <input type='text' />
+                                                <label>You Rating*</label>
+                                            </div>
+                                            <Rating name="half-rating" onChange={(event, newValue) => {
+                                                setValues({ ...values, rating: newValue });
+                                            }} precision={0.5} />
+                                            <div className='login-input text-start'>
+                                                <label>You Name*</label>
+                                                <input type='text' name='title' value={values.title} onChange={handleChange} />
                                             </div>
                                             <div className='login-input text-start mt-3'>
-                                                <label>Comments</label>
-                                                <textarea placeholder='Type your review here' rows={5} />
+                                                <label>Comments*</label>
+                                                <textarea placeholder='Type your review here' value={values.content} name='content' onChange={handleChange} rows={5} />
                                             </div>
                                             <div className='mt-3 review-file'>
-                                                <input type='file' />
+                                                <input type='file' name='review_files' accept='image/*,video/*' onChange={handlePhoto} multiple />
                                             </div>
-                                            <Button className='submit-btn mt-3 w-100' >Publish Review</Button>
+                                            <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} >Publish Review</Button>
                                         </Form>
                                     </div>
                                 </Modal.Body>

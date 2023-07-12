@@ -137,7 +137,7 @@ export const CartProvider = ({ children }) => {
       stopAnimation()
     } catch (error) {
       errorResponse(error, setMyMessage);
-      setWarningSnackBarOpen(!warningSnackBarOpen);
+      // setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
@@ -415,7 +415,7 @@ export const CartProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
       errorResponse(error, setMyMessage);
-      setWarningSnackBarOpen(!warningSnackBarOpen);
+      // setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
@@ -431,7 +431,8 @@ export const CartProvider = ({ children }) => {
 
   const generateDynamicLink = async (productId) => {
     const response = await api.post(
-      'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyAor2O--2cGLZ1MNY_QmIj3I8lfzmNV4U0',
+
+      `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${process.env.REACT_APP_API_FIREBASE}`,
       {
         "dynamicLinkInfo": {
           "domainUriPrefix": "https://clubmall.page.link",
