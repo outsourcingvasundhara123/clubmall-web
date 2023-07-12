@@ -56,6 +56,7 @@ const ForYou = () => {
   const [comment, setCommnet] = useState(null);
   const [postId, setPostId] = useState(null);
   const [report, setReport] = useState({});
+  const [muted, setMuted] = useState(true);
 
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => {
@@ -399,7 +400,10 @@ const ForYou = () => {
     }
   }
 
-
+  const handleOnUnmute = () => {
+    setMuted(false);
+  };
+  
   // console.log(modelData, "modelData");
   // console.log(postId, "postId");
 
@@ -448,8 +452,9 @@ const ForYou = () => {
                     width="100%"
                     height="100%"
                     controls={true}
+                    onPlay={handleOnUnmute}
                     playing={currentVideoIndex === i}
-                    muted={false}
+                    muted={muted}
                     loop={true}
                     config={{
                       file: {

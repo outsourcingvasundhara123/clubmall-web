@@ -29,6 +29,7 @@ function Register() {
         username: "",
         email: "",
         contact_no: "",
+        phone_code:"",
         country_id: "",
         state_id: "",
         password: "",
@@ -69,6 +70,14 @@ function Register() {
             newValue = selectedState ? selectedState._id : "";
         }
 
+        if (name === "country_id") {
+            setValues((prevValues) => ({
+                ...prevValues,
+                ["state_id"]: "",
+            })); 
+                 
+         }
+
         if (submitCount > 0) {
             const validationErrors = validate({ ...values, [name]: newValue });
             setErrors(validationErrors);
@@ -92,8 +101,8 @@ function Register() {
         const validationErrors = validate(updatedValues);
         setErrors(validationErrors);
 
-        if (updatedValues.contact_no) {
-            updatedValues.contact_no = "+" + updatedValues.contact_no;
+        if (updatedValues.phone_code) {
+            updatedValues.phone_code = "+" + updatedValues.phone_code;
         }
 
         if (updatedValues.first_name && updatedValues.last_name) {
@@ -102,6 +111,8 @@ function Register() {
 
         if (Object.keys(validationErrors).length === 0) {
             updatedValues.user_type = "4";
+
+            console.log(updatedValues,"updatedValues");
 
             try {
                 api.post(`${serverURL}signup`, updatedValues)
@@ -164,6 +175,7 @@ function Register() {
         } catch (error) {
             console.error(error);
         }
+        
     };
 
     const handleChangeotp = (index, event) => {
@@ -343,9 +355,15 @@ function Register() {
                                         country={"eg"}
                                         enableSearch={true}
                                         name="contact_no"
-                                        value={values.contact_no}
-                                        onChange={(value) => handleChange({ target: { name: "contact_no", value } })}
-                                    />
+                                        value={  values?.phone_code + values?.contact_no}
+                                        onChange={(value, data) => {
+                                            const { dialCode } = data;
+                                            const contactNumber = value.substring(dialCode.length);
+                                            handleChange({ target: { name: "contact_no", value: contactNumber } });
+                                            handleChange({ target: { name: "phone_code", value: dialCode } });
+                                          }}
+                                        // onChange={(value) => handleChange({ target: { name: "contact_no", value } })}
+                                  />
                                     <div className='error' >{errors?.contact_no}</div>
 
                                 </div>
@@ -377,13 +395,11 @@ function Register() {
                                     <label>State</label>
                                     <select
                                         onClick={checkforcounty} onChange={handleChange}
-                                        value={values.state}
+                                        value={ !values.state_id  ? "" :  values.state}
                                         name='state_id' className='select-arrow'>
                                         <option>Select State</option>
                                         {errors.country_id == undefined && (
                                             <>
-
-
 
                                                 {
                                                     stateList.map((e, i) =>
@@ -455,13 +471,6 @@ function Register() {
                             <div className='google-login'>
 
                             </div>
-                            {/* <GoogleLogin
-                        clientId="402818709804-of0dbhqmjqeiddjejjpkvf1keu7v8556.apps.googleusercontent.com"
-                        buttonText="Google"
-                        onSuccess={googleResponse}
-                        onFailure={googleResponse}
-                        cookiePolicy="single_host_origin"
-                      /> */}
                             <NavLink>
                                 <img onClick={googlelogin} src='./img/login/google.png' alt='' />
                             </NavLink>

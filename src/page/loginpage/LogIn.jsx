@@ -34,6 +34,7 @@ const LogIn = () => {
   const [showPass, setShowPass] = useState(true)
   const [otpShow, SetOtpShow] = useState(false)
   const [show, setShow] = useState(false);
+  const [values, setValues] = useState(initialValues);
 
   const handleClose = () => {
     SetOtpShow(false)
@@ -43,9 +44,9 @@ const LogIn = () => {
   const handleShow = () => {
     SetOtpShow(true)
     setShow(true);
+    setValues(initialValues)
   }
 
-  const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [Mymessage, setMyMessage] = useState("");
   const [submitCount, setSubmitCount] = useState(0);
@@ -53,6 +54,7 @@ const LogIn = () => {
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const [otpEmail, SetEmail] = useState("")
+  const [forgetpassEmail, SetForgetpassEmail] = useState("")
   const inputRefs = useRef([]);
   const [isFirstTime, setIsFirstTime] = useState(true);
 
@@ -243,10 +245,10 @@ const LogIn = () => {
 
     e.preventDefault();
 
-    if (values.email) {
+    if (forgetpassEmail) {
       try {
         api.post(`${serverURL}forgot-password`, {
-          email: values.email
+          email: forgetpassEmail
         }).then((res) => {
           if (res.data.success == true) {
             setMyMessage(res.data.message);
@@ -270,10 +272,10 @@ const LogIn = () => {
   const SubmitResetPassword = (e) => {
 
     e.preventDefault();
-    if (values.email && (!errors.password) && values.password && values.reset_password_otp) {
+    if (forgetpassEmail && (!errors.password) && values.password && values.reset_password_otp) {
       try {
         api.post(`${serverURL}reset-password`, {
-          email: values.email,
+          email: forgetpassEmail,
           password: values.password,
           reset_password_otp: values.reset_password_otp
         }).then((res) => {
@@ -459,8 +461,8 @@ const LogIn = () => {
                   <div className='login-input text-start mt-3'>
                     <input placeholder='Enter your email '
                       name="email"
-                      onChange={handleChange}
-                      value={values.email}
+                      onChange={(e) => SetForgetpassEmail(e.target.value)}
+                      value={forgetpassEmail}
                       type='text'
                       autoComplete="off"
                     />

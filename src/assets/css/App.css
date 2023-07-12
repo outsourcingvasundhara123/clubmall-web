@@ -2353,18 +2353,18 @@ del {
 
 .product-info .slide-box h5 {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     color: #223263;
 }
 
 .product-info .slide-box del {
-    font-size: 16px;
+    font-size: 14px;
     color: #9098B1;
 }
 
 .product-info .slide-box span {
     font-weight: 400;
-    font-size: 18px;
+    font-size: 13px;
     color: #9098B1;
 }
 
@@ -6092,4 +6092,12 @@ input[type='radio'] {
     background-color: #E02E24 !important;
     border: none;
     color: #fff !important;
+}
+.text_frequently{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 95%;
+    display: block;
+    font-size: 16px !important;
 }

@@ -219,15 +219,14 @@ const AddCartModal = (props) => {
                                     <Col lg={6} md={12} className='mt-3 mt-lg-0'>
                                         <div className='pro-def pt-2'>
                                             <h6>  {modelProduct.productList?.name}</h6>
-
                                             <div className='brand my-3'>
-                                                <p><span>1 sold, by {modelProduct.stockData?.recent_bought_name} ({modelProduct.stockData?.order_count}K + sold)</span></p>
+                                                <p><span>1 sold by {modelProduct.stockData?.recent_bought_name} ({modelProduct.stockData?.order_count}K + sold)</span></p>
                                             </div>
 
                                             <div className='per-pro d-flex align-items-end gap-2'>
                                                 <h3> ${modelProduct.productList?.individual_price}</h3>
-                                                <del>$534,33</del>
-                                                <span>24% Off</span>
+                                                <del>${modelProduct?.productList?.group_price}</del>
+                                                <span>{Math.round(modelProduct?.productList?.group_price * 100 / modelProduct?.productList?.individual_price)}% Off</span>
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>

@@ -34,7 +34,6 @@ const WrappedCart = () => {
 
     const stripe = useStripe();
     const elements = useElements();
-
     const isLoggedIn = Is_Login();
     const { getCartData, setCartList, couponId, setCouponId, cartList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
 
@@ -46,7 +45,6 @@ const WrappedCart = () => {
 
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-
     const [fleshProductList, setFleshProductList] = useState([]);
     const serverURL = getServerURL();
     const [page, setPage] = useState(1);
@@ -264,6 +262,7 @@ const WrappedCart = () => {
         });
     };
 
+console.log(cartList.list,"cartList");
 
     return (
         <>
@@ -401,16 +400,23 @@ const WrappedCart = () => {
                                                                             {formatDate(startDate)} - {formatDate(endDate)}
                                                                         </span>
                                                                         <span className='d-flex align-items-center'>By {e.seller_name}</span>
-                                                                        <Button className='select-items-color mt-2 my-3'>
-                                                                            {e.sku_attributes?.color[0]?.name}
+                                                                      <div className='d-flex gap-2'>
+                                                                      <Button className='select-items-color mt-2 my-3'>
+                                                                            {e.sku_data?.color}
                                                                             <MdOutlineKeyboardArrowRight />
                                                                         </Button>
+                                                                        {/* <Button className='select-items-color mt-2 my-3'>
+                                                                            {e.sku_data?.size}
+                                                                            <MdOutlineKeyboardArrowRight />
+                                                                        </Button> */}
+                                                                        </div>
+                                                        
 
                                                                         <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                                             <div className='items-per d-flex align-items-center gap-2 mt-2'>
-                                                                                <h5>${e.product_details.individual_price}</h5>
-                                                                                <del>${e.product_details.group_price}</del>
-                                                                                <span>{Math.round(e.product_details.group_price * 100 / e.product_details.individual_price)}% Off</span>
+                                                                                <h5>${e.total_price}</h5>
+                                                                                {/* <del>${e.product_details.group_price}</del> */}
+                                                                                {/* <span>{Math.round(e.product_details.group_price * 100 / e.product_details.individual_price)}% Off</span> */}
                                                                             </div>
 
                                                                             <div className='product-info d-flex align-items-center gap-3 marg-cos'>
