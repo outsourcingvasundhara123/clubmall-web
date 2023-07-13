@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import route from "./helper/route"
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,6 +24,8 @@ const ScrollToTop = () => {
 
 const App = () => {
 
+  const [active, setActive] = useState(window.location.pathname);
+
   const { startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
@@ -42,7 +44,7 @@ const App = () => {
       <ScrollToTop />
       <div className='page-layout'>
         <div>
-          <Header />
+          <Header active={active} setActive={setActive} />
           <div className='mar-cos'>
             <Routes>
               {route.map((route, index) => {
@@ -59,7 +61,7 @@ const App = () => {
           </div>
         </div>
 
-        <Footer />
+        <Footer setActive={setActive} />
       </div>
 
     </BrowserRouter>
