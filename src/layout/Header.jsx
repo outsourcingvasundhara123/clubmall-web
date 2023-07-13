@@ -271,13 +271,13 @@ const Header = (props) => {
                                 </div>
                             </Button>
                         </NavLink>
-                        {
-                            isLoggedIn &&
+                        {/* {
+                            isLoggedIn && */}
                             <div className='search-filed d-flex align-items-center gap-2'>
                                 <input type="text" onKeyDown={handleKeyPress} placeholder='Search products' className='w-100' onChange={handleChange} value={searchKeyWord} />
                                 <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
                             </div>
-                        }
+                        {/* // } */}
                     </div>
                     <div className='account d-flex align-items-center gap-3 gap-sm-4'>
                         {

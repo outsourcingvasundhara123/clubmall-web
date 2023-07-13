@@ -346,12 +346,13 @@ export const CartProvider = ({ children }) => {
 
   const getSearchedProduct = async () => {
     try {
+      const apiTyp = isLoggedIn ? api.postWithToken : api.post;
       setLoading(true)
       if (searchKeyWord) {
         let search = searchKeyWord
         handelSearch(search)
         const [postListResponse] = await Promise.all([
-          api.postWithToken(`${serverURL + "search"}`, {
+          apiTyp(`${serverURL + "search"}`, {
             q: search,
             search_type: "product",
             page: searchPage,

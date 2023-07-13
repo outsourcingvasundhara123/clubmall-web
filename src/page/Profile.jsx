@@ -421,7 +421,6 @@ const Profile = () => {
         getNotificationList()
     }, [pageNotification]);
 
-console.log(values,"values");
 
     return (
         <>

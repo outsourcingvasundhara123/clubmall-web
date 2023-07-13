@@ -71,7 +71,6 @@ const Home = () => {
         setActive(event.target.id);
     }
 
-    console.log(productList, "productList");
 
     return (
         <>
@@ -123,15 +122,15 @@ const Home = () => {
                                         <Col className='py-4 pad-cos'>
                                             <div className='discount-card'>
                                                 <h1>20% OFF</h1>
-                                                <p>ORDERS OF $89+</p>
+                                                <p>ORDERS OF $120+</p>
                                             </div>
                                         </Col>
                                         <Col className='py-4 pad-cos'>
                                             <div className='discount-card mt-1' style={{ borderRight: "none" }}>
                                                 <Button className='discount-btn mx-auto'>
-                                                    CODE : clubmall30
+                                                    CODE : clubmalltry
                                                 </Button>
-                                                <p>CAPPED AT $5</p>
+                                                {/* <p>CAPPED AT $5</p> */}
                                             </div>
                                         </Col>
                                     </Row>

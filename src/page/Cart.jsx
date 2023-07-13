@@ -73,7 +73,6 @@ const WrappedCart = () => {
     const handleCheckout = async (event) => {
 
         try {
-            // console.log(token, "stripe");
             setIsOpen(!isOpen);
 
             if (Object.keys(correntAddess)?.length === 0) {
@@ -262,7 +261,12 @@ const WrappedCart = () => {
         });
     };
 
-console.log(cartList.list,"cartList");
+    const getimagename = (list, id) => {
+        let data = list.filter(detail => detail.skuid.toString() === id);
+        return data[0]?.file_name
+    }
+
+    // console.log(cartList,"cartList");
 
     return (
         <>
@@ -392,7 +396,7 @@ console.log(cartList.list,"cartList");
                                                                                 }))
                                                                             }
                                                                         /> */}
-                                                                        <img src={e.product_images} alt='' width="150px" />
+                                                                        <img src={cartList.productImagePath + e.product_id + "/" + getimagename(e.sku_details, e.skuid)} alt='' width="150px" />
                                                                     </div>
                                                                     <div className='cart-items-def w-100'>
                                                                         <h5>{e.product_name}</h5>
@@ -400,17 +404,16 @@ console.log(cartList.list,"cartList");
                                                                             {formatDate(startDate)} - {formatDate(endDate)}
                                                                         </span>
                                                                         <span className='d-flex align-items-center'>By {e.seller_name}</span>
-                                                                      <div className='d-flex gap-2'>
-                                                                      <Button className='select-items-color mt-2 my-3'>
-                                                                            {e.sku_data?.color}
-                                                                            <MdOutlineKeyboardArrowRight />
-                                                                        </Button>
-                                                                        {/* <Button className='select-items-color mt-2 my-3'>
-                                                                            {e.sku_data?.size}
-                                                                            <MdOutlineKeyboardArrowRight />
-                                                                        </Button> */}
+                                                                        <div className='d-flex align-items-center gap-2 cart-color w-100'>
+                                                                            <h6>Color : </h6>
+                                                                            <span>{e.sku_data?.color}</span>
                                                                         </div>
-                                                        
+
+                                                                        <div className='d-flex align-items-center gap-2 cart-color w-100'>
+                                                                            <h6>Size : </h6>
+                                                                            <span>{e.sku_data?.size}</span>
+                                                                        </div>
+
 
                                                                         <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                                             <div className='items-per d-flex align-items-center gap-2 mt-2'>
