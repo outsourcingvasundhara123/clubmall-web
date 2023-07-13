@@ -427,8 +427,6 @@ const ProductInfo = () => {
     }
 
 
-    // console.log(   ,"Product");
-    console.log(values, "values");
 
     return (
         <>

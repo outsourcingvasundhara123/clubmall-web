@@ -81,7 +81,6 @@ const Categories = () => {
             }
             if (Categorie_id) {
                 const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-                console.log(apiTyp,"isLoggedIn");
                 let categoryDtata = await apiTyp(`${serverURL + PRODUCTDEPENDENTCATEGORY}`)
                 let subcat = categoryDtata?.data?.data?.productsCategoryList.filter((e) => e._id === Categorie_id);
                 var subCart_id = subcat[0]?.child.find(e => e?.name == subCat)
@@ -107,7 +106,6 @@ const Categories = () => {
                         page: page
                     }),
                 ]);
-                // console.log(postListResponse,"postListResponse");
                 setSubCatId(subCart_id?._id)
                 const postsData = postListResponse.data.data;
                 setUrl(postsData.productImagePath)

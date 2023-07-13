@@ -57,6 +57,7 @@ const ForYou = () => {
   const [postId, setPostId] = useState(null);
   const [report, setReport] = useState({});
   const [muted, setMuted] = useState(true);
+  const [playerRefs, setPlayerRefs] = useState({});
 
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => {
@@ -400,12 +401,23 @@ const ForYou = () => {
     }
   }
 
-  const handleOnUnmute = () => {
-    setMuted(false);
+
+  const handleVolumeChange = ({ played, playedSeconds, loaded, loadedSeconds, volume }) => {
+    if (muted === false) {
+      console.log("1");
+      setMuted(true);
+    } else if(muted === true) {
+      console.log("2");
+      setMuted(false);
+    }
   };
-  
+
+  // const handleOnUnmute = () => {
+  //   setMuted(false);
+  // };
   // console.log(modelData, "modelData");
-  // console.log(postId, "postId");
+
+  // console.log(muted, "muted");
 
   return (
 
@@ -452,8 +464,9 @@ const ForYou = () => {
                     width="100%"
                     height="100%"
                     controls={true}
-                    onPlay={handleOnUnmute}
+                    // onPlay={handleOnUnmute}
                     playing={currentVideoIndex === i}
+                    onVolumeChange={handleVolumeChange}
                     muted={muted}
                     loop={true}
                     config={{
@@ -469,7 +482,11 @@ const ForYou = () => {
                 ) : (
                   <img className='reels-img' src={e.post_video_link} alt="Image" />
                 )}
+                    {
 
+                    console.log("currentVideoIndex:",currentVideoIndex,"i:",i)
+                    
+                    }
                 <div className='user-name px-3'>
                   <div className='d-flex align-items-center gap-2'>
                     <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} />

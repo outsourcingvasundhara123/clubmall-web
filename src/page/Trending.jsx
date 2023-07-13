@@ -43,11 +43,9 @@ const Trending = () => {
                 }),
             ]);
             const postsData = postListResponse.data.data;
-            // console.log(postsData,"postsData");
             const updatedProductList = [...postList, ...postsData.productListArrObj]
                 .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
             setPostList(updatedProductList);
-            // console.log(postsData,"postsData");
             setURL(postsData.productImagePath)
             setViewmoreLoder(false)
             stopAnimation()
@@ -55,8 +53,6 @@ const Trending = () => {
             console.log(error);
         }
     };
-
-    console.log(postList, "postList");
 
     useEffect(() => {
         getTrendingProduct();

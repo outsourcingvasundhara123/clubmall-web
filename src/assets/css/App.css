@@ -6101,3 +6101,13 @@ input[type='radio'] {
     display: block;
     font-size: 16px !important;
 }
+
+
+.cart-color h6{
+    color: #223263;
+    font-weight: 600;
+}
+
+.cart-color span{
+    color: #9199B1;
+}
