@@ -2,7 +2,7 @@ import React from 'react'
 import { Col, NavLink, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
-const Footer = () => {
+const Footer = (props) => {
     return (
         <div className='footer'>
             <div className='container-cos'>
@@ -10,8 +10,8 @@ const Footer = () => {
                     <div className='info footer-box'>
                         <h5>Company Info</h5>
                         <div className='mt-2 mt-sm-3'>
-                            <Link to="/about">About</Link>
-                            <Link to="/influencer">Affiliate & Influencer</Link>
+                            <Link to="/about" onClick={() => props.setActive(false)}>About</Link>
+                            <Link to="/influencer" onClick={() => props.setActive(false)}>Affiliate & Influencer</Link>
                             {/* <NavLink>Campus Ambassador</NavLink>
                             <NavLink>Contact Us</NavLink>
                             <NavLink>Careers</NavLink>
@@ -21,7 +21,7 @@ const Footer = () => {
                     <div className='info footer-box'>
                         <h5>Customer Services</h5>
                         <div className='mt-2 mt-sm-3'>
-                            <Link to="/terms-use">Terms of use</Link>
+                            <Link to="/terms-use" onClick={() => props.setActive(false)}>Terms of use</Link>
                             {/* <NavLink>Return and refund policy</NavLink>
                             <NavLink>Intellectual property policy</NavLink>
                             <NavLink>Shipping info</NavLink>
@@ -33,7 +33,7 @@ const Footer = () => {
                         <div className='mt-2 mt-sm-3'>
                             {/* <NavLink>Support center & FAQ</NavLink>
                             <NavLink>Clubmall Purchase Protection</NavLink> */}
-                            <Link to="/privacy-policy">Privacy Policy</Link>
+                            <Link to="/privacy-policy" onClick={() => props.setActive(false)}>Privacy Policy</Link>
                             {/* <NavLink>Sitemap</NavLink>
                             <NavLink>How to order</NavLink>
                             <NavLink>How to Track</NavLink>

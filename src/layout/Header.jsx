@@ -17,13 +17,16 @@ import ErrorSnackBar from "../components/SnackBar";
 import { logout } from '../helper/auth'
 import { useNavigate } from 'react-router-dom';
 import { BiSearch } from 'react-icons/bi'
-const Header = () => {
+
+
+
+const Header = (props) => {
 
     const navigate = useNavigate();
     const { itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("../img/header/ind.svg");
-    const [active, setActive] = useState(window.location.pathname);
+
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -177,11 +180,11 @@ const Header = () => {
                     <div className='menu-box h-100'>
                         <ul className='h-100'>
                             <li>
-                                <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => setActive("/")}>For You</Link>
+                                <Link to="/" className={`${props.active === "/" ? "active" : ""} `} onClick={() => props.setActive("/")}>For You</Link>
                             </li>
 
                             <li>
-                                <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => setActive("/home")}>Home</Link>
+                                <Link to="/home" className={`${props.active === "/home" ? "active" : ""} `} onClick={() => props.setActive("/home")}>Home</Link>
                             </li>
 
                             <li>
@@ -189,16 +192,16 @@ const Header = () => {
                             </li>
 
                             <li>
-                                <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => setActive("/fashion")}>Fashion</Link>
+                                <Link to="/fashion" className={`${props.active === "/fashion" ? "active" : ""} `} onClick={() => props.setActive("/fashion")}>Fashion</Link>
                             </li>
                             <li>
-                                <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => setActive("/selling")}>Hot Selling</Link>
+                                <Link to="/selling" className={`${props.active === "/selling" ? "active" : ""} `} onClick={() => props.setActive("/selling")}>Hot Selling</Link>
                             </li>
                             <li>
-                                <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => setActive("/trending")}>Trending</Link>
+                                <Link to="/trending" className={`${props.active === "/trending" ? "active" : ""} `} onClick={() => props.setActive("/trending")}>Trending</Link>
                             </li>
                             <li>
-                                <Link className={`${active === "/categories" ? "active" : ""} `} >Categories <MdOutlineKeyboardArrowDown /></Link>
+                                <Link className={`${props.active === "/categories" ? "active" : ""} `} >Categories <MdOutlineKeyboardArrowDown /></Link>
                                 {/* names of the main categorys */}
                                 <div className='mega-menu'>
 
@@ -312,7 +315,7 @@ const Header = () => {
                                     <Dropdown className='order-lg-1 order-4'>
                                         <Dropdown.Toggle id="dropdown-basic" className='p-0'>
                                             <NavLink className='py-0'>
-                                                <Button className='pre-label-btn user-account' onClick={() => setActive(false)}>
+                                                <Button className='pre-label-btn user-account' >
                                                     <div className='d-flex align-items-center gap-2'>
                                                         <img className='myprofile' src={Userprofile} alt='' />
                                                         <div className='price-text text-start'>
@@ -331,7 +334,7 @@ const Header = () => {
                                                 </div>
                                             </div>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item onClick={() => (handelProfile("list"), setItemShow(true))} >
+                                            <Dropdown.Item onClick={() => (handelProfile("list"), setItemShow(true), props.setActive(false))} >
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/list.png' alt='' />
                                                     My orders
@@ -341,7 +344,7 @@ const Header = () => {
                                                 <img src='../img/header/review.png' alt='' />
                                                 Your reviews
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => (handelProfile("user"), setItemShow(false))}>
+                                            <Dropdown.Item onClick={() => (handelProfile("user"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/user.png' alt='' />
                                                     Your profile
@@ -359,19 +362,19 @@ const Header = () => {
                                                 <img src='../img/header/shop.png' alt='' />
                                                 Followed shops
                                             </Dropdown.Item> */}
-                                            <Dropdown.Item onClick={() => (handelProfile("location"), setItemShow(false))}>
+                                            <Dropdown.Item onClick={() => (handelProfile("location"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/location.png' alt='' />
                                                     Addresses
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item onClick={() => (handelProfile("security"), setItemShow(false))}>
+                                            <Dropdown.Item onClick={() => (handelProfile("security"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/security.png' alt='' />
                                                     Account security
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"), setItemShow(false))}>
+                                            <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/notification.png' alt='' />
                                                     Notifications
@@ -389,12 +392,12 @@ const Header = () => {
                                         </Dropdown.Menu>
                                     </Dropdown>
 
-                                    <Link to="/wishlist" className='cart position-relative flag-selector order-2' onClick={() => setActive(false)}>
+                                    <Link to="/wishlist" className='cart position-relative flag-selector order-2' onClick={() => props.setActive(false)}>
                                         <img src='../img/header/wishlist.png' className='header-icon' alt='' width="25px" />
                                         <span className='cart-items-count'>{wishlistCount}</span>
                                     </Link>
 
-                                    <Link to="/cart" className='cart position-relative flag-selector order-3' onClick={() => setActive(false)}>
+                                    <Link to="/cart" className='cart position-relative flag-selector order-3' onClick={() => props.setActive(false)}>
                                         <img src='../img/header/cart.png' className='header-icon' alt='' width="25px" />
                                         <span className='cart-items-count'>{cart && cart}</span>
                                     </Link>
@@ -418,10 +421,10 @@ const Header = () => {
                         <div className='menu-main'>
                             <ul className='h-100'>
                                 <li>
-                                    <Link to="/" className={`${active === "/" ? "active" : ""} `} onClick={() => { setActive("/"); handleClose() }}>For You</Link>
+                                    <Link to="/" className={`${props.active === "/" ? "active" : ""} `} onClick={() => { props.setActive("/"); handleClose() }}>For You</Link>
                                 </li>
                                 <li>
-                                    <Link to="/home" className={`${active === "/home" ? "active" : ""} `} onClick={() => { setActive("/home"); handleClose() }}>Home</Link>
+                                    <Link to="/home" className={`${props.active === "/home" ? "active" : ""} `} onClick={() => { props.setActive("/home"); handleClose() }}>Home</Link>
                                 </li>
                                 <li>
                                     <Button onClick={() => {
@@ -430,19 +433,19 @@ const Header = () => {
                                     }} className='new-in-btn'>New In</Button>
                                 </li>
                                 <li>
-                                    <Link to="/fashion" className={`${active === "/fashion" ? "active" : ""} `} onClick={() => { setActive("/fashion"); handleClose() }}>Fashion</Link>
+                                    <Link to="/fashion" className={`${props.active === "/fashion" ? "active" : ""} `} onClick={() => { props.setActive("/fashion"); handleClose() }}>Fashion</Link>
                                 </li>
                                 <li>
-                                    <Link to="/selling" className={`${active === "/selling" ? "active" : ""} `} onClick={() => { setActive("/selling"); handleClose() }}>Hot Selling</Link>
+                                    <Link to="/selling" className={`${props.active === "/selling" ? "active" : ""} `} onClick={() => { props.setActive("/selling"); handleClose() }}>Hot Selling</Link>
                                 </li>
                                 <li>
-                                    <Link to="/trending" className={`${active === "/trending" ? "active" : ""} `} onClick={() => { setActive("/trending"); handleClose() }}>Trending</Link>
+                                    <Link to="/trending" className={`${props.active === "/trending" ? "active" : ""} `} onClick={() => { props.setActive("/trending"); handleClose() }}>Trending</Link>
                                 </li>
                                 <li className='position-relative show-body-menu'>
                                     <Accordion defaultActiveKey="0">
                                         <Accordion.Item eventKey="1">
                                             <Accordion.Header>
-                                                <Link className={`${active === "/categories" ? "active" : ""} `}>
+                                                <Link className={`${props.active === "/categories" ? "active" : ""} `}>
                                                     Categories
                                                 </Link>
                                                 <MdOutlineKeyboardArrowDown />
