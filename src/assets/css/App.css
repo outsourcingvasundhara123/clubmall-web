@@ -3958,17 +3958,13 @@ input[type='radio'] {
 
 @media (max-width: 676px) {
     .for-you .additional-icon {
-        bottom: 90px;
+        bottom: 150px;
         right: 12px;
-    }
-
-    .for-you .price {
-        bottom: 10px;
     }
 
     .reel-items {
         left: 20px;
-        bottom: 90px;
+        bottom: 150px;
         right: auto;
     }
 
