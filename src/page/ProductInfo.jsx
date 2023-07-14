@@ -510,9 +510,9 @@ console.log(Product.productList,"Product");
                                         {Product?.productList?.rating_count == 0 &&
                                             <div className='no-review py-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
-                                                <Button onClick={handlereviewShow} className='write-review'>
+                                                {/* <Button onClick={handlereviewShow} className='write-review'>
                                                     Write a review
-                                                </Button>
+                                                </Button> */}
                                                 {/* <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p> */}
                                             </div>
                                         }
@@ -844,9 +844,9 @@ console.log(Product.productList,"Product");
                                     {Product?.productReviewList?.length === 0 ? " " :
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
-                                            <Button onClick={handlereviewShow} className='write-review'>
+                                            {/* <Button onClick={handlereviewShow} className='write-review'>
                                                 Write a review
-                                            </Button>
+                                            </Button> */}
                                         </div>
                                     }
                                     <div className=''>
