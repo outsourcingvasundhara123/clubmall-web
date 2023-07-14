@@ -1159,7 +1159,7 @@ del {
     height: 42px !important;
     background: #fff;
     border-radius: 50%;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 0px 10px rgb(0 0 0 / 27%);
     right: 2px !important;
 }
 
@@ -1196,6 +1196,18 @@ del {
     font-weight: 700;
     color: #FB7181 !important;
     padding: 0;
+}
+
+@media (max-width: 512px) {
+    .slider-controls-cos .next-slide-cos {
+        position: absolute;
+        right: -14px !important;
+    }
+
+    .slider-controls-cos .prev-slide-cos {
+        position: absolute;
+        left: -14px !important;
+    }
 }
 
 /* product-slider end */

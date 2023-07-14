@@ -287,7 +287,7 @@ const Home = () => {
                                         className="mySwiper"
                                     >
                                         {
-                                            trendingProductList.productListArrObj?.slice(0, 5).map((e) => {
+                                            trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <SwiperSlide>
                                                         <ProCard
@@ -368,7 +368,7 @@ const Home = () => {
                                     >
 
                                         {
-                                            productList.productListArrObj && productList.productListArrObj?.slice(5, 10).map((e) => {
+                                            productList.productListArrObj && productList.productListArrObj?.map((e) => {
                                                 return (
 
                                                     <SwiperSlide>
