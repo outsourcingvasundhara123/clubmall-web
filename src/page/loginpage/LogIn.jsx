@@ -382,7 +382,7 @@ const LogIn = () => {
                   <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
                 </div> */}
                 <NavLink>
-                  <img onClick={googlelogin} src='./img/login/google.png' alt='' />
+                  <img onClick={googlelogin} src='./img/login/google.svg' alt='' />
                 </NavLink>
                 {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
                 <FacebookLogin
@@ -401,7 +401,7 @@ const LogIn = () => {
                   onProfileSuccess={(response) => {
                     console.log('Get Profile Success!', response);
                   }}
-                ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
+                ><img src='./img/login/facebook.svg' alt='' /></FacebookLogin>
 
                 <AppleLogin
                   clientId="YOUR_CLIENT_ID"
