@@ -418,8 +418,12 @@ const Home = () => {
                                         className="mySwiper"
                                     >
 
+
+
                                         {
-                                            productList.productListArrObj && productList.productListArrObj?.map((e) => {
+
+                                            isMobile === false &&
+                                            productList.productListArrObj && productList.productListArrObj?.slice(0, 5).map((e) => {
                                                 return (
 
                                                     <SwiperSlide>
@@ -430,6 +434,23 @@ const Home = () => {
                                                     </SwiperSlide>
                                                 )
                                             })
+                                        }
+
+                                        {
+
+                                            isMobile === true &&
+                                            productList.productListArrObj && productList.productListArrObj?.map((e) => {
+                                                return (
+                                                    <SwiperSlide>
+                                                        <div className='product-card stylist-card1 position-relative p-0 position-relative shop-btn-up'>
+                                                            <img src={productList?.productImagePath && productList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt={e.name} className='w-100' />
+                                                            <Button className='shop-now' onClick={() => handelProductDetail(e._id)} >Shop Now</Button>
+                                                        </div>
+                                                    </SwiperSlide>
+                                                )
+                                            })
+
+
                                         }
 
 
