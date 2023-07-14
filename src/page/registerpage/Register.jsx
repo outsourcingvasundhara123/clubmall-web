@@ -29,7 +29,7 @@ function Register() {
         username: "",
         email: "",
         contact_no: "",
-        phone_code:"",
+        phone_code: "",
         country_id: "",
         state_id: "",
         password: "",
@@ -74,9 +74,9 @@ function Register() {
             setValues((prevValues) => ({
                 ...prevValues,
                 ["state_id"]: "",
-            })); 
-                 
-         }
+            }));
+
+        }
 
         if (submitCount > 0) {
             const validationErrors = validate({ ...values, [name]: newValue });
@@ -112,7 +112,7 @@ function Register() {
         if (Object.keys(validationErrors).length === 0) {
             updatedValues.user_type = "4";
 
-            console.log(updatedValues,"updatedValues");
+            console.log(updatedValues, "updatedValues");
 
             try {
                 api.post(`${serverURL}signup`, updatedValues)
@@ -175,7 +175,7 @@ function Register() {
         } catch (error) {
             console.error(error);
         }
-        
+
     };
 
     const handleChangeotp = (index, event) => {
@@ -355,15 +355,15 @@ function Register() {
                                         country={"eg"}
                                         enableSearch={true}
                                         name="contact_no"
-                                        value={  values?.phone_code + values?.contact_no}
+                                        value={values?.phone_code + values?.contact_no}
                                         onChange={(value, data) => {
                                             const { dialCode } = data;
                                             const contactNumber = value.substring(dialCode.length);
                                             handleChange({ target: { name: "contact_no", value: contactNumber } });
                                             handleChange({ target: { name: "phone_code", value: dialCode } });
-                                          }}
-                                        // onChange={(value) => handleChange({ target: { name: "contact_no", value } })}
-                                  />
+                                        }}
+                                    // onChange={(value) => handleChange({ target: { name: "contact_no", value } })}
+                                    />
                                     <div className='error' >{errors?.contact_no}</div>
 
                                 </div>
@@ -395,7 +395,7 @@ function Register() {
                                     <label>State</label>
                                     <select
                                         onClick={checkforcounty} onChange={handleChange}
-                                        value={ !values.state_id  ? "" :  values.state}
+                                        value={!values.state_id ? "" : values.state}
                                         name='state_id' className='select-arrow'>
                                         <option>Select State</option>
                                         {errors.country_id == undefined && (
@@ -472,7 +472,7 @@ function Register() {
 
                             </div>
                             <NavLink>
-                                <img onClick={googlelogin} src='./img/login/google.png' alt='' />
+                                <img onClick={googlelogin} src='./img/login/google.svg' alt='' />
                             </NavLink>
                             <FacebookLogin
                                 appId={process.env.REACT_APP_APP_ID}
@@ -490,7 +490,7 @@ function Register() {
                                 onProfileSuccess={(response) => {
                                     console.log('Get Profile Success!', response);
                                 }}
-                            ><img src='./img/login/facebook.png' alt='' /></FacebookLogin>
+                            ><img src='./img/login/facebook.svg' alt='' /></FacebookLogin>
 
                             <AppleLogin
                                 clientId="YOUR_CLIENT_ID"

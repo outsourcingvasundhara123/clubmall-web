@@ -44,10 +44,10 @@ const Footer = (props) => {
                         <h5>Download the Clubmall App</h5>
                         <div className='mt-2 mt-sm-3'>
                             <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
-                                <img src='./img/play.png' alt='' />
+                                <img src='./img/play.svg' alt='' />
                             </NavLink>
                             <NavLink href='https://apps.apple.com/us/app/clubmall/id6444752184' target='_blank'>
-                                <img src='./img/store.png' alt='' />
+                                <img src='./img/store.svg' alt='' />
                             </NavLink>
                         </div>
                     </div>
