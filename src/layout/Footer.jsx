@@ -55,22 +55,22 @@ const Footer = (props) => {
                         <h5>Connect with Clubmall</h5>
                         <div className='mt-2 mt-sm-3 d-flex align-items-center gap-3'>
                             <NavLink href='https://www.instagram.com/clubmallofficial/' target='_blank'>
-                                <img src='./img/insta.png' alt='' />
+                                <img src='./img/insta.svg' alt='' />
                             </NavLink>
                             <NavLink href='https://www.facebook.com/people/Clubmall/100088814472280/' target='_blank'>
-                                <img src='./img/face.png' alt='' />
+                                <img src='./img/face.svg' alt='' />
                             </NavLink>
                             <NavLink href='https://twitter.com/Clubmall2' target='_blank'>
-                                <img src='./img/twitter.png' alt='' />
+                                <img src='./img/twitter.svg' alt='' />
                             </NavLink>
                             <NavLink href='https://www.tiktok.com/@clubmall_official?_t=8YIK4hDQ6IQ&_r=1' target='_blank'>
-                                <img src='./img/tiktok.png' alt='' />
+                                <img src='./img/tiktok.svg' alt='' />
                             </NavLink>
                             <NavLink href='https://www.youtube.com/@clubmall633/about' target='_blank'>
-                                <img src='./img/youtub.png' alt='' />
+                                <img src='./img/youtub.svg' alt='' />
                             </NavLink>
                             <NavLink href='https://www.pinterest.com/clubmall/?invite_code=fbbd260f52c340579abd4030827a9bdb&sender=663718201242369602' target='_blank'>
-                                <img src='./img/pintrest.png' alt='' />
+                                <img src='./img/pintrest.svg' alt='' />
                             </NavLink>
                         </div>
                     </div>

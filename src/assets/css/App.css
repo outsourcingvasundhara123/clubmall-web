@@ -3958,17 +3958,13 @@ input[type='radio'] {
 
 @media (max-width: 676px) {
     .for-you .additional-icon {
-        bottom: 90px;
+        bottom: 150px;
         right: 12px;
-    }
-
-    .for-you .price {
-        bottom: 10px;
     }
 
     .reel-items {
         left: 20px;
-        bottom: 90px;
+        bottom: 150px;
         right: auto;
     }
 
@@ -5176,7 +5172,8 @@ input[type='radio'] {
         font-size: 15px;
     }
 }
-.wishlist-btn-cos{
+
+.wishlist-btn-cos {
     border: none;
     padding: 0;
     position: absolute;
@@ -6093,7 +6090,8 @@ input[type='radio'] {
     border: none;
     color: #fff !important;
 }
-.text_frequently{
+
+.text_frequently {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -6103,11 +6101,23 @@ input[type='radio'] {
 }
 
 
-.cart-color h6{
+.cart-color h6 {
     color: #223263;
     font-weight: 600;
 }
 
-.cart-color span{
+.cart-color span {
     color: #9199B1;
+}
+
+@media (max-width : 991px) {
+    .explore-main {
+        justify-content: center;
+    }
+}
+
+@media (max-width : 512px) {
+    .explore-main {
+        justify-content: flex-start;
+    }
 }
