@@ -418,12 +418,10 @@ const Home = () => {
                                         className="mySwiper"
                                     >
 
-
-
                                         {
 
                                             isMobile === false &&
-                                            productList.productListArrObj && productList.productListArrObj?.slice(0, 5).map((e) => {
+                                            productList.productListArrObj && productList.productListArrObj?.slice(5, 10).map((e) => {
                                                 return (
 
                                                     <SwiperSlide>
