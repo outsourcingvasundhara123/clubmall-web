@@ -175,7 +175,7 @@ const Header = (props) => {
             <div className='header-main'>
                 <div className='header d-flex align-items-center gap-5 position-relative'>
                     <div className='logo'>
-                        <Link to="/home" className='py-0'><img src='../img/logo.png' alt='' /></Link>
+                        <Link to="/home" className='py-0'><img src='../img/logo.svg' alt='' /></Link>
                     </div>
                     <div className='menu-box h-100'>
                         <ul className='h-100'>
@@ -273,10 +273,10 @@ const Header = (props) => {
                         </NavLink>
                         {/* {
                             isLoggedIn && */}
-                            <div className='search-filed d-flex align-items-center gap-2'>
-                                <input type="text" onKeyDown={handleKeyPress} placeholder='Search products' className='w-100' onChange={handleChange} value={searchKeyWord} />
-                                <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
-                            </div>
+                        <div className='search-filed d-flex align-items-center gap-2'>
+                            <input type="text" onKeyDown={handleKeyPress} placeholder='Search products' className='w-100' onChange={handleChange} value={searchKeyWord} />
+                            <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
+                        </div>
                         {/* // } */}
                     </div>
                     <div className='account d-flex align-items-center gap-3 gap-sm-4'>
