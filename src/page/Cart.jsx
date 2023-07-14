@@ -35,7 +35,7 @@ const WrappedCart = () => {
     const stripe = useStripe();
     const elements = useElements();
     const isLoggedIn = Is_Login();
-    const { getCartData, setCartList, couponId, setCouponId, cartList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
+    const {mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, getCartData, setCartList, couponId, setCouponId, cartList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, sellIs_wished, setProfileOption, getMyAddress, correntAddess, setCart, cart } = useContext(CartContext);
 
     const [checkboxes, setCheckboxes] = useState({
         checkbox1: false,
@@ -169,6 +169,7 @@ const WrappedCart = () => {
 
     const removeCartData = async (id, action, qty) => {
         try {
+            setMainLoder(true)
             var data = {
                 action: action,
                 _id: id
@@ -177,7 +178,6 @@ const WrappedCart = () => {
                 data.qty = qty
             }
             const res = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
-
             if (res.data.success === true) {
                 getCartData()
                 setMyMessageCart(res.data.message);
@@ -186,10 +186,17 @@ const WrappedCart = () => {
                 setMyMessageCart(res.data.message);
                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             }
+
+            setTimeout(() => {
+                setMainLoder(false)
+              }, 1000);
+     
+          
         } catch (error) {
             console.log(error);
         }
     };
+
 
     const getFleshData = async () => {
 
@@ -216,6 +223,7 @@ const WrappedCart = () => {
     };
 
     const handleCoupon = async (action, coupon) => {
+        setMainLoder(true)
         try {
             var data = {
                 action: action,
@@ -234,6 +242,9 @@ const WrappedCart = () => {
                 setMyMessageCart(res.data.message);
                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             }
+            setTimeout(() => {
+                setMainLoder(false)
+              }, 1000);
         } catch (error) {
             console.log(error, "error");
         }
@@ -262,11 +273,10 @@ const WrappedCart = () => {
     };
 
     const getimagename = (list, id) => {
-        let data = list.filter(detail => detail.skuid.toString() === id);
+        let data = list.filter(detail => detail.skuid.toString() == id);
         return data[0]?.file_name
     }
 
-    // console.log(cartList,"cartList");
 
     return (
         <>
@@ -409,11 +419,12 @@ const WrappedCart = () => {
                                                                             <span>{e.sku_data?.color}</span>
                                                                         </div>
 
-                                                                        <div className='d-flex align-items-center gap-2 cart-color w-100'>
-                                                                            <h6>Size : </h6>
-                                                                            <span>{e.sku_data?.size}</span>
-                                                                        </div>
-
+                                                                        {e.sku_data?.size &&
+                                                                            <div className='d-flex align-items-center gap-2 cart-color w-100'>
+                                                                                <h6>Size : </h6>
+                                                                                <span>{e.sku_data?.size}</span>
+                                                                            </div>
+                                                                        }
 
                                                                         <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                                             <div className='items-per d-flex align-items-center gap-2 mt-2'>

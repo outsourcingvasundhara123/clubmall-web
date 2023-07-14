@@ -24,7 +24,7 @@ import { isMobile } from 'react-device-detect';
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const {generateDynamicLink,  getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {  mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer, generateDynamicLink,  getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -103,13 +103,23 @@ const AddCartModal = (props) => {
     }, [props.show]);
 
 
-    const findSKUId = () => {
-        const sku = modelProduct.productList.sku_details.find((sku) => {
-            return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
-        });
+    // const findSKUId = () => {
+    //     const sku = modelProduct.productList.sku_details.find((sku) => {
+    //         return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
+    //     });
 
+    //     return sku ? sku.skuid : null;
+    // };
+
+    const findSKUId = () => {
+        const sku = modelProduct?.productList.sku_details.find((sku) => {
+            // Check if color matches and either size is not required or size matches
+            return sku.attrs[0].color === productColorActive && 
+            (!sizeActive || sku.attrs[0].size === sizeActive);
+        });
         return sku ? sku.skuid : null;
     };
+
 
     const handleCart = async (e) => {
 

@@ -33,6 +33,7 @@ export const CartProvider = ({ children }) => {
   const [productList, setProductList] = useState([]);
   const [trendingProductList, setTrendingProductList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [mainloder, setMainLoder] = useState(false);
   const [loadingCategory, setLoadingCategory] = useState(true);
 
   const [womanProductList, setWomanProductList] = useState([]);
@@ -57,6 +58,7 @@ export const CartProvider = ({ children }) => {
 
   const serverURL = getServerURL();
   const player = useRef();
+  const mainplayer = useRef();
   const [activeImage, setActiveImage] = useState("")
 
   const [couponId, setCouponId] = useState([]);
@@ -78,6 +80,18 @@ export const CartProvider = ({ children }) => {
   const stopAnimation = () => {
     setLoading(false);
   };
+
+
+  const mainstartAnimation = () => {
+    if (mainplayer.current) {
+      mainplayer.current.play(); // Check if player.current is not null before accessing play()
+    }
+  };
+
+  const mainstopAnimation = () => {
+    setMainLoder(false);
+  };
+
 
   //category page 
   const playercategory = useRef();
@@ -399,6 +413,7 @@ export const CartProvider = ({ children }) => {
   const getCartData = async () => {
 
     startAnimation()
+    // setMainLoder(true)
 
     try {
       // if (isLoggedIn) {
@@ -413,6 +428,7 @@ export const CartProvider = ({ children }) => {
       setCouponId(ids)
       setCartList(poroductData);
       stopAnimation()
+      // setMainLoder(false)
     } catch (error) {
       console.log(error);
       errorResponse(error, setMyMessage);
@@ -459,7 +475,8 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      generateDynamicLink,
+      mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer,
+      generateDynamicLink,setMyMessage,
       itemShow, setItemShow, getCartData, setCartList, setCouponId, cartList, couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb

@@ -6,6 +6,7 @@ import {
     MdOutlineKeyboardArrowDown,
     MdKeyboardDoubleArrowRight,
     MdOutlineClose
+
 } from "react-icons/md"
 import { Link } from 'react-router-dom'
 import "swiper/css/pagination";
@@ -35,7 +36,6 @@ import { RWebShare } from "react-web-share";
 import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
 
-
 const ProductInfo = () => {
 
 
@@ -62,6 +62,7 @@ const ProductInfo = () => {
     const [loading, setLoading] = useState(true);
     const player = useRef();
     const [url, setUrl] = useState("");
+    const [submitLoderRv, setSubmitLoderRv] = useState(false);
     const [drawer, setDrawer] = useState(false);
     const handleDrawerClose = () => setDrawer(false);
     const handleDrawerShow = () => setDrawer(true);
@@ -225,9 +226,18 @@ const ProductInfo = () => {
     }, [sellIs_wished, isLoggedIn, add_wished_Called]);
 
 
+    // const findSKUId = () => {
+    //     const sku = Product?.productList.sku_details.find((sku) => {
+    //         return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
+    //     });
+    //     return sku ? sku.skuid : null;
+    // };
+
     const findSKUId = () => {
         const sku = Product?.productList.sku_details.find((sku) => {
-            return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
+            // Check if color matches and either size is not required or size matches
+            return sku.attrs[0].color === productColorActive && 
+            (!sizeActive || sku.attrs[0].size === sizeActive);
         });
         return sku ? sku.skuid : null;
     };
@@ -335,47 +345,10 @@ const ProductInfo = () => {
     };
 
 
-    // const submitReviews = async (e) => {
-    //     e.preventDefault();
-    //     try {
-
-    //         if (product_id && product_id !== undefined && Product.productList.user_id?._id) {
-    //             if (values.title && values.content && values.rating) {
-    //                 const formData = new FormData();
-    //                 formData.append('action', "create");
-    //                 formData.append('product_id', product_id);
-    //                 formData.append('vendor_id', Product.productList.user_id?._id );
-    //                 formData.append('content', values.content);
-    //                 formData.append('rating', values.rating);
-    //                 formData.append('title', values.title);
-
-    //                 formData.append('review_files', values.review_files);
-    //                 formData.append('review_type', "");
-
-    //                 const response = await Promise.all([
-    //                     api.postWithToken(`${serverURL}profile-update`, formData)
-    //                 ]);
-    //                 setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
-    //                 window.location.reload()
-    //             } else {
-    //                 setMymessageProfileProfile("please fill out all required fields");
-    //                 setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
-    //             }
-    //         } else {
-    //             navigate("/")
-    //         }
-
-    //         // Additional actions after successful submission
-    //     } catch (error) {
-    //         console.error('Error posting profile data:', error);
-    //         // Handle error scenario
-    //     }
-    // }
-
-
     const submitReviews = async (e) => {
         e.preventDefault();
         try {
+            setSubmitLoderRv(true)
             if (product_id && product_id !== undefined && Product.productList.user_id?._id) {
                 if (values.title && values.content && values.rating) {
                     const formData = new FormData();
@@ -410,8 +383,9 @@ const ProductInfo = () => {
                     formData.append('review_type', reviewType);
 
                     const response = await Promise.all([
-                        api.postWithToken(`${serverURL}profile-update`, formData)
+                        api.postWithToken(`${serverURL}product-review-manage`, formData)
                     ]);
+                    console.log(response,"response");
                     // setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
                     // window.location.reload()
                 } else {
@@ -421,12 +395,13 @@ const ProductInfo = () => {
             } else {
                 navigate("/")
             }
+            setSubmitLoderRv(false)
         } catch (error) {
             console.error('Error posting profile data:', error);
         }
     }
 
-
+console.log(Product.productList,"Product");
 
     return (
         <>
@@ -600,8 +575,8 @@ const ProductInfo = () => {
                                                                                         <h5 className='text_frequently'>{e.name}</h5>
                                                                                         <div className='d-flex align-items-center gap-2 mt-2'>
                                                                                             <h5>${e.individual_price}</h5>
-                                                                                            <del>${e.group_price}</del>
-                                                                                            <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span>
+                                                                                            {/* <del>${e.group_price}</del> */}
+                                                                                            {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -973,8 +948,8 @@ const ProductInfo = () => {
                                                                                 <h5 className='text_frequently'>{e.name}</h5>
                                                                                 <div className='d-flex align-items-center gap-2 mt-3'>
                                                                                     <h5>${e.individual_price}</h5>
-                                                                                    <del>${e.group_price}</del>
-                                                                                    <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span>
+                                                                                    {/* <del>${e.group_price}</del> */}
+                                                                                    {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1160,7 +1135,7 @@ const ProductInfo = () => {
                                             <div className='mt-3 review-file'>
                                                 <input type='file' name='review_files' accept='image/*,video/*' onChange={handlePhoto} multiple />
                                             </div>
-                                            <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} >Publish Review</Button>
+                                            <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} > { submitLoderRv ? "Loding..." : "Publish Review" } </Button>
                                         </Form>
                                     </div>
                                 </Modal.Body>
