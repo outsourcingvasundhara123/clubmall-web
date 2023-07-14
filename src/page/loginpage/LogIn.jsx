@@ -96,7 +96,7 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
-                  if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || (!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+                  if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
                     window.location.href = "/"
                   } else {
                     window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
@@ -155,7 +155,7 @@ const LogIn = () => {
             login(res.data.data.user);
             setTimeout(() => {
               setValues(initialValues);
-              if (localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || (!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+              if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
                 window.location.href = "/"
               } else {
                 window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
@@ -300,12 +300,12 @@ const LogIn = () => {
     }
   };
 
-  useEffect(() => {
-    if (isFirstTime && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login" && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login") {
-      localStorage.setItem('lastVisitedPath', document.referrer);
-      setIsFirstTime(false);
-    }
-  }, [isFirstTime]);
+  // useEffect(() => {
+  //   if (isFirstTime && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login" && localStorage.getItem('lastVisitedPath') !== "https://clubmall.com/login") {
+  //     localStorage.setItem('lastVisitedPath', document.referrer);
+  //     setIsFirstTime(false);
+  //   }
+  // }, [isFirstTime]);
 
 
   return (

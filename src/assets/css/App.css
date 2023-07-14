@@ -113,7 +113,9 @@ p {
     justify-content: center;
     background-color: #000000a1;
     z-index: 9999;
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
 .btn-scroll-top {
@@ -4014,7 +4016,7 @@ input[type='radio'] {
 }
 
 .for-you .swiper {
-    width: 620px;
+    width: 100%;
     height: 100%;
 }
 

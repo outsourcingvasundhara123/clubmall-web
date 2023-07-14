@@ -19,14 +19,18 @@ import { CartContext } from '../context/CartContext';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { Is_Login } from '../helper/IsLogin';
+import { isMobile } from 'react-device-detect';
 
 const Home = () => {
 
-    const { startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+    const { setMyMessage, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
-
+    const textRef = useRef(null);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
+    const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
+    const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
+    const [MymessageProductDtl, setMyMessageProductDtl] = useState("");
     // const [category, setcategory] = useState([]);
     // const [currentUser, setCorrectUser] = useState("");
     // const [productList, setProductList] = useState([]);
@@ -34,6 +38,8 @@ const Home = () => {
     const serverURL = getServerURL();
     // const [loading, setLoading] = useState(true);
     const [active, setActive] = useState("1");
+
+
 
     const breakpoints = {
         0: {
@@ -70,6 +76,22 @@ const Home = () => {
     const handleClick = (event) => {
         setActive(event.target.id);
     }
+
+    const handleCopy = () => {
+        if (textRef.current) {
+            setMyMessage("Coupon code copied successfully");
+            setSucessSnackBarOpen(!sucessSnackBarOpen);
+            navigator.clipboard.writeText(textRef.current.innerText)
+                .then(() => {
+                    console.log('Text copied to clipboard');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        }
+    };
+
+
 
 
     return (
@@ -127,8 +149,8 @@ const Home = () => {
                                         </Col>
                                         <Col className='py-4 pad-cos'>
                                             <div className='discount-card mt-1' style={{ borderRight: "none" }}>
-                                                <Button className='discount-btn mx-auto'>
-                                                    CODE : clubmalltry
+                                                <Button onClick={handleCopy} className='discount-btn mx-auto' >
+                                                    CODE : <span ref={textRef} >clubmalltry</span>
                                                 </Button>
                                                 {/* <p>CAPPED AT $5</p> */}
                                             </div>
@@ -286,7 +308,35 @@ const Home = () => {
                                         modules={[Pagination, Navigation]}
                                         className="mySwiper"
                                     >
+
                                         {
+
+                                            isMobile === false &&
+
+                                            trendingProductList.productListArrObj?.slice(0, 5).map((e) => {
+
+
+                                                return (
+                                                    <SwiperSlide>
+                                                        <ProCard
+                                                            id={e._id}
+                                                            img={e.product_images[0]?.file_name}
+                                                            name={e.name}
+                                                            group_price={e.group_price}
+                                                            individual_price={e.individual_price}
+                                                            sold={e.total_order}
+                                                            secper={e.secper}
+                                                            off={e.discount_percentage}
+                                                            path={trendingProductList?.productImagePath && trendingProductList.productImagePath}
+                                                            is_wishList={e.wishList && e.wishList}
+                                                        />
+                                                    </SwiperSlide>
+                                                )
+                                            })
+                                        }
+
+                                        {
+                                            isMobile === true &&
                                             trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <SwiperSlide>
@@ -306,6 +356,7 @@ const Home = () => {
                                                 )
                                             })
                                         }
+
                                     </Swiper>
                                 </div>
                             </div>

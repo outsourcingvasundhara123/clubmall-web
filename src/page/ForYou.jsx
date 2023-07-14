@@ -404,10 +404,9 @@ const ForYou = () => {
 
   const handleVolumeChange = ({ played, playedSeconds, loaded, loadedSeconds, volume }) => {
     if (muted === false) {
-      console.log("1");
+
       setMuted(true);
     } else if(muted === true) {
-      console.log("2");
       setMuted(false);
     }
   };
@@ -482,11 +481,7 @@ const ForYou = () => {
                 ) : (
                   <img className='reels-img' src={e.post_video_link} alt="Image" />
                 )}
-                    {
 
-                    console.log("currentVideoIndex:",currentVideoIndex,"i:",i)
-                    
-                    }
                 <div className='user-name px-3'>
                   <div className='d-flex align-items-center gap-2'>
                     <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} />

@@ -14,10 +14,10 @@ export const login = (user) => {
     localStorage.removeItem('token');
     localStorage.removeItem('name');
     localStorage.removeItem('user');
+    localStorage.removeItem('lastVisitedPath');
     localStorage.removeItem('profile_image');
     localStorage.removeItem("search");
     localStorage.removeItem("selectedSubcategories")
-    localStorage.removeItem('lastVisitedPath');
     window.location.href = "/login";
 
   };

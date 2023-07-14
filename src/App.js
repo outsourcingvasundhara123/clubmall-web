@@ -22,26 +22,57 @@ const ScrollToTop = () => {
 }
 
 
+// This will run whenever `mainloder` changes.
+
+
 const App = () => {
 
   const [active, setActive] = useState(window.location.pathname);
-
-  const { startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+  const { mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+
+
+    useEffect(() => {
+      if(window.location.pathname !== "/login" && window.location.pathname !== "/register"  ){
+        localStorage.setItem('lastVisitedPath',window.location.pathname);
+      }
+    }, [window.location.pathname]);
+
+
+  // UseEffect hook here
+  useEffect(() => {
+    if (mainloder) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [mainloder]);
+
 
   return (
     <BrowserRouter>
-      <Button
+
+
+      {
+        window.location.pathname !== "/"  &&
+        <Button
         className='btn-scroll-top'
         onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
         <MdOutlineKeyboardArrowUp />
       </Button>
+      }
+      {
+        mainloder &&
 
-      {/* <div className='loader-main'>
-        <LoaderMain />
-      </div> */}
+        <div className='loader-main' >
+          <LoaderMain startAnimationMain={mainstartAnimation} stopAnimationMain={mainstopAnimation} player={mainplayer} />
+        </div>
+      }
+
+
 
       <ScrollToTop />
+
       <div className='page-layout'>
         <div>
           <Header active={active} setActive={setActive} />
