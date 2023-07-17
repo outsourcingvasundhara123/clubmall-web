@@ -114,7 +114,7 @@ const Home = () => {
                         <section>
                             <div className='container-cos'>
                                 <div className='discount-offer'>
-                                    <Row className='align-items-center'>2
+                                    <Row className='align-items-center'>
                                         <Col className='py-4 pad-cos'>
                                             <div className='discount-card'>
                                                 <h1>10% OFF</h1>
