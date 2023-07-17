@@ -39,35 +39,6 @@ const Home = () => {
     // const [loading, setLoading] = useState(true);
     const [active, setActive] = useState("1");
 
-
-
-    const breakpoints = {
-        0: {
-            slidesPerView: 3,
-            spaceBetween: 10
-        },
-        600: {
-            slidesPerView: 3,
-            spaceBetween: 10
-        },
-        991: {
-            slidesPerView: 3,
-            spaceBetween: 10
-        },
-        1140: {
-            slidesPerView: 4,
-            spaceBetween: 20
-        },
-        1200: {
-            slidesPerView: 5,
-            spaceBetween: 20
-        },
-        1300: {
-            slidesPerView: 6,
-            spaceBetween: 20
-        },
-    }
-
     useEffect(() => {
         getProducts();
         getWishList()
@@ -191,7 +162,32 @@ const Home = () => {
                                             watchState: true,
                                         }}
                                         loop={true}
-                                        breakpoints={breakpoints}
+                                        breakpoints={{
+                                            0: {
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
+                                            },
+                                            600: {
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
+                                            },
+                                            991: {
+                                                slidesPerView: 3,
+                                                spaceBetween: 10
+                                            },
+                                            1140: {
+                                                slidesPerView: 4,
+                                                spaceBetween: 20
+                                            },
+                                            1200: {
+                                                slidesPerView: 5,
+                                                spaceBetween: 20
+                                            },
+                                            1300: {
+                                                slidesPerView: 5,
+                                                spaceBetween: 20
+                                            },
+                                        }}
                                         navigation={true}
                                         modules={[Pagination, Navigation]}
                                         className="mySwiper" >

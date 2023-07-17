@@ -4042,6 +4042,23 @@ input[type='radio'] {
 
 .for_you-modal .modal-dialog {
     max-width: 445px;
+    margin: auto;
+}
+
+@media (max-width: 640px) {
+
+    .product-list-modal .modal-dialog {
+        margin: auto 15px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .for_you-modal .modal-dialog {
+        margin: auto 15px;
+    }
+
 }
 
 .for_you-modal .modal-dialog .modal-content {
