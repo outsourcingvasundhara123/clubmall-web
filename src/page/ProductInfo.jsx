@@ -405,7 +405,7 @@ const ProductInfo = () => {
             setMainLoder(false)
         } catch (error) {
 
-            setMyMessageProductDtl("please try again with video or image !");
+            setMyMessageProductDtl("please try again with video or image!");
             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
             // setreviewShow(false)
             setMainLoder(false)
