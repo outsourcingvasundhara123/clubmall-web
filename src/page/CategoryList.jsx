@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect,useContext } from 'react'
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { useNavigate } from 'react-router-dom'
@@ -12,9 +12,13 @@ import { PRODUCTCATEGORY, PRODUCTList } from "../helper/endpoints";
 import Loader from '../components/Loader';
 import { handelCategorydata, handelCategory } from '../helper/constants';
 import { Button } from 'react-bootstrap';
+import { CartContext } from '../context/CartContext';
 
 const CategoryList = () => {
 
+
+   
+    const { categoryHome, setcategoryHome } = useContext(CartContext);
     const navigate = useNavigate();
     const [category, setcategory] = useState([]);
 
@@ -82,6 +86,7 @@ const CategoryList = () => {
             const halfwayIndex = Math.ceil(categoryData.productsCategoryList && categoryData?.productsCategoryList.length / 2);
             const firstHalf = categoryData.productsCategoryList?.slice(0, halfwayIndex);
             const secondHalf = categoryData.productsCategoryList?.slice(halfwayIndex);
+            setcategoryHome({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath })
             // Set the first half and second half of categories
             setcategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath });
             stopAnimation()
@@ -93,6 +98,8 @@ const CategoryList = () => {
     useEffect(() => {
         getCategory();
     }, []);
+
+console.log(category,"category");
 
     return (
         <div className='categories-slider mt-5 position-relative'>

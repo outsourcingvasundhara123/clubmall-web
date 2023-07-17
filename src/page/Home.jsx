@@ -20,10 +20,11 @@ import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { Is_Login } from '../helper/IsLogin';
 import { isMobile } from 'react-device-detect';
+import { handelCategorydata } from '../helper/constants';
 
 const Home = () => {
 
-    const { setMyMessage, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+    const {categoryHome, setMyMessage, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const textRef = useRef(null);
     const isLoggedIn = Is_Login();
@@ -38,6 +39,20 @@ const Home = () => {
     const serverURL = getServerURL();
     // const [loading, setLoading] = useState(true);
     const [active, setActive] = useState("1");
+
+
+    const colorMap = {
+        "2": "#EECA94",
+        "3": "#893350",
+        "4": "#D7C9BE",
+        "5": "#DDCAD7",
+        "6": "#C49275",
+        "7": "#D3C4B1",
+        "8": "#DFA6A8",
+        "9": "#EECA94",
+        "10":"#D7C9BE"
+        // Note: changed id to 9 because there were two "8"s in your comment block
+    };
 
     useEffect(() => {
         getProducts();
@@ -90,7 +105,7 @@ const Home = () => {
 
                         <section className='home-first-image'>
                             <div className='container-cos'>
-                                <div className='w-100  pointer ' onClick={() => navigate("/trending")}>
+                                <div className='w-100  pointer '  onClick={() => (handelCategorydata("64426a1637764b8698579aa0"), localStorage.removeItem("selectedSubcategories"))}>
                                     <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
                                 </div>
                             </div>
@@ -99,7 +114,7 @@ const Home = () => {
                         <section>
                             <div className='container-cos'>
                                 <div className='discount-offer'>
-                                    <Row className='align-items-center'>
+                                    <Row className='align-items-center'>2
                                         <Col className='py-4 pad-cos'>
                                             <div className='discount-card'>
                                                 <h1>10% OFF</h1>
@@ -133,7 +148,7 @@ const Home = () => {
 
                         <section className='home-second-image ' >
                             <div className='container-cos position-relative'>
-                                <div className='w-100 pointer ' onClick={() => navigate("/trending")}>
+                                <div className='w-100 pointer '  onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))}>
                                     <img src="./img/homePageBg2.webp" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>
@@ -218,7 +233,7 @@ const Home = () => {
                                                         <h5>RJ Jewellery</h5>
                                                         <span className='my-2 d-block'>From $0.29</span>
                                                     </div>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/trending")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                    <Button className='shop-btn mt-0 mt-3'  onClick={() => (handelCategorydata("6488512c483f4ea550675331"), localStorage.removeItem("selectedSubcategories"))}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -232,7 +247,7 @@ const Home = () => {
                                                         <h5>FS - Nike Air Max 270 React </h5>
                                                         <span className='my-2 d-block'>Up to 50% off</span>
                                                     </div>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/trending")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                    <Button className='shop-btn mt-0 mt-3'  onClick={() => (handelCategorydata("644804f095c53d0f01ab0782"), localStorage.removeItem("selectedSubcategories"))}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,13 +267,13 @@ const Home = () => {
                                             <div className='position-relative'>
                                                 <img src='./img/daily-drop-1.webp' alt='' />
                                                 <div className='card-text-bottom big-box-daily-drops'>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => navigate("/trending")}>Shop Now</Button>
+                                                    <Button className='shop-btn mt-0 mt-3'  onClick={() => (handelCategorydata("6443aac367efa3bfcab97f69"), localStorage.removeItem("selectedSubcategories"))}>Shop Now</Button>
                                                 </div>
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10'>
-                                        <div className='product-s4-card'>
+                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10 pointer'>
+                                        <div className='product-s4-card' onClick={() => (handelCategorydata("6442936437764b869857a33e"), localStorage.removeItem("selectedSubcategories"))} >
                                             <div className='position-relative'>
                                                 <img src='./img/daily-drop-2.webp' alt='' />
                                             </div>
@@ -363,7 +378,7 @@ const Home = () => {
                                 <div className='title w-100 text-center '>
                                     <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
                                 </div>
-                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => navigate("/trending")}>
+                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => (handelCategorydata("64426a1637764b8698579aa0"), localStorage.removeItem("selectedSubcategories"))}>
                                     <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
                                 </div>
                             </div>
@@ -371,7 +386,7 @@ const Home = () => {
 
                         <section className='home-second-image'>
                             <div className='container-cos position-relative'>
-                                <div className='w-100 pointer ' onClick={() => navigate("/trending")}>
+                                <div className='w-100 pointer ' onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))}>
                                     <img src="./img/homePageBg2.webp" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>
@@ -456,6 +471,19 @@ const Home = () => {
                         <section className='explore my-5 mar-top-0 mar-bot-20'>
                             <div className='container-cos d-flex justify-content-center'>
                                 <div className='btns-home'>
+
+                                {/* {
+                                    categoryHome.firstHalf && categoryHome.firstHalf?.map((d,i) => {
+                                                return (
+
+                                                    <Button className={active === d._id ? "active" : undefined} style={{ backgroundColor: colorMap[i] }} id={d._id}  onClick={(e) => (handelCategorydata(d._id), localStorage.removeItem("selectedSubcategories"), handleClick(e))} >{d.name}</Button>
+
+                                                    )
+                                                })
+    
+    
+                                            } */}
+                                    
                                     <Button className={active === "2" ? "active" : undefined} style={{ backgroundColor: "#2D4658" }} id={"2"} onClick={handleClick}>Spring&Summer</Button>
                                     <Button className={active === "3" ? "active" : undefined} style={{ backgroundColor: "#893350" }} id={"3"} onClick={handleClick}>Springiton</Button>
                                     <Button className={active === "4" ? "active" : undefined} style={{ backgroundColor: "#D7C9BE" }} id={"4"} onClick={handleClick}>Denim Guide</Button>
