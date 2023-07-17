@@ -39,7 +39,7 @@ import { isMobile } from 'react-device-detect';
 const ProductInfo = () => {
 
 
-    const { addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -236,8 +236,8 @@ const ProductInfo = () => {
     const findSKUId = () => {
         const sku = Product?.productList.sku_details.find((sku) => {
             // Check if color matches and either size is not required or size matches
-            return sku.attrs[0].color === productColorActive && 
-            (!sizeActive || sku.attrs[0].size === sizeActive);
+            return sku.attrs[0].color === productColorActive &&
+                (!sizeActive || sku.attrs[0].size === sizeActive);
         });
         return sku ? sku.skuid : null;
     };
@@ -348,7 +348,7 @@ const ProductInfo = () => {
     const submitReviews = async (e) => {
         e.preventDefault();
         try {
-            setSubmitLoderRv(true)
+            setMainLoder(true)
             if (product_id && product_id !== undefined && Product.productList.user_id?._id) {
                 if (values.title && values.content && values.rating) {
                     const formData = new FormData();
@@ -385,9 +385,16 @@ const ProductInfo = () => {
                     const response = await Promise.all([
                         api.postWithToken(`${serverURL}product-review-manage`, formData)
                     ]);
-                    console.log(response,"response");
-                    // setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
-                    // window.location.reload()
+                    if (response[0]?.data.success === true) {
+                        setMyMessageProductDtl(response[0]?.data.message);
+                        setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
+                    } else {
+                        setMyMessageProductDtl(response[0]?.data.message);
+                        setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                    }
+                    getProductDetail()
+                    setValues(initialValues)
+                    setreviewShow(false)
                 } else {
                     setMyMessageProductDtl("please fill out all required fields!");
                     setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
@@ -395,13 +402,17 @@ const ProductInfo = () => {
             } else {
                 navigate("/")
             }
-            setSubmitLoderRv(false)
+            setMainLoder(false)
         } catch (error) {
-            console.error('Error posting profile data:', error);
+
+            setMyMessageProductDtl("please try again with video or image !");
+            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+            // setreviewShow(false)
+            setMainLoder(false)
+            console.error('Error posting  data:', error);
         }
     }
 
-console.log(Product.productList,"Product");
 
     return (
         <>
@@ -511,9 +522,9 @@ console.log(Product.productList,"Product");
                                         {Product?.productList?.rating_count == 0 &&
                                             <div className='no-review py-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
-                                                {/* <Button onClick={handlereviewShow} className='write-review'>
+                                                <Button onClick={handlereviewShow} className='write-review'>
                                                     Write a review
-                                                </Button> */}
+                                                </Button>
                                                 {/* <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p> */}
                                             </div>
                                         }
@@ -845,9 +856,9 @@ console.log(Product.productList,"Product");
                                     {Product?.productReviewList?.length === 0 ? " " :
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
-                                            {/* <Button onClick={handlereviewShow} className='write-review'>
+                                            <Button onClick={handlereviewShow} className='write-review'>
                                                 Write a review
-                                            </Button> */}
+                                            </Button>
                                         </div>
                                     }
                                     <div className=''>
@@ -862,12 +873,31 @@ console.log(Product.productList,"Product");
                                                                     <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
-
+                                                                <div className='d-flex gap-2 p-2 align-items-center'>
+                                                                    {
+                                                                        e?.review_files?.map((r, i) => {
+                                                                            return (
+                                                                                <React.Fragment key={i}>
+                                                                                    {r?.media_type === "image" ? (
+                                                                                        <img style={{ width: "100px" }} src={Product.productImagePath + r.file_name} alt='' />
+                                                                                    ) : (
+                                                                                        <video style={{ width: "200px" }}   controls>
+                                                                                            <source src={Product.productImagePath + r.file_name} type="video/mp4" />
+                                                                                            {/* Add more <source> elements for different video formats if necessary */}
+                                                                                            Your browser does not support the video .
+                                                                                        </video>                                    
+                                                                                    )}
+                                                                                </React.Fragment>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                </div>
                                                                 <span className='date_pro_info'>{e.content}</span>
                                                                 <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
                                                                 <div className='d-flex align-items-center gap-1'>
                                                                     <Rating name="read-only" value={e?.rating} readOnly />
                                                                 </div>
+
                                                                 {/* <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
                                                                     <p><b>Overall Fit:</b> True to Size</p>
                                                                     <p><b>Color:</b> Olive Green</p>
@@ -893,7 +923,7 @@ console.log(Product.productList,"Product");
                                 <div className='together mobile-together'>
                                     <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
                                         <h5 className='info-title cos-title'>Frequently bought together</h5>
-                                        <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button>
+                                        {/* <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button> */}
                                     </div>
                                     <div>
                                         <Swiper
@@ -1135,7 +1165,7 @@ console.log(Product.productList,"Product");
                                             <div className='mt-3 review-file'>
                                                 <input type='file' name='review_files' accept='image/*,video/*' onChange={handlePhoto} multiple />
                                             </div>
-                                            <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} > { submitLoderRv ? "Loding..." : "Publish Review" } </Button>
+                                            <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} > {submitLoderRv ? "Loding..." : "Publish Review"} </Button>
                                         </Form>
                                     </div>
                                 </Modal.Body>

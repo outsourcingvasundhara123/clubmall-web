@@ -391,7 +391,6 @@ const ForYou = () => {
 
 
   const groupPriceShare = (id) => {
-    console.log(isMobile,"isMobile");
     if (isMobile) {
       generateDynamicLink(id)
     }  else {

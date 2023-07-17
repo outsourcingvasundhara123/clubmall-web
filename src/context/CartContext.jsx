@@ -24,6 +24,7 @@ export const CartProvider = ({ children }) => {
   const [wishProductUrl, setWishProductURL] = useState("");
   const [userProductList, setUserProductList] = useState([]);
   const [category, setcategory] = useState([]);
+  const [categoryHome, setcategoryHome] = useState([]);
   const [categoryWeb, setCategoryWeb] = useState([]);
   const [sellingCategory, setSellingCategory] = useState({});
   const [myAddress, setMyAddess] = useState([]);
@@ -295,7 +296,6 @@ export const CartProvider = ({ children }) => {
 
   const getSellProducts = async () => {
     try {
-      console.log(sellIs_wished, "sellIs_wished --- called");
 
       startAnimation()
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
@@ -475,6 +475,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
+      categoryHome, setcategoryHome,
       mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer,
       generateDynamicLink,setMyMessage,
       itemShow, setItemShow, getCartData, setCartList, setCouponId, cartList, couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
