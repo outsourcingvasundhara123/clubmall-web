@@ -100,13 +100,13 @@ const Fashion = () => {
                                 <div className='shop-trend px-5'>
                                     <Row>
                                         <Col xl={3} lg={4} md={6} sm={12}>
-                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/trending")}>
+                                            <div className='shop-box position-relative pointer ' onClick={() => (handelCategorydata("64426a1637764b8698579aa0"), localStorage.removeItem("selectedSubcategories"))}>
                                                 <img alt='' src='./img/new_in/shop1.png' width="100%" />
                                                 <h2 className='brown'>Shop Women</h2>
                                             </div>
                                         </Col>
                                         <Col xl={3} lg={4} md={6} sm={12} className='mt-5 '>
-                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/trending")}>
+                                            <div className='shop-box position-relative pointer ' onClick={() => (handelCategorydata("6442936437764b869857a33e"), localStorage.removeItem("selectedSubcategories"))}>
                                                 <img alt='' src='./img/new_in/shop2.png' width="100%" />
                                                 <h2 className='dark'>Shop Curve</h2>
                                             </div>
@@ -118,7 +118,7 @@ const Fashion = () => {
                                             </div>
                                         </Col>
                                         <Col xl={3} lg={4} md={6} sm={12} className='mt-5'>
-                                            <div className='shop-box position-relative pointer ' onClick={() => navigate("/trending")}>
+                                            <div className='shop-box position-relative pointer ' onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))}>
                                                 <img alt='' src='./img/new_in/shop4.png' width="100%" />
                                                 <h2 className='green-text'>Shop Kids</h2>
                                             </div>
