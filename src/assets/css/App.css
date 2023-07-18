@@ -2328,6 +2328,34 @@ del {
     margin-top: -2px;
 }
 
+.review select {
+    border: 1px solid #EBF0FF;
+    padding: 8px 30px 8px 8px;
+    border-radius: 5px;
+    font-size: 15px;
+    color: #9098B1;
+    font-weight: 500;
+    outline: none;
+    appearance: none;
+    background-image: url('../img/review.png');
+    background-repeat: no-repeat;
+    background-size: 10px;
+    background-position: calc(100% - 10px) 16px, calc(100% - 20px) 14px, 100% 0;
+    cursor: pointer;
+}
+
+@media (max-width: 830px) {
+    .review-responsive {
+        flex-direction: column;
+        row-gap: 12px;
+        align-items: flex-start !important;
+    }
+
+    .filter-review {
+        flex-wrap: wrap;
+    }
+}
+
 .product-info .frequently button {
     background-color: transparent !important;
     border: none;

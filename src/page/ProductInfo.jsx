@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import Layout from '../layout/Layout'
-import { Button, Col, Form, Modal, NavLink, Offcanvas, Row } from 'react-bootstrap'
+import { Button, Col, Form, Modal, NavLink, Offcanvas, Row, } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdOutlineKeyboardArrowDown,
@@ -28,7 +28,7 @@ import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
-import { Rating } from '@mui/material'
+import { Divider, Rating } from '@mui/material'
 import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
 import { useParams } from 'react-router-dom';
@@ -854,11 +854,31 @@ const ProductInfo = () => {
 
                                 <div className='review mt-5 mar-top-20'>
                                     {Product?.productReviewList?.length === 0 ? " " :
-                                        <div className='d-flex align-items-center justify-content-between'>
+                                        <div className='d-flex align-items-center justify-content-between review-responsive'>
                                             <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
-                                            <Button onClick={handlereviewShow} className='write-review'>
-                                                Write a review
-                                            </Button>
+                                            <div className='filter-review d-flex align-items-center gap-3'>
+                                                <select>
+                                                    <option>All</option>
+                                                    <option>With Video (0)</option>
+                                                    <option>With Photos (0)</option>
+                                                </select>
+                                                <select>
+                                                    <option>5 Start</option>
+                                                    <option>4 Start</option>
+                                                    <option>3 Start</option>
+                                                    <option>2 Start</option>
+                                                    <option>1 Start</option>
+                                                </select>
+                                                <select>
+                                                    <option>Sort by default</option>
+                                                    <option>Sort by videos</option>
+                                                    <option>Sort by pictures</option>
+                                                    <option>Sort by ratings</option>
+                                                </select>
+                                                <Button onClick={handlereviewShow} className='write-review'>
+                                                    Write a review
+                                                </Button>
+                                            </div>
                                         </div>
                                     }
                                     <div className=''>
@@ -881,11 +901,11 @@ const ProductInfo = () => {
                                                                                     {r?.media_type === "image" ? (
                                                                                         <img style={{ width: "100px" }} src={Product.productImagePath + r.file_name} alt='' />
                                                                                     ) : (
-                                                                                        <video style={{ width: "200px" }}   controls>
+                                                                                        <video style={{ width: "200px" }} controls>
                                                                                             <source src={Product.productImagePath + r.file_name} type="video/mp4" />
                                                                                             {/* Add more <source> elements for different video formats if necessary */}
                                                                                             Your browser does not support the video .
-                                                                                        </video>                                    
+                                                                                        </video>
                                                                                     )}
                                                                                 </React.Fragment>
                                                                             )
@@ -917,6 +937,9 @@ const ProductInfo = () => {
                                                 )
                                             })
                                         }
+                                        <div className='w-100 d-flex justify-content-center mt-3 mb-5'>
+                                            <Button className='shop-btn btn-cos-mobile'> View More <MdKeyboardDoubleArrowRight /></Button>
+                                        </div>
                                     </div>
                                 </div>
 
