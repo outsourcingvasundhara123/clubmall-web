@@ -106,7 +106,7 @@ const Home = () => {
                         <section className='home-first-image'>
                             <div className='container-cos'>
                                 <div className='w-100  pointer ' onClick={() => (handelCategorydata("64426a1637764b8698579aa0"), localStorage.removeItem("selectedSubcategories"))}>
-                                    <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg1.svg" alt="" width={"100%"} />
                                 </div>
                             </div>
                         </section>
@@ -149,7 +149,7 @@ const Home = () => {
                         <section className='home-second-image ' >
                             <div className='container-cos position-relative'>
                                 <div className='w-100 pointer ' onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))}>
-                                    <img src="./img/homePageBg2.webp" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg2.svg" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>
                             </div>
@@ -227,7 +227,7 @@ const Home = () => {
                                     <Col xl={6} lg={6} md={6} sm={12} className='mt-4'>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
-                                                <img src='./img/img4.webp' alt='' />
+                                                <img src='./img/img4.svg' alt='' />
                                                 <div className='card-text-bottom big-box'>
                                                     <div className='card-text'>
                                                         <h5>RJ Jewellery</h5>
@@ -241,7 +241,7 @@ const Home = () => {
                                     <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10'>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
-                                                <img src='./img/img5.webp' alt='' />
+                                                <img src='./img/img5.svg' alt='' />
                                                 <div className='card-text-bottom big-box'>
                                                     <div className='card-text'>
                                                         <h5>FS - Nike Air Max 270 React </h5>

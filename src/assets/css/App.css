@@ -204,6 +204,11 @@ p {
     font-size: 15px;
 }
 
+.header .menu-box a:hover,
+.header .menu-box button:hover {
+    color: #E02E24 !important;
+}
+
 .new-in-btn {
     margin-top: 10px;
 }
@@ -1239,11 +1244,10 @@ del {
 .section-4 .product-s4-card .card-text h5 {
     font-weight: 700;
     font-size: 20px;
-    color: #FFFFFF;
+    color: #000;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    line-height: 30px;
 
 }
 
@@ -1254,7 +1258,7 @@ del {
 .section-4 .product-s4-card .card-text span {
     font-weight: 500;
     font-size: 15px;
-    color: #FFFFFF;
+    color: #000;
 }
 
 .section-4 .big-box {
@@ -4031,6 +4035,7 @@ input[type='radio'] {
     border-radius: 50%;
     border: none;
     overflow: hidden;
+    color: #000 !important;
 }
 
 .product-color-cos button img {
