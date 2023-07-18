@@ -33,9 +33,16 @@ export const CartProvider = ({ children }) => {
   const [currentUser, setCorrectUser] = useState("");
   const [productList, setProductList] = useState([]);
   const [trendingProductList, setTrendingProductList] = useState([]);
+
+
   const [loading, setLoading] = useState(true);
+  const [sellProLoading, setSellProLoading] = useState(false);
   const [mainloder, setMainLoder] = useState(false);
   const [loadingCategory, setLoadingCategory] = useState(true);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [ProductLoading, setProductLoading] = useState(false);
+  const [catwebLoading, setCatwebLoading] = useState(false);
+
 
   const [womanProductList, setWomanProductList] = useState([]);
   const [manProductList, setManProductList] = useState([]);
@@ -56,6 +63,9 @@ export const CartProvider = ({ children }) => {
   const [searchPage, setSearchPage] = useState(1);
   const [searchUrl, setSearchURL] = useState("");
   const [is_search, setIs_search] = useState(0);
+
+
+
 
   const serverURL = getServerURL();
   const player = useRef();
@@ -121,9 +131,9 @@ export const CartProvider = ({ children }) => {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setSellIs_wished(sellIs_wished + 1)
           setAdd_wished_Called(true)
-          getSellProducts()
-          getProducts()
-          getWishList()
+          // getSellProducts()
+          // getProducts()
+          // getWishList()
         } else {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -143,6 +153,7 @@ export const CartProvider = ({ children }) => {
 
   const getWishList = async () => {
     startAnimation()
+    setLoading(true)
     try {
       // if (isLoggedIn) {
       const res = await api.postWithToken(`${serverURL + WISHLIST}`, { "action": "my-wishlist-list" })
@@ -150,6 +161,8 @@ export const CartProvider = ({ children }) => {
       setWishlistCount(res.data.data.list.length)
       setWishProductURL(res.data.data.productImagePath)
       stopAnimation()
+      console.log("getWishList");
+
     } catch (error) {
       errorResponse(error, setMyMessage);
       // setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -215,9 +228,9 @@ export const CartProvider = ({ children }) => {
   };
 
   const getProducts = async () => {
-
     try {
       startAnimation()
+      setProductLoading(true)
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
       const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
         api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" }),
@@ -237,14 +250,29 @@ export const CartProvider = ({ children }) => {
       setUserProductList(userproductData)
 
       stopAnimation()
+      setProductLoading(false)
     } catch (error) {
       console.log(error);
     }
   };
 
+//categoryweb loding 
+  const playercategoryweb = useRef();
+
+  const startAnimationcategoryweb = () => {
+    if (playercategoryweb.current) {
+      playercategoryweb.current.play(); // Check if player.current is not null before accessing play()
+    }
+  };
+
+  const stopAnimationcategoryweb = () => {
+    setCatwebLoading(false);
+  };
+
   const getCategoryWeb = async () => {
     startAnimation()
-
+    startAnimationcategoryweb()
+    setCatwebLoading(true)
     try {
       const [categoryResponse] = await Promise.all([
         api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "sub-category" })
@@ -287,17 +315,35 @@ export const CartProvider = ({ children }) => {
       const secondHalf = categoryData.productsCategoryList?.slice(halfwayIndex);
       // Set the first half and second half of categories
       setCategoryWeb({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath, categoryData: categoryData.productsCategoryList });
-
+      stopAnimationcategoryweb()
+      setCatwebLoading(false)
       stopAnimation()
+
     } catch (error) {
       console.log(error);
     }
   };
 
+  //sellproduct loding 
+  const playersellproduct = useRef();
+
+  const startAnimationsellpro = () => {
+    if (playersellproduct.current) {
+      playersellproduct.current.play(); // Check if player.current is not null before accessing play()
+    }
+  };
+
+  const stopAnimationsellpro = () => {
+    setSellProLoading(false);
+  };
+
+
   const getSellProducts = async () => {
     try {
 
-      startAnimation()
+      // startAnimation()
+      startAnimationsellpro()
+      setSellProLoading(true)
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
       const [womenCategory, menCategory, kidCategory, favorites] = await Promise.all([
         apiTyp(`${serverURL + PRODUCTList}`, {
@@ -327,13 +373,14 @@ export const CartProvider = ({ children }) => {
       const manproductData = menCategory.data.data;
       const kidsproductData = kidCategory.data.data;
       const favoriteproductData = favorites.data.data;
-      setSellProducUrl(womanproductData.productImagePath);
+      setSellProducUrl(womanproductData?.productImagePath);
 
       // if (sellIs_wished >= 1) {
-      setWomanProductList(womanproductData.productListArrObj);
-      setManProductList(manproductData.productListArrObj);
-      setkidsProductList(kidsproductData.productListArrObj);
-      setFavoriteProductList(favoriteproductData.productListArrObj)
+      setWomanProductList(womanproductData?.productListArrObj);
+      setManProductList(manproductData?.productListArrObj);
+      setkidsProductList(kidsproductData?.productListArrObj);
+      setFavoriteProductList(favoriteproductData?.productListArrObj)
+
       // } else if(sellIs_wished === 0){
       //   // Merge products without repetitions
       //   const updatedWomanProductList = [...womanProductList, ...womanproductData.productListArrObj]
@@ -349,10 +396,11 @@ export const CartProvider = ({ children }) => {
       //   setkidsProductList(updatedKidsProductList);
       //   setFavoriteProductList(updatedfavoriteProductList)
       // }
+      // stopAnimation()
 
+      stopAnimationsellpro()
       setViewmoreLoder(false)
-      stopAnimation()
-
+      setSellProLoading(false)
     } catch (error) {
       console.log(error);
     }
@@ -475,7 +523,8 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      categoryHome, setcategoryHome,
+    playersellproduct,startAnimationsellpro,stopAnimationsellpro,playercategoryweb,startAnimationcategoryweb,stopAnimationcategoryweb
+    ,categoryHome, setcategoryHome,categoryLoading, setCategoryLoading,catwebLoading, setCatwebLoading,ProductLoading, setProductLoading,sellProLoading, setSellProLoading,
       mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer,
       generateDynamicLink,setMyMessage,
       itemShow, setItemShow, getCartData, setCartList, setCouponId, cartList, couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,

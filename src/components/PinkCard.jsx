@@ -34,11 +34,15 @@ const PinkCard = (props) => {
         }
     }
 
+    const pinkProduct = props.img.sku_details.find(item => item.attrs.some(attr => attr.color === props.color));
+
     return (
         <>
             <div className='pink-card  pointer'>
                 <div className='pink-img position-relative'>
+              {props.color ? <img alt='' src={props.path + props.img._id + "/" + pinkProduct?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} /> :
                     <img alt='' src={props.path + props.img._id + "/" + props.img?.product_images[0]?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} />
+              }  
                     <Button className='add-to-card-btn' onClick={() => handleShow(props.img._id)}>Add to Cart</Button>
                 </div>
                 <div className='pink-card-text d-flex align-items-center justify-content-between px-3 py-2'>

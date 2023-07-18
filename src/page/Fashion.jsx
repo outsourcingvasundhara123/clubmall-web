@@ -18,16 +18,24 @@ import { Is_Login } from '../helper/IsLogin';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import ProductCard from './ProductCard';
+import { PRODUCTList } from "../helper/endpoints";
+import { errorResponse } from '../helper/constants';
 
 const Fashion = () => {
 
     const isLoggedIn = Is_Login();
-    const { userProductList, loading, setLoading, wishProductUrl, category, currentUser,
+    const { setMyMessage, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const serverURL = getServerURL();
 
     const navigate = useNavigate();
     const [isWishlist, setIsWishlist] = useState(); // We use !! to convert to a boolean
     const [show, setShow] = useState(false);
+    const [colorProductList, setColorProductList] = useState([]);
+    const [url, setUrl] = useState([]);
+    const [colorLoading, setColorLoading] = useState(false);
+
+    
     const handleClose = () => {
         setProduct_id({})
         setShow(false)
@@ -39,9 +47,7 @@ const Fashion = () => {
         setShow(true);
     }
 
-
     const player = useRef();
-
     const startAnimation = () => {
         if (player.current) {
             player.current.play(); // Check if player.current is not null before accessing play()
@@ -51,11 +57,53 @@ const Fashion = () => {
         setLoading(false);
     };
 
+    const handelSubCat = (Id) => {
+        localStorage.setItem("selectedSubcategories", Id);
+        window.location.href = "/categories";
+    };
+
+
 
     useEffect(() => {
         getProducts();
         getWishList()
     }, [isLoggedIn]);
+
+    useEffect(() => {
+        setColorLoading(true)
+        const getProductsByColor = async (color) => {
+            startAnimation();
+            const apiType = isLoggedIn ? api.postWithToken : api.post;
+    
+            const postListResponse = await apiType(`${serverURL + PRODUCTList}`, {
+                "product_list_type": "by-filters",
+                product_category_one_id: "64426a1637764b8698579aa0",
+                color: color,
+            });
+    
+            const postsData = postListResponse.data.data;
+            setUrl(postsData.productImagePath)
+            return {color, data: postsData.productListArrObj};
+        }
+    
+        Promise.all([
+            getProductsByColor("Pink"),
+            getProductsByColor("Purple"),
+            getProductsByColor("Blue"),
+            getProductsByColor("Green"),
+        ]).then((results) => {
+            const newColorProductList = results.reduce((accumulator, current) => {
+                accumulator[current.color.toLowerCase()] = current.data;
+                return accumulator;
+            }, {});
+            setColorProductList(newColorProductList);
+            setColorLoading(false)
+        }).catch((error) => {
+            errorResponse(error, setMyMessage);
+            console.log(error);
+        });
+    }, [isLoggedIn]);
+    
 
     return (
         <>
@@ -75,11 +123,11 @@ const Fashion = () => {
             />
 
             {
-                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                loading || colorLoading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
                         <section className='home-first-image mb-0'>
                             <div className='container-cos'>
-                                <div className='w-100 position-relative pointer' onClick={() => navigate("/trending")}>
+                                <div className='w-100 position-relative pointer' onClick={() => (handelSubCat("64481e7595c53d0f01ab0bf4"), handelCategorydata("64426a1637764b8698579aa0"))}>
                                     <img alt='' src="./img/new_in/hero-new-in.webp" width={"100%"} />
                                     <div className='particular-cate-head'>
                                         <h1>HOT <span>xxx</span> <br />FASHION <p>TREND</p></h1>
@@ -92,9 +140,9 @@ const Fashion = () => {
                             <div className='container-cos blue-bg'>
                                 <div className='shop-care-bears text-center pb-5'>
                                     <p>Dress for sunny days ahead with the help of our very caring friends!</p>
-                                    <div className='d-flex justify-content-center'>
+                                    {/* <div className='d-flex justify-content-center'>
                                         <Button className='shop-care-bears-btn mt-3'>Shop Care Bears</Button>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <div className='shop-trend px-5'>
@@ -173,7 +221,21 @@ const Fashion = () => {
                                         className="mySwiper"
                                     >
                                         {
-                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
+
+                                            colorProductList?.pink && colorProductList?.pink?.map((e) => {
+                                                return (
+                                                    <>
+                                                        <SwiperSlide>
+                                                            <PinkCard img={e} path={url && url} color={"Pink"} />
+                                                        </SwiperSlide>
+                                                    </>
+                                                )
+                                            })
+                                        }
+
+
+                                        {
+                                            colorProductList?.pink?.length <= 0 && trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <>
                                                         <SwiperSlide>
@@ -183,6 +245,7 @@ const Fashion = () => {
                                                 )
                                             })
                                         }
+
                                     </Swiper>
 
                                     <div className='d-flex justify-content-center mt-4'>
@@ -230,8 +293,24 @@ const Fashion = () => {
                                         modules={[Pagination, Navigation]}
                                         className="mySwiper"
                                     >
+
+
                                         {
-                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
+
+                                            colorProductList?.purple && colorProductList?.purple?.map((e) => {
+                                                return (
+                                                    <>
+                                                        <SwiperSlide>
+                                                            <PinkCard img={e} path={url && url} color={"Purple"} />
+                                                        </SwiperSlide>
+                                                    </>
+                                                )
+                                            })
+                                        }
+
+
+                                        {
+                                            colorProductList?.purple?.length <= 0 && trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <>
                                                         <SwiperSlide>
@@ -294,8 +373,23 @@ const Fashion = () => {
                                         modules={[Pagination, Navigation]}
                                         className="mySwiper"
                                     >
+
+
                                         {
-                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
+
+                                            colorProductList?.blue && colorProductList?.blue?.map((e) => {
+                                                return (
+                                                    <>
+                                                        <SwiperSlide>
+                                                            <PinkCard img={e} path={url && url} color={"Blue"} />
+                                                        </SwiperSlide>
+                                                    </>
+                                                )
+                                            })
+                                        }
+
+                                        {
+                                            colorProductList?.blue?.length <= 0 && trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {
                                                 return (
                                                     <>
                                                         <SwiperSlide>
@@ -352,8 +446,22 @@ const Fashion = () => {
                                         modules={[Pagination, Navigation]}
                                         className="mySwiper"
                                     >
+
                                         {
-                                            trendingProductList.productListArrObj && trendingProductList.productListArrObj.map((e) => {
+
+                                            colorProductList?.green && colorProductList?.green?.map((e) => {
+                                                return (
+                                                    <>
+                                                        <SwiperSlide>
+                                                            <PinkCard img={e} path={url && url} color={"Green"} />
+                                                        </SwiperSlide>
+                                                    </>
+                                                )
+                                            })
+                                        }
+
+                                        {
+                                            colorProductList?.green?.length <= 0 && trendingProductList.productListArrObj && trendingProductList.productListArrObj.map((e) => {
                                                 return (
                                                     <>
                                                         <SwiperSlide>

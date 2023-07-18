@@ -71,9 +71,10 @@ const ProductInfo = () => {
     const handleShow = () => {
         setShow(true);
     }
+    const [page, setPage] = useState(1);
     const handleClose = () => setShow(false);
     const [Product, setProduct] = useState({})
-    // const [productList, setProductList] = useState([]);
+    const [reviweList, setReviweList] = useState([]);
     const [favoriteProductList, setFavoriteProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
     const [sizeActive, setSizeActive] = useState("")
@@ -172,31 +173,43 @@ const ProductInfo = () => {
         }
     };
 
-    // const getProductReview = async () => {
-    //     startAnimation()
-    //     const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-    //     try {
-    //         if (product_id) {
-    //             const [productReview] = await Promise.all([
-    //                 apiTyp(`${serverURL + "product-review-list"}`, {
-    //                     "action": "list",
-    //                     "filter_by": [],
-    //                     "rating_value": [],
-    //                     "sort_by": "rating",
-    //                     product_id: product_id, page: "1"
-    //                 })
-    //             ]);
-    //         }
+    const getProductReview = async () => {
+        startAnimation()
+        const apiTyp = isLoggedIn ? api.postWithToken : api.post;
+        try {
+            if (product_id) {
+                const [productReview] = await Promise.all([
+                    apiTyp(`${serverURL + "product-review-list"}`, {
+                        "action": "list",
+                        "filter_by": [],
+                        "rating_value": [],
+                        "sort_by": "rating",
+                        product_id: product_id,
+                         page: page
+                    })
+                ]);
 
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+                const updateProductList = [...reviweList, ...productReview.data.data.list]
+                .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+                setReviweList(updateProductList)
+                console.log(productReview.data.data.list,"productReview.data.data.list");
+            }
 
-    useEffect(() => {
-        // getProductReview()
+            setMainLoder(false)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+  
+  useEffect(() => {
+        getProductReview()
         getProductDetail();
     }, [product_id, isLoggedIn, isWishlist, add_wished_Called]);
+
+    useEffect(() => {
+        getProductReview()
+    }, [page]);
 
 
     const getproductlist = async () => {
@@ -393,6 +406,7 @@ const ProductInfo = () => {
                         setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                     }
                     getProductDetail()
+                    getProductReview()
                     setValues(initialValues)
                     setreviewShow(false)
                 } else {
@@ -412,6 +426,8 @@ const ProductInfo = () => {
             console.error('Error posting  data:', error);
         }
     }
+
+    console.log(reviweList,"reviweList");
 
 
     return (
@@ -568,9 +584,9 @@ const ProductInfo = () => {
                                                     className="mySwiper"
                                                 >
 
-                                                    {
+                                                    {/* {
 
-                                                        !favoriteProductList.productListArrObj ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                                                        !favoriteProductList.productListArrObj ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : ( */}
                                                             <>
                                                                 {
 
@@ -597,7 +613,7 @@ const ProductInfo = () => {
                                                                 }
 
                                                             </>
-                                                        )}
+                                                         {/* )} */}
 
                                                 </Swiper>
 
@@ -883,7 +899,7 @@ const ProductInfo = () => {
                                     }
                                     <div className=''>
                                         {
-                                            Product?.productReviewList?.map((e, i) => {
+                                            reviweList?.map((e, i) => {
                                                 return (
                                                     <div className='d-flex align-items-start review-box gap-3 mt-4'>
                                                         {/* <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' /> */}
@@ -893,13 +909,13 @@ const ProductInfo = () => {
                                                                     <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
-                                                                <div className='d-flex gap-2 p-2 align-items-center'>
+                                                                <div className='d-flex gap-2 py-2 align-items-center'>
                                                                     {
                                                                         e?.review_files?.map((r, i) => {
                                                                             return (
                                                                                 <React.Fragment key={i}>
                                                                                     {r?.media_type === "image" ? (
-                                                                                        <img style={{ width: "100px" }} src={Product.productImagePath + r.file_name} alt='' />
+                                                                                        <img style={{ width: "100px" }} src={ r.file_name} alt='' />
                                                                                     ) : (
                                                                                         <video style={{ width: "200px" }} controls>
                                                                                             <source src={Product.productImagePath + r.file_name} type="video/mp4" />
@@ -938,7 +954,7 @@ const ProductInfo = () => {
                                             })
                                         }
                                         <div className='w-100 d-flex justify-content-center mt-3 mb-5'>
-                                            <Button className='shop-btn btn-cos-mobile'> View More <MdKeyboardDoubleArrowRight /></Button>
+                                            <Button className='shop-btn btn-cos-mobile' onClick={() => ( setPage(page + 1),setMainLoder(true))}  > View More <MdKeyboardDoubleArrowRight /></Button>
                                         </div>
                                     </div>
                                 </div>

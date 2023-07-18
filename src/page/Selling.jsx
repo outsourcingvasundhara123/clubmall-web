@@ -16,31 +16,34 @@ import { PRODUCTCATEGORY } from '../helper/endpoints'
 
 const Selling = () => {
 
-    const { handelwishSell, sellIs_wished, setLoading, loading, viewMoreLodr, startAnimation, stopAnimation, player, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, wishsellProducUrl, category, currentUser,
+    const { playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
+        , catwebLoading, setCatwebLoading, ProductLoading, setProductLoading, sellProLoading, setSellProLoading, handelwishSell, sellIs_wished, setLoading, loading, viewMoreLodr, startAnimation, stopAnimation, player, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, wishsellProducUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [sellCategory, setSellCategory] = useState([]);
     const serverURL = getServerURL();
-    // const [loading, setLoading] = useState(true);
-    // const player = useRef();
+    const [categoryLoading, setCategoryLoading] = useState(true);
 
-    // const startAnimation = () => {
-    //     if (player.current) {
-    //       player.current.play(); // Check if player.current is not null before accessing play()
-    //     }
-    //   };
 
-    //   const stopAnimation = () => {
-    //     setLoading(false);
+    const playercat = useRef();
 
-    //   };
+    const startAnimationcat = () => {
+        if (playercat.current) {
+            playercat.current.play(); // Check if player.current is not null before accessing play()
+        }
+    };
+
+    const stopAnimationcat = () => {
+        setCategoryLoading(false);
+
+    };
 
 
     const getCategory = async () => {
-        startAnimation()
-        setLoading(true);
+        startAnimationcat()
+        setCategoryLoading(true);
         try {
             const [categoryResponse] = await Promise.all([
                 api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" })
@@ -52,7 +55,10 @@ const Selling = () => {
             const secondHalf = categoryData.productsCategoryList?.slice(halfwayIndex);
             // Set the first half and second half of categories
             setSellCategory({ firstHalf, secondHalf, productsCategoryIconPath: categoryData?.productImagePath });
-            stopAnimation()
+
+
+            setCategoryLoading(false);
+
         } catch (error) {
             console.log(error);
         }
@@ -60,14 +66,16 @@ const Selling = () => {
 
     useEffect(() => {
         getSellProducts();
-        getWishList()
         getProducts()
     }, [womanpage, manpage, kidspage, favoritepage, sellingCategory, sellIs_wished, isLoggedIn]);
 
     useEffect(() => {
+        getWishList()
         getCategoryWeb()
         getCategory()
     }, []);
+
+
 
     return (
 
@@ -89,7 +97,7 @@ const Selling = () => {
             />
 
             {
-                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                loading || catwebLoading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
                         <section className='hero position-relative selling-banner pointer' onClick={() => navigate("/trending")}>
                             <div className='hero-text'>
@@ -97,27 +105,31 @@ const Selling = () => {
                             </div>
                         </section>
 
-                        <section className='shop-categories'>
-                            <div className='container-cos'>
-                                <div className='title w-100 text-center'>
-                                    <h2><span>S</span>HOP BY CATEGORY </h2>
-                                </div>
-                                <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4 mar-top-0'>
-                                    {
-                                        sellCategory && sellCategory.firstHalf?.slice(0, 6).map((e) => {
-                                            return (
-                                                <div className='cate-box text-center pointer' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >
-                                                    <div className='cat-img-round'>
-                                                        <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="100%" />
-                                                    </div>
-                                                    <h5 className='mt-4'>{e.name}</h5>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </div>
-                            </div>
-                        </section>
+                        {catwebLoading ?
+                            <Loader startAnimation={startAnimationcategoryweb} stopAnimation={stopAnimationcategoryweb} player={playercategoryweb} /> : (
+                                <section className='shop-categories'>
+                                    <div className='container-cos'>
+                                        <div className='title w-100 text-center'>
+                                            <h2><span>S</span>HOP BY CATEGORY </h2>
+                                        </div>
+                                        <div className='cate-main d-flex align-items-center justify-content-center gap-5 flex-wrap mt-4 mar-top-0'>
+                                            {
+                                                sellCategory && sellCategory.firstHalf?.slice(0, 6).map((e) => {
+                                                    return (
+                                                        <div className='cate-box text-center pointer' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >
+                                                            <div className='cat-img-round'>
+                                                                <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="100%" />
+                                                            </div>
+                                                            <h5 className='mt-4'>{e.name}</h5>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                </section>
+                            )
+                        }
 
                         <section className='basket'>
                             <div className='container-cos'>
@@ -125,22 +137,25 @@ const Selling = () => {
                                     <h2><span>B</span>ASKET STUFFERS FOR EVERTONE FROM $0.39</h2>
                                 </div>
                                 <Row className='mt-4'>
+                                    {catwebLoading ?
+                                        <Loader startAnimation={startAnimationcat} stopAnimation={stopAnimationcat} player={playercat} /> : (
 
-                                    {
-                                        sellCategory && sellCategory.secondHalf?.slice(0, 4).map((e) => {
-                                            return (
+                                            sellCategory && sellCategory.secondHalf?.slice(0, 4).map((e) => {
+                                                return (
 
-                                                <Col lg={3} md={6} sm={12} className='mt-4'>
-                                                    <div className='basket-box'>
-                                                        <h5>{e.name}</h5>
-                                                        <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="80%" className='my-4' />
-                                                        <div className='d-flex justify-content-center'>
-                                                            <Button className='shop-btn' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                    <Col lg={3} md={6} sm={12} className='mt-4'>
+                                                        <div className='basket-box'>
+                                                            <h5>{e.name}</h5>
+                                                            <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="80%" className='my-4' />
+                                                            <div className='d-flex justify-content-center'>
+                                                                <Button className='shop-btn' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </Col>
-                                            )
-                                        })
+                                                    </Col>
+                                                )
+                                            })
+
+                                        )
                                     }
 
                                 </Row>
@@ -152,6 +167,12 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>C</span>ELEBRATE IN FRESH STYLES </h2>
                                 </div>
+
+
+                                {/* {
+                                    sellProLoading ? <Loader startAnimation={startAnimationsellpro} stopAnimation={stopAnimationsellpro} player={playersellproduct} /> : (
+                                        <> */}
+
                                 <div className='tabs-content mt-5 '>
                                     <Tabs
                                         defaultActiveKey={sellingCategory?.first?.name}
@@ -241,6 +262,9 @@ const Selling = () => {
                                     </Tabs>
 
                                 </div>
+                                {/* </>
+                                    )
+                                } */}
                             </div>
                         </section>
 
@@ -317,30 +341,40 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>F</span>AVORITES FOR YOU</h2>
                                 </div>
-                                <div className='mb-0 mt-4 explore-main mar-top-0'>
-                                    {
-                                        favoriteProductList && favoriteProductList.map((e) => {
-                                            return (
-                                                <ProCard
-                                                    id={e._id}
-                                                    img={e.product_images[0]?.file_name}
-                                                    name={e.name}
-                                                    group_price={e.group_price}
-                                                    individual_price={e.individual_price}
-                                                    sold={e.total_order}
-                                                    secper={e.secper}
-                                                    off={e.discount_percentage}
-                                                    path={sellProducUrl && sellProducUrl}
-                                                    is_wishList={e.wishList && e.wishList}
-                                                />
-                                            )
-                                        })
-                                    }
+{/* 
+                                {
 
-                                    {/* <div className='w-100 d-flex justify-content-center'>
+
+                                    sellProLoading ?
+                                        <Loader startAnimation={startAnimationsellpro} stopAnimation={stopAnimationsellpro} player={playersellproduct} /> : ( */}
+                                            <div className='mb-0 mt-4 explore-main mar-top-0'>
+                                                {
+
+
+                                                    favoriteProductList && favoriteProductList.map((e) => {
+                                                        return (
+                                                            <ProCard
+                                                                id={e._id}
+                                                                img={e.product_images[0]?.file_name}
+                                                                name={e.name}
+                                                                group_price={e.group_price}
+                                                                individual_price={e.individual_price}
+                                                                sold={e.total_order}
+                                                                secper={e.secper}
+                                                                off={e.discount_percentage}
+                                                                path={sellProducUrl && sellProducUrl}
+                                                                is_wishList={e.wishList && e.wishList}
+                                                            />
+                                                        )
+                                                    })
+                                                }
+
+                                                {/* <div className='w-100 d-flex justify-content-center'>
                                         <Button className='shop-btn btn-cos-mobile' onClick={() => (setFavoritePage(favoritepage + 1), setViewmoreLoder(true), handelwishSell())} > {viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
                                     </div> */}
-                                </div>
+                                            </div>
+                                {/* //         )
+                                // } */}
                             </div>
                         </section>
 
@@ -349,29 +383,38 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>E</span>XPLORE YOUR INTERESTS</h2>
                                 </div>
-                                <div className='mb-0 mt-4 explore-main mar-top-0'>
-                                    {
-                                        trendingProductList.productListArrObj?.map((e) => {
-                                            return (
-                                                <ProCard
-                                                    id={e._id}
-                                                    img={e.product_images[0]?.file_name}
-                                                    name={e.name}
-                                                    group_price={e.group_price}
-                                                    individual_price={e.individual_price}
-                                                    sold={e.total_order}
-                                                    secper={e.secper}
-                                                    off={e.discount_percentage}
-                                                    path={sellProducUrl && sellProducUrl}
-                                                    is_wishList={e.wishList && e.wishList}
-                                                />
-                                            )
-                                        })
-                                    }
-                                    <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (navigate("/trending"), handelwishSell())} >View More<MdKeyboardDoubleArrowRight /></Button>
-                                    </div>
-                                </div>
+
+                                {/* {
+
+
+                                    // sellProLoading ?
+                                    //     <Loader startAnimation={startAnimationsellpro} stopAnimation={stopAnimationsellpro} player={playersellproduct} /> : ( */}
+
+                                            <div className='mb-0 mt-4 explore-main mar-top-0'>
+                                                {
+                                                    trendingProductList.productListArrObj?.map((e) => {
+                                                        return (
+                                                            <ProCard
+                                                                id={e._id}
+                                                                img={e.product_images[0]?.file_name}
+                                                                name={e.name}
+                                                                group_price={e.group_price}
+                                                                individual_price={e.individual_price}
+                                                                sold={e.total_order}
+                                                                secper={e.secper}
+                                                                off={e.discount_percentage}
+                                                                path={sellProducUrl && sellProducUrl}
+                                                                is_wishList={e.wishList && e.wishList}
+                                                            />
+                                                        )
+                                                    })
+                                                }
+                                                <div className='w-100 d-flex justify-content-center'>
+                                                    <Button className='shop-btn btn-cos-mobile' onClick={() => (navigate("/trending"), handelwishSell())} >View More<MdKeyboardDoubleArrowRight /></Button>
+                                                </div>
+                                            </div>
+                                {/* //         )
+                                // } */}
                             </div>
                         </section>
                     </>

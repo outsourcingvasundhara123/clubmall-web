@@ -99,7 +99,6 @@ const CategoryList = () => {
         getCategory();
     }, []);
 
-console.log(category,"category");
 
     return (
         <div className='categories-slider mt-5 position-relative'>
