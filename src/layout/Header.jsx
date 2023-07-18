@@ -155,6 +155,20 @@ const Header = (props) => {
     }, []);
 
 
+    const [animation, setAnimation] = useState('');
+    const texts = ['Women Apparel', 'Underwear & Sleepwear', 'Kids', 'Sports & Outdoor', 'Men Clothing', 'Beauty & Health'];
+    const intervalTime = 2000;
+
+    useEffect(() => {
+        const changeAnimation = () => {
+            const randomIndex = Math.floor(Math.random() * texts.length);
+            setAnimation(texts[randomIndex]);
+        };
+
+        const intervalId = setInterval(changeAnimation, intervalTime);
+        return () => clearInterval(intervalId);
+    }, []);
+
 
     return (
         <Fragment>
@@ -274,7 +288,7 @@ const Header = (props) => {
                         {/* {
                             isLoggedIn && */}
                         <div className='search-filed d-flex align-items-center gap-2'>
-                            <input type="text" onKeyDown={handleKeyPress} placeholder='Search products' className='w-100' onChange={handleChange} value={searchKeyWord} />
+                            <input type="text" onKeyDown={handleKeyPress} placeholder={animation} className='w-100' onChange={handleChange} value={searchKeyWord} />
                             <Button onClick={handleKeyUp} type='button' className='search-icon-btn'><BiSearch /></Button>
                         </div>
                         {/* // } */}
