@@ -382,7 +382,7 @@ const Home = () => {
 
                                     </Swiper>
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile'> View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile'  onClick={() => navigate("/trending")} > View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>
