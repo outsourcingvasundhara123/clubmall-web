@@ -76,7 +76,7 @@ const ProCard = (props) => {
                         <h5>{props.name}</h5>
                         <div className='d-flex align-items-center justify-content-between'>
                             <div >
-                                <p className='per' >${props.group_price} <span    >(Group Price)</span></p>
+                                <p className='per' >${props.group_price} <span >(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
 

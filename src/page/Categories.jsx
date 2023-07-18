@@ -459,6 +459,7 @@ const Categories = () => {
                                                                 color={e.sku_attributes.color}
                                                                 is_wishList={e.wishList && e.wishList}
                                                                 colorUrl={e.sku_details}
+                                                                
                                                             />
                                                         )
                                                     })

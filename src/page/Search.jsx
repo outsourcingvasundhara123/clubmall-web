@@ -21,7 +21,7 @@ const Search = () => {
         getSearchedProduct();
     }, [searchPage, is_search]);
 
-
+console.log(searchpostList,"searchpostList");
     return (
         <>
             <h1 className='d-none'></h1>
