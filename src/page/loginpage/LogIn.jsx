@@ -443,7 +443,7 @@ const LogIn = () => {
 
             {
               show ? <div className='pass-model-title text-center'>
-                <h3>Forget Password?</h3>
+                <h3>Forgot Password?</h3>
                 {(otpShow !== 1 && show == true) &&
                   <p className='mt-2'>Enter email to retrieve OTP for resetting password</p>
                 }

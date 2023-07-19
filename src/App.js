@@ -32,34 +32,34 @@ const App = () => {
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
 
-    useEffect(() => {
-      if(window.location.pathname !== "/login" && window.location.pathname !== "/register"  ){
-        localStorage.setItem('lastVisitedPath',window.location.pathname);
-      }
-    }, [window.location.pathname]);
+  useEffect(() => {
+    if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
+      localStorage.setItem('lastVisitedPath', window.location.pathname);
+    }
+  }, [window.location.pathname]);
 
 
-    // user devise 
-    function getMobileOperatingSystem() {
-      const userAgent = navigator.userAgent || navigator.vendor;
-  
-      // Apple devices (iPod, iPhone and iPad)
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-          return "iOS";
-      }
-  
-      // Android devices
-      else if (/android/i.test(userAgent)) {
-          return "Android";
-      }
-  
-      // If it's not an iPhone or Android we will assume it's "desktop"
-      return "desktop";
+  // user devise 
+  function getMobileOperatingSystem() {
+    const userAgent = navigator.userAgent || navigator.vendor;
+
+    // Apple devices (iPod, iPhone and iPad)
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      return "iOS";
+    }
+
+    // Android devices
+    else if (/android/i.test(userAgent)) {
+      return "Android";
+    }
+
+    // If it's not an iPhone or Android we will assume it's "desktop"
+    return "desktop";
   }
-  
+
   // usage
   useEffect(() => {
-    if(window.location.pathname.startsWith("/product-details/") && getMobileOperatingSystem() == "desktop" ){
+    if (window.location.pathname.startsWith("/product-details/") && getMobileOperatingSystem() == "iOS") {
       window.open("https://apps.apple.com/us/app/clubmall/id6444752184");
     }
   }, [window.location.pathname]);
@@ -80,12 +80,12 @@ const App = () => {
 
 
       {
-        window.location.pathname !== "/"  &&
+        window.location.pathname !== "/" &&
         <Button
-        className='btn-scroll-top'
-        onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
-        <MdOutlineKeyboardArrowUp />
-      </Button>
+          className='btn-scroll-top'
+          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+          <MdOutlineKeyboardArrowUp />
+        </Button>
       }
       {
         mainloder &&
