@@ -65,9 +65,16 @@ const Header = (props) => {
 
     const handleKeyUp = () => {
 
-        handelSearch(searchKeyWord)
-        navigate("/search")
-        getSearchedProduct()
+        if (!searchKeyWord) {
+            setMyMessage("Please enter a keyword for the search");
+            setWarningSnackBarOpen(!warningSnackBarOpen);    
+            }else{
+            handelSearch(searchKeyWord)
+            navigate("/search")
+            getSearchedProduct()
+        }
+
+
 
     };
     const handleKeyPress = (e) => {
@@ -157,7 +164,7 @@ const Header = (props) => {
 
     const [animation, setAnimation] = useState('');
     const texts = ['Women Apparel', 'Underwear & Sleepwear', 'Kids', 'Sports & Outdoor', 'Men Clothing', 'Beauty & Health'];
-    const intervalTime = 2000;
+    const intervalTime = 5000;
 
     useEffect(() => {
         const changeAnimation = () => {

@@ -79,11 +79,10 @@ const Home = () => {
     };
 
     const handleKeyUp = () => {
-
+        
         handelSearch(searchKeyWord)
         getSearchedProduct()
         navigate("/search")
-        
 
     };
 

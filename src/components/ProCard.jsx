@@ -110,13 +110,11 @@ const ProCard = (props) => {
                         </div>
                     </div>
                 </div>
-
                 {
                     location.pathname === "/trending" &&
                     <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
                         {
-                            props.colorUrl &&
-                            uniqueColors(props.colorUrl).map((e, i) => {
+                            props.colorUrl && uniqueColors(props.colorUrl).slice(0, 3).map((e, i) => {
                                 return (
                                     <div key={i}>
                                         <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(props.path + props.id + "/" + e.file_name))}>
@@ -126,7 +124,7 @@ const ProCard = (props) => {
                                 )
                             })
                         }
-                        <Button onClick={() => handleShow(props.id)}>+3</Button>
+                        {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+3</Button>}
                     </div>
                 }
                 {
@@ -134,8 +132,7 @@ const ProCard = (props) => {
                         <>
                             <div className='product-color-cos d-flex align-items-center overflow-auto gap-2 mt-2'>
                                 {
-                                    props.colorUrl &&
-                                    uniqueColors(props.colorUrl).map((e, i) => {
+                                    props.colorUrl && uniqueColors(props.colorUrl).slice(0, 3).map((e, i) => {
                                         return (
                                             <div key={i}>
                                                 <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(props.path + props.id + "/" + e.file_name))}>
@@ -145,7 +142,7 @@ const ProCard = (props) => {
                                         )
                                     })
                                 }
-                                <Button onClick={() => handleShow(props.id)}>+3</Button>
+                                {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+3</Button>}
                             </div>
                         </> : ""
                 }
