@@ -70,39 +70,71 @@ const Fashion = () => {
     }, [isLoggedIn]);
 
     useEffect(() => {
-        setColorLoading(true)
-        const getProductsByColor = async (color) => {
-            startAnimation();
-            const apiType = isLoggedIn ? api.postWithToken : api.post;
-    
-            const postListResponse = await apiType(`${serverURL + PRODUCTList}`, {
-                "product_list_type": "by-filters",
-                product_category_one_id: "64426a1637764b8698579aa0",
-                color: color,
-            });
-    
-            const postsData = postListResponse.data.data;
-            setUrl(postsData.productImagePath)
-            return {color, data: postsData.productListArrObj};
-        }
-    
+        setColorLoading(true);
+      
+        // Array of product IDs to ignore for all colors
+        const idsToIgnore = [
+          "648548e5cd7dafd7b364678a",
+          "6485c02e3d634c69fdac598e",
+          "6485c02e3d634c69fdac598e",
+          "6484cacacd7dafd7b3646403",
+          "6485731752b0e7657d84b1f8",
+          "64857eef3d634c69fdac5853",
+          "6484885052b0e7657d84acb2",
+          "6484cd9ccd7dafd7b3646418",
+          "648557d5b60a664b6e52bf0e",
+          "64868f11b60a664b6e52c686",
+          "64868a1fcd7dafd7b3646f11",
+          "64867a7952b0e7657d84b88f",
+          "64858a0a47a981c1dddf72c1"
+        ];
+      
+        const getProductsByColor = async (color, ignoreIds) => {
+          startAnimation();
+          const apiType = isLoggedIn ? api.postWithToken : api.post;
+      
+          const postListResponse = await apiType(`${serverURL + PRODUCTList}`, {
+            "product_list_type": "by-filters",
+            product_category_one_id: "64426a1637764b8698579aa0",
+            color: color,
+            page: 1,
+          });
+      
+          const postsData = postListResponse.data.data;
+          setUrl(postsData.productImagePath);
+      
+          // Filtering out products with the specified IDs
+          const filteredData = postsData.productListArrObj.filter(
+            (product) => !ignoreIds.includes(product._id)
+          );
+      
+          return { color, data: filteredData };
+        };
+      
         Promise.all([
-            getProductsByColor("Pink"),
-            getProductsByColor("Purple"),
-            getProductsByColor("Blue"),
-            getProductsByColor("Green"),
-        ]).then((results) => {
+          getProductsByColor("Pink", idsToIgnore),
+          getProductsByColor("Purple", idsToIgnore),
+          getProductsByColor("Blue", idsToIgnore),
+          getProductsByColor("Green", idsToIgnore),
+        ])
+          .then((results) => {
             const newColorProductList = results.reduce((accumulator, current) => {
-                accumulator[current.color.toLowerCase()] = current.data;
-                return accumulator;
+              accumulator[current.color.toLowerCase()] = current.data;
+              return accumulator;
             }, {});
+      
+            console.log(newColorProductList, "newColorProductList");
+      
             setColorProductList(newColorProductList);
-            setColorLoading(false)
-        }).catch((error) => {
-            errorResponse(error, setMyMessage);
+            setColorLoading(false);
+          })
+          .catch((error) => {
+            // errorResponse(error, setMyMessage);
             console.log(error);
-        });
-    }, [isLoggedIn]);
+          });
+      }, [isLoggedIn]);
+      
+      
     
 
     return (
@@ -248,9 +280,9 @@ const Fashion = () => {
 
                                     </Swiper>
 
-                                    <div className='d-flex justify-content-center mt-4'>
+                                    {/* <div className='d-flex justify-content-center mt-4'>
                                         <Button className='view-all-btn' onClick={() => navigate("/trending")}>View All</Button>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <img alt='' src='./img/new_in/purple.webp' width="100%" />
@@ -322,9 +354,9 @@ const Fashion = () => {
                                         }
                                     </Swiper>
 
-                                    <div className='d-flex justify-content-center mt-4'>
+                                    {/* <div className='d-flex justify-content-center mt-4'>
                                         <Button className='view-all-btn view-btn-yellow' onClick={() => navigate("/trending")}>View All</Button>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <img alt='' src='./img/new_in/blue.webp' width="100%" className='pink-big-img' />
@@ -401,9 +433,9 @@ const Fashion = () => {
                                         }
                                     </Swiper>
 
-                                    <div className='d-flex justify-content-center mt-4'>
+                                    {/* <div className='d-flex justify-content-center mt-4'>
                                         <Button className='view-all-btn' onClick={() => navigate("/trending")} >View All</Button>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 <img alt='' src='./img/new_in/green.webp' width="100%" />
@@ -473,9 +505,9 @@ const Fashion = () => {
                                         }
                                     </Swiper>
 
-                                    <div className='d-flex justify-content-center mt-4'>
+                                    {/* <div className='d-flex justify-content-center mt-4'>
                                         <Button className='view-all-btn view-btn-red' onClick={() => navigate("/trending")} >View All</Button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 

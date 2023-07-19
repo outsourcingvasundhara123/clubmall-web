@@ -51,9 +51,14 @@ const ProductInfo = () => {
         review_type: "",
         review_files: ""
     };
+
+
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [values, setValues] = useState(initialValues);
+
+
+
     const defaultProfile = `../img/for_you/defaultuser.png`
     const [perActive, setPerActive] = useState('Individual');
     const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
@@ -95,6 +100,26 @@ const ProductInfo = () => {
     const handlereviewClose = () => setreviewShow(false);
     const { id } = useParams();
     const product_id = id
+    const initialValues_2 = {
+        "action": "list",
+        "filter_by": [],
+        "rating_value": [],
+        "sort_by": "rating",
+        product_id: product_id,
+        page: page
+    };
+    const [filters, setFilters] = useState(initialValues_2);
+
+    const handelreviewFilter = (e) => {
+        const { name, value } = e.target;
+        setFilters((prevValues) => ({
+          ...prevValues,
+          [name]: value,
+        }));
+      };
+
+    console.log(filters,"filters");
+
     const [shareLink, setShareLink] = useState('');
     const [imagePreview, setImagePreview] = useState([]);
 
@@ -179,20 +204,12 @@ const ProductInfo = () => {
         try {
             if (product_id) {
                 const [productReview] = await Promise.all([
-                    apiTyp(`${serverURL + "product-review-list"}`, {
-                        "action": "list",
-                        "filter_by": [],
-                        "rating_value": [],
-                        "sort_by": "rating",
-                        product_id: product_id,
-                         page: page
-                    })
+                    apiTyp(`${serverURL + "product-review-list"}`, filters)
                 ]);
 
                 const updateProductList = [...reviweList, ...productReview.data.data.list]
-                .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+                    .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
                 setReviweList(updateProductList)
-                console.log(productReview.data.data.list,"productReview.data.data.list");
             }
 
             setMainLoder(false)
@@ -201,8 +218,8 @@ const ProductInfo = () => {
         }
     };
 
-  
-  useEffect(() => {
+
+    useEffect(() => {
         getProductReview()
         getProductDetail();
     }, [product_id, isLoggedIn, isWishlist, add_wished_Called]);
@@ -399,8 +416,13 @@ const ProductInfo = () => {
                         api.postWithToken(`${serverURL}product-review-manage`, formData)
                     ]);
                     if (response[0]?.data.success === true) {
-                        setMyMessageProductDtl(response[0]?.data.message);
-                        setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
+                        if(response[0]?.data.message ==  "Already review and rating this product!"){
+                            setMyMessageProductDtl("This product has already been reviewed and rated");
+                            setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);   
+                        }else{
+                            setMyMessageProductDtl(response[0]?.data.message);
+                            setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
+                        }
                     } else {
                         setMyMessageProductDtl(response[0]?.data.message);
                         setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
@@ -427,7 +449,7 @@ const ProductInfo = () => {
         }
     }
 
-    console.log(reviweList,"reviweList");
+    // console.log(reviweList, "reviweList");
 
 
     return (
@@ -587,33 +609,33 @@ const ProductInfo = () => {
                                                     {/* {
 
                                                         !favoriteProductList.productListArrObj ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : ( */}
-                                                            <>
-                                                                {
+                                                    <>
+                                                        {
 
-                                                                    favoriteProductList.productListArrObj
-                                                                    && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
-                                                                        return (
-                                                                            <SwiperSlide>
-                                                                                <div className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
-                                                                                    <div className='position-relative'>
-                                                                                        <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
-                                                                                    </div>
-                                                                                    <div className='slider-box-per pt-3'>
-                                                                                        <h5 className='text_frequently'>{e.name}</h5>
-                                                                                        <div className='d-flex align-items-center gap-2 mt-2'>
-                                                                                            <h5>${e.individual_price}</h5>
-                                                                                            {/* <del>${e.group_price}</del> */}
-                                                                                            {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
-                                                                                        </div>
-                                                                                    </div>
+                                                            favoriteProductList.productListArrObj
+                                                            && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
+                                                                return (
+                                                                    <SwiperSlide>
+                                                                        <div className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
+                                                                            <div className='position-relative'>
+                                                                                <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
+                                                                            </div>
+                                                                            <div className='slider-box-per pt-3'>
+                                                                                <h5 className='text_frequently'>{e.name}</h5>
+                                                                                <div className='d-flex align-items-center gap-2 mt-2'>
+                                                                                    <h5>${e.individual_price}</h5>
+                                                                                    {/* <del>${e.group_price}</del> */}
+                                                                                    {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
                                                                                 </div>
-                                                                            </SwiperSlide>
-                                                                        )
-                                                                    })
-                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </SwiperSlide>
+                                                                )
+                                                            })
+                                                        }
 
-                                                            </>
-                                                         {/* )} */}
+                                                    </>
+                                                    {/* )} */}
 
                                                 </Swiper>
 
@@ -871,31 +893,32 @@ const ProductInfo = () => {
                                 <div className='review mt-5 mar-top-20'>
                                     {Product?.productReviewList?.length === 0 ? " " :
                                         <div className='d-flex align-items-center justify-content-between review-responsive'>
-                                            <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
-                                            <div className='filter-review d-flex align-items-center gap-3'>
-                                                <select>
-                                                    <option>All</option>
-                                                    <option>With Video (0)</option>
-                                                    <option>With Photos (0)</option>
-                                                </select>
-                                                <select>
-                                                    <option>5 Start</option>
-                                                    <option>4 Start</option>
-                                                    <option>3 Start</option>
-                                                    <option>2 Start</option>
-                                                    <option>1 Start</option>
-                                                </select>
-                                                <select>
-                                                    <option>Sort by default</option>
-                                                    <option>Sort by videos</option>
-                                                    <option>Sort by pictures</option>
-                                                    <option>Sort by ratings</option>
-                                                </select>
-                                                <Button onClick={handlereviewShow} className='write-review'>
-                                                    Write a review
-                                                </Button>
-                                            </div>
+                                        <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
+                                        <div className='filter-review d-flex align-items-center gap-3'>
+                                          <select name='review_type' value={filters.review_type} onChange={handelreviewFilter}>
+                                            <option value=''>All</option>
+                                            <option value='video'>With Video</option>
+                                            <option value='photo'>With Photos</option>
+                                          </select>
+                                          <select name='rating_value' value={filters.rating_value} onChange={handelreviewFilter}>
+                                            <option value=''>All Ratings</option>
+                                            <option value='5'>5 Star</option>
+                                            <option value='4'>4 Star</option>
+                                            <option value='3'>3 Star</option>
+                                            <option value='2'>2 Star</option>
+                                            <option value='1'>1 Star</option>
+                                          </select>
+                                          <select name='sort_by' value={filters.sort_by} onChange={handelreviewFilter}>
+                                            <option value=''>Sort by default</option>
+                                            {/* <option>Sort by videos</option> */}
+                                            {/* <option>Sort by pictures</option> */}
+                                            <option value='rating'>Sort by ratings</option>
+                                          </select>
+                                          <Button onClick={handlereviewShow} className='write-review'>
+                                            Write a review
+                                          </Button>
                                         </div>
+                                      </div>
                                     }
                                     <div className=''>
                                         {
@@ -915,7 +938,7 @@ const ProductInfo = () => {
                                                                             return (
                                                                                 <React.Fragment key={i}>
                                                                                     {r?.media_type === "image" ? (
-                                                                                        <img style={{ width: "100px" }} src={ r.file_name} alt='' />
+                                                                                        <img style={{ width: "100px" }} src={r.file_name} alt='' />
                                                                                     ) : (
                                                                                         <video style={{ width: "200px" }} controls>
                                                                                             <source src={Product.productImagePath + r.file_name} type="video/mp4" />
@@ -953,9 +976,14 @@ const ProductInfo = () => {
                                                 )
                                             })
                                         }
-                                        <div className='w-100 d-flex justify-content-center mt-3 mb-5'>
-                                            <Button className='shop-btn btn-cos-mobile' onClick={() => ( setPage(page + 1),setMainLoder(true))}  > View More <MdKeyboardDoubleArrowRight /></Button>
-                                        </div>
+
+                                        {
+                                            reviweList.length >= 10 &&
+                                            <div className='w-100 d-flex justify-content-center mt-3 mb-5'>
+                                                <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setMainLoder(true))}  > View More <MdKeyboardDoubleArrowRight /></Button>
+                                            </div>
+                                        }
+
                                     </div>
                                 </div>
 

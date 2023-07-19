@@ -39,6 +39,32 @@ const App = () => {
     }, [window.location.pathname]);
 
 
+    // user devise 
+    function getMobileOperatingSystem() {
+      const userAgent = navigator.userAgent || navigator.vendor;
+  
+      // Apple devices (iPod, iPhone and iPad)
+      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+          return "iOS";
+      }
+  
+      // Android devices
+      else if (/android/i.test(userAgent)) {
+          return "Android";
+      }
+  
+      // If it's not an iPhone or Android we will assume it's "desktop"
+      return "desktop";
+  }
+  
+  // usage
+  useEffect(() => {
+    if(window.location.pathname.startsWith("/product-details/") && getMobileOperatingSystem() == "desktop" ){
+      window.open("https://apps.apple.com/us/app/clubmall/id6444752184");
+    }
+  }, [window.location.pathname]);
+
+
   // UseEffect hook here
   useEffect(() => {
     if (mainloder) {

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect,useContext } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { useNavigate } from 'react-router-dom'
@@ -17,7 +17,8 @@ import { CartContext } from '../context/CartContext';
 const CategoryList = () => {
 
 
-   
+    // Define a new piece of state to hold the random prices.
+    const [prices, setPrices] = useState([]);
     const { categoryHome, setcategoryHome } = useContext(CartContext);
     const navigate = useNavigate();
     const [category, setcategory] = useState([]);
@@ -95,6 +96,16 @@ const CategoryList = () => {
         }
     };
 
+
+
+    useEffect(() => {
+        // Whenever the `category` data changes, recalculate the random prices.
+        if (category && category.firstHalf) {
+            setPrices(category.firstHalf.map(() => parseFloat((Math.random() * (10.0 - 1.0) + 1.0).toFixed(2))));
+        }
+    }, [category]);
+
+
     useEffect(() => {
         getCategory();
     }, []);
@@ -123,7 +134,7 @@ const CategoryList = () => {
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
 
-                                            <p>From ${parseFloat((Math.random() * (10.0 - 1.0) + 1.0).toFixed(2))}</p>
+                                            <p>From ${prices[i]}</p>
                                         </div>
                                     </div>
                                 );
@@ -147,7 +158,7 @@ const CategoryList = () => {
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
-                                            <p>From ${parseFloat((Math.random() * (10.0 - 1.0) + 1.0).toFixed(2))}</p>
+                                            <p>From ${prices[i]}</p>
                                         </div>
                                     </div>
                                 );
