@@ -100,9 +100,7 @@ const Selling = () => {
                 loading || catwebLoading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
                         <section className='hero position-relative selling-banner pointer' onClick={() => navigate("/trending")}>
-                            <div className='hero-text'>
-                                <h1>Hop Into <br /> Hot Selling</h1>
-                            </div>
+                            <img src='./img/banner2.webp' />
                         </section>
 
                         {catwebLoading ?
@@ -341,38 +339,38 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>F</span>AVORITES FOR YOU</h2>
                                 </div>
-{/* 
+                                {/* 
                                 {
 
 
                                     sellProLoading ?
                                         <Loader startAnimation={startAnimationsellpro} stopAnimation={stopAnimationsellpro} player={playersellproduct} /> : ( */}
-                                            <div className='mb-0 mt-4 explore-main mar-top-0'>
-                                                {
+                                <div className='mb-0 mt-4 explore-main mar-top-0'>
+                                    {
 
 
-                                                    favoriteProductList && favoriteProductList.map((e) => {
-                                                        return (
-                                                            <ProCard
-                                                                id={e._id}
-                                                                img={e.product_images[0]?.file_name}
-                                                                name={e.name}
-                                                                group_price={e.group_price}
-                                                                individual_price={e.individual_price}
-                                                                sold={e.total_order}
-                                                                secper={e.secper}
-                                                                off={e.discount_percentage}
-                                                                path={sellProducUrl && sellProducUrl}
-                                                                is_wishList={e.wishList && e.wishList}
-                                                            />
-                                                        )
-                                                    })
-                                                }
+                                        favoriteProductList && favoriteProductList.map((e) => {
+                                            return (
+                                                <ProCard
+                                                    id={e._id}
+                                                    img={e.product_images[0]?.file_name}
+                                                    name={e.name}
+                                                    group_price={e.group_price}
+                                                    individual_price={e.individual_price}
+                                                    sold={e.total_order}
+                                                    secper={e.secper}
+                                                    off={e.discount_percentage}
+                                                    path={sellProducUrl && sellProducUrl}
+                                                    is_wishList={e.wishList && e.wishList}
+                                                />
+                                            )
+                                        })
+                                    }
 
-                                                {/* <div className='w-100 d-flex justify-content-center'>
+                                    {/* <div className='w-100 d-flex justify-content-center'>
                                         <Button className='shop-btn btn-cos-mobile' onClick={() => (setFavoritePage(favoritepage + 1), setViewmoreLoder(true), handelwishSell())} > {viewMoreLodr ? "Loding..." : "View More"} <MdKeyboardDoubleArrowRight /></Button>
                                     </div> */}
-                                            </div>
+                                </div>
                                 {/* //         )
                                 // } */}
                             </div>
@@ -390,29 +388,29 @@ const Selling = () => {
                                     // sellProLoading ?
                                     //     <Loader startAnimation={startAnimationsellpro} stopAnimation={stopAnimationsellpro} player={playersellproduct} /> : ( */}
 
-                                            <div className='mb-0 mt-4 explore-main mar-top-0'>
-                                                {
-                                                    trendingProductList.productListArrObj?.map((e) => {
-                                                        return (
-                                                            <ProCard
-                                                                id={e._id}
-                                                                img={e.product_images[0]?.file_name}
-                                                                name={e.name}
-                                                                group_price={e.group_price}
-                                                                individual_price={e.individual_price}
-                                                                sold={e.total_order}
-                                                                secper={e.secper}
-                                                                off={e.discount_percentage}
-                                                                path={sellProducUrl && sellProducUrl}
-                                                                is_wishList={e.wishList && e.wishList}
-                                                            />
-                                                        )
-                                                    })
-                                                }
-                                                <div className='w-100 d-flex justify-content-center'>
-                                                    <Button className='shop-btn btn-cos-mobile' onClick={() => (navigate("/trending"), handelwishSell())} >View More<MdKeyboardDoubleArrowRight /></Button>
-                                                </div>
-                                            </div>
+                                <div className='mb-0 mt-4 explore-main mar-top-0'>
+                                    {
+                                        trendingProductList.productListArrObj?.map((e) => {
+                                            return (
+                                                <ProCard
+                                                    id={e._id}
+                                                    img={e.product_images[0]?.file_name}
+                                                    name={e.name}
+                                                    group_price={e.group_price}
+                                                    individual_price={e.individual_price}
+                                                    sold={e.total_order}
+                                                    secper={e.secper}
+                                                    off={e.discount_percentage}
+                                                    path={sellProducUrl && sellProducUrl}
+                                                    is_wishList={e.wishList && e.wishList}
+                                                />
+                                            )
+                                        })
+                                    }
+                                    <div className='w-100 d-flex justify-content-center'>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (navigate("/trending"), handelwishSell())} >View More<MdKeyboardDoubleArrowRight /></Button>
+                                    </div>
+                                </div>
                                 {/* //         )
                                 // } */}
                             </div>

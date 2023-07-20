@@ -839,14 +839,14 @@ p {
 }
 
 .selling-banner {
-    height: 500px;
-    background-image: url("../img/banner2.webp");
-    background-repeat: no-repeat;
-    background-size: cover;
     display: flex;
     align-items: center;
     background-position: 10% bottom;
     background-position: center;
+}
+
+.selling-banner img {
+    object-fit: cover;
 }
 
 .hero-banner .hero-text {
@@ -3766,9 +3766,9 @@ input[type='radio'] {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
     .pink-slider {
-        padding: 50px 20px;
+        padding: 20px !important;
     }
 }
 
