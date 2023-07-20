@@ -161,9 +161,6 @@ const Fashion = () => {
                             <div className='container-cos'>
                                 <div className='w-100 position-relative pointer' onClick={() => (handelSubCat("64481e7595c53d0f01ab0bf4"), handelCategorydata("64426a1637764b8698579aa0"))}>
                                     <img alt='' src="./img/new_in/hero-new-in.webp" width={"100%"} />
-                                    <div className='particular-cate-head'>
-                                        <h1>HOT <span>xxx</span> <br />FASHION <p>TREND</p></h1>
-                                    </div>
                                 </div>
                             </div>
                         </section>

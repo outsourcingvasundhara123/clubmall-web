@@ -3518,11 +3518,11 @@ input[type='radio'] {
 
 /* particular-categories-page start */
 
-.home-first-image .particular-cate-head {
+/* .home-first-image .particular-cate-head {
     position: absolute;
     top: 42px;
     left: 42px;
-}
+} */
 
 .home-first-image .Shop-Care-Bears-div {
     text-align: center;
@@ -3535,7 +3535,7 @@ input[type='radio'] {
     margin-top: -96px;
 }
 
-.home-first-image .particular-cate-head h1 {
+/* .home-first-image .particular-cate-head h1 {
     font-weight: 900;
     font-size: 75px;
     color: #223263;
@@ -3604,7 +3604,7 @@ input[type='radio'] {
         top: 0px;
         left: 17px;
     }
-}
+} */
 
 .blue-bg {
     background-color: #ecf8fe;
