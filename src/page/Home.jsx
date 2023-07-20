@@ -241,7 +241,7 @@ const Home = () => {
                                                 <img src='./img/img4.svg' alt='' />
                                                 <div className='card-text-bottom big-box'>
                                                     <div className='card-text'>
-                                                        <h5>RJ Jewellery</h5>
+                                                        <h5>Jewellery</h5>
                                                         <span className='my-2 d-block'>From $0.29</span>
                                                     </div>
                                                     <Button className='shop-btn mt-0 mt-3' onClick={() => (handelCategorydata("6488512c483f4ea550675331"), localStorage.removeItem("selectedSubcategories"))}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
