@@ -24,7 +24,7 @@ import { handelCategorydata } from '../helper/constants';
 
 const Home = () => {
 
-    const {handelSearch,getSearchedProduct,searchKeyWord,setSearchKeyWord,categoryHome, setMyMessage, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
+    const { handelSearch, getSearchedProduct, searchKeyWord, setSearchKeyWord, categoryHome, setMyMessage, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const textRef = useRef(null);
     const isLoggedIn = Is_Login();
@@ -79,7 +79,7 @@ const Home = () => {
     };
 
     const handleKeyUp = () => {
-        
+
         handelSearch(searchKeyWord)
         getSearchedProduct()
         navigate("/search")
@@ -117,7 +117,7 @@ const Home = () => {
                         <section className='home-first-image'>
                             <div className='container-cos'>
                                 <div className='w-100  pointer ' onClick={() => (handelCategorydata("64426a1637764b8698579aa0"), localStorage.removeItem("selectedSubcategories"))}>
-                                    <img src="./img/homePageBg1.svg" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
                                 </div>
                             </div>
                         </section>
@@ -160,7 +160,7 @@ const Home = () => {
                         <section className='home-second-image ' >
                             <div className='container-cos position-relative'>
                                 <div className='w-100 pointer ' onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))}>
-                                    <img src="./img/homePageBg2.svg" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg2.webp" alt="" width={"100%"} />
                                 </div>
                                 <Button onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))} className='shop-the-drop'>Shop The Drop</Button>
                             </div>
@@ -241,7 +241,7 @@ const Home = () => {
                                                 <img src='./img/img4.svg' alt='' />
                                                 <div className='card-text-bottom big-box'>
                                                     <div className='card-text'>
-                                                        <h5>RJ Jewellery</h5>
+                                                        <h5>Jewellery</h5>
                                                         <span className='my-2 d-block'>From $0.29</span>
                                                     </div>
                                                     <Button className='shop-btn mt-0 mt-3' onClick={() => (handelCategorydata("6488512c483f4ea550675331"), localStorage.removeItem("selectedSubcategories"))}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
@@ -381,7 +381,7 @@ const Home = () => {
 
                                     </Swiper>
                                     <div className='w-100 d-flex justify-content-center'>
-                                        <Button className='shop-btn btn-cos-mobile'  onClick={() => navigate("/trending")} > View More <MdKeyboardDoubleArrowRight /></Button>
+                                        <Button className='shop-btn btn-cos-mobile' onClick={() => navigate("/trending")} > View More <MdKeyboardDoubleArrowRight /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -393,7 +393,7 @@ const Home = () => {
                                     <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
                                 </div>
                                 <div className='w-100 mt-5 pointer mar-top-20' onClick={() => (handelCategorydata("64426a1637764b8698579aa0"), localStorage.removeItem("selectedSubcategories"))}>
-                                    <img src="./img/homePageBg1.webp" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg3.webp" alt="" width={"100%"} />
                                 </div>
                             </div>
                         </section>
@@ -401,7 +401,7 @@ const Home = () => {
                         <section className='home-second-image'>
                             <div className='container-cos position-relative'>
                                 <div className='w-100 pointer ' onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))}>
-                                    <img src="./img/homePageBg2.webp" alt="" width={"100%"} />
+                                    <img src="./img/homePageBg4.webp" alt="" width={"100%"} />
                                 </div>
                                 <Button className='shop-the-drop'>Shop The Drop</Button>
                             </div>
@@ -497,15 +497,15 @@ const Home = () => {
     
     
                                             } */}
-                                    
-                                    <Button className={active === "2" ? "active" : undefined} style={{ backgroundColor: "#2D4658" }} id={"2"} onClick={ (e) => (handleClick(e),handleChange("Spring")) } >Spring</Button>
-                                    <Button className={active === "3" ? "active" : undefined} style={{ backgroundColor: "#893350" }} id={"3"} onClick={ (e) => (handleClick(e),handleChange("Makeup")) } >Makeup</Button>
-                                    <Button className={active === "4" ? "active" : undefined} style={{ backgroundColor: "#D7C9BE" }} id={"4"} onClick={ (e) => (handleClick(e),handleChange("Denim")) } >Denim</Button>
-                                    <Button className={active === "5" ? "active" : undefined} style={{ backgroundColor: "#DDCAD7" }} id={"5"} onClick={ (e) => (handleClick(e),handleChange("Girls")) } >Girls</Button>
-                                    <Button className={active === "6" ? "active" : undefined} style={{ backgroundColor: "#C49275" }} id={"6"} onClick={ (e) => (handleClick(e),handleChange("Beauty")) } >Beauty</Button>
-                                    <Button className={active === "7" ? "active" : undefined} style={{ backgroundColor: "#D3C4B1" }} id={"7"} onClick={ (e) => (handleClick(e),handleChange("Style")) } >Style</Button>
-                                    <Button className={active === "8" ? "active" : undefined} style={{ backgroundColor: "#DFA6A8" }} id={"8"} onClick={ (e) => (handleClick(e),handleChange("Elegant")) }  >Elegant</Button>
-                                    <Button className={active === "8" ? "active" : undefined} style={{ backgroundColor: "#EECA94" }} id={"8"} onClick={ (e) => (handleClick(e),handleChange("Cool")) }  >Cool</Button>
+
+                                    <Button className={active === "2" ? "active" : undefined} style={{ backgroundColor: "#2D4658" }} id={"2"} onClick={(e) => (handleClick(e), handleChange("Spring"))} >Spring</Button>
+                                    <Button className={active === "3" ? "active" : undefined} style={{ backgroundColor: "#893350" }} id={"3"} onClick={(e) => (handleClick(e), handleChange("Makeup"))} >Makeup</Button>
+                                    <Button className={active === "4" ? "active" : undefined} style={{ backgroundColor: "#D7C9BE" }} id={"4"} onClick={(e) => (handleClick(e), handleChange("Denim"))} >Denim</Button>
+                                    <Button className={active === "5" ? "active" : undefined} style={{ backgroundColor: "#DDCAD7" }} id={"5"} onClick={(e) => (handleClick(e), handleChange("Girls"))} >Girls</Button>
+                                    <Button className={active === "6" ? "active" : undefined} style={{ backgroundColor: "#C49275" }} id={"6"} onClick={(e) => (handleClick(e), handleChange("Beauty"))} >Beauty</Button>
+                                    <Button className={active === "7" ? "active" : undefined} style={{ backgroundColor: "#D3C4B1" }} id={"7"} onClick={(e) => (handleClick(e), handleChange("Style"))} >Style</Button>
+                                    <Button className={active === "8" ? "active" : undefined} style={{ backgroundColor: "#DFA6A8" }} id={"8"} onClick={(e) => (handleClick(e), handleChange("Elegant"))}  >Elegant</Button>
+                                    <Button className={active === "8" ? "active" : undefined} style={{ backgroundColor: "#EECA94" }} id={"8"} onClick={(e) => (handleClick(e), handleChange("Cool"))}  >Cool</Button>
                                 </div>
                             </div>
                         </section>

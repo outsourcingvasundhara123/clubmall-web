@@ -35,7 +35,7 @@ const Fashion = () => {
     const [url, setUrl] = useState([]);
     const [colorLoading, setColorLoading] = useState(false);
 
-    
+
     const handleClose = () => {
         setProduct_id({})
         setShow(false)
@@ -71,71 +71,71 @@ const Fashion = () => {
 
     useEffect(() => {
         setColorLoading(true);
-      
+
         // Array of product IDs to ignore for all colors
         const idsToIgnore = [
-          "648548e5cd7dafd7b364678a",
-          "6485c02e3d634c69fdac598e",
-          "6485c02e3d634c69fdac598e",
-          "6484cacacd7dafd7b3646403",
-          "6485731752b0e7657d84b1f8",
-          "64857eef3d634c69fdac5853",
-          "6484885052b0e7657d84acb2",
-          "6484cd9ccd7dafd7b3646418",
-          "648557d5b60a664b6e52bf0e",
-          "64868f11b60a664b6e52c686",
-          "64868a1fcd7dafd7b3646f11",
-          "64867a7952b0e7657d84b88f",
-          "64858a0a47a981c1dddf72c1"
+            "648548e5cd7dafd7b364678a",
+            "6485c02e3d634c69fdac598e",
+            "6485c02e3d634c69fdac598e",
+            "6484cacacd7dafd7b3646403",
+            "6485731752b0e7657d84b1f8",
+            "64857eef3d634c69fdac5853",
+            "6484885052b0e7657d84acb2",
+            "6484cd9ccd7dafd7b3646418",
+            "648557d5b60a664b6e52bf0e",
+            "64868f11b60a664b6e52c686",
+            "64868a1fcd7dafd7b3646f11",
+            "64867a7952b0e7657d84b88f",
+            "64858a0a47a981c1dddf72c1"
         ];
-      
+
         const getProductsByColor = async (color, ignoreIds) => {
-          startAnimation();
-          const apiType = isLoggedIn ? api.postWithToken : api.post;
-      
-          const postListResponse = await apiType(`${serverURL + PRODUCTList}`, {
-            "product_list_type": "by-filters",
-            product_category_one_id: "64426a1637764b8698579aa0",
-            color: color,
-            page: 1,
-          });
-      
-          const postsData = postListResponse.data.data;
-          setUrl(postsData.productImagePath);
-      
-          // Filtering out products with the specified IDs
-          const filteredData = postsData.productListArrObj.filter(
-            (product) => !ignoreIds.includes(product._id)
-          );
-      
-          return { color, data: filteredData };
+            startAnimation();
+            const apiType = isLoggedIn ? api.postWithToken : api.post;
+
+            const postListResponse = await apiType(`${serverURL + PRODUCTList}`, {
+                "product_list_type": "by-filters",
+                product_category_one_id: "64426a1637764b8698579aa0",
+                color: color,
+                page: 1,
+            });
+
+            const postsData = postListResponse.data.data;
+            setUrl(postsData.productImagePath);
+
+            // Filtering out products with the specified IDs
+            const filteredData = postsData.productListArrObj.filter(
+                (product) => !ignoreIds.includes(product._id)
+            );
+
+            return { color, data: filteredData };
         };
-      
+
         Promise.all([
-          getProductsByColor("Pink", idsToIgnore),
-          getProductsByColor("Purple", idsToIgnore),
-          getProductsByColor("Blue", idsToIgnore),
-          getProductsByColor("Green", idsToIgnore),
+            getProductsByColor("Pink", idsToIgnore),
+            getProductsByColor("Purple", idsToIgnore),
+            getProductsByColor("Blue", idsToIgnore),
+            getProductsByColor("Green", idsToIgnore),
         ])
-          .then((results) => {
-            const newColorProductList = results.reduce((accumulator, current) => {
-              accumulator[current.color.toLowerCase()] = current.data;
-              return accumulator;
-            }, {});
-      
-            console.log(newColorProductList, "newColorProductList");
-      
-            setColorProductList(newColorProductList);
-            setColorLoading(false);
-          })
-          .catch((error) => {
-            // errorResponse(error, setMyMessage);
-            console.log(error);
-          });
-      }, [isLoggedIn]);
-      
-      
-    
+            .then((results) => {
+                const newColorProductList = results.reduce((accumulator, current) => {
+                    accumulator[current.color.toLowerCase()] = current.data;
+                    return accumulator;
+                }, {});
+
+                console.log(newColorProductList, "newColorProductList");
+
+                setColorProductList(newColorProductList);
+                setColorLoading(false);
+            })
+            .catch((error) => {
+                // errorResponse(error, setMyMessage);
+                console.log(error);
+            });
+    }, [isLoggedIn]);
+
+
+
 
     return (
         <>
@@ -161,9 +161,6 @@ const Fashion = () => {
                             <div className='container-cos'>
                                 <div className='w-100 position-relative pointer' onClick={() => (handelSubCat("64481e7595c53d0f01ab0bf4"), handelCategorydata("64426a1637764b8698579aa0"))}>
                                     <img alt='' src="./img/new_in/hero-new-in.webp" width={"100%"} />
-                                    <div className='particular-cate-head'>
-                                        <h1>HOT <span>xxx</span> <br />FASHION <p>TREND</p></h1>
-                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -206,7 +203,7 @@ const Fashion = () => {
                                     </Row>
                                 </div>
 
-                                <img alt='' src='./img/new_in/pink.webp' width="100%" className='pink-big-img' />
+                                <img alt='' src='./img/new_in/pink.webp' width="100%" className='pink-big-img mt-5' />
                             </div>
                         </section>
 
@@ -285,7 +282,7 @@ const Fashion = () => {
                                     </div> */}
                                 </div>
 
-                                <img alt='' src='./img/new_in/purple.webp' width="100%" />
+                                <img alt='' src='./img/new_in/purple.webp' width="100%" className='mt-0 mt-md-5' />
 
                                 <div className='pink-slider pt-5'>
                                     <Swiper
@@ -359,7 +356,7 @@ const Fashion = () => {
                                     </div> */}
                                 </div>
 
-                                <img alt='' src='./img/new_in/blue.webp' width="100%" className='pink-big-img' />
+                                <img alt='' src='./img/new_in/blue.webp' width="100%" className='pink-big-img mt-0 mt-md-5' />
                             </div>
 
                         </section>
@@ -438,7 +435,7 @@ const Fashion = () => {
                                     </div> */}
                                 </div>
 
-                                <img alt='' src='./img/new_in/green.webp' width="100%" />
+                                <img alt='' src='./img/new_in/green.webp' width="100%" className='mt-0 mt-md-5' />
 
                                 <div className='pink-slider py-5'>
                                     <Swiper

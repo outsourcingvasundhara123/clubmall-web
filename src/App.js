@@ -32,11 +32,11 @@ const App = () => {
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
 
-    useEffect(() => {
-      if(window.location.pathname !== "/login" && window.location.pathname !== "/register"  ){
-        localStorage.setItem('lastVisitedPath',window.location.pathname);
-      }
-    }, [window.location.pathname]);
+  useEffect(() => {
+    if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
+      localStorage.setItem('lastVisitedPath', window.location.pathname);
+    }
+  }, [window.location.pathname]);
 
 
     // user devise 
@@ -93,12 +93,12 @@ const App = () => {
 
 
       {
-        window.location.pathname !== "/"  &&
+        window.location.pathname !== "/" &&
         <Button
-        className='btn-scroll-top'
-        onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
-        <MdOutlineKeyboardArrowUp />
-      </Button>
+          className='btn-scroll-top'
+          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+          <MdOutlineKeyboardArrowUp />
+        </Button>
       }
       {
         mainloder &&
