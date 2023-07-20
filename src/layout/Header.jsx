@@ -164,7 +164,7 @@ const Header = (props) => {
 
     const [animation, setAnimation] = useState('');
     const texts = ['Women Apparel', 'Underwear & Sleepwear', 'Kids', 'Sports & Outdoor', 'Men Clothing', 'Beauty & Health'];
-    const intervalTime = 5000;
+    const intervalTime = 7000;
 
     useEffect(() => {
         const changeAnimation = () => {
@@ -176,6 +176,8 @@ const Header = (props) => {
         return () => clearInterval(intervalId);
     }, []);
 
+
+console.log(category,"category");
 
     return (
         <Fragment>
