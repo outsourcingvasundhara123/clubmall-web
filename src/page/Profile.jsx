@@ -159,7 +159,7 @@ const Profile = () => {
         // }
 
         if (name === "country_id") {
-            console.log("chnaged");
+   
             setValues((prevValues) => ({
                 ...prevValues,
                 ["state_id"]: "",

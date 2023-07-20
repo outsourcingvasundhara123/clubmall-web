@@ -42,7 +42,6 @@ const App = () => {
     // user devise 
     function getMobileOperatingSystem() {
       const userAgent = navigator.userAgent || navigator.vendor;
-      console.log(navigator,"navigator");
       // Apple devices (iPod, iPhone and iPad)
       if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
           return "iOS";
