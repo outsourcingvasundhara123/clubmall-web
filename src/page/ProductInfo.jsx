@@ -73,6 +73,7 @@ const ProductInfo = () => {
     const handleDrawerShow = () => setDrawer(true);
     const serverURL = getServerURL();
     const [show, setShow] = useState(false);
+    const [isfilter, setIsFilter] = useState(false);
     const handleShow = () => {
         setShow(true);
     }
@@ -104,21 +105,35 @@ const ProductInfo = () => {
         "action": "list",
         "filter_by": [],
         "rating_value": [],
-        "sort_by": "rating",
+        "sort_by": "",
         product_id: product_id,
-        page: page
+
     };
     const [filters, setFilters] = useState(initialValues_2);
 
     const handelreviewFilter = (e) => {
+        setPage(1)
         const { name, value } = e.target;
-        setFilters((prevValues) => ({
-          ...prevValues,
-          [name]: value,
-        }));
-      };
 
-    console.log(filters,"filters");
+        if (name === "filter_by") {
+            setFilters((prevValues) => ({
+                ...prevValues,
+                filter_by: [value],
+            }));
+        } else if (name === "rating_value" && value !== "") {
+            setFilters((prevValues) => ({
+                ...prevValues,
+                rating_value: [value],
+            }));
+        } else {
+            setFilters((prevValues) => ({
+                ...prevValues,
+                [name]: value,
+            }));
+        }
+        setMainLoder(true)
+        setIsFilter(false)
+    };
 
     const [shareLink, setShareLink] = useState('');
     const [imagePreview, setImagePreview] = useState([]);
@@ -203,14 +218,21 @@ const ProductInfo = () => {
         const apiTyp = isLoggedIn ? api.postWithToken : api.post;
         try {
             if (product_id) {
+                filters.page = page
                 const [productReview] = await Promise.all([
                     apiTyp(`${serverURL + "product-review-list"}`, filters)
                 ]);
 
-                const updateProductList = [...reviweList, ...productReview.data.data.list]
-                    .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-                setReviweList(updateProductList)
+                if (isfilter) {
+                    const updateProductList = [...reviweList, ...productReview.data.data.list]
+                        .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
+                    setReviweList(updateProductList)
+                } else {
+                    setReviweList(productReview.data.data.list)
+
+                }
             }
+
 
             setMainLoder(false)
         } catch (error) {
@@ -220,13 +242,14 @@ const ProductInfo = () => {
 
 
     useEffect(() => {
-        getProductReview()
         getProductDetail();
-    }, [product_id, isLoggedIn, isWishlist, add_wished_Called]);
-
-    useEffect(() => {
         getProductReview()
-    }, [page]);
+    }, [product_id, isLoggedIn, isWishlist, add_wished_Called, filters, page]);
+
+
+    // useEffect(() => {
+    //     getProductReview()
+    // }, [page]);
 
 
     const getproductlist = async () => {
@@ -416,10 +439,10 @@ const ProductInfo = () => {
                         api.postWithToken(`${serverURL}product-review-manage`, formData)
                     ]);
                     if (response[0]?.data.success === true) {
-                        if(response[0]?.data.message ==  "Already review and rating this product!"){
+                        if (response[0]?.data.message == "Already review and rating this product!") {
                             setMyMessageProductDtl("This product has already been reviewed and rated");
-                            setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);   
-                        }else{
+                            setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
+                        } else {
                             setMyMessageProductDtl(response[0]?.data.message);
                             setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
                         }
@@ -893,35 +916,48 @@ const ProductInfo = () => {
                                 <div className='review mt-5 mar-top-20'>
                                     {Product?.productReviewList?.length === 0 ? " " :
                                         <div className='d-flex align-items-center justify-content-between review-responsive'>
-                                        <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
-                                        <div className='filter-review d-flex align-items-center gap-3'>
-                                          <select name='review_type' value={filters.review_type} onChange={handelreviewFilter}>
-                                            <option value=''>All</option>
-                                            <option value='video'>With Video</option>
-                                            <option value='photo'>With Photos</option>
-                                          </select>
-                                          <select name='rating_value' value={filters.rating_value} onChange={handelreviewFilter}>
-                                            <option value=''>All Ratings</option>
-                                            <option value='5'>5 Star</option>
-                                            <option value='4'>4 Star</option>
-                                            <option value='3'>3 Star</option>
-                                            <option value='2'>2 Star</option>
-                                            <option value='1'>1 Star</option>
-                                          </select>
-                                          <select name='sort_by' value={filters.sort_by} onChange={handelreviewFilter}>
-                                            <option value=''>Sort by default</option>
-                                            {/* <option>Sort by videos</option> */}
-                                            {/* <option>Sort by pictures</option> */}
-                                            <option value='rating'>Sort by ratings</option>
-                                          </select>
-                                          <Button onClick={handlereviewShow} className='write-review'>
-                                            Write a review
-                                          </Button>
+                                            <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
+                                            <div className='filter-review d-flex align-items-center gap-3'>
+                                                <select name='filter_by' value={filters.filter_by} onChange={handelreviewFilter}>
+                                                    <option value=''>All</option>
+                                                    <option value='video'>With Video</option>
+                                                    <option value='image'>With Photos</option>
+                                                </select>
+                                                <select name='rating_value' value={filters.rating_value} onChange={handelreviewFilter}>
+                                                    <option value=''>All Ratings</option>
+                                                    <option value='5'>5 Star</option>
+                                                    <option value='4'>4 Star</option>
+                                                    <option value='3'>3 Star</option>
+                                                    <option value='2'>2 Star</option>
+                                                    <option value='1'>1 Star</option>
+                                                </select>
+                                                <select name='sort_by' value={filters.sort_by} onChange={handelreviewFilter}>
+                                                    <option value=''>Sort by default</option>
+                                                    {/* <option>Sort by videos</option> */}
+                                                    {/* <option>Sort by pictures</option> */}
+                                                    <option value='rating'>Sort by ratings</option>
+                                                </select>
+                                                <Button onClick={handlereviewShow} className='write-review'>
+                                                    Write a review
+                                                </Button>
+                                            </div>
                                         </div>
-                                      </div>
                                     }
                                     <div className=''>
+
                                         {
+                                            reviweList.length <= 0 &&
+                                            <div className='d-flex align-items-center justify-content-center h-100 spacing-top'>
+                                                <div className='text-center found'>
+                                                    <img src='../img/not-found.png' alt='' />
+                                                    <p className='mt-3'> No comments </p>
+                                                    {/* <Button className='mt-3 submit-btn'>Shop Now</Button> */}
+                                                </div>
+                                            </div>
+                                        }
+
+                                        {
+
                                             reviweList?.map((e, i) => {
                                                 return (
                                                     <div className='d-flex align-items-start review-box gap-3 mt-4'>
@@ -937,11 +973,11 @@ const ProductInfo = () => {
                                                                         e?.review_files?.map((r, i) => {
                                                                             return (
                                                                                 <React.Fragment key={i}>
-                                                                                    {r?.media_type === "image" ? (
+                                                                                    {e?.review_type === 1 ? (
                                                                                         <img style={{ width: "100px" }} src={r.file_name} alt='' />
                                                                                     ) : (
                                                                                         <video style={{ width: "200px" }} controls>
-                                                                                            <source src={Product.productImagePath + r.file_name} type="video/mp4" />
+                                                                                            <source src={r.file_name} type="video/mp4" />
                                                                                             {/* Add more <source> elements for different video formats if necessary */}
                                                                                             Your browser does not support the video .
                                                                                         </video>
@@ -980,7 +1016,7 @@ const ProductInfo = () => {
                                         {
                                             reviweList.length >= 10 &&
                                             <div className='w-100 d-flex justify-content-center mt-3 mb-5'>
-                                                <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setMainLoder(true))}  > View More <MdKeyboardDoubleArrowRight /></Button>
+                                                <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setMainLoder(true), setIsFilter(true))}  > View More <MdKeyboardDoubleArrowRight /></Button>
                                             </div>
                                         }
 
