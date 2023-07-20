@@ -91,6 +91,12 @@ const Home = () => {
         handleKeyUp()
     };
 
+    const handelSubCat = (Id) => {
+        localStorage.setItem("selectedSubcategories", Id);
+        window.location.href = "/categories";
+    };
+
+
     return (
         <>
             <h1 className='d-none'></h1>
@@ -392,7 +398,7 @@ const Home = () => {
                                 <div className='title w-100 text-center '>
                                     <h2><span>C</span>LUBMALL CAMPAIGNS</h2>
                                 </div>
-                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => (handelCategorydata("64426a1637764b8698579aa0"), localStorage.removeItem("selectedSubcategories"))}>
+                                <div className='w-100 mt-5 pointer mar-top-20' onClick={() => (handelCategorydata("6442c8b437764b869857ac13"), localStorage.removeItem("selectedSubcategories"))}>
                                     <img src="./img/homePageBg3.webp" alt="" width={"100%"} />
                                 </div>
                             </div>
@@ -400,10 +406,10 @@ const Home = () => {
 
                         <section className='home-second-image'>
                             <div className='container-cos position-relative'>
-                                <div className='w-100 pointer ' onClick={() => (handelCategorydata("6442b56d37764b869857a925"), localStorage.removeItem("selectedSubcategories"))}>
+                                <div className='w-100 pointer ' onClick={() => (handelSubCat("64493af9b4e98da026bbd859"), handelCategorydata("6447cf2d4140dd3938c74c35"))}>
                                     <img src="./img/homePageBg4.webp" alt="" width={"100%"} />
                                 </div>
-                                <Button className='shop-the-drop'>Shop The Drop</Button>
+                                <Button className='shop-the-drop' onClick={() => (handelSubCat("64493af9b4e98da026bbd859"), handelCategorydata("6447cf2d4140dd3938c74c35"))}>Shop The Drop</Button>
                             </div>
                         </section>
 
