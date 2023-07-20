@@ -177,7 +177,7 @@ const Header = (props) => {
     }, []);
 
 
-console.log(category,"category");
+// console.log(category,"category");
 
     return (
         <Fragment>
