@@ -302,32 +302,17 @@ const Selling = () => {
                                 <Row className='mt-5 mar-top-20'>
                                     <Col lg={12} md={12} sm={12}>
                                         <div className='get-box hot-box position-relative cos-height'>
-                                            <img src='./img/selling/img9.png' alt='' />
-                                            <div className='hot-text'>
-                                                <h5>TRENDING <br /> FOR DEALS</h5>
-                                                <Button className='shop-btn mt-3' onClick={() => navigate("/trending")}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
-                                            </div>
+                                            <img src='./img/selling/img9.webp' alt='' />
                                         </div>
                                     </Col>
                                     <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10'>
                                         <div className='get-box hot-sub-box position-relative'>
-                                            <img src='./img/selling/img10.png' alt='' />
-                                            <div className='hot-text'>
-                                                <h5>2<span>FOR</span> $0.98</h5>
-                                                <Button className='shop-btn mt-3' onClick={() => navigate("/trending")}>Save Big <MdKeyboardDoubleArrowRight /></Button>
-                                            </div>
+                                            <img src='./img/selling/img10.webp' alt='' />
                                         </div>
                                     </Col>
                                     <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10'>
                                         <div className='get-box hot-sub-box position-relative'>
-                                            <img src='./img/selling/img11.png' alt='' />
-                                            <div className='hot-text'>
-                                                <div className='d-flex align-items-center'>
-                                                    <h5 className='white-text'><span>ALL</span> 50-90</h5>
-                                                    <p>% <br /> OFF</p>
-                                                </div>
-                                                <Button className='shop-btn mt-3' onClick={() => navigate("/trending")}>Save Big <MdKeyboardDoubleArrowRight /></Button>
-                                            </div>
+                                            <img src='./img/selling/img11.webp' alt='' />
                                         </div>
                                     </Col>
                                 </Row>
