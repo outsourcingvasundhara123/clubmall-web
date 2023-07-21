@@ -434,14 +434,12 @@ export const CartProvider = ({ children }) => {
           } else {
             setSearchPostList(postsData.data);
           }
-          // console.log(updatedProductList,"postsData");
           setSearchURL(postsData.productImagePath);
           setViewmoreLoder(false);
           setLoading(false)
 
         } else {
           stopAnimation();
-          // console.log("Invalid data format received");
         }
       } else {
         setSearchPostList([])

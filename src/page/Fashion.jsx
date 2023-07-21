@@ -123,7 +123,7 @@ const Fashion = () => {
                     return accumulator;
                 }, {});
 
-                console.log(newColorProductList, "newColorProductList");
+                // console.log(newColorProductList, "newColorProductList");
 
                 setColorProductList(newColorProductList);
                 setColorLoading(false);
