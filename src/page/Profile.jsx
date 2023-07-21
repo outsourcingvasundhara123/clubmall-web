@@ -529,12 +529,12 @@ const Profile = () => {
                                                 Your payment methods
                                             </Nav.Link>
                                         </Nav.Item> */}
-                                        <Nav.Item>
+                                        {/* <Nav.Item>
                                             <Nav.Link eventKey="security" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/security.png' alt='' />
                                                 Account security
                                             </Nav.Link>
-                                        </Nav.Item>
+                                        </Nav.Item> */}
                                         <Nav.Item>
                                             <Nav.Link eventKey="notification" onClick={() => setItemShow(false)}>
                                                 <img src='./img/header/notification.png' alt='' />

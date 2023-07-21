@@ -66,14 +66,21 @@ const App = () => {
 
 
   function getPathName() {
-    // window.location.pathname gives us the path: "/home/123"
     const path = window.location.pathname;
     const pathParts = path.split("/");
     const firstPartOfPath = pathParts[1];
-    return firstPartOfPath;
+  
+    if (!firstPartOfPath || firstPartOfPath === '') {
+      return "For you";
+    } else if (firstPartOfPath.toLowerCase() === 'selling') {
+      return "Hot selling";
+    } else {
+      return firstPartOfPath.charAt(0).toUpperCase() + firstPartOfPath.slice(1);
+    }
   }
+
   useEffect(() => {
-    document.title = `${getPathName() ? getPathName() : "for you "} | Clubmall`;
+    document.title = `${getPathName()} | Clubmall`;
   }, [window.location.pathname]);
 
 

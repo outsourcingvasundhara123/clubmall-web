@@ -99,7 +99,7 @@ const Selling = () => {
             {
                 loading || catwebLoading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                     <>
-                        <section className='hero position-relative selling-banner pointer' onClick={() => navigate("/trending")}>
+                        <section className='hero position-relative selling-banner pointer'  onClick={() => (handelCategorydata("6447cbbb4140dd3938c74b34"), localStorage.removeItem("selectedSubcategories"))}>
                             <img src='./img/banner2.webp' />
                         </section>
 
@@ -299,18 +299,18 @@ const Selling = () => {
                                 <div className='title w-100 text-center'>
                                     <h2><span>H</span>OT DEALS</h2>
                                 </div>
-                                <Row className='mt-5 mar-top-20'>
-                                    <Col lg={12} md={12} sm={12}>
+                                <Row className='mt-5 mar-top-20 pointer'>
+                                    <Col lg={12} md={12} sm={12}  onClick={() => (handelCategorydata("644804f095c53d0f01ab0782"), localStorage.removeItem("selectedSubcategories"))}>
                                         <div className='get-box hot-box position-relative cos-height'>
                                             <img src='./img/selling/img9.webp' alt='' />
                                         </div>
                                     </Col>
-                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10'>
+                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10 pointer'  onClick={() => (handelCategorydata("644804f095c53d0f01ab0782"), localStorage.removeItem("selectedSubcategories"))}>
                                         <div className='get-box hot-sub-box position-relative'>
                                             <img src='./img/selling/img10.webp' alt='' />
                                         </div>
                                     </Col>
-                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10'>
+                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10 pointer'>
                                         <div className='get-box hot-sub-box position-relative'>
                                             <img src='./img/selling/img11.webp' alt='' />
                                         </div>

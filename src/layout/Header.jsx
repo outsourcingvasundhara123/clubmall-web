@@ -391,12 +391,12 @@ const Header = (props) => {
                                                     Addresses
                                                 </Link>
                                             </Dropdown.Item>
-                                            <Dropdown.Item onClick={() => (handelProfile("security"), setItemShow(false), props.setActive(false))}>
+                                            {/* <Dropdown.Item onClick={() => (handelProfile("security"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/security.png' alt='' />
                                                     Account security
                                                 </Link>
-                                            </Dropdown.Item>
+                                            </Dropdown.Item> */}
                                             <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/notification.png' alt='' />
@@ -404,10 +404,10 @@ const Header = (props) => {
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-                                            <Dropdown.Item className='w-100'>
+                                            {/* <Dropdown.Item className='w-100'>
                                                 <img src='../img/header/switch.png' alt='' />
                                                 Switch accounts
-                                            </Dropdown.Item>
+                                            </Dropdown.Item> */}
                                             <Dropdown.Item onClick={handleLogout} className='w-100'>
                                                 <img src='../img/header/logout.png' alt='' />
                                                 Sign out

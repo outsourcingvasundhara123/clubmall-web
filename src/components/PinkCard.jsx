@@ -8,6 +8,7 @@ import { CartContext } from '../context/CartContext';
 const PinkCard = (props) => {
     const [isWishlist, setIsWishlist] = useState(!!props.img.wishList); // We use !! to convert to a boolean
     const navigate = useNavigate();
+    const [imageLoaded, setImageLoaded] = useState(false);
     const {addWishList } = useContext(CartContext);
     const [show, setShow] = useState(false);
     const handleClose = () => {
@@ -40,8 +41,20 @@ const PinkCard = (props) => {
         <>
             <div className='pink-card  pointer'>
                 <div className='pink-img position-relative'>
-              {props.color ? <img alt='' src={props.path + props.img._id + "/" + pinkProduct?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} /> :
-                    <img alt='' src={props.path + props.img._id + "/" + props.img?.product_images[0]?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} />
+                <img
+                            src="./img/placeholder_img.png"
+                            alt=''
+                            className='img-fluid'
+                            style={{ display: imageLoaded ? 'none' : 'block' }}
+                        />
+              {props.color ? <img alt=''
+               onLoad={() => setImageLoaded(true)}
+               style={{ display: imageLoaded ? 'block' : 'none' }}
+              src={props.path + props.img._id + "/" + pinkProduct?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} /> :
+                    <img alt=''
+                    onLoad={() => setImageLoaded(true)}
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                    src={props.path + props.img._id + "/" + props.img?.product_images[0]?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} />
               }  
                     <Button className='add-to-card-btn' onClick={() => handleShow(props.img._id)}>Add to Cart</Button>
                 </div>
