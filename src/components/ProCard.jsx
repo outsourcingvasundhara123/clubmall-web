@@ -19,6 +19,7 @@ const ProCard = (props) => {
     const [productColorActive, setProductColorActive] = useState()
     const [show, setShow] = useState(false);
     const [activeImage, setActiveImage] = useState(null); // Add this line
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     const handleClose = () => {
         setProduct_id({})
@@ -54,13 +55,28 @@ const ProCard = (props) => {
     }
 
 
+    // useEffect(() => {
+    //     if (props?.color && props.color.length > 0) {
+    //         setProductColorActive(props.color[0]?.name);
+    //         setActiveImage(props.path + props.id + "/" + props.colorUrl[0]?.file_name); // Set the default activeImage here
+    //     }
+    // }, []);
+
+
     useEffect(() => {
-        if (props?.color && props.color.length > 0) {
-            setProductColorActive(props.color[0]?.name);
-            setActiveImage(props.path + props.id + "/" + props.colorUrl[0]?.file_name); // Set the default activeImage here
+        let defaultColor;
+        if (props.productActiveColor) {
+            defaultColor = props.color?.find((color) => color.name === props.productActiveColor);
+        } else if (props?.color && props.color.length > 0) {
+            defaultColor = props.color[0];
+        }
+
+        if (defaultColor) {
+            setProductColorActive(defaultColor.name);
+            const matchingColorDetails = props.colorUrl?.find((colorDetail) => colorDetail.attrs[0]?.color === defaultColor.name);
+            setActiveImage(props.path + props.id + "/" + matchingColorDetails?.file_name);
         }
     }, []);
-
 
     return (
         <>
@@ -68,8 +84,20 @@ const ProCard = (props) => {
             <div className='cos-width explore-card'>
                 <div className='product-card   pointer'>
                     <div className='position-relative'>
-                        {/* Use the local activeImage state here */}
-                        <img src={activeImage ? activeImage : props.path + props.id + "/" + props.img} alt='' className='img-fluid' onClick={() => handelProductDetail(props.id)} />
+                        <img
+                            src="./img/placeholder_img.png"
+                            alt=''
+                            className='img-fluid'
+                            style={{ display: imageLoaded ? 'none' : 'block' }}
+                        />
+                        <img
+                            src={activeImage ? activeImage : props.path + props.id + "/" + props.img}
+                            alt=''
+                            className='img-fluid'
+                            onClick={() => handelProductDetail(props.id)}
+                            onLoad={() => setImageLoaded(true)}
+                            style={{ display: imageLoaded ? 'block' : 'none' }}
+                        />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
                     </div>
                     <div className='py-3 px-3 space-card'>
@@ -124,7 +152,7 @@ const ProCard = (props) => {
                                 )
                             })
                         }
-                        {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+3</Button>}
+                        {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+{uniqueColors(props.colorUrl).length}</Button>}
                     </div>
                 }
                 {
@@ -142,7 +170,7 @@ const ProCard = (props) => {
                                         )
                                     })
                                 }
-                                {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+3</Button>}
+                                {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+{uniqueColors(props.colorUrl).length}</Button>}
                             </div>
                         </> : ""
                 }

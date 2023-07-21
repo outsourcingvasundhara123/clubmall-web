@@ -41,7 +41,7 @@ const Categories = () => {
     const [url, setUrl] = useState()
     const [catName, setCatName] = useState()
     const [subCatList, setSubCatList] = useState([])
-    const [filterShow, setFilterShow] = useState(window.innerWidth < 991 ? false : true)                  // 
+    const [filterShow, setFilterShow] = useState(window.innerWidth < 991 ? false : true)                  
     const [filterList, setFilterList] = useState([])
     const [productColorActive, setProductColorActive] = useState()
     const [postList, setPostList] = useState([]);
@@ -179,6 +179,8 @@ const Categories = () => {
     // };
 
     const handleChange = (e) => {
+        setPage(1)
+        setViewCalled(false)
         const { name, value } = e.target;
         setAdd_wished_Called(false)
         setMyFilter((prevValues) => {
@@ -190,7 +192,9 @@ const Categories = () => {
     };
 
     const handleRangeChange = (values) => {
+        setPage(1)
         setAdd_wished_Called(false)
+        setViewCalled(false)
         setRange(values);
     };
 
@@ -288,7 +292,7 @@ const Categories = () => {
                                                                     {
                                                                         colorList && colorList.map((e, i) => {
                                                                             return (
-                                                                                <div key={i} className={`${productColorActive == e.name ? "active" : ""} pointer cat-color `} style={{ backgroundColor: `rgb(${e.code})`, width: '30px', height: '30px', borderRadius: '50%' }} onClick={() => (setProductColorActive(e.name), setAdd_wished_Called(false))}>
+                                                                                <div key={i} className={`${productColorActive == e.name ? "active" : ""} pointer cat-color `} style={{ backgroundColor: `rgb(${e.code})`, width: '30px', height: '30px', borderRadius: '50%' }} onClick={() => (setProductColorActive(e.name),setViewCalled(false),setPage(1),setAdd_wished_Called(false))}>
                                                                                 </div>
                                                                             )
                                                                         })
@@ -459,7 +463,7 @@ const Categories = () => {
                                                                 color={e.sku_attributes.color}
                                                                 is_wishList={e.wishList && e.wishList}
                                                                 colorUrl={e.sku_details}
-                                                                
+                                                                productActiveColor={productColorActive}
                                                             />
                                                         )
                                                     })
@@ -470,7 +474,6 @@ const Categories = () => {
                                                         <Button className='shop-btn' onClick={() => (setViewmoreLoder(true), handelwishSell(), setPage(page + 1), setViewmoreLoder(true), setViewCalled(true))}  >{viewMoreLodr ? "Loding..." : "View More"}<MdKeyboardDoubleArrowRight /></Button>
                                                     </div>
                                                 }
-
                                             </div>
 
                                             {
