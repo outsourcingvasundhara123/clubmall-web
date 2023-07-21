@@ -632,32 +632,32 @@ const ProductInfo = () => {
                                                     {/* {
 
                                                         !favoriteProductList.productListArrObj ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : ( */}
-                                                    <>
-                                                        {
 
-                                                            favoriteProductList.productListArrObj
-                                                            && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
-                                                                return (
-                                                                    <SwiperSlide>
-                                                                        <div className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
-                                                                            <div className='position-relative'>
-                                                                                <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
-                                                                            </div>
-                                                                            <div className='slider-box-per pt-3'>
-                                                                                <h5 className='text_frequently'>{e.name}</h5>
-                                                                                <div className='d-flex align-items-center gap-2 mt-2'>
-                                                                                    <h5>${e.individual_price}</h5>
-                                                                                    {/* <del>${e.group_price}</del> */}
-                                                                                    {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
-                                                                                </div>
+                                                    {
+
+                                                        favoriteProductList.productListArrObj
+                                                        && favoriteProductList.productListArrObj.map((e) => {
+                                                            return (
+                                                                <SwiperSlide>
+                                                                    <div className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
+                                                                        <div className='position-relative'>
+                                                                            <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
+                                                                        </div>
+                                                                        <div className='slider-box-per pt-3'>
+                                                                            <h5 className='text_frequently'>{e.name}</h5>
+                                                                            <div className='d-flex align-items-center gap-2 mt-2'>
+                                                                                <h5>${e.individual_price}</h5>
+                                                                                {/* <del>${e.group_price}</del> */}
+                                                                                {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
                                                                             </div>
                                                                         </div>
-                                                                    </SwiperSlide>
-                                                                )
-                                                            })
-                                                        }
+                                                                    </div>
+                                                                </SwiperSlide>
+                                                            )
+                                                        })
+                                                    }
 
-                                                    </>
+
                                                     {/* )} */}
 
                                                 </Swiper>
@@ -1070,7 +1070,7 @@ const ProductInfo = () => {
                                                         {
 
                                                             favoriteProductList.productListArrObj
-                                                            && favoriteProductList.productListArrObj?.slice(0, 5)?.map((e) => {
+                                                            && favoriteProductList.productListArrObj.map((e) => {
                                                                 return (
                                                                     <SwiperSlide>
                                                                         <div className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
