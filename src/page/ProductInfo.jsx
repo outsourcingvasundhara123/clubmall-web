@@ -666,7 +666,7 @@ const ProductInfo = () => {
                                                 </Swiper>
 
                                                 <div className='d-flex justify-content-center'>
-                                                    <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button>
+                                                    {/* <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button> */}
                                                 </div>
 
 
