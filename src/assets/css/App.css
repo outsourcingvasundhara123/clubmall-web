@@ -6186,3 +6186,61 @@ input[type='radio'] {
     }
 }
 
+.shipping-table table thead tr th,
+.shipping-table table tbody tr td {
+    padding: 20px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.text-gray {
+    color: gray;
+}
+
+.text-red {
+    color: #E02E24;
+    font-weight: 600;
+}
+
+.shipping-table p {
+    color: #E02E24;
+}
+
+.nots p a {
+    text-decoration: underline !important;
+    color: #E02E24 !important;
+}
+
+.nots p {
+    margin: 12px 0;
+    color: rgb(90, 90, 90);
+}
+
+.shipping-table table thead tr {
+    background-color: #f6f6f6;
+}
+
+@media (max-width: 512px) {
+
+    .shipping-table table thead tr th,
+    .shipping-table table tbody tr td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+.return-policy h5 {
+    font-size: 17px;
+    margin-top: 30px;
+}
+
+
+.return-policy p {
+    font-size: 15px;
+    color: gray;
+}
+
+.highlight {
+    font-weight: 600;
+    color: #000;
+}
