@@ -635,36 +635,36 @@ const ProductInfo = () => {
 
                                                     {
 
-                                                            favoriteProductList.productListArrObj
-                                                            && favoriteProductList.productListArrObj?.map((e,i) => {
-                                                                return (
-                                                                    <SwiperSlide>
-                                                                        <div key={i} className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
-                                                                            <div className='position-relative'>
-                                                                                <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
-                                                                            </div>
-                                                                            <div className='slider-box-per pt-3'>
-                                                                                <h5 className='text_frequently'>{e.name}</h5>
-                                                                                <div className='d-flex align-items-center gap-2 mt-2'>
-                                                                                    <h5>${e.individual_price}</h5>
-                                                                                    {/* <del>${e.group_price}</del> */}
-                                                                                    {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
-                                                                                </div>
+                                                        favoriteProductList.productListArrObj
+                                                        && favoriteProductList.productListArrObj?.map((e, i) => {
+                                                            return (
+                                                                <SwiperSlide>
+                                                                    <div key={i} className='slide-box pointer' onClick={() => handelProductDetail(e._id)}>
+                                                                        <div className='position-relative'>
+                                                                            <img src={favoriteProductList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt='' className='w-100' />
+                                                                        </div>
+                                                                        <div className='slider-box-per pt-3'>
+                                                                            <h5 className='text_frequently'>{e.name}</h5>
+                                                                            <div className='d-flex align-items-center gap-2 mt-2'>
+                                                                                <h5>${e.individual_price}</h5>
+                                                                                {/* <del>${e.group_price}</del> */}
+                                                                                {/* <span>{e.in_stock > 0 ? e.in_stock : 0} sold</span> */}
                                                                             </div>
                                                                         </div>
-                                                                    </SwiperSlide>
-                                                                )
-                                                            })
-                                                        }
+                                                                    </div>
+                                                                </SwiperSlide>
+                                                            )
+                                                        })
+                                                    }
 
 
                                                     {/* )} */}
 
                                                 </Swiper>
 
-                                                {/* <div className='d-flex justify-content-center'>
-                                                    <Button className='add-items' onClick={handleDrawerShow}>Add 3 items to cart: <b>$36.45</b> <del>$534,33</del></Button>
-                                                </div> */}
+                                                <div className='d-flex justify-content-center'>
+                                                    <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button>
+                                                </div>
 
 
                                             </div>
@@ -1096,9 +1096,9 @@ const ProductInfo = () => {
 
                                         </Swiper>
 
-                                        {/* <div className='d-flex justify-content-center'>
-                                                    <Button className='add-items' onClick={handleDrawerShow}>Add 3 items to cart: <b>$36.45</b> <del>$534,33</del></Button>
-                                                </div> */}
+                                        <div className='d-flex justify-content-center'>
+                                            <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button>
+                                        </div>
 
 
                                     </div>
@@ -1135,7 +1135,7 @@ const ProductInfo = () => {
 
 
                             {/* cart drawer */}
-                            {/* <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
+                            <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
                                 <Offcanvas.Body>
                                     <div className='cart-side position-relative'>
 
@@ -1221,7 +1221,7 @@ const ProductInfo = () => {
                                         </div>
                                     </div>
                                 </Offcanvas.Body>
-                            </Offcanvas> */}
+                            </Offcanvas>
 
 
                             <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
