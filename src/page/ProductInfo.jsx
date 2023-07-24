@@ -13,6 +13,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
 import ProCard from '../components/ProCard';
 import { data } from "../page/Data"
 import ProductSlider from '../components/ProductSlider';
@@ -36,10 +38,11 @@ import { RWebShare } from "react-web-share";
 import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
 
+
 const ProductInfo = () => {
 
 
-    const { setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -313,7 +316,7 @@ const ProductInfo = () => {
                         group_id: null,
                         skuid: findSKUId(),
                     }
-
+                    setMainLoder(true)
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
 
                     if (res.data.success == true) {
@@ -322,7 +325,9 @@ const ProductInfo = () => {
                         setMyMessageProductDtl(res.data.message);
                         setProductColorActive(" ")
                         setSizeActive(" ")
+                        setMainLoder(false)
                     } else if (res.data.success === false) {
+                        setMainLoder(false)
                         setMyMessageProductDtl(res.data.message);
                         setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                     }
@@ -336,6 +341,7 @@ const ProductInfo = () => {
                 setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
             }
         } catch (error) {
+            setMainLoder(false)
             setProductColorActive(" ")
             setSizeActive(" ")
             errorResponse(error, setMyMessageProductDtl)
@@ -346,6 +352,7 @@ const ProductInfo = () => {
     const textRef = useRef(null);
 
     const handleCopy = () => {
+
         if (textRef.current) {
             setMyMessageProductDtl("Item id copied successfully");
             setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
@@ -472,7 +479,7 @@ const ProductInfo = () => {
         }
     }
 
-    console.log(favoriteProductList.productListArrObj, "favoriteProductList.productListArrObj");
+    // conso0le.log(favoriteProductList.productListArrObj, "favoriteProductList.productListArrObj");
 
 
     return (
@@ -627,11 +634,9 @@ const ProductInfo = () => {
                                                     navigation={true}
                                                     modules={[Pagination, Navigation]}
                                                     className="mySwiper"
+
                                                 >
 
-                                                    {/* {
-
-                                                        !favoriteProductList.productListArrObj ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : ( */}
 
                                                     {
 
@@ -657,8 +662,6 @@ const ProductInfo = () => {
                                                         })
                                                     }
 
-
-                                                    {/* )} */}
 
                                                 </Swiper>
 
@@ -686,7 +689,7 @@ const ProductInfo = () => {
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
+                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handleCart())}>Individual Price <br />
                                                     ${Product?.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(Product?.productList?._id)
@@ -1148,25 +1151,6 @@ const ProductInfo = () => {
                                             <h5>Added 3 items(s) to cart</h5>
                                         </div>
 
-                                        <div className='product-info'>
-                                            <div className='order-time d-flex align-items-center justify-content-between mt-4'>
-                                                <div className='d-flex align-items-center gap-3'>
-                                                    <img src='./img/product_def/right-green.png' alt='' className='right-green-mark' />
-                                                    <h5>Free shipping on all orders</h5>
-                                                </div>
-                                                <div className='d-flex align-items-center gap-3 order-time-cos'>
-                                                    <span>Ends in</span>
-                                                    <div className='time d-flex align-items-center gap-2'>
-                                                        <span>08</span>
-                                                        <p>:</p>
-                                                        <span>34</span>
-                                                        <p>:</p>
-                                                        <span>52</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <div className='cart-list border-bottom-cos mt-4 pb-4'>
                                             {
                                                 cartListData.slice(0, 3)?.map((e, i) => {
@@ -1187,37 +1171,6 @@ const ProductInfo = () => {
                                             }
 
                                             <Button className='go-cart'>Go to cart</Button>
-                                        </div>
-
-                                        <div className='purchased-list pt-4'>
-                                            <h4>Items purchased together</h4>
-                                            <div>
-                                                {
-                                                    cartListData.slice(0, 5).map((e, i) => {
-                                                        return (
-                                                            <div className='cart-items d-flex align-items-start gap-3 mt-4' >
-                                                                <img src={e.img} alt='' width="90px" />
-                                                                <div className='cart-items-text'>
-                                                                    <h5>{e.name}</h5>
-                                                                    <span>{e.categories}</span>
-                                                                    <div className='cart-per d-flex align-items-center justify-content-between gap-2'>
-                                                                        <div className='cart-per d-flex align-items-center gap-2'>
-                                                                            <h5>{e.per}</h5>
-                                                                            <del>{e.delPer}</del>
-                                                                        </div>
-                                                                        <Button className='cart-side-btn'>
-                                                                            <img src='./img/product_def/cart-orange.png' alt='' />
-                                                                        </Button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
-                                                <div className='w-100 d-flex justify-content-center'>
-                                                    <Button className='shop-btn rotate-img'>View More <MdKeyboardDoubleArrowRight /></Button>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </Offcanvas.Body>

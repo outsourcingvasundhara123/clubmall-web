@@ -26,7 +26,7 @@ import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants'
 const Profile = () => {
 
-    const { itemShow, setItemShow, sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
+    const { setMainLoder, itemShow, setItemShow, sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -159,11 +159,12 @@ const Profile = () => {
         // }
 
         if (name === "country_id") {
-   
+
             setValues((prevValues) => ({
                 ...prevValues,
                 ["state_id"]: "",
-            }));        }
+            }));
+        }
 
         if (submitCount > 0) {
             const validationErrors = validate({ ...values, [name]: newValue });
@@ -207,9 +208,11 @@ const Profile = () => {
 
     const submitProfile = async (e) => {
         e.preventDefault();
+
         try {
 
             if (values_2.bio && values_2.first_name && values_2.last_name && values_2.gender && values_2.profile_image) {
+                setMainLoder(true)
                 const formData = new FormData();
                 formData.append('bio', values_2.bio);
                 formData.append('first_name', values_2.first_name);
@@ -222,14 +225,17 @@ const Profile = () => {
                 login(response[0]?.data.data?.user)
                 setMymessageProfileProfile(response[0].data.message);
                 setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
+                setMainLoder(false)
                 window.location.reload()
             } else {
+                setMainLoder(false)
                 setMymessageProfileProfile("please fill out all required fields");
                 setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             }
 
             // Additional actions after successful submission
         } catch (error) {
+            setMainLoder(false)
             console.error('Error posting profile data:', error);
             // Handle error scenario
         }
@@ -263,6 +269,7 @@ const Profile = () => {
                     updatedValues.action = "shipping-address-update"
                     updatedValues.shipping_address_id = adId
                 }
+                setMainLoder(true)
                 api.postWithToken(`${serverURL}${type}`, updatedValues)
                     .then((res) => {
 
@@ -275,15 +282,18 @@ const Profile = () => {
                             setTimeout(() => {
                                 setValues(initialValues);
                                 handleClose()
+                                setMainLoder(false)
                             }, 1000);
                             // navigate("/login");
                             // console.log(updatedValues.email,"updatedValues");
                         } else {
+                            setMainLoder(false)
                             setMymessageProfileProfile(res.data.message);
                             setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                         }
                     });
             } catch (error) {
+                setMainLoder(false)
                 setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                 console.error(error);
             }
@@ -291,7 +301,7 @@ const Profile = () => {
     };
 
     const deleteAddress = (id) => {
-
+        setMainLoder(true)
         try {
 
             let data = {
@@ -307,15 +317,18 @@ const Profile = () => {
                         setTimeout(() => {
                             setValues(initialValues);
                             handleClose()
+                            setMainLoder(false)
                         }, 1000);
                         // navigate("/login");
                         // console.log(updatedValues.email,"updatedValues");
                     } else {
+                        setMainLoder(false)
                         setMymessageProfileProfile(res.data.message);
                         setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                     }
                 });
         } catch (error) {
+            setMainLoder(false)
             setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             console.error(error);
         }
@@ -323,6 +336,7 @@ const Profile = () => {
     };
 
     const selectAddress = (id) => {
+        setMainLoder(true)
         try {
             let data = {
                 action: "shipping-address-default-active",
@@ -337,15 +351,18 @@ const Profile = () => {
                         setTimeout(() => {
                             setValues(initialValues);
                             handleClose()
+                            setMainLoder(false)
                         }, 1000);
                         // navigate("/login");
                         // console.log(updatedValues.email,"updatedValues");
                     } else {
+                        setMainLoder(false)
                         setMymessageProfileProfile(res.data.message);
                         setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                     }
                 });
         } catch (error) {
+            setMainLoder(false)
             setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             console.error(error);
         }

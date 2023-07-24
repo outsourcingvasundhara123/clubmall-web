@@ -140,7 +140,7 @@ const AddCartModal = (props) => {
                         group_id: null,
                         skuid: findSKUId(),
                     }
-
+                    setMainLoder(true)
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
 
                     if (res.data.success == true) {
@@ -149,6 +149,7 @@ const AddCartModal = (props) => {
                         getCartData()
                         setProductColorActive(" ")
                         setSizeActive(" ")
+                        setMainLoder(false)
                         setTimeout(() => {
                             if (location.pathname == "/cart") {
                                 window.location.reload();
@@ -156,6 +157,7 @@ const AddCartModal = (props) => {
                             props.handleClose()
                         }, 1000);
                     } else if (res.data.success === false) {
+                        setMainLoder(false)
                         setMyMessage(res.data.message);
                         setWarningSnackBarOpen(!warningSnackBarOpen);
                     }
@@ -169,6 +171,7 @@ const AddCartModal = (props) => {
                 setWarningSnackBarOpen(!warningSnackBarOpen);
             }
         } catch (error) {
+            setMainLoder(false)
             setProductColorActive(" ")
             setSizeActive(" ")
             errorResponse(error, setMyMessage, props)
@@ -239,7 +242,7 @@ const AddCartModal = (props) => {
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => setPerActive('Individual')}>Individual Price <br />
+                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={(e) => (setPerActive('Individual'),handleCart(e))}>Individual Price <br />
                                                     ${modelProduct.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(modelProduct.productList?._id)

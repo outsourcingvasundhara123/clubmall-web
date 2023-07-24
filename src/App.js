@@ -57,7 +57,7 @@ const App = () => {
   }
   
 
-  // ios usage redirect to appstore 
+  // ios user redirect to appstore 
   useEffect(() => {
     if(window.location.pathname.startsWith("/product-details/") && getMobileOperatingSystem() == "iOS" ){
       window.open("https://apps.apple.com/us/app/clubmall/id6444752184");
@@ -93,10 +93,8 @@ const App = () => {
     }
   }, [mainloder]);
 
-
   return (
     <BrowserRouter>
-
 
       {
         window.location.pathname !== "/" &&
