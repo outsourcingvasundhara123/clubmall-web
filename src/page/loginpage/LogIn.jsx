@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect,useContext } from 'react'
 import Layout from '../../layout/Layout'
 import { Button, Form, Modal, NavLink, } from 'react-bootstrap'
 import "react-phone-input-2/lib/bootstrap.css";
@@ -18,9 +18,12 @@ import AppleLogin from 'react-apple-login';
 import { BsApple } from 'react-icons/bs'
 import axios from 'axios';
 import { SOCIALLOGIN } from '../../helper/endpoints';
+import { CartContext } from '../../context/CartContext'
 
 
 const LogIn = () => {
+
+  const { setMainLoder,itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
 
   const navigate = useNavigate();
 
@@ -87,6 +90,8 @@ const LogIn = () => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         updatedValues.login_type = "4"
+        setMainLoder(true)
+
         api.post(`${serverURL}login`, updatedValues)
           .then((res) => {
             if (res.data.success === true) {
@@ -96,6 +101,7 @@ const LogIn = () => {
                 login(res.data.data.user);
                 setTimeout(() => {
                   setValues(initialValues);
+                  setMainLoder(false)
                   if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
                     window.location.href = "/"
                   } else {
@@ -113,7 +119,10 @@ const LogIn = () => {
               setMyMessage(res.data.message);
               setWarningSnackBarOpen(!warningSnackBarOpen);
             }
+            setMainLoder(false)
+
           });
+
       } catch (error) {
         // setWarningSnackBarOpen(!warningSnackBarOpen);
         console.error(error);

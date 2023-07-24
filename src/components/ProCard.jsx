@@ -152,7 +152,7 @@ const ProCard = (props) => {
                                 )
                             })
                         }
-                        {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+{uniqueColors(props.colorUrl).length}</Button>}
+                        {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+{uniqueColors(props.colorUrl).length - 3}</Button>}
                     </div>
                 }
                 {
@@ -170,7 +170,7 @@ const ProCard = (props) => {
                                         )
                                     })
                                 }
-                                {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+{uniqueColors(props.colorUrl).length}</Button>}
+                                {props.colorUrl && uniqueColors(props.colorUrl).length > 3 && <Button onClick={() => handleShow(props.id)}>+{uniqueColors(props.colorUrl).length - 3}</Button>}
                             </div>
                         </> : ""
                 }

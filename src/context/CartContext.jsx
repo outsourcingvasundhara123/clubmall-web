@@ -161,10 +161,9 @@ export const CartProvider = ({ children }) => {
       setWishlistCount(res.data.data.list.length)
       setWishProductURL(res.data.data.productImagePath)
       stopAnimation()
-      console.log("getWishList");
-
     } catch (error) {
-      errorResponse(error, setMyMessage);
+      console.log(error,"error");
+      // errorResponse(error, setMyMessage);
       // setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
@@ -514,6 +513,31 @@ export const CartProvider = ({ children }) => {
     );
     call(response.data.shortLink)
   };
+
+//chnage for redirect ios user
+  // const generateDynamicLink = async (productId) => {
+  //   const response = await api.post(
+  //     `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${process.env.REACT_APP_API_FIREBASE}`,
+  //     {
+  //       "dynamicLinkInfo": {
+  //         "domainUriPrefix": "https://clubmall.page.link",
+  //         "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
+  //         "androidInfo": {
+  //           "androidPackageName": "com.clubmall"
+  //         },
+  //         "iosInfo": {
+  //           "iosBundleId": "com.clubmall",
+  //           "iosFallbackLink": "https://apps.apple.com/app/clubmall/id6444752184"
+  //         }
+  //       },
+  //       "suffix": {
+  //         "option": "SHORT"
+  //       }
+  //     }
+  //   );
+  //   call(response.data.shortLink)
+  // };
+
 
   // dynamic link functions ---- end -----
 

@@ -305,12 +305,12 @@ const Selling = () => {
                                             <img src='./img/selling/img9.webp' alt='' />
                                         </div>
                                     </Col>
-                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10 pointer'  onClick={() => (handelCategorydata("644804f095c53d0f01ab0782"), localStorage.removeItem("selectedSubcategories"))}>
+                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10 pointer'  onClick={() => (handelCategorydata("6442c8b437764b869857ac13"), localStorage.removeItem("selectedSubcategories"))}>
                                         <div className='get-box hot-sub-box position-relative'>
                                             <img src='./img/selling/img10.webp' alt='' />
                                         </div>
                                     </Col>
-                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10 pointer'>
+                                    <Col lg={6} md={12} sm={12} className='mt-4 mar-top-10 pointer' onClick={() => (handelCategorydata("6447ca944140dd3938c74adb"), localStorage.removeItem("selectedSubcategories"))}>
                                         <div className='get-box hot-sub-box position-relative'>
                                             <img src='./img/selling/img11.webp' alt='' />
                                         </div>

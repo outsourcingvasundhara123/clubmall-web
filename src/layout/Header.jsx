@@ -23,7 +23,7 @@ import { BiSearch } from 'react-icons/bi'
 const Header = (props) => {
 
     const navigate = useNavigate();
-    const { itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const { setMainLoder,itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("../img/header/ind.svg");
 
@@ -104,23 +104,28 @@ const Header = (props) => {
     }
 
     const handleLogout = () => {
+
+        setMainLoder(true)
         try {
             api.postWithToken(`${serverURL}logout`)
                 .then((res) => {
                     if (res.data.success === true) {
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
-                        logout();
                         setTimeout(() => {
-                            navigate("/login");
+                            setMainLoder(false)
+                            logout();
+                            // navigate("/login");
                         }, 1000);
                     } else if (res.data.success === false) {
                         setMyMessage(res.data.message);
                         setWarningSnackBarOpen(!warningSnackBarOpen);
                     }
+                    setMainLoder(false)
                 });
-        } catch (error) {
-            console.error(error);
+            } catch (error) {
+                setMainLoder(false)
+                console.error(error);
         }
     };
 
