@@ -15,6 +15,9 @@ import Policy from '../page/Policy';
 import TermsUse from '../page/TermsUse';
 import Influencer from '../page/Influencer';
 import Search from '../page/Search';
+import ContactUs from '../page/ContactUs';
+import ReturnPolicy from '../page/ReturnPolicy';
+import ShippingInfo from '../page/ShippingInfo';
 
 export default [
 
@@ -32,7 +35,7 @@ export default [
   },
   {
     path: "/search",
-    element: <Search/>,
+    element: <Search />,
   },
   {
     path: "/categories",
@@ -93,5 +96,17 @@ export default [
   {
     path: "/influencer",
     element: <Influencer />,
+  },
+  {
+    path: "/contact-us",
+    element: <ContactUs />,
+  },
+  {
+    path: "/return-policy",
+    element: <ReturnPolicy />,
+  },
+  {
+    path: "/shipping-info",
+    element: <ShippingInfo />,
   },
 ];
