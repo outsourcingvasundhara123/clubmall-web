@@ -18,6 +18,7 @@ import Search from '../page/Search';
 import ContactUs from '../page/ContactUs';
 import ReturnPolicy from '../page/ReturnPolicy';
 import ShippingInfo from '../page/ShippingInfo';
+import ThankYou from '../page/ThankYou';
 
 export default [
 
@@ -108,5 +109,9 @@ export default [
   {
     path: "/shipping-info",
     element: <ShippingInfo />,
+  },
+  {
+    path: "/thankyou",
+    element: <ThankYou />,
   },
 ];

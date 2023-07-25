@@ -6246,3 +6246,18 @@ input[type='radio'] {
     font-weight: 600;
     color: #000;
 }
+
+.thankyou p {
+    color: #000;
+    font-weight: 600;
+}
+
+.thankyou-box {
+    max-width: 600px;
+}
+
+@media (max-width: 512px) {
+    .thankyou-box img {
+        width: 80%;
+    }
+}
