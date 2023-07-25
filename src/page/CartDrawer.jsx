@@ -103,7 +103,7 @@ const CartDrawer = () => {
                         {(cartList.list?.length === 0 || !isLoggedIn) &&
                             <div className='d-flex align-items-center justify-content-center h-100'>
                                 <div className='text-center found'>
-                                    <img src='../img/not-found.png' alt='' />
+                                    <img src='../img/not-found.png' alt='' className='my-4' />
                                     <p className='mt-3'>The cart is empty</p>
                                     <Button className='mt-3 submit-btn' type='button' onClick={() => (navigate("/trending"), handleDrawerClose())}  >Shop Now</Button>
                                 </div>
