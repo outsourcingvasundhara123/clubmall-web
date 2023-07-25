@@ -85,8 +85,6 @@ const CartDrawer = () => {
         }
     };
 
-    console.log(cartList, "cartList");
-
     return (
         <>
             <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
@@ -112,18 +110,22 @@ const CartDrawer = () => {
                             </div>
                         }
 
-                        <div className='cart-list border-bottom-cos mt-4 pb-4'>
-                            {
-                                isLoggedIn && cartList.list && cartList.list?.map((e, i) => {
-                                    return (
-                                        <div className='cart-items d-flex align-items-start gap-3 mt-4' >
-                                            <img src={cartList.productImagePath + e.product_id + "/" + getimagename(e.sku_details, e.skuid)} alt='' width="150px" />
-                                            <div className='cart-items-text'>
-                                                <h5 className='dot-text'>{e.product_name}</h5>
-                                                <div className='d-flex align-items-center gap-2 cart-color w-100 mt-1'>
-                                                    <h6>Color : </h6>
-                                                    <span className='m-0'>{e.sku_data?.color}</span>
-                                                </div>
+                    <div className='cart-list border-bottom-cos mt-4 pb-4'>
+                        {
+                            isLoggedIn && cartList.list && cartList.list?.map((e, i) => {
+                                return (
+                                    <div className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_details._id)} >
+                                        <img className='pointer' src={cartList.productImagePath + e.product_id + "/" + getimagename(e.sku_details, e.skuid)} alt='' width="150px" />
+                                        <div className='cart-items-text'>
+                                            <h5>{e.product_name}</h5>
+                                            {/* <span className='d-flex align-items-center'>
+                                                {formatDate(startDate)} - {formatDate(endDate)}
+                                            </span>
+                                            <span className='d-flex align-items-center'>By {e.seller_name}</span> */}
+                                            <div className='d-flex align-items-center gap-2 cart-color w-100 mt-2'>
+                                                <h6>Color : </h6>
+                                                <span className='m-0'>{e.sku_data?.color}</span>
+                                            </div>
 
                                                 {e.sku_data?.size &&
                                                     <div className='d-flex align-items-center gap-2 cart-color w-100 mt-1'>
@@ -139,7 +141,7 @@ const CartDrawer = () => {
                                                         {/* <span>{Math.round(e.product_details.group_price * 100 / e.product_details.individual_price)}% Off</span> */}
                                                     </div>
 
-                                                    <div className='product-info d-flex align-items-center gap-3 marg-cos'>
+                                                    <div className='product-info d-flex align-items-center gap-3 marg-cos' onClick={(event) => event.stopPropagation()}>
                                                         <div className='qty d-flex align-items-center gap-3'>
                                                             <h5>Qty:</h5>
                                                             <div className='count-product'>

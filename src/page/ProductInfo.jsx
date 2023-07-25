@@ -580,7 +580,7 @@ const ProductInfo = () => {
                                                 <div className='rate d-flex align-items-center gap-2'>
                                                     <span className='cos-title'>{Product?.productList?.rating}</span>
                                                     <div className='d-flex align-items-center gap-1'>
-                                                        <Rating name="read-only" value={Product?.productList?.rating} readOnly />
+                                                        <Rating name="simple-controlled" value={Product?.productList?.rating} readOnly />
                                                     </div>
                                                 </div>
                                             </div>
@@ -995,7 +995,8 @@ const ProductInfo = () => {
                                                                 <span className='date_pro_info'>{e.content}</span>
                                                                 <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
                                                                 <div className='d-flex align-items-center gap-1'>
-                                                                    <Rating name="read-only" value={e?.rating} readOnly />
+                                                                    {console.log(e?.rating,"e?.rating")}
+                                                                    <Rating   name="simple-controlled" value={e?.rating} readOnly />
                                                                 </div>
 
                                                                 {/* <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
@@ -1019,7 +1020,7 @@ const ProductInfo = () => {
                                         }
 
                                         {
-                                            reviweList.length > 10 &&
+                                            reviweList.length >= 10 &&
                                             <div className='w-100 d-flex justify-content-center mt-3 mb-5'>
                                                 <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setMainLoder(true), setIsFilter(true))}  > View More <MdKeyboardDoubleArrowRight /></Button>
                                             </div>
@@ -1138,7 +1139,8 @@ const ProductInfo = () => {
 
 
                             {/* cart drawer */}
-                            
+                            {/* <CartDrawer /> */}
+
 
                             <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
                                 <Modal.Body>
@@ -1170,9 +1172,9 @@ const ProductInfo = () => {
                                             <div className='login-input text-start'>
                                                 <label>You Rating*</label>
                                             </div>
-                                            <Rating name="half-rating" onChange={(event, newValue) => {
+                                            <Rating name="simple-controlled" onChange={(event, newValue) => {
                                                 setValues({ ...values, rating: newValue });
-                                            }} precision={0.5} />
+                                            }}  />
                                             <div className='login-input text-start'>
                                                 <label>You Name*</label>
                                                 <input type='text' name='title' value={values.title} onChange={handleChange} />

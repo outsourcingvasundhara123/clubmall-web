@@ -108,6 +108,7 @@ const WrappedCart = () => {
 
                         if (order.data.success == true) {
                             setIs_Wait(true)
+                            setMainLoder(true)
                             // create payment intent and get client_secret
                             const paymentIntentResponse = await api.post(`${serverURL + "create-payment-intent"}`, {
                                 amount: amountInCents,
@@ -143,11 +144,12 @@ const WrappedCart = () => {
 
                                 setTimeout(() => {
                                     setProfileOption("list")
-                                    navigate("/profile")
+                                    navigate("/thankyou")
                                 }, 1000);
                                 // Continue with the rest of your checkout flow here.
                             }
                             setIs_Wait(false)
+                            setMainLoder(false)
                             getCartData()
                         } else {
                             setMyMessageCart(order.data.message);
