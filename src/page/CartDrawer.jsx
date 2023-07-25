@@ -116,7 +116,7 @@ const CartDrawer = () => {
                                 return (
                                     <div className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_details._id)} >
                                         <img className='pointer' src={cartList.productImagePath + e.product_id + "/" + getimagename(e.sku_details, e.skuid)} alt='' width="150px" />
-                                        <div className='cart-items-text'>
+                                        <div className='cart-items-text w-100'>
                                             <h5>{e.product_name}</h5>
                                             {/* <span className='d-flex align-items-center'>
                                                 {formatDate(startDate)} - {formatDate(endDate)}
