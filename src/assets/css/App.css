@@ -6281,3 +6281,33 @@ input[type='radio'] {
         width: 80%;
     }
 }
+
+.delete-product {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.dot-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.sub-total h5 {
+    color: #223263;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.sub-total span {
+    color: #E02E24;
+    font-weight: 600;
+    font-size: 17px;
+}

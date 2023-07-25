@@ -2,7 +2,7 @@ import Selling from '../page/Selling';
 import Trending from '../page/Trending';
 import Categories from '../page/Categories';
 import ProductInfo from '../page/ProductInfo';
-import Cart from '../page/Cart';
+import CartNew from '../page/CartNew';
 import Profile from '../page/Profile';
 import Fashion from '../page/Fashion';
 import Home from '../page/Home';
@@ -52,7 +52,7 @@ export default [
   },
   {
     path: "/cart",
-    element: <Cart />,
+    element: <CartNew />,
   },
   {
     path: "/profile",

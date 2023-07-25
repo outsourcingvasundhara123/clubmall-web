@@ -40,27 +40,27 @@ const App = () => {
   }, [window.location.pathname]);
 
 
-    // user devise 
-    function getMobileOperatingSystem() {
-      const userAgent = navigator.userAgent || navigator.vendor;
-      // Apple devices (iPod, iPhone and iPad)
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-          return "iOS";
-      }
-  
-      // Android devices
-      else if (/android/i.test(userAgent)) {
-          return "Android";
-      }
-  
-      // If it's not an iPhone or Android we will assume it's "desktop"
-      return "desktop";
+  // user devise 
+  function getMobileOperatingSystem() {
+    const userAgent = navigator.userAgent || navigator.vendor;
+    // Apple devices (iPod, iPhone and iPad)
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+      return "iOS";
+    }
+
+    // Android devices
+    else if (/android/i.test(userAgent)) {
+      return "Android";
+    }
+
+    // If it's not an iPhone or Android we will assume it's "desktop"
+    return "desktop";
   }
-  
+
 
   // ios user redirect to appstore 
   useEffect(() => {
-    if(window.location.pathname.startsWith("/product-details/") && getMobileOperatingSystem() == "iOS" ){
+    if (window.location.pathname.startsWith("/product-details/") && getMobileOperatingSystem() == "iOS") {
       window.open("https://apps.apple.com/us/app/clubmall/id6444752184");
     }
   }, [window.location.pathname]);
@@ -70,7 +70,7 @@ const App = () => {
     const path = window.location.pathname;
     const pathParts = path.split("/");
     const firstPartOfPath = pathParts[1];
-  
+
     if (!firstPartOfPath || firstPartOfPath === '') {
       return "For you";
     } else if (firstPartOfPath.toLowerCase() === 'selling') {

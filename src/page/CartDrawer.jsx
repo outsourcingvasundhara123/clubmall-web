@@ -8,7 +8,8 @@ import {
     MdOutlineKeyboardArrowRight,
     MdOutlineKeyboardArrowDown,
     MdKeyboardDoubleArrowRight,
-    MdOutlineClose
+    MdOutlineClose,
+    MdDelete
 
 } from "react-icons/md"
 import ProCard from '../components/ProCard'
@@ -87,95 +88,94 @@ const CartDrawer = () => {
     console.log(cartList, "cartList");
 
     return (
-        <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
-            <Offcanvas.Body>
-                <div className='cart-side position-relative'>
+        <>
+            <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
+                <Offcanvas.Body>
+                    <div className='cart-side position-relative'>
 
-                    <Button className='close-modal-btn cart-side-close' onClick={handleDrawerClose}>
-                        <MdOutlineClose />
-                    </Button>
+                        <Button className='close-modal-btn cart-side-close' onClick={handleDrawerClose}>
+                            <MdOutlineClose />
+                        </Button>
 
-                    <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                        <img src='./img/product_def/right-black.png' alt='' width="18px" />
-                        <h5>Added ({cartList.list ? cartList.list?.length : 0}) items to cart</h5>
-                    </div>
-
-                    {(cartList.list?.length === 0 || !isLoggedIn) &&
-                        <div className='d-flex align-items-center justify-content-center h-100'>
-                            <div className='text-center found'>
-                                <img src='../img/not-found.png' alt='' />
-                                <p className='mt-3'>The cart is empty</p>
-                                <Button className='mt-3 submit-btn' type='button' onClick={() => (navigate("/trending"),handleDrawerClose())}  >Shop Now</Button>
-                            </div>
+                        <div className='cart-header d-flex align-items-center gap-2 pt-2'>
+                            <img src='./img/product_def/right-black.png' alt='' width="18px" />
+                            <h5>Added ({cartList.list ? cartList.list?.length : 0}) items to cart</h5>
                         </div>
-                    }
 
-                    <div className='cart-list border-bottom-cos mt-4 pb-4'>
-                        {
-                            isLoggedIn && cartList.list && cartList.list?.map((e, i) => {
-                                return (
-                                    <div className='cart-items d-flex align-items-start gap-3 mt-4' >
-                                        <img src={cartList.productImagePath + e.product_id + "/" + getimagename(e.sku_details, e.skuid)} alt='' width="150px" />
-                                        <div className='cart-items-text'>
-                                            <h5>{e.product_name}</h5>
-                                            <span className='d-flex align-items-center'>
-                                                {formatDate(startDate)} - {formatDate(endDate)}
-                                            </span>
-                                            <span className='d-flex align-items-center'>By {e.seller_name}</span>
-                                            <div className='d-flex align-items-center gap-2 cart-color w-100'>
-                                                <h6>Color : </h6>
-                                                <span>{e.sku_data?.color}</span>
-                                            </div>
+                        {(cartList.list?.length === 0 || !isLoggedIn) &&
+                            <div className='d-flex align-items-center justify-content-center h-100'>
+                                <div className='text-center found'>
+                                    <img src='../img/not-found.png' alt='' />
+                                    <p className='mt-3'>The cart is empty</p>
+                                    <Button className='mt-3 submit-btn' type='button' onClick={() => (navigate("/trending"), handleDrawerClose())}  >Shop Now</Button>
+                                </div>
+                            </div>
+                        }
 
-                                            {e.sku_data?.size &&
-                                                <div className='d-flex align-items-center gap-2 cart-color w-100'>
-                                                    <h6>Size : </h6>
-                                                    <span>{e.sku_data?.size}</span>
-                                                </div>
-                                            }
-
-                                            <div className='wrap-cos d-flex align-items-center justify-content-between'>
-                                                <div className='items-per d-flex align-items-center gap-2 mt-2'>
-                                                    <h5>${e.total_price}</h5>
-                                                    {/* <del>${e.product_details.group_price}</del> */}
-                                                    {/* <span>{Math.round(e.product_details.group_price * 100 / e.product_details.individual_price)}% Off</span> */}
+                        <div className='cart-list border-bottom-cos mt-4 pb-4'>
+                            {
+                                isLoggedIn && cartList.list && cartList.list?.map((e, i) => {
+                                    return (
+                                        <div className='cart-items d-flex align-items-start gap-3 mt-4' >
+                                            <img src={cartList.productImagePath + e.product_id + "/" + getimagename(e.sku_details, e.skuid)} alt='' width="150px" />
+                                            <div className='cart-items-text'>
+                                                <h5 className='dot-text'>{e.product_name}</h5>
+                                                <div className='d-flex align-items-center gap-2 cart-color w-100 mt-1'>
+                                                    <h6>Color : </h6>
+                                                    <span className='m-0'>{e.sku_data?.color}</span>
                                                 </div>
 
-                                                <div className='product-info d-flex align-items-center gap-3 marg-cos'>
-                                                    <div className='qty d-flex align-items-center gap-3'>
-                                                        <h5>Qty:</h5>
-                                                        <div className='count-product'>
-                                                            <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty - 1))} > <MdRemove /></Button>
-                                                            <span>{e.qty}</span>
-                                                            <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty + 1))}><MdAdd /></Button>
-                                                        </div>
+                                                {e.sku_data?.size &&
+                                                    <div className='d-flex align-items-center gap-2 cart-color w-100 mt-1'>
+                                                        <h6>Size : </h6>
+                                                        <span className='m-0'>{e.sku_data?.size}</span>
                                                     </div>
-                                                    <Button onClick={() => removeCartData(e._id, "remove-to-cart-product")} className='delete-btn'>
-                                                        <img src='../img/cart/delete.png' alt='' />
-                                                    </Button>
+                                                }
+
+                                                <div className='wrap-cos d-flex align-items-center justify-content-between'>
+                                                    <div className='items-per d-flex align-items-center gap-2 mt-2'>
+                                                        <h5>${e.total_price}</h5>
+                                                        {/* <del>${e.product_details.group_price}</del> */}
+                                                        {/* <span>{Math.round(e.product_details.group_price * 100 / e.product_details.individual_price)}% Off</span> */}
+                                                    </div>
+
+                                                    <div className='product-info d-flex align-items-center gap-3 marg-cos'>
+                                                        <div className='qty d-flex align-items-center gap-3'>
+                                                            <h5>Qty:</h5>
+                                                            <div className='count-product'>
+                                                                <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty - 1))} > <MdRemove /></Button>
+                                                                <span>{e.qty}</span>
+                                                                <Button onClick={(d) => (removeCartData(e._id, "update-to-cart-qty", e.qty + 1))}><MdAdd /></Button>
+                                                            </div>
+                                                        </div>
+                                                        <Button onClick={() => removeCartData(e._id, "remove-to-cart-product")} className='submit-btn delete-comment delete-product'>
+                                                            <MdDelete />
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    )
+                                })
+                            }
+
+
+                            {(cartList.list?.length > 0 && isLoggedIn) &&
+                                <>
+                                    <div className='sub-total d-flex gap-2 align-items-center p-10 mt-5'>
+                                        <h5 className=''>Subtotal:</h5>
+                                        <span>${cartList.cartAmountDetails.total_amount}</span>
                                     </div>
-                                )
-                            })
-                        }
+                                    <Button className='go-cart mt-2' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Go to cart</Button>
+                                </>
+                            }
 
-
-                        {(cartList.list?.length > 0 && isLoggedIn) &&
-                            <>
-                                <div className='d-flex gap-2 align-items-center p-10'>
-                                    <h5>Subtotal:</h5>
-                                    ${cartList.cartAmountDetails.total_amount}
-                                </div>
-                                <Button className='go-cart' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Go to cart</Button>
-                            </>
-                        }
-
+                        </div>
                     </div>
-                </div>
-            </Offcanvas.Body>
-        </Offcanvas>)
+                </Offcanvas.Body>
+            </Offcanvas>
+        </>
+    )
 }
 
 export default CartDrawer
