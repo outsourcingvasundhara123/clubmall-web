@@ -155,9 +155,10 @@ const AddCartModal = (props) => {
                         setTimeout(() => {
                             if (location.pathname == "/cart") {
                                 window.location.reload();
+                            }else{
+                                props.handleClose()
+                                handleDrawerShow()
                             }
-                            props.handleClose()
-                            handleDrawerShow()
                             setMainLoder(false)         
                         }, 1000);
 
@@ -312,6 +313,7 @@ const AddCartModal = (props) => {
                         </>
                     )}
             </Modal>
+     
 
             <InstallApp show={show} Hide={handleClose} />
 

@@ -19,7 +19,8 @@ import ContactUs from '../page/ContactUs';
 import ReturnPolicy from '../page/ReturnPolicy';
 import ShippingInfo from '../page/ShippingInfo';
 import ThankYou from '../page/ThankYou';
-
+import PrivateRoute from './PrivateRoute';
+import Cart from '../page/Cart';
 export default [
 
   {
@@ -52,11 +53,15 @@ export default [
   },
   {
     path: "/cart",
+    element: <PrivateRoute><Cart /></PrivateRoute>,
+  },
+  {
+    path: "/cart-new",
     element: <CartNew />,
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: <PrivateRoute><Profile /></PrivateRoute>,
   },
   {
     path: "/new-in",
@@ -80,7 +85,7 @@ export default [
   },
   {
     path: "/wishlist",
-    element: <Wishlist />,
+    element: <PrivateRoute><Wishlist /></PrivateRoute>,
   },
   {
     path: "/about",
@@ -112,6 +117,6 @@ export default [
   },
   {
     path: "/thankyou",
-    element: <ThankYou />,
+    element: <PrivateRoute><ThankYou /></PrivateRoute>,
   },
 ];

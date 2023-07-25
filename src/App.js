@@ -29,7 +29,7 @@ const ScrollToTop = () => {
 const App = () => {
 
   const [active, setActive] = useState(window.location.pathname);
-  const { mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+  const {drawer, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
 
@@ -115,8 +115,8 @@ const App = () => {
 
 
 
-      <ScrollToTop />
       <CartDrawer />
+      <ScrollToTop />
 
       <div className='page-layout'>
         <div>
