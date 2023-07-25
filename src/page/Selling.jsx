@@ -141,12 +141,12 @@ const Selling = () => {
                                             sellCategory && sellCategory.secondHalf?.slice(0, 4).map((e) => {
                                                 return (
 
-                                                    <Col lg={3} md={6} sm={12} className='mt-4'>
+                                                    <Col lg={3} md={6} sm={12} className='mt-4 pointer' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))}>
                                                         <div className='basket-box'>
                                                             <h5>{e.name}</h5>
                                                             <img src={categoryWeb.productsCategoryIconPath + e.product_icon} alt='' width="80%" className='my-4' />
                                                             <div className='d-flex justify-content-center'>
-                                                                <Button className='shop-btn' onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                                <Button className='shop-btn'  >Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                             </div>
                                                         </div>
                                                     </Col>

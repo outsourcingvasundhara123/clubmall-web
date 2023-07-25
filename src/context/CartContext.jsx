@@ -81,6 +81,10 @@ export const CartProvider = ({ children }) => {
   const handleClose = () => setShow(false);
   const [perActive, setPerActive] = useState('Individual');
 
+   //drawer
+  const [drawer, setDrawer] = useState(false);
+  const handleDrawerClose = () => setDrawer(false);
+  const handleDrawerShow = () => setDrawer(true);
 
   const startAnimation = () => {
     if (player.current) {
@@ -545,6 +549,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
+      handleDrawerShow,handleDrawerClose,drawer,
     playersellproduct,startAnimationsellpro,stopAnimationsellpro,playercategoryweb,startAnimationcategoryweb,stopAnimationcategoryweb
     ,categoryHome, setcategoryHome,categoryLoading, setCategoryLoading,catwebLoading, setCatwebLoading,ProductLoading, setProductLoading,sellProLoading, setSellProLoading,
       mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer,

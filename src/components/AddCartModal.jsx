@@ -21,10 +21,12 @@ import InstallApp from '../components/InstallApp';
 import { CartContext } from '../context/CartContext'
 import { useLocation } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
+import CartDrawer from '../page/CartDrawer'
+
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const {  mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer, generateDynamicLink,  getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {handleDrawerShow,  mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer, generateDynamicLink,  getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -149,14 +151,20 @@ const AddCartModal = (props) => {
                         getCartData()
                         setProductColorActive(" ")
                         setSizeActive(" ")
-                        setMainLoder(false)
+
                         setTimeout(() => {
                             if (location.pathname == "/cart") {
                                 window.location.reload();
                             }
                             props.handleClose()
+                            handleDrawerShow()
+                            setMainLoder(false)         
                         }, 1000);
+
+
+
                     } else if (res.data.success === false) {
+                        // handleDrawerShow()
                         setMainLoder(false)
                         setMyMessage(res.data.message);
                         setWarningSnackBarOpen(!warningSnackBarOpen);

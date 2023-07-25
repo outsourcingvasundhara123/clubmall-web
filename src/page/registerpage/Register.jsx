@@ -271,15 +271,18 @@ function Register() {
                     username: res.data.given_name
                 })
                     .then((res) => {
-                        //   if (res.data.success === true) {
                         setMyMessage(res.data.message);
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         login(res.data.data.user);
                         setTimeout(() => {
                             setValues(initialValues);
-                            navigate("/");
+                            if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+                                window.location.href = "/"
+                            } else {
+                                window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
+                            }
+                            // navigate("");
                         }, 1000);
-                        // }
                     })
             } catch (err) {
                 console.log(err);

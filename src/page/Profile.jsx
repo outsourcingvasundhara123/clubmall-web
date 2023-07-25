@@ -24,6 +24,7 @@ import { CartContext } from '../context/CartContext';
 import { login } from '../helper/auth'
 import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants'
+
 const Profile = () => {
 
     const { setMainLoder, itemShow, setItemShow, sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
@@ -76,6 +77,7 @@ const Profile = () => {
     const [displayedOrders, setDisplayedOrders] = useState([]);
     // const [page, setPage] = useState(1);
     const itemsPerPage = 5; // Set the number of items you want to show on one page
+    const navigate = useNavigate();
 
     const handleClose = () => {
         setErrors({})
@@ -623,6 +625,15 @@ const Profile = () => {
                                                                             )
                                                                         })}
 
+                                                                        {displayedOrders?.length === 0 &&
+                                                                            <div className='d-flex align-items-center justify-content-center h-100'>
+                                                                                <div className='text-center found'>
+                                                                                    <img src='../img/not-found.png' alt='' />
+                                                                                    <p className='mt-3'>The order list is empty</p>
+                                                                                    <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
                                                                     </>
                                                                 )}
                                                         </tbody>
