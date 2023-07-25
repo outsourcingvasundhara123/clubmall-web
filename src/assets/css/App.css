@@ -6246,3 +6246,38 @@ input[type='radio'] {
     font-weight: 600;
     color: #000;
 }
+
+.thankyou p {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.thankyou-box {
+    max-width: 600px;
+}
+
+.thankyou-box h1 {
+    font-weight: 900;
+    color: #E02E24;
+}
+
+.thankyou-box h3 {
+    font-weight: 800;
+    color: #000;
+    font-size: 24px;
+}
+
+.thankyou-box span {
+    font-size: 100px;
+    color: #009806;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+@media (max-width: 512px) {
+    .thankyou-box img {
+        width: 80%;
+    }
+}

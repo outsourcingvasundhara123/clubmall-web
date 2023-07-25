@@ -11,8 +11,7 @@ ReactDOM.render(
     <GoogleOAuthProvider 
     clientId={
       process.env.REACT_APP_CLIEN_ID
-    }
-    >
+    }>
       <CartProvider>
         <App />
       </CartProvider>

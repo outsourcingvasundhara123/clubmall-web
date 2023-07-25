@@ -37,12 +37,13 @@ import { useParams } from 'react-router-dom';
 import { RWebShare } from "react-web-share";
 import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
+import CartDrawer from './CartDrawer'
 
 
 const ProductInfo = () => {
 
 
-    const {cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { handleDrawerShow,handleDrawerClose,drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -54,7 +55,6 @@ const ProductInfo = () => {
         review_type: "",
         review_files: ""
     };
-
 
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
@@ -71,9 +71,7 @@ const ProductInfo = () => {
     const player = useRef();
     const [url, setUrl] = useState("");
     const [submitLoderRv, setSubmitLoderRv] = useState(false);
-    const [drawer, setDrawer] = useState(false);
-    const handleDrawerClose = () => setDrawer(false);
-    const handleDrawerShow = () => setDrawer(true);
+   
     const serverURL = getServerURL();
     const [show, setShow] = useState(false);
     const [isfilter, setIsFilter] = useState(false);
@@ -326,7 +324,9 @@ const ProductInfo = () => {
                         setProductColorActive(" ")
                         setSizeActive(" ")
                         setMainLoder(false)
+                        handleDrawerShow()
                     } else if (res.data.success === false) {
+                        handleDrawerShow()
                         setMainLoder(false)
                         setMyMessageProductDtl(res.data.message);
                         setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
@@ -478,6 +478,8 @@ const ProductInfo = () => {
             console.error('Error posting  data:', error);
         }
     }
+
+
 
     // conso0le.log(favoriteProductList.productListArrObj, "favoriteProductList.productListArrObj");
 
@@ -665,9 +667,9 @@ const ProductInfo = () => {
 
                                                 </Swiper>
 
-                                                <div className='d-flex justify-content-center'>
-                                                    {/* <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button> */}
-                                                </div>
+                                                {/* <div className='d-flex justify-content-center'>
+                                                    <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button>
+                                                </div> */}
 
 
                                             </div>
@@ -1017,7 +1019,7 @@ const ProductInfo = () => {
                                         }
 
                                         {
-                                            reviweList.length >= 10 &&
+                                            reviweList.length > 10 &&
                                             <div className='w-100 d-flex justify-content-center mt-3 mb-5'>
                                                 <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setMainLoder(true), setIsFilter(true))}  > View More <MdKeyboardDoubleArrowRight /></Button>
                                             </div>
@@ -1099,10 +1101,9 @@ const ProductInfo = () => {
 
                                         </Swiper>
 
-                                        <div className='d-flex justify-content-center'>
+                                        {/* <div className='d-flex justify-content-center'> */}
                                             {/* <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button> */}
-                                        </div>
-
+                                        {/* </div> */}
 
                                     </div>
                                 </div>
@@ -1124,7 +1125,6 @@ const ProductInfo = () => {
                                                         off={e.discount_percentage}
                                                         path={trendingProductList?.productImagePath && trendingProductList?.productImagePath}
                                                         is_wishList={e.wishList && e.wishList}
-
                                                     />
                                                 )
                                             })
@@ -1138,44 +1138,7 @@ const ProductInfo = () => {
 
 
                             {/* cart drawer */}
-                            <Offcanvas show={drawer} onHide={handleDrawerClose} placement="end" className="cart-canvas">
-                                <Offcanvas.Body>
-                                    <div className='cart-side position-relative'>
-
-                                        <Button className='close-modal-btn cart-side-close' onClick={handleDrawerClose}>
-                                            <MdOutlineClose />
-                                        </Button>
-
-                                        <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                                            <img src='./img/product_def/right-black.png' alt='' width="18px" />
-                                            <h5>Added 3 items(s) to cart</h5>
-                                        </div>
-
-                                        <div className='cart-list border-bottom-cos mt-4 pb-4'>
-                                            {
-                                                cartListData.slice(0, 3)?.map((e, i) => {
-                                                    return (
-                                                        <div className='cart-items d-flex align-items-start gap-3 mt-4' >
-                                                            <img src={e.img} alt='' width="90px" />
-                                                            <div className='cart-items-text'>
-                                                                <h5>{e.name}</h5>
-                                                                <span>{e.categories}</span>
-                                                                <div className='cart-per d-flex align-items-center gap-2'>
-                                                                    <h5>{e.per}</h5>
-                                                                    <del>{e.delPer}</del>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-
-                                            <Button className='go-cart'>Go to cart</Button>
-                                        </div>
-                                    </div>
-                                </Offcanvas.Body>
-                            </Offcanvas>
-
+                            
 
                             <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
                                 <Modal.Body>

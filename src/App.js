@@ -11,6 +11,7 @@ import Footer from './layout/Footer';
 import Loader from './components/Loader';
 import { CartContext } from './context/CartContext';
 import LoaderMain from './components/LoaderMain';
+import CartDrawer from './page/CartDrawer';
 
 const ScrollToTop = () => {
 
@@ -115,6 +116,7 @@ const App = () => {
 
 
       <ScrollToTop />
+      <CartDrawer />
 
       <div className='page-layout'>
         <div>

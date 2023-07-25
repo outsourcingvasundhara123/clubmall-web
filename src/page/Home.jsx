@@ -241,7 +241,7 @@ const Home = () => {
                         <section className='section-4 my-5'>
                             <div className='container-cos'>
                                 <Row>
-                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4'>
+                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 pointer' onClick={() => (handelCategorydata("6488512c483f4ea550675331"), localStorage.removeItem("selectedSubcategories"))}>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
                                                 <img src='./img/img4.svg' alt='' />
@@ -250,12 +250,12 @@ const Home = () => {
                                                         <h5>Jewellery</h5>
                                                         <span className='my-2 d-block'>From $0.29</span>
                                                     </div>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => (handelCategorydata("6488512c483f4ea550675331"), localStorage.removeItem("selectedSubcategories"))}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                    <Button className='shop-btn mt-0 mt-3' >Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                 </div>
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10'>
+                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10 pointer' onClick={() => (handelCategorydata("644804f095c53d0f01ab0782"), localStorage.removeItem("selectedSubcategories"))}>
                                         <div className='product-s4-card'>
                                             <div className='position-relative'>
                                                 <img src='./img/img5.svg' alt='' />
@@ -264,7 +264,7 @@ const Home = () => {
                                                         <h5>FS - Nike Air Max 270 React </h5>
                                                         <span className='my-2 d-block'>Up to 50% off</span>
                                                     </div>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => (handelCategorydata("644804f095c53d0f01ab0782"), localStorage.removeItem("selectedSubcategories"))}>Shop Now <MdKeyboardDoubleArrowRight /></Button>
+                                                    <Button className='shop-btn mt-0 mt-3' >Shop Now <MdKeyboardDoubleArrowRight /></Button>
                                                 </div>
                                             </div>
                                         </div>
@@ -279,18 +279,18 @@ const Home = () => {
                                     <h2><span>D</span>AILY DROPS</h2>
                                 </div>
                                 <Row className=''>
-                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4'>
+                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 pointer' onClick={() => (handelCategorydata("6443aac367efa3bfcab97f69"), localStorage.removeItem("selectedSubcategories"))}>
                                         <div className='product-s4-card' style={{ borderRadius: "0px 0px 15px 15px" }}>
                                             <div className='position-relative'>
                                                 <img src='./img/daily-drop-1.webp' alt='' />
                                                 <div className='card-text-bottom big-box-daily-drops'>
-                                                    <Button className='shop-btn mt-0 mt-3' onClick={() => (handelCategorydata("6443aac367efa3bfcab97f69"), localStorage.removeItem("selectedSubcategories"))}>Shop Now</Button>
+                                                    <Button className='shop-btn mt-0 mt-3' >Shop Now</Button>
                                                 </div>
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10 pointer'>
-                                        <div className='product-s4-card' onClick={() => (handelCategorydata("6442936437764b869857a33e"), localStorage.removeItem("selectedSubcategories"))} >
+                                    <Col xl={6} lg={6} md={6} sm={12} className='mt-4 mar-top-10 pointer' onClick={() => (handelCategorydata("6442936437764b869857a33e"), localStorage.removeItem("selectedSubcategories"))}>
+                                        <div className='product-s4-card'  >
                                             <div className='position-relative'>
                                                 <img src='./img/daily-drop-2.webp' alt='' />
                                             </div>
@@ -404,12 +404,12 @@ const Home = () => {
                             </div>
                         </section>
 
-                        <section className='home-second-image'>
+                        <section className='home-second-image'  onClick={() => (handelSubCat("64493af9b4e98da026bbd859"), handelCategorydata("6447cf2d4140dd3938c74c35"))}>
                             <div className='container-cos position-relative'>
-                                <div className='w-100 pointer ' onClick={() => (handelSubCat("64493af9b4e98da026bbd859"), handelCategorydata("6447cf2d4140dd3938c74c35"))}>
+                                <div className='w-100 pointer '>
                                     <img src="./img/homePageBg4.webp" alt="" width={"100%"} />
                                 </div>
-                                <Button className='shop-the-drop' onClick={() => (handelSubCat("64493af9b4e98da026bbd859"), handelCategorydata("6447cf2d4140dd3938c74c35"))}>Shop The Drop</Button>
+                                <Button className='shop-the-drop' >Shop The Drop</Button>
                             </div>
                         </section>
 
