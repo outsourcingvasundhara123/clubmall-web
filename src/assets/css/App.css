@@ -2727,6 +2727,11 @@ del {
     font-size: 16px;
     color: #223263;
 }
+.total h5 {
+    font-weight: 600;
+    font-size: 18px; 
+    color: #223263;
+}
 
 .cart-main .total-list del {
     font-weight: 500;

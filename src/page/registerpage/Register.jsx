@@ -142,22 +142,48 @@ function Register() {
         }
     };
 
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const request1 = api.get(`${serverURL + "/country-list"}`);
+    //             const request2 = api.get(`${serverURL + "/state-list"}`);
+    //             const responses = await Promise.all([request1, request2]);
+    //             setCountryList(responses[0].data.data.country);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, []);
+
+    // select usa as a default id
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
                 const request2 = api.get(`${serverURL + "/state-list"}`);
                 const responses = await Promise.all([request1, request2]);
-                // console.log(responses[0].data.data.country, "responses[0].data.data.country");
+    
                 setCountryList(responses[0].data.data.country);
-                // setStateList(responses[1].data.data.states);
+                
+                // Find United States country from list and set it
+                const USCountry = responses[0].data.data.country.find(country => country.name === 'United States');
+                if(USCountry){
+                    setValues(prevValues => ({
+                        ...prevValues,
+                        country_id: USCountry._id
+                    }))
+                }
+    
             } catch (error) {
                 console.error(error);
             }
         };
-
+    
         fetchData();
     }, []);
+    
 
     const checkforcounty = async () => {
 
@@ -378,7 +404,7 @@ function Register() {
                                         value={values.country}
                                         onChange={handleChange}
                                         className='select-arrow'>
-                                        <option>Select Country</option>
+                                        <option value="United States">United States</option>
                                         {(countryList.length <= 0) && <option
                                         >loding....</option>}
                                         {

@@ -12,6 +12,8 @@ import Loader from './components/Loader';
 import { CartContext } from './context/CartContext';
 import LoaderMain from './components/LoaderMain';
 import CartDrawer from './page/CartDrawer';
+import { Is_Login } from './helper/IsLogin';
+
 
 const ScrollToTop = () => {
 
@@ -29,9 +31,11 @@ const ScrollToTop = () => {
 const App = () => {
 
   const [active, setActive] = useState(window.location.pathname);
-  const {drawer, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+  const { drawer, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+  const isLoggedIn = Is_Login();
 
+  console.log(isLoggedIn, "isLoggedIn");
 
   useEffect(() => {
     if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
