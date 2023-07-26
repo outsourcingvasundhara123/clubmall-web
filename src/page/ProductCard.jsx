@@ -45,9 +45,9 @@ const ProductCard = ({ product, productImagePath, handleShow }) => {
                 <Button className='add-to-card-btn' onClick={() => handleShow(product._id)} >Add to Cart</Button>
             </div>
             <div className='py-3 px-3 space-card'>
-                <h5>{product.name}</h5>
+                <h5 onClick={() => handelProductDetail(product._id)}>{product.name}</h5>
                 <div className='d-flex align-items-center justify-content-between'>
-                    <div>
+                    <div onClick={() => handelProductDetail(product._id)}>
                         <p className='per'>${product.group_price} <span>(Group Price)</span></p>
                         <span className='sub-per'>${product.individual_price} (Individual Price)</span>
                     </div>

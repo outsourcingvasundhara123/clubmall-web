@@ -55,10 +55,10 @@ export default [
     path: "/cart",
     element: <PrivateRoute><Cart /></PrivateRoute>,
   },
-  {
-    path: "/cart-new",
-    element: <CartNew />,
-  },
+  // {
+  //   path: "/cart-new",
+  //   element: <CartNew />,
+  // },
   {
     path: "/profile",
     element: <PrivateRoute><Profile /></PrivateRoute>,

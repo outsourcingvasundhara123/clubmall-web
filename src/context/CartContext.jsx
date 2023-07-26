@@ -225,8 +225,8 @@ export const CartProvider = ({ children }) => {
 
       stopAnimation()
     } catch (error) {
-      errorResponse(error, setMyMessage);
-      setWarningSnackBarOpen(!warningSnackBarOpen);
+      // errorResponse(error, setMyMessage);
+      // setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
@@ -480,7 +480,7 @@ export const CartProvider = ({ children }) => {
       // setMainLoder(false)
     } catch (error) {
       console.log(error);
-      errorResponse(error, setMyMessage);
+      // errorResponse(error, setMyMessage);
       // setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };

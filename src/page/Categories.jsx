@@ -122,7 +122,7 @@ const Categories = () => {
                 navigate("/")
             }
         } catch (error) {
-            errorResponse(error, setMyMessage);
+            // errorResponse(error, setMyMessage);
             console.log(error);
         }
     };
@@ -152,7 +152,7 @@ const Categories = () => {
             setFilterList(filterlist.data.filterData)
             stopAnimation()
         } catch (error) {
-            errorResponse(error, setMyMessage);
+            // errorResponse(error, setMyMessage);
             console.log(error);
         }
     };
@@ -224,6 +224,8 @@ const Categories = () => {
         return () => clearTimeout(timer); // Clear the timer if the component unmounts
     }, []);
 
+
+    console.log(selectedSub,"selectedSub-----");
 
     return (
         <>

@@ -345,7 +345,9 @@ const Header = (props) => {
                                             <NavLink className='py-0'>
                                                 <Button className='pre-label-btn user-account' >
                                                     <div className='d-flex align-items-center gap-2'>
-                                                        <img className='myprofile' src={Userprofile} alt='' />
+                                                        <img className='myprofile' src={Userprofile}
+                                                             onError={(e)=>{e.target.onerror = null; e.target.src=defaultProfile}}
+                                                        alt='' />
                                                         <div className='price-text text-start'>
                                                             <h6>Hello, {UserName}</h6>
                                                             <span>Orders & Account</span>
@@ -357,7 +359,9 @@ const Header = (props) => {
                                         <Dropdown.Menu>
                                             <div className='drop-items'>
                                                 <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
-                                                    <img className='myprofile' src={Userprofile} alt='' />
+                                                    <img className='myprofile' src={Userprofile}
+                                                         onError={(e)=>{e.target.onerror = null; e.target.src=defaultProfile}}
+                                                    alt='' />
                                                     <h6>Hello, {UserName}</h6>
                                                 </div>
                                             </div>

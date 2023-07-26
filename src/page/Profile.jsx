@@ -47,7 +47,8 @@ const Profile = () => {
         gender: "",
         profile_image: ""
     };
-
+    const defaultProfile = `../img/for_you/defaultuser.png`
+    const Userprofile =  defaultProfile
     const isLoggedIn = Is_Login();
     const [showPass, setShowPass] = useState(true)
     const [showloderUrl, setShowloderUrl] = useState(false)
@@ -402,9 +403,9 @@ const Profile = () => {
 
         fetchData();
         getMyAddress()
+        getUserProfile()
         getOrderList()
         getWishList()
-        getUserProfile()
     }, [isLoggedIn]);
 
 
@@ -626,10 +627,10 @@ const Profile = () => {
                                                                         })}
 
                                                                         {displayedOrders?.length === 0 &&
-                                                                            <div className='d-flex align-items-center justify-content-center h-100'>
+                                                                            <div className='d-flex align-items-center justify-content-center h-100 '>
                                                                                 <div className='text-center found'>
-                                                                                    <img src='../img/not-found.png' alt='' />
-                                                                                    <p className='mt-3'>The order list is empty</p>
+                                                                                    <img src='../img/not-found.png' alt='' className='my-20 ' />
+                                                                                    <p className='mt-3'>No orders available. Make your first order now</p>
                                                                                     <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button>
                                                                                 </div>
                                                                             </div>
@@ -742,7 +743,9 @@ const Profile = () => {
                                                                 <Col xl={4} lg={6} md={12}>
                                                                     <div className='select-img'>
                                                                         <div className='preview position-relative'>
-                                                                            <img src={imagePreview || values_2.profile_image} alt='' className=' preview_profile ' />
+                                                                            <img src={imagePreview || values_2.profile_image}
+                                                                                onError={(e) => { e.target.onerror = null; e.target.src = defaultProfile }}
+                                                                                alt='' className=' preview_profile ' />
                                                                             <input type="file" name='profile_image' onChange={handlePhoto} id='file' />
                                                                             <label htmlFor='file' className='file-label'>
                                                                                 <img src='./img/profile/select-btn.png' alt='' />

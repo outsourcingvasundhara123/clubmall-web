@@ -100,10 +100,10 @@ const ProCard = (props) => {
                         />
                         <Button className='add-to-card-btn' onClick={() => handleShow(props.id)}>Add to Cart</Button>
                     </div>
-                    <div className='py-3 px-3 space-card'>
-                        <h5>{props.name}</h5>
-                        <div className='d-flex align-items-center justify-content-between'>
-                            <div >
+                    <div className='py-3 px-3 space-card' >
+                        <h5 onClick={() => handelProductDetail(props.id)}>{props.name}</h5>
+                        <div  className='d-flex align-items-center justify-content-between'>
+                            <div onClick={() => handelProductDetail(props.id)} >
                                 <p className='per' >${props.group_price} <span >(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
