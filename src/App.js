@@ -35,8 +35,6 @@ const App = () => {
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
   const isLoggedIn = Is_Login();
 
-  console.log(isLoggedIn, "isLoggedIn");
-
   useEffect(() => {
     if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
       localStorage.setItem('lastVisitedPath', window.location.pathname);
@@ -97,6 +95,18 @@ const App = () => {
       document.body.style.overflow = 'auto';
     }
   }, [mainloder]);
+
+
+  // UseEffect hook here
+  useEffect(() => {
+    if (drawer) {
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+    }
+}, [drawer]);
 
   return (
     <BrowserRouter>

@@ -81,7 +81,7 @@ export const CartProvider = ({ children }) => {
   const handleClose = () => setShow(false);
   const [perActive, setPerActive] = useState('Individual');
 
-   //drawer
+  //drawer
   const [drawer, setDrawer] = useState(false);
   const handleDrawerClose = () => setDrawer(false);
   const handleDrawerShow = () => setDrawer(true);
@@ -156,20 +156,25 @@ export const CartProvider = ({ children }) => {
   };
 
   const getWishList = async () => {
-    startAnimation()
-    setLoading(true)
+
     try {
-      // if (isLoggedIn) {
-      const res = await api.postWithToken(`${serverURL + WISHLIST}`, { "action": "my-wishlist-list" })
-      setWishList(res.data.data.list)
-      setWishlistCount(res.data.data.list.length)
-      setWishProductURL(res.data.data.productImagePath)
-      stopAnimation()
+      if (isLoggedIn) {
+        startAnimation()
+        setLoading(true)
+        const res = await api.postWithToken(`${serverURL + WISHLIST}`, { "action": "my-wishlist-list" })
+        setWishList(res.data.data.list)
+        setWishlistCount(res.data.data.list.length)
+        setWishProductURL(res.data.data.productImagePath)
+        stopAnimation()
+      }
     } catch (error) {
-      console.log(error,"error");
-      // errorResponse(error, setMyMessage);
-      // setWarningSnackBarOpen(!warningSnackBarOpen);
+      console.log(error, "error");
+      if (window.location.pathname == "/wishlist") {
+        errorResponse(error, setMyMessage);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
     }
+
   };
 
   // const handleWishlistClick = async (productId) => {
@@ -225,6 +230,7 @@ export const CartProvider = ({ children }) => {
 
       stopAnimation()
     } catch (error) {
+      console.log(error)
       // errorResponse(error, setMyMessage);
       // setWarningSnackBarOpen(!warningSnackBarOpen);
     }
@@ -235,22 +241,36 @@ export const CartProvider = ({ children }) => {
       startAnimation()
       setProductLoading(true)
       const apiTyp = isLoggedIn ? api.postWithToken : api.post;
-      const [categoryResponse, trendingproductListResponse, productListResponse, userProductList] = await Promise.all([
-        api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" }),
-        apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
-        apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
-        api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
-      ]);
 
-      const categoryData = categoryResponse.data.data;
-      const productListData = productListResponse.data.data;
-      const trendingproductData = trendingproductListResponse.data.data
-      const userproductData = userProductList.data.data;
+      if (window.location.pathname == "/selling") {
+        var [trendingproductListResponse, productListResponse, categoryResponse, userProductList] = await Promise.all([
+          apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+          // apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
+          // api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" }),
+          // api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
+        ]);
+        var trendingproductData = trendingproductListResponse.data.data
+        setTrendingProductList(trendingproductData)
+      } else {
+        var [trendingproductListResponse, productListResponse, categoryResponse, userProductList] = await Promise.all([
+          apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "trending-product" }),
+          apiTyp(`${serverURL + PRODUCTList}`, { "product_list_type": "flashsale-products" }),
+          // api.post(`${serverURL + PRODUCTCATEGORY}`, { action: "category" }),
+          // api.post(`${serverURL + PRODUCTList}`, { product_list_type: "user-product-list", user_id: "63906926deb5464a1ed67770" })
+        ]);
+        var productListData = productListResponse.data.data;
+        var trendingproductData = trendingproductListResponse.data.data
+        setProductList(productListData);
+        setTrendingProductList(trendingproductData)
+      }
 
-      setcategory(categoryData);
-      setProductList(productListData);
-      setTrendingProductList(trendingproductData)
-      setUserProductList(userproductData)
+      // const categoryData = categoryResponse.data.data;
+      // const userproductData = userProductList.data.data;
+
+      // setcategory(categoryData);
+
+
+      // setUserProductList(userproductData)
 
       stopAnimation()
       setProductLoading(false)
@@ -259,7 +279,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-//categoryweb loding 
+  //categoryweb loding 
   const playercategoryweb = useRef();
 
   const startAnimationcategoryweb = () => {
@@ -461,27 +481,30 @@ export const CartProvider = ({ children }) => {
 
   const getCartData = async () => {
 
-    startAnimation()
-    // setMainLoder(true)
-
     try {
-      // if (isLoggedIn) {
-      const [poroductResponse] = await Promise.all([
-        api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
+      if (isLoggedIn) {
 
-      ]);
+        startAnimation()
+        // setMainLoder(true)
+        const [poroductResponse] = await Promise.all([
+          api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
 
-      const poroductData = poroductResponse.data.data;
-      setCart(poroductResponse.data.data.list?.length)
-      let ids = poroductData.list?.map((e) => e._id)
-      setCouponId(ids)
-      setCartList(poroductData);
-      stopAnimation()
-      // setMainLoder(false)
+        ]);
+
+        const poroductData = poroductResponse.data.data;
+        setCart(poroductResponse.data.data.list?.length)
+        let ids = poroductData.list?.map((e) => e._id)
+        setCouponId(ids)
+        setCartList(poroductData);
+        stopAnimation()
+        // setMainLoder(false)
+      }
     } catch (error) {
       console.log(error);
-      // errorResponse(error, setMyMessage);
-      // setWarningSnackBarOpen(!warningSnackBarOpen);
+      if (window.location.pathname == "/cart") {
+        errorResponse(error, setMyMessage);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
     }
   };
 
@@ -518,7 +541,7 @@ export const CartProvider = ({ children }) => {
     call(response.data.shortLink)
   };
 
-//chnage for redirect ios user
+  //chnage for redirect ios user
   // const generateDynamicLink = async (productId) => {
   //   const response = await api.post(
   //     `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${process.env.REACT_APP_API_FIREBASE}`,
@@ -549,11 +572,11 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      handleDrawerShow,handleDrawerClose,drawer,
-    playersellproduct,startAnimationsellpro,stopAnimationsellpro,playercategoryweb,startAnimationcategoryweb,stopAnimationcategoryweb
-    ,categoryHome, setcategoryHome,categoryLoading, setCategoryLoading,catwebLoading, setCatwebLoading,ProductLoading, setProductLoading,sellProLoading, setSellProLoading,
-      mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer,
-      generateDynamicLink,setMyMessage,
+      handleDrawerShow, handleDrawerClose, drawer,
+      playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
+      , categoryHome, setcategoryHome, categoryLoading, setCategoryLoading, catwebLoading, setCatwebLoading, ProductLoading, setProductLoading, sellProLoading, setSellProLoading,
+      mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer,
+      generateDynamicLink, setMyMessage,
       itemShow, setItemShow, getCartData, setCartList, setCouponId, cartList, couponId, setAdd_wished_Called, add_wished_Called, deleteWishList, player, handelwishSell, sellIs_wished, activeImage, setActiveImage, setIs_search, handelSearch, searchUrl, searchPage, searchKeyWord, setSearchKeyWord, searchpostList, setSearchPage, searchUrl, getSearchedProduct, profileOption, setProfileOption, viewMoreLodr, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, correntAddess, myAddress, getMyAddress, sellingCategory, stopAnimationcategory, startAnimationcategory, playercategory, loadingCategory, setLoadingCategory, startAnimation, stopAnimation, player, cart, setCart, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage,
       setSucessSnackBarOpen, setWarningSnackBarOpen, getWishList, wishlist, getProducts, wishProductUrl, category, currentUser,
       productList, trendingProductList, loading, setLoading, wishlistCount, userProductList, getCategoryWeb, categoryWeb
