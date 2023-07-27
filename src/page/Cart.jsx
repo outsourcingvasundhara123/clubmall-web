@@ -193,42 +193,6 @@ const WrappedCart = () => {
         // setShow(true);
     }
 
-
-    const handleChange = (e) => {
-
-        const { name, value, checked, type } = e.target;
-        let newValue = type === "checkbox" ? checked : value;
-
-        // if (name === "state_id") {
-        //     const selectedState = stateList.find((state) => state.name === newValue);
-        //     newValue = selectedState ? selectedState._id : "";
-        // }
-
-        if (name === "country_id") {
-
-            setValues((prevValues) => ({
-                ...prevValues,
-                ["state_id"]: "",
-            }));
-        }
-
-        if (submitCount > 0) {
-            const validationErrors = validate({ ...values, [name]: newValue });
-            setErrors(validationErrors);
-
-            // Remove error message for the specific field if it is valid
-            if (Object.keys(validationErrors).length === 0) {
-                delete errors[name];
-            }
-        }
-
-        setValues((prevValues) => ({
-            ...prevValues,
-            [name]: newValue,
-        }));
-    };
-
-
     const handleSubmit = (mood) => {
         // e.preventDefault();
 
@@ -358,19 +322,83 @@ const WrappedCart = () => {
 
     };
 
-    useEffect(() => {
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const request1 = api.get(`${serverURL + "/country-list"}`);
+    //             const request2 = api.get(`${serverURL + "/state-list"}`);
+    //             const responses = await Promise.all([request1, request2]);
+    //             setCountryList(responses[0].data.data.country);
+    //             // setStateList(responses[1].data.data.states);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
+
+    //     getCartData();
+    //     fetchData();
+    //     getMyAddress()
+    // }, [isLoggedIn]);
+
+    const handleChange = (e) => {
+
+        const { name, value, checked, type } = e.target;
+        let newValue = type === "checkbox" ? checked : value;
+
+        // if (name === "state_id") {
+        //     const selectedState = stateList.find((state) => state.name === newValue);
+        //     newValue = selectedState ? selectedState._id : "";
+        // }
+
+        if (name === "country_id") {
+
+            setValues((prevValues) => ({
+                ...prevValues,
+                ["state_id"]: "",
+            }));
+        }
+
+        if (submitCount > 0) {
+            const validationErrors = validate({ ...values, [name]: newValue });
+            setErrors(validationErrors);
+
+            // Remove error message for the specific field if it is valid
+            if (Object.keys(validationErrors).length === 0) {
+                delete errors[name];
+            }
+        }
+
+        setValues((prevValues) => ({
+            ...prevValues,
+            [name]: newValue,
+        }));
+    };
+
+
+      // select usa as a default id
+      useEffect(() => {
         const fetchData = async () => {
             try {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
                 const request2 = api.get(`${serverURL + "/state-list"}`);
                 const responses = await Promise.all([request1, request2]);
+    
                 setCountryList(responses[0].data.data.country);
-                // setStateList(responses[1].data.data.states);
+                
+                // Find United States country from list and set it
+                const USCountry = responses[0].data.data.country.find(country => country.name === 'United States');
+                if(USCountry){
+                    setValues(prevValues => ({
+                        ...prevValues,
+                        country_id: USCountry._id
+                    }))
+                }
+    
             } catch (error) {
                 console.error(error);
             }
         };
-
+    
         getCartData();
         fetchData();
         getMyAddress()
@@ -615,21 +643,29 @@ const WrappedCart = () => {
                             <div className='container-cos'>
 
                                 <div className='page-path d-flex align-items-center gap-1'>
-                                    <div className='d-flex align-items-center gap-1'>
-                                        <NavLink >Cart</NavLink>
-                                        <MdOutlineKeyboardArrowRight />
-                                        <NavLink
-                                            // onClick={() => setStep(1)}
-                                            className={step === 1 ? 'active' : ''}>Information</NavLink>
-                                        <MdOutlineKeyboardArrowRight />
-                                        <NavLink
-                                            // onClick={() => setStep(2)} 
-                                            className={step === 2 ? 'active' : ''}>Shipping</NavLink>
-                                        <MdOutlineKeyboardArrowRight />
-                                        <NavLink
-                                            // onClick={() => setStep(3)}
-                                            className={step === 3 ? 'active' : ''}>Payment</NavLink>
-                                        <MdOutlineKeyboardArrowRight />
+                                    <div className='d-flex align-items-center gap-1 flex-wrap'>
+                                        <div className='d-flex align-items-center gap-1'>
+                                            <NavLink >Cart</NavLink>
+                                            <MdOutlineKeyboardArrowRight />
+                                        </div>
+                                        <div className='d-flex align-items-center gap-1'>
+                                            <NavLink
+                                                // onClick={() => setStep(1)}
+                                                className={step === 1 ? 'active' : ''}>Information</NavLink>
+                                            <MdOutlineKeyboardArrowRight />
+                                        </div>
+                                        <div className='d-flex align-items-center gap-1'>
+                                            <NavLink
+                                                // onClick={() => setStep(2)} 
+                                                className={step === 2 ? 'active' : ''}>Shipping</NavLink>
+                                            <MdOutlineKeyboardArrowRight />
+                                        </div>
+                                        <div className='d-flex align-items-center gap-1'>
+                                            <NavLink
+                                                // onClick={() => setStep(3)}
+                                                className={step === 3 ? 'active' : ''}>Payment</NavLink>
+                                            <MdOutlineKeyboardArrowRight />
+                                        </div>
                                     </div>
                                 </div>
                                 <Row className='mt-4'>
@@ -637,7 +673,7 @@ const WrappedCart = () => {
 
                                         {step === 1 &&
 
-                                            <div>
+                                            <div style={{ position: "sticky", top: "100px" }}>
                                                 {/* <div>
                                         <div className='login-input text-start'>
                                             <label>Contact</label>
@@ -704,7 +740,7 @@ const WrappedCart = () => {
 
 
                                         {step === 2 &&
-                                            <div className='shipping'>
+                                            <div className='shipping' style={{ position: "sticky", top: "100px" }}>
 
                                                 <Button className='p-0 back-btn' onClick={prevStep}>
                                                     <FiChevronLeft />
@@ -753,7 +789,7 @@ const WrappedCart = () => {
                                         }
 
                                         {step === 3 &&
-                                            <div className='shipping'>
+                                            <div className='shipping' style={{ position: "sticky", top: "100px" }}>
 
                                                 <Button className='p-0 back-btn' onClick={prevStep}>
                                                     <FiChevronLeft />
@@ -867,7 +903,7 @@ const WrappedCart = () => {
                                         }
 
                                     </Col>
-                                    <Col lg={6} md={12} className='mt-5 mt-lg-0'>
+                                    <Col lg={6} md={12} className='mt-4 mt-lg-0'>
 
                                         {/* <div className='cart-pricing-main '> */}
                                         {/* <div className='cart-product border-bottom-cos pb-3'>
@@ -924,7 +960,7 @@ const WrappedCart = () => {
                                                 cartList.list && cartList.list?.map((e, i) => {
                                                     return (
 
-                                                        <div className='cart-items ' key={i} >
+                                                        <div className='cart-items pb-3' key={i} >
 
                                                             <div onClick={() => handelProductDetail(e.product_details._id)} className='pointer items-img select-all d-flex align-items-center'>
                                                                 {/* <input
@@ -1108,7 +1144,7 @@ checkbox1: event.target.checked,
                                             value={values.country_id}
                                             onChange={handleChange}
                                             className='select-arrow'>
-                                            <option value="" >Select Country</option>
+                                            <option value="United States">United States</option>
                                             {(countryList.length <= 0) && <option
                                             >loding....</option>}
                                             {
