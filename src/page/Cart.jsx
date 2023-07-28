@@ -375,30 +375,30 @@ const WrappedCart = () => {
     };
 
 
-      // select usa as a default id
-      useEffect(() => {
+    // select usa as a default id
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
                 const request2 = api.get(`${serverURL + "/state-list"}`);
                 const responses = await Promise.all([request1, request2]);
-    
+
                 setCountryList(responses[0].data.data.country);
-                
+
                 // Find United States country from list and set it
                 const USCountry = responses[0].data.data.country.find(country => country.name === 'United States');
-                if(USCountry){
+                if (USCountry) {
                     setValues(prevValues => ({
                         ...prevValues,
                         country_id: USCountry._id
                     }))
                 }
-    
+
             } catch (error) {
                 console.error(error);
             }
         };
-    
+
         getCartData();
         fetchData();
         getMyAddress()
@@ -673,7 +673,7 @@ const WrappedCart = () => {
 
                                         {step === 1 &&
 
-                                            <div style={{ position: "sticky", top: "100px" }}>
+                                            <div>
                                                 {/* <div>
                                         <div className='login-input text-start'>
                                             <label>Contact</label>
@@ -740,7 +740,7 @@ const WrappedCart = () => {
 
 
                                         {step === 2 &&
-                                            <div className='shipping' style={{ position: "sticky", top: "100px" }}>
+                                            <div className='shipping'>
 
                                                 <Button className='p-0 back-btn' onClick={prevStep}>
                                                     <FiChevronLeft />
@@ -789,7 +789,7 @@ const WrappedCart = () => {
                                         }
 
                                         {step === 3 &&
-                                            <div className='shipping' style={{ position: "sticky", top: "100px" }}>
+                                            <div className='shipping'>
 
                                                 <Button className='p-0 back-btn' onClick={prevStep}>
                                                     <FiChevronLeft />
