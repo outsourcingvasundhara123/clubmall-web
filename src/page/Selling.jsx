@@ -94,9 +94,9 @@ const Selling = () => {
                 type="error"
             />
 
-            {
+            {/* {
                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
-                    <>
+                    <> */}
                         <section className='hero position-relative selling-banner pointer' onClick={() => (handelCategorydata("6447cbbb4140dd3938c74b34"), localStorage.removeItem("selectedSubcategories"))}>
                             <img src='./img/banner2.webp' />
                         </section>
@@ -398,9 +398,9 @@ const Selling = () => {
                                 // } */}
                             </div>
                         </section>
-                    </>
+                    {/* </>
                 )
-            }
+            } */}
         </ >
     )
 }

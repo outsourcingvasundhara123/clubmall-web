@@ -11,3 +11,4 @@ function placeOrder(orderValue, currency, transactionID) {
 }
 
 export default placeOrder;
+

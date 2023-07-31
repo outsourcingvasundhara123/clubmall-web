@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,useContext } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import Layout from '../../layout/Layout'
 import { Button, Form, Modal, NavLink, } from 'react-bootstrap'
 import "react-phone-input-2/lib/bootstrap.css";
@@ -19,13 +19,15 @@ import { BsApple } from 'react-icons/bs'
 import axios from 'axios';
 import { SOCIALLOGIN } from '../../helper/endpoints';
 import { CartContext } from '../../context/CartContext'
-
+import { Is_Login } from '../../helper/IsLogin';
+import { ADDTOCART } from '../../helper/endpoints';
 
 const LogIn = () => {
 
-  const { setMainLoder,itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+  const { localCartPostData, getLocalCartPostData, localCart, getLocalCartData, setMainLoder, itemShow, setItemShow, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
 
   const navigate = useNavigate();
+  const isLoggedIn = Is_Login();
 
   const initialValues = {
     email: "",
@@ -80,6 +82,23 @@ const LogIn = () => {
     }));
   };
 
+  const getCartData = async () => {
+    try {
+
+      const [productResponse] = await Promise.all([
+        api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
+      ]);
+      const productData = productResponse.data.data;
+      // setMainLoder(false)
+      return productData; // Return the cartList directly.
+
+    } catch (error) {
+      console.log(error);
+
+    };
+
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const updatedValues = { ...values };
@@ -93,12 +112,76 @@ const LogIn = () => {
         setMainLoder(true)
 
         api.post(`${serverURL}login`, updatedValues)
-          .then((res) => {
+          .then(async (res) => {
             if (res.data.success === true) {
               if (res.data.data.user) {
-                setMyMessage(res.data.message);
-                setSucessSnackBarOpen(!sucessSnackBarOpen);
                 login(res.data.data.user);
+                // Checking local storage for products
+                if (localCartPostData && localCartPostData.length > 0 && localCart.items && localCart.items.length > 0) {
+                  // Adding each product in the cart
+                  var cartList
+                  for (let item of localCartPostData) {
+                    try {
+                      const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, item);
+
+                    } catch (error) {
+                      // catch specific '400 BAD REQUEST' error and handle it
+                      if (error.response && error.response.status === 400) {
+                        if (error.response.data.flag === "ALREADY_IN_CART") {
+                          console.log("Product is already in cart, skipping...");
+                          continue; // skips the rest of the loop for this item and moves to the next item
+                        } else {
+                          console.error("Unhandled 400 error", error.response.data);
+                        }
+                      } else {
+                        // re-throw the error if it's not the one we are expecting
+                        throw error;
+                      }
+                    }
+                  }
+                  // Sleep for 2 seconds to wait for the cart data to update
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+
+                  cartList = await getCartData(); // Fetch and store the data
+                  var data = { "action": "update-to-cart-qty" };
+                  for (let item of localCart.items) {
+                    if (!item.product_id || !item.qty) {
+                      console.error("Invalid item data: ", item);
+                      continue;
+                    }
+
+                    // Find the matching cart item from cartList
+                    const cartItem = cartList.list?.find(cart => cart.product_id === item.product_id);
+
+                    if (!cartItem || !cartItem._id) {
+                      console.error("Could not find matching cart item for product: ", item.product_id);
+                      continue;
+                    }
+
+                    data.qty = item.qty;
+                    data._id = cartItem._id; // Use cart_id instead of product_id
+
+                    try {
+                      const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                    } catch (error) {
+                      // Handle '400 BAD REQUEST' error
+                      if (error.response && error.response.status === 400) {
+                        if (error.response.data.flag === "ALREADY_IN_CART") {
+                          console.log("Product is already in cart, skipping...");
+                          continue;
+                        } else {
+                          console.error("Unhandled 400 error", error.response.data);
+                        }
+                      } else {
+                        throw error;
+                      }
+                    }
+                  }
+
+                  // window.location.href = "/cart";
+                  localStorage.removeItem('cartPostData');
+                  localStorage.removeItem('productDetails');
+                }
                 setTimeout(() => {
                   setValues(initialValues);
                   setMainLoder(false)
@@ -109,6 +192,10 @@ const LogIn = () => {
                   }
                   // navigate("");
                 }, 1000);
+
+                setMyMessage(res.data.message);
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
+
               } else {
                 SetOtpShow(true)
                 SetEmail(updatedValues.email);
@@ -140,7 +227,7 @@ const LogIn = () => {
   const googlelogin = useGoogleLogin({
 
     onSuccess: async (respose) => {
-      console.log(respose, "respose");
+
       try {
         const res = await axios.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
@@ -150,6 +237,8 @@ const LogIn = () => {
             },
           }
         );
+        var updatedValues
+        updatedValues.email = res.data.email
         api.post(`${serverURL + SOCIALLOGIN}`, {
           email: res.data.email,
           social_login_type: 2,
@@ -158,20 +247,103 @@ const LogIn = () => {
           name: res.data.name,
           username: res.data.given_name
         })
-          .then((res) => {
-            setMyMessage(res.data.message);
-            setSucessSnackBarOpen(!sucessSnackBarOpen);
-            login(res.data.data.user);
-            setTimeout(() => {
-              setValues(initialValues);
-              if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
-                window.location.href = "/"
+          .then(async (res) => {
+            if (res.data.success === true) {
+              if (res.data.data.user) {
+                login(res.data.data.user);
+                // Checking local storage for products
+                if (localCartPostData && localCartPostData.length > 0 && localCart.items && localCart.items.length > 0) {
+                  // Adding each product in the cart
+                  var cartList
+                  for (let item of localCartPostData) {
+                    try {
+                      const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, item);
+
+                    } catch (error) {
+                      // catch specific '400 BAD REQUEST' error and handle it
+                      if (error.response && error.response.status === 400) {
+                        if (error.response.data.flag === "ALREADY_IN_CART") {
+                          console.log("Product is already in cart, skipping...");
+                          continue; // skips the rest of the loop for this item and moves to the next item
+                        } else {
+                          console.error("Unhandled 400 error", error.response.data);
+                        }
+                      } else {
+                        // re-throw the error if it's not the one we are expecting
+                        throw error;
+                      }
+                    }
+                  }
+                  // Sleep for 2 seconds to wait for the cart data to update
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+
+                  cartList = await getCartData(); // Fetch and store the data
+                  var data = { "action": "update-to-cart-qty" };
+                  for (let item of localCart.items) {
+                    if (!item.product_id || !item.qty) {
+                      console.error("Invalid item data: ", item);
+                      continue;
+                    }
+
+                    // Find the matching cart item from cartList
+                    const cartItem = cartList.list?.find(cart => cart.product_id === item.product_id);
+
+                    if (!cartItem || !cartItem._id) {
+                      console.error("Could not find matching cart item for product: ", item.product_id);
+                      continue;
+                    }
+
+                    data.qty = item.qty;
+                    data._id = cartItem._id; // Use cart_id instead of product_id
+
+                    try {
+                      const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                    } catch (error) {
+                      // Handle '400 BAD REQUEST' error
+                      if (error.response && error.response.status === 400) {
+                        if (error.response.data.flag === "ALREADY_IN_CART") {
+                          console.log("Product is already in cart, skipping...");
+                          continue;
+                        } else {
+                          console.error("Unhandled 400 error", error.response.data);
+                        }
+                      } else {
+                        throw error;
+                      }
+                    }
+                  }
+
+                  // window.location.href = "/cart";
+                  localStorage.removeItem('cartPostData');
+                  localStorage.removeItem('productDetails');
+                }
+                setTimeout(() => {
+                  setValues(initialValues);
+                  setMainLoder(false)
+                  if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+                    window.location.href = "/"
+                  } else {
+                    window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
+                  }
+                  // navigate("");
+                }, 1000);
+
+                setMyMessage(res.data.message);
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
+
               } else {
-                window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
+                SetOtpShow(true)
+                SetEmail(updatedValues.email);
+                setMyMessage(res.data.message);
+                setSucessSnackBarOpen(!sucessSnackBarOpen);
               }
-              // navigate("");
-            }, 1000);
-          })
+            } else if (res.data.success === false) {
+              setMyMessage(res.data.message);
+              setWarningSnackBarOpen(!warningSnackBarOpen);
+            }
+            setMainLoder(false)
+
+          });
       } catch (err) {
         console.log(err);
       }
@@ -315,6 +487,11 @@ const LogIn = () => {
   //     setIsFirstTime(false);
   //   }
   // }, [isFirstTime]);
+
+  useEffect(() => {
+    getLocalCartData()
+    getLocalCartPostData()
+  }, [isLoggedIn]);
 
 
   return (

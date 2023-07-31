@@ -510,7 +510,6 @@ const WrappedCart = () => {
 
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>SHIPPING CHARGE </label>
-                                                        {/* {console.log(cartList.cartAmountDetails?.shipping_charge,"cartList.cartAmountDetails?.shipping_charge")} */}
                                                         {
                                                             cartList.cartAmountDetails?.shipping_charge
                                                                 ? <h5>$ {cartList.cartAmountDetails?.shipping_charge}</h5>

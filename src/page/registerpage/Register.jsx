@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import Layout from '../../layout/Layout'
 import { Button, Col, Form, NavLink, Row, Modal } from 'react-bootstrap'
 import PhoneInput from "react-phone-input-2";
@@ -19,19 +19,26 @@ import AppleLogin from 'react-apple-login';
 import { BsApple } from 'react-icons/bs'
 import { SOCIALLOGIN } from '../../helper/endpoints';
 import { login } from '../../helper/auth';
+import { Is_Login } from '../../helper/IsLogin';
+import { ADDTOCART } from '../../helper/endpoints';
+import { CartContext } from '../../context/CartContext'
+
+
 function Register() {
+
+    const { localCartPostData, getLocalCartPostData, localCart, getLocalCartData, setMainLoder, itemShow, setItemShow, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
 
     const navigate = useNavigate();
 
     const initialValues = {
-        first_name: "",
-        last_name: "",
-        username: "",
+        // first_name: "",
+        // last_name: "",
+        // username: "",
         email: "",
-        contact_no: "",
-        phone_code: "",
-        country_id: "",
-        state_id: "",
+        // contact_no: "",
+        // phone_code: "",
+        // country_id: "",
+        // state_id: "",
         password: "",
         terms_and_condition: "",
     };
@@ -94,6 +101,24 @@ function Register() {
         }));
     };
 
+    const getCartData = async () => {
+        try {
+
+            const [productResponse] = await Promise.all([
+                api.postWithToken(`${serverURL + ADDTOCART}`, { "action": "cart-list" }),
+            ]);
+            const productData = productResponse.data.data;
+            // setMainLoder(false)
+            return productData; // Return the cartList directly.
+
+        } catch (error) {
+            console.log(error);
+
+        };
+
+    }
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const updatedValues = { ...values }; // Create a copy of the values object
@@ -111,22 +136,120 @@ function Register() {
 
         if (Object.keys(validationErrors).length === 0) {
             updatedValues.user_type = "4";
-
-            console.log(updatedValues, "updatedValues");
-
             try {
                 api.post(`${serverURL}signup`, updatedValues)
                     .then((res) => {
                         if (res.data.status === 1) {
-                            setMyMessage(res.data.message);
-                            setSucessSnackBarOpen(!sucessSnackBarOpen);
-                            setValues(initialValues);
-                            SetOtpShow(true)
+                            updatedValues.login_type = "4"
+                            setMainLoder(true)
+
+                            api.post(`${serverURL}login`, updatedValues)
+                                .then(async (res) => {
+                                    if (res.data.success === true) {
+                                        if (res.data.data.user) {
+                                            login(res.data.data.user);
+                                            // Checking local storage for products
+                                            if (localCartPostData && localCartPostData.length > 0 && localCart.items && localCart.items.length > 0) {
+                                                // Adding each product in the cart
+                                                var cartList
+                                                for (let item of localCartPostData) {
+                                                    try {
+                                                        const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, item);
+
+                                                    } catch (error) {
+                                                        // catch specific '400 BAD REQUEST' error and handle it
+                                                        if (error.response && error.response.status === 400) {
+                                                            if (error.response.data.flag === "ALREADY_IN_CART") {
+                                                                console.log("Product is already in cart, skipping...");
+                                                                continue; // skips the rest of the loop for this item and moves to the next item
+                                                            } else {
+                                                                console.error("Unhandled 400 error", error.response.data);
+                                                            }
+                                                        } else {
+                                                            // re-throw the error if it's not the one we are expecting
+                                                            throw error;
+                                                        }
+                                                    }
+                                                }
+                                                // Sleep for 2 seconds to wait for the cart data to update
+                                                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                                                cartList = await getCartData(); // Fetch and store the data
+                                                var data = { "action": "update-to-cart-qty" };
+                                                for (let item of localCart.items) {
+                                                    if (!item.product_id || !item.qty) {
+                                                        console.error("Invalid item data: ", item);
+                                                        continue;
+                                                    }
+
+                                                    // Find the matching cart item from cartList
+                                                    const cartItem = cartList.list?.find(cart => cart.product_id === item.product_id);
+
+                                                    if (!cartItem || !cartItem._id) {
+                                                        console.error("Could not find matching cart item for product: ", item.product_id);
+                                                        continue;
+                                                    }
+
+                                                    data.qty = item.qty;
+                                                    data._id = cartItem._id; // Use cart_id instead of product_id
+
+                                                    try {
+                                                        const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                                                    } catch (error) {
+                                                        // Handle '400 BAD REQUEST' error
+                                                        if (error.response && error.response.status === 400) {
+                                                            if (error.response.data.flag === "ALREADY_IN_CART") {
+                                                                console.log("Product is already in cart, skipping...");
+                                                                continue;
+                                                            } else {
+                                                                console.error("Unhandled 400 error", error.response.data);
+                                                            }
+                                                        } else {
+                                                            throw error;
+                                                        }
+                                                    }
+                                                }
+
+                                                // window.location.href = "/cart";
+                                                localStorage.removeItem('cartPostData');
+                                                localStorage.removeItem('productDetails');
+                                            }
+                                            setTimeout(() => {
+                                                setValues(initialValues);
+                                                setMainLoder(false)
+                                                if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+                                                    window.location.href = "/"
+                                                } else {
+                                                    window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
+                                                }
+                                                // navigate("");
+                                            }, 1000);
+
+                                            setMyMessage(res.data.message);
+                                            setSucessSnackBarOpen(!sucessSnackBarOpen);
+
+                                        } else {
+                                            SetOtpShow(true)
+                                            SetEmail(updatedValues.email);
+                                            setMyMessage(res.data.message);
+                                            setSucessSnackBarOpen(!sucessSnackBarOpen);
+                                        }
+                                    } else if (res.data.success === false) {
+                                        setMyMessage(res.data.message);
+                                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                                    }
+                                    setMainLoder(false)
+
+                                });
+
+                            // setMyMessage(res.data.message);
+                            // setSucessSnackBarOpen(!sucessSnackBarOpen);
+                            // setValues(initialValues);
+                            // SetOtpShow(true)
                             // navigate("/login");
-                            SetEmail(updatedValues.email)
+                            // SetEmail(updatedValues.email)
                             // console.log(updatedValues.email,"updatedValues");
                         } else {
-                            console.log(res, "res.data.message");
                             if (res.data.message === "Duplicate field value entered") {
                                 setMyMessage("This User Name is already exist");
                             } else {
@@ -164,26 +287,26 @@ function Register() {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
                 const request2 = api.get(`${serverURL + "/state-list"}`);
                 const responses = await Promise.all([request1, request2]);
-    
+
                 setCountryList(responses[0].data.data.country);
-                
+
                 // Find United States country from list and set it
                 const USCountry = responses[0].data.data.country.find(country => country.name === 'United States');
-                if(USCountry){
+                if (USCountry) {
                     setValues(prevValues => ({
                         ...prevValues,
                         country_id: USCountry._id
                     }))
                 }
-    
+
             } catch (error) {
                 console.error(error);
             }
         };
-    
+
         fetchData();
     }, []);
-    
+
 
     const checkforcounty = async () => {
 
@@ -288,6 +411,8 @@ function Register() {
                         },
                     }
                 );
+                var updatedValues
+                updatedValues.email = res.data.email
                 api.post(`${serverURL + SOCIALLOGIN}`, {
                     email: res.data.email,
                     social_login_type: 2,
@@ -296,20 +421,103 @@ function Register() {
                     name: res.data.name,
                     username: res.data.given_name
                 })
-                    .then((res) => {
+                .then(async (res) => {
+                    if (res.data.success === true) {
+                      if (res.data.data.user) {
+                        login(res.data.data.user);
+                        // Checking local storage for products
+                        if (localCartPostData && localCartPostData.length > 0 && localCart.items && localCart.items.length > 0) {
+                          // Adding each product in the cart
+                          var cartList
+                          for (let item of localCartPostData) {
+                            try {
+                              const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, item);
+        
+                            } catch (error) {
+                              // catch specific '400 BAD REQUEST' error and handle it
+                              if (error.response && error.response.status === 400) {
+                                if (error.response.data.flag === "ALREADY_IN_CART") {
+                                  console.log("Product is already in cart, skipping...");
+                                  continue; // skips the rest of the loop for this item and moves to the next item
+                                } else {
+                                  console.error("Unhandled 400 error", error.response.data);
+                                }
+                              } else {
+                                // re-throw the error if it's not the one we are expecting
+                                throw error;
+                              }
+                            }
+                          }
+                          // Sleep for 2 seconds to wait for the cart data to update
+                          await new Promise(resolve => setTimeout(resolve, 2000));
+        
+                          cartList = await getCartData(); // Fetch and store the data
+                          var data = { "action": "update-to-cart-qty" };
+                          for (let item of localCart.items) {
+                            if (!item.product_id || !item.qty) {
+                              console.error("Invalid item data: ", item);
+                              continue;
+                            }
+        
+                            // Find the matching cart item from cartList
+                            const cartItem = cartList.list?.find(cart => cart.product_id === item.product_id);
+        
+                            if (!cartItem || !cartItem._id) {
+                              console.error("Could not find matching cart item for product: ", item.product_id);
+                              continue;
+                            }
+        
+                            data.qty = item.qty;
+                            data._id = cartItem._id; // Use cart_id instead of product_id
+        
+                            try {
+                              const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                            } catch (error) {
+                              // Handle '400 BAD REQUEST' error
+                              if (error.response && error.response.status === 400) {
+                                if (error.response.data.flag === "ALREADY_IN_CART") {
+                                  console.log("Product is already in cart, skipping...");
+                                  continue;
+                                } else {
+                                  console.error("Unhandled 400 error", error.response.data);
+                                }
+                              } else {
+                                throw error;
+                              }
+                            }
+                          }
+        
+                          // window.location.href = "/cart";
+                          localStorage.removeItem('cartPostData');
+                          localStorage.removeItem('productDetails');
+                        }
+                        setTimeout(() => {
+                          setValues(initialValues);
+                          setMainLoder(false)
+                          if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+                            window.location.href = "/"
+                          } else {
+                            window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
+                          }
+                          // navigate("");
+                        }, 1000);
+        
                         setMyMessage(res.data.message);
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
-                        login(res.data.data.user);
-                        setTimeout(() => {
-                            setValues(initialValues);
-                            if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
-                                window.location.href = "/"
-                            } else {
-                                window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
-                            }
-                            // navigate("");
-                        }, 1000);
-                    })
+        
+                      } else {
+                        SetOtpShow(true)
+                        SetEmail(updatedValues.email);
+                        setMyMessage(res.data.message);
+                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+                      }
+                    } else if (res.data.success === false) {
+                      setMyMessage(res.data.message);
+                      setWarningSnackBarOpen(!warningSnackBarOpen);
+                    }
+                    setMainLoder(false)
+        
+                  });
             } catch (err) {
                 console.log(err);
             }
@@ -341,7 +549,7 @@ function Register() {
                     <Form onSubmit={handleSubmit}
                         className='mt-4'>
                         <Row>
-                            <Col lg={6} md={6} sm={12} className='mb-3'>
+                            {/* <Col lg={6} md={6} sm={12} className='mb-3'>
                                 <div className='login-input text-start'>
                                     <label>First Name</label>
                                     <input placeholder='Enter your first name'
@@ -444,7 +652,7 @@ function Register() {
                                     </select>
                                     <div className='error' >{errors?.state_id}</div>
                                 </div>
-                            </Col>
+                            </Col> */}
                             <Col lg={12} md={12} sm={12} className='mb-3'>
                                 <div className='login-input text-start'>
                                     <label>Email Address</label>

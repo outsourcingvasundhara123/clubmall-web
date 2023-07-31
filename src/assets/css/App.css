@@ -4412,7 +4412,7 @@ input[type='radio'] {
     font-weight: 700;
     font-size: 18px;
     color: #223263;
-    height: 40px;
+    min-height: 40px;
 }
 
 .cate-slider-box p {

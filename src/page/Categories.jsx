@@ -225,8 +225,6 @@ const Categories = () => {
     }, []);
 
 
-    console.log(selectedSub,"selectedSub-----");
-
     return (
         <>
             <h1 className='d-none'></h1>

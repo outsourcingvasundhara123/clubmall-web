@@ -544,7 +544,8 @@ const WrappedCart = () => {
                             } else {
                                 setMyMessageCart(paymentStatus.data.message);
                                 setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
-                               //run js 
+
+                               //run  order js 
                                 placeOrder(cartList?.cartAmountDetails?.net_amount, "USD", payment.paymentIntent.id  );
 
                                 setTimeout(() => {

@@ -32,7 +32,7 @@ const ScrollToTop = () => {
 const App = () => {
 
   const [active, setActive] = useState(window.location.pathname);
-  const { drawer, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+  const { drawer, mainloder,  handleDrawerShow,  setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
   const isLoggedIn = Is_Login();
 
@@ -117,12 +117,11 @@ const App = () => {
       {
         window.location.pathname !== "/" &&
         <div className='cart-top-main'>
-          <Link to="/cart">
             <Button
+            onClick={handleDrawerShow}
               className='btn-scroll-top cart-scroll'>
               <BsFillCartCheckFill />
             </Button>
-          </Link>
           <Button
             className='btn-scroll-top mt-3'
             onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
@@ -137,8 +136,6 @@ const App = () => {
           <LoaderMain startAnimationMain={mainstartAnimation} stopAnimationMain={mainstopAnimation} player={mainplayer} />
         </div>
       }
-
-
 
       <CartDrawer />
       <ScrollToTop />

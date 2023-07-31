@@ -38,12 +38,12 @@ import { RWebShare } from "react-web-share";
 import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
 import CartDrawer from './CartDrawer'
-
+import { createJsonLdSchema } from './productjson';
 
 const ProductInfo = () => {
 
 
-    const { handleDrawerShow,handleDrawerClose,drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {addcartLocal,addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -71,7 +71,7 @@ const ProductInfo = () => {
     const player = useRef();
     const [url, setUrl] = useState("");
     const [submitLoderRv, setSubmitLoderRv] = useState(false);
-   
+
     const serverURL = getServerURL();
     const [show, setShow] = useState(false);
     const [isfilter, setIsFilter] = useState(false);
@@ -300,20 +300,22 @@ const ProductInfo = () => {
     const handleCart = async (e) => {
 
         try {
-
+            var data
             if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
 
+                data = {
+                    action: "add-to-cart-product",
+                    seller_id: Product?.productList?.user_id?._id,
+                    product_id: Product?.productList?._id,
+                    product_price: Product?.productList.individual_price,
+                    product_price_type: 1,
+                    product_tax: 0,
+                    group_id: null,
+                    skuid: findSKUId(),
+                }
+
                 if (isLoggedIn) {
-                    let data = {
-                        action: "add-to-cart-product",
-                        seller_id: Product?.productList?.user_id?._id,
-                        product_id: Product?.productList?._id,
-                        product_price: Product?.productList.individual_price,
-                        product_price_type: 1,
-                        product_tax: 0,
-                        group_id: null,
-                        skuid: findSKUId(),
-                    }
+
                     setMainLoder(true)
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
 
@@ -332,11 +334,15 @@ const ProductInfo = () => {
                         setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                     }
                 } else {
-                    // User is not logged in, redirect to the login page
-                    afterLogin(setMyMessageProductDtl)
-                    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                // User is not logged in, redirect to the login page
+                //    afterLogin(setMyMessageProductDtl)
+                //    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                // handleDrawerShow()
+                addProductDetailsToLocal(data,Product,sizeActive,productColorActive)
+                addcartLocal(data,handleDrawerShow)
                 }
             } else {
+
                 setMyMessageProductDtl("select color and size  of the product");
                 setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
             }
@@ -348,6 +354,16 @@ const ProductInfo = () => {
             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }
     };
+
+    // const ciphertext = localStorage.getItem('cartPostData');
+    // if (ciphertext) {
+    //     const bytes  = CryptoJS.AES.decrypt(ciphertext, 'your_secret_key');
+    //     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    //     console.log(decryptedData,"decryptedData");
+    // } else {
+    //     // Handle the case where the cart data does not exist
+    //     console.log("No cart data found");
+    // }
 
     const textRef = useRef(null);
 
@@ -364,6 +380,7 @@ const ProductInfo = () => {
             window.getSelection().removeAllRanges();
         }
     };
+    
 
     const groupPriceShare = (id) => {
         if (isMobile) {
@@ -479,9 +496,19 @@ const ProductInfo = () => {
         }
     }
 
+    useEffect(() => {
+        const schema = createJsonLdSchema(Product);
+        const script = document.createElement('script');
+        script.setAttribute('type', 'application/ld+json');
+        script.innerHTML = JSON.stringify(schema);
+        document.head.appendChild(script);
+        
+        //Clean-up function to remove the script when component unmounts
+        return () => {
+            document.head.removeChild(script);
+        }
+    }, [Product]);
 
-
-    // conso0le.log(favoriteProductList.productListArrObj, "favoriteProductList.productListArrObj");
 
 
     return (
@@ -639,7 +666,6 @@ const ProductInfo = () => {
 
                                                 >
 
-
                                                     {
 
                                                         favoriteProductList.productListArrObj
@@ -765,118 +791,6 @@ const ProductInfo = () => {
 
                                             <Button onClick={handleCart} className='add-cart-items mt-4'>Add to cart</Button>
 
-                                            {/* <div className='shipping-def mt-4'> */}
-                                            {/* <div className='stock d-flex align-items-center gap-2'>
-                                                    <span className='d-flex align-items-center gap-2'>
-                                                        <img src='./img/product_def/stok-limit.png' alt='' />
-                                                        Selling fast!
-                                                    </span>
-                                                    <p>Only  {Product.stockData?.stocks_left > 0 ? Product.stockData?.stocks_left : 1} left in stock</p>
-                                                </div> */}
-                                            {/* <h5 className='info-title my-4'>Shipping & Return</h5> */}
-                                            {/* <div className='shipping-order'>
-                                                    <div className='sub-title-info d-flex align-items-center gap-2'>
-                                                        <img src='./img/product_def/shipping.png' alt='' />
-                                                        <span>Shipping <MdOutlineKeyboardArrowRight /></span>
-                                                    </div>
-                                                    <div className='order-types mt-3'>
-                                                        <Swiper
-                                                            slidesPerView={4}
-                                                            spaceBetween={30}
-                                                            hashNavigation={{
-                                                                watchState: true,
-                                                            }}
-                                                            breakpoints={{
-                                                                0: {
-                                                                    slidesPerView: 1,
-                                                                    spaceBetween: 20
-                                                                },
-                                                                600: {
-                                                                    slidesPerView: 1,
-                                                                    spaceBetween: 20
-                                                                },
-                                                                991: {
-                                                                    slidesPerView: 1,
-                                                                    spaceBetween: 20
-                                                                },
-                                                                1500: {
-                                                                    slidesPerView: 2,
-                                                                    spaceBetween: 30
-                                                                }
-                                                            }}
-                                                            navigation={true}
-                                                            modules={[Pagination, Navigation]}
-                                                            className="mySwiper"
-                                                        >
-                                                            <SwiperSlide>
-                                                                <div className='order-box'>
-                                                                    <h5>Standard: free on all orders </h5>
-                                                                    <div className='d-flex align-items-center gap-2 mt-2'>
-                                                                        <span>Courier company: </span>
-                                                                        <div className='d-flex align-items-center gap-2'>
-                                                                            <p><img src='./img/product_def/usps.png' alt='' /> USPS</p>
-                                                                            <p><img src='./img/product_def/ups.png' alt='' /> UPS</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 mt-1'>
-                                                                        <span>Delivery: Apr 13-18,</span>
-                                                                        <p> 67.7% are - 13 days</p>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 mt-1'>
-                                                                        <span>Get a $5 credit for late delivery</span>
-                                                                    </div>
-                                                                </div>
-                                                            </SwiperSlide>
-                                                            <SwiperSlide>
-                                                                <div className='order-box'>
-                                                                    <h5>Express: $12.90, free over $129.00</h5>
-                                                                    <div className='d-flex align-items-center gap-2 mt-2'>
-                                                                        <span>Courier company: </span>
-                                                                        <div className='d-flex align-items-center gap-2'>
-                                                                            <p><img src='./img/product_def/usps.png' alt='' /> USPS</p>
-                                                                            <p><img src='./img/product_def/ups.png' alt='' /> UPS</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 mt-1'>
-                                                                        <span>Delivery: Apr 13-18,</span>
-                                                                        <p> 67.7% are - 13 days</p>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 mt-1'>
-                                                                        <span>Get a $5 credit for late delivery</span>
-                                                                    </div>
-                                                                </div>
-                                                            </SwiperSlide>
-                                                            <SwiperSlide>
-                                                                <div className='order-box'>
-                                                                    <h5>Standard: free on all orders </h5>
-                                                                    <div className='d-flex align-items-center gap-2 mt-2'>
-                                                                        <span>Courier company: </span>
-                                                                        <div className='d-flex align-items-center gap-2'>
-                                                                            <p><img src='./img/product_def/usps.png' alt='' /> USPS</p>
-                                                                            <p><img src='./img/product_def/ups.png' alt='' /> UPS</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 mt-1'>
-                                                                        <span>Delivery: Apr 13-18,</span>
-                                                                        <p> 67.7% are - 13 days</p>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center gap-2 mt-1'>
-                                                                        <span>Get a $5 credit for late delivery</span>
-                                                                    </div>
-                                                                </div>
-                                                            </SwiperSlide>
-                                                        </Swiper>
-                                                    </div>
-                                                </div> */}
-                                            {/* <div className='sub-title-info d-flex align-items-center gap-2 mt-4'>
-                                                    <img src='./img/product_def/return.png' alt='' />
-                                                    <span className='d-flex align-items-center gap-1'>Free returns <p>•</p> Price adjustment <MdOutlineKeyboardArrowRight /></span>
-                                                </div> */}
-                                            {/* <div className='sub-title-info d-flex align-items-center gap-2 mt-3'>
-                                                    <img src='./img/product_def/commited.png' alt='' />
-                                                    <span className='d-flex align-items-center gap-1'>Clubmall is commited to environmental sustainability</span>
-                                                </div> */}
-                                            {/* </div> */}
 
                                             <div className='shipping-def mt-4'>
                                                 <h5 className='info-title mt-4 mb-2'>Shop with confidence</h5>
@@ -995,8 +909,7 @@ const ProductInfo = () => {
                                                                 <span className='date_pro_info'>{e.content}</span>
                                                                 <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
                                                                 <div className='d-flex align-items-center gap-1'>
-                                                                    {console.log(e?.rating,"e?.rating")}
-                                                                    <Rating   name="simple-controlled" value={e?.rating} readOnly />
+                                                                    <Rating name="simple-controlled" value={e?.rating} readOnly />
                                                                 </div>
 
                                                                 {/* <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
@@ -1103,7 +1016,7 @@ const ProductInfo = () => {
                                         </Swiper>
 
                                         {/* <div className='d-flex justify-content-center'> */}
-                                            {/* <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button> */}
+                                        {/* <Button className='add-items' onClick={handleDrawerShow}>Show cart List</Button> */}
                                         {/* </div> */}
 
                                     </div>
@@ -1174,7 +1087,7 @@ const ProductInfo = () => {
                                             </div>
                                             <Rating name="simple-controlled" onChange={(event, newValue) => {
                                                 setValues({ ...values, rating: newValue });
-                                            }}  />
+                                            }} />
                                             <div className='login-input text-start'>
                                                 <label>You Name*</label>
                                                 <input type='text' name='title' value={values.title} onChange={handleChange} />
