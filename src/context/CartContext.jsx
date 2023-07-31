@@ -807,8 +807,7 @@ export const CartProvider = ({ children }) => {
     const newWindow = call(response.data.shortLink);
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
       //POPUP BLOCKED
-      handleShow();
-      setPerActive('Group')
+      alert('Please disable your popup blocker and try again.');
     }
   };
 
