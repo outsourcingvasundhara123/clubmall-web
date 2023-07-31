@@ -237,8 +237,7 @@ const LogIn = () => {
             },
           }
         );
-        var updatedValues
-        updatedValues.email = res.data.email
+        var updatedValues = res.data.email
         api.post(`${serverURL + SOCIALLOGIN}`, {
           email: res.data.email,
           social_login_type: 2,
@@ -334,7 +333,7 @@ const LogIn = () => {
 
               } else {
                 SetOtpShow(true)
-                SetEmail(updatedValues.email);
+                SetEmail(updatedValues);
                 setMyMessage(res.data.message);
                 setSucessSnackBarOpen(!sucessSnackBarOpen);
               }
