@@ -425,6 +425,7 @@ function Register() {
                     if (res.data.success === true) {
                       if (res.data.data.user) {
                         login(res.data.data.user);
+                        setMainLoder(true)
                         // Checking local storage for products
                         if (localCartPostData && localCartPostData.length > 0 && localCart.items && localCart.items.length > 0) {
                           // Adding each product in the cart
