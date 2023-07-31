@@ -94,7 +94,7 @@ const Wishlist = () => {
                                         <div className='d-flex align-items-center justify-content-center w-100 h-100 empty-wishlist'>
                                             <div className='text-center found'>
                                                 <img src='./img/not-found.png' alt='' />
-                                                <p className='mt-3'> No products are there </p>
+                                                <p className='mt-3 d-flex align-items-end gap-2 flex-wrap justify-content-center'> Your wish-list is empty,<img src='./img/gift.svg' width="30px" /> Create Your Perfect Wishlist Today! <img src='./img/shopping-bag.svg' width="30px" /> </p>
                                             </div>
                                         </div>
                                     }
