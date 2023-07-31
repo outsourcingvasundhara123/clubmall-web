@@ -26,7 +26,7 @@ import CartDrawer from '../page/CartDrawer'
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const {handleDrawerShow,  mainloder, setMainLoder,mainstopAnimation,mainstartAnimation,mainplayer, generateDynamicLink,  getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { addcartLocal, addProductDetailsToLocal, handleDrawerShow, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, generateDynamicLink, getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -85,9 +85,9 @@ const AddCartModal = (props) => {
                 stopAnimation()
                 setUrl(productData.productImagePath)
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
-    
-                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath   + productData?.productList?._id + "/" + e?.file_name}`);
-        
+
+                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath + productData?.productList?._id + "/" + e?.file_name}`);
+
                 const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
@@ -116,8 +116,8 @@ const AddCartModal = (props) => {
     const findSKUId = () => {
         const sku = modelProduct?.productList.sku_details.find((sku) => {
             // Check if color matches and either size is not required or size matches
-            return sku.attrs[0].color === productColorActive && 
-            (!sizeActive || sku.attrs[0].size === sizeActive);
+            return sku.attrs[0].color === productColorActive &&
+                (!sizeActive || sku.attrs[0].size === sizeActive);
         });
         return sku ? sku.skuid : null;
     };
@@ -128,20 +128,22 @@ const AddCartModal = (props) => {
         e.preventDefault();
 
         try {
-
+            var data 
             if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size == undefined)) {
 
+                data = {
+                    action: "add-to-cart-product",
+                    seller_id: modelProduct.productList.user_id._id,
+                    product_id: modelProduct.productList._id,
+                    product_price: modelProduct.productList.individual_price,
+                    product_price_type: 1,
+                    product_tax: 0,
+                    group_id: null,
+                    skuid: findSKUId(),
+                }
+
                 if (isLoggedIn) {
-                    let data = {
-                        action: "add-to-cart-product",
-                        seller_id: modelProduct.productList.user_id._id,
-                        product_id: modelProduct.productList._id,
-                        product_price: modelProduct.productList.individual_price,
-                        product_price_type: 1,
-                        product_tax: 0,
-                        group_id: null,
-                        skuid: findSKUId(),
-                    }
+
                     setMainLoder(true)
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
 
@@ -155,14 +157,12 @@ const AddCartModal = (props) => {
                         setTimeout(() => {
                             if (location.pathname == "/cart") {
                                 window.location.reload();
-                            }else{
+                            } else {
                                 props.handleClose()
                                 handleDrawerShow()
                             }
-                            setMainLoder(false)         
+                            setMainLoder(false)
                         }, 1000);
-
-
 
                     } else if (res.data.success === false) {
                         // handleDrawerShow()
@@ -172,8 +172,11 @@ const AddCartModal = (props) => {
                     }
                 } else {
                     // User is not logged in, redirect to the login page
-                    afterLogin(setMyMessage)
-                    setWarningSnackBarOpen(!warningSnackBarOpen);
+                    // afterLogin(setMyMessage)
+                    // setWarningSnackBarOpen(!warningSnackBarOpen);
+                    props.handleClose()
+                    addProductDetailsToLocal(data, modelProduct, sizeActive, productColorActive)
+                    addcartLocal(data, handleDrawerShow)
                 }
             } else {
                 setMyMessage("select color and size  of the product");
@@ -190,14 +193,14 @@ const AddCartModal = (props) => {
 
     const groupPriceShare = (id) => {
         if (isMobile) {
-          generateDynamicLink(id)
-        }  else {
-          // If the device is not mobile, log 'false' to the console
-          handleShow();
-          setPerActive('Group')
+            generateDynamicLink(id)
+        } else {
+            // If the device is not mobile, log 'false' to the console
+            handleShow();
+            setPerActive('Group')
         }
-      }
-    
+    }
+
 
     return (
         <>
@@ -251,7 +254,7 @@ const AddCartModal = (props) => {
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={(e) => (setPerActive('Individual'),handleCart(e))}>Individual Price <br />
+                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={(e) => (setPerActive('Individual'), handleCart(e))}>Individual Price <br />
                                                     ${modelProduct.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(modelProduct.productList?._id)
@@ -261,7 +264,7 @@ const AddCartModal = (props) => {
                                             </div>
 
                                             <div className='product-color mt-4'>
-                                            <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
+                                                <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
                                                     {
                                                         modelProduct?.productList?.sku_details && uniqueColors(modelProduct?.productList?.sku_details)?.map((e, i) => {
@@ -275,7 +278,7 @@ const AddCartModal = (props) => {
                                                 </div>
 
                                                 <div className='size mt-4'>
-                                                {modelProduct?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
+                                                    {modelProduct?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
                                                     {/* <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5> */}
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
@@ -313,7 +316,7 @@ const AddCartModal = (props) => {
                         </>
                     )}
             </Modal>
-     
+
 
             <InstallApp show={show} Hide={handleClose} />
 

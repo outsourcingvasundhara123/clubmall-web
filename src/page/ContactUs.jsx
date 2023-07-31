@@ -52,7 +52,6 @@ const ContactUs = () => {
 
         const validationErrors = validate(updatedValues);
         setErrors(validationErrors);
-        console.log(Object.keys(validationErrors),"validate");
 
         if (Object.keys(validationErrors).length === 0) {
             try {

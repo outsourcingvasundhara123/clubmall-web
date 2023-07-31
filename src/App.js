@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import route from "./helper/route"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'swiper/css';
@@ -13,6 +13,7 @@ import { CartContext } from './context/CartContext';
 import LoaderMain from './components/LoaderMain';
 import CartDrawer from './page/CartDrawer';
 import { Is_Login } from './helper/IsLogin';
+import { BsFillCartCheckFill } from 'react-icons/bs';
 
 
 const ScrollToTop = () => {
@@ -31,7 +32,7 @@ const ScrollToTop = () => {
 const App = () => {
 
   const [active, setActive] = useState(window.location.pathname);
-  const { drawer, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+  const { drawer, mainloder,  handleDrawerShow,  setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
     productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
   const isLoggedIn = Is_Login();
 
@@ -100,24 +101,33 @@ const App = () => {
   // UseEffect hook here
   useEffect(() => {
     if (drawer) {
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
-        document.body.style.overflow = 'auto';
-        document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
     }
-}, [drawer]);
+  }, [drawer]);
+
+
 
   return (
     <BrowserRouter>
 
       {
         window.location.pathname !== "/" &&
-        <Button
-          className='btn-scroll-top'
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
-          <MdOutlineKeyboardArrowUp />
-        </Button>
+        <div className='cart-top-main'>
+            <Button
+            onClick={handleDrawerShow}
+              className='btn-scroll-top cart-scroll'>
+              <BsFillCartCheckFill />
+            </Button>
+          <Button
+            className='btn-scroll-top mt-3'
+            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>
+            <MdOutlineKeyboardArrowUp />
+          </Button>
+        </div>
       }
       {
         mainloder &&
@@ -126,8 +136,6 @@ const App = () => {
           <LoaderMain startAnimationMain={mainstartAnimation} stopAnimationMain={mainstopAnimation} player={mainplayer} />
         </div>
       }
-
-
 
       <CartDrawer />
       <ScrollToTop />
@@ -154,7 +162,7 @@ const App = () => {
         <Footer setActive={setActive} />
       </div>
 
-    </BrowserRouter>
+    </BrowserRouter >
   )
 }
 

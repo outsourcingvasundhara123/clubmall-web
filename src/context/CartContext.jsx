@@ -6,6 +6,7 @@ import { Is_Login } from '../helper/IsLogin'
 import { errorResponse, afterLogin } from '../helper/constants';
 import { data } from 'jquery';
 import { isMobile } from 'react-device-detect';
+import CryptoJS from 'crypto-js';
 
 // Create the cart context
 export const CartContext = createContext();
@@ -63,6 +64,8 @@ export const CartProvider = ({ children }) => {
   const [searchPage, setSearchPage] = useState(1);
   const [searchUrl, setSearchURL] = useState("");
   const [is_search, setIs_search] = useState(0);
+  const [localCart, setLocalCart] = useState([]);
+  const [localCartPostData, setLocalCartPostData] = useState([]);
 
 
 
@@ -155,6 +158,262 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // local store products 
+
+  const addcartLocal = async (data, handleDrawerShow) => {
+    let currentCartData = localStorage.getItem('cartPostData');
+    if (currentCartData) {
+      const bytes = CryptoJS.AES.decrypt(currentCartData, process.env.REACT_APP_JWT_SECRET_KEY);
+      currentCartData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    } else {
+      currentCartData = [];
+    }
+    const productExists = currentCartData.find(item => item.product_id === data.product_id);
+    if (!productExists) {
+      currentCartData.push(data);
+
+      // Convert object to string and encrypt
+      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+      localStorage.setItem('cartPostData', ciphertext);
+      handleDrawerShow()
+      setMyMessage("Product added to cart successfully");
+      setSucessSnackBarOpen(!sucessSnackBarOpen);
+    } else {
+      setMyMessage("This product is already in your cart");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  }
+
+  const addProductDetailsToLocal = async (data, Product, sizeActive, productColorActive) => {
+    let currentProductDetails = localStorage.getItem('productDetails');
+    if (currentProductDetails) {
+      const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
+      currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    } else {
+      currentProductDetails = {
+        items: [],
+        subtotal: 0
+      };
+    }
+
+    const productExists = currentProductDetails.items.find(item => item.product_id === data.product_id);
+    if (!productExists) {
+      // Find matching SKU details
+      const skuDetail = Product.productList.sku_details.find(sku => sku.attrs[0].color === productColorActive);
+
+      // Check if SKU detail was found
+      if (!skuDetail) {
+        console.error('SKU details not found');
+        return;
+      }
+
+      // construct the details
+      let productDetail = {
+        product_id: data.product_id,
+        name: Product.productList.name,
+        image: `${Product.productImagePath}${data.product_id}/${skuDetail.file_name}`,
+        qty: 1,
+        total_price: Product.productList.individual_price,
+        individual_price: Product.productList.individual_price,
+        size: sizeActive,
+        color: productColorActive
+      }
+
+      currentProductDetails.items.push(productDetail);
+
+      // Update subtotal
+      currentProductDetails.subtotal += productDetail.total_price;
+
+      // Convert object to string and encrypt
+      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+      localStorage.setItem('productDetails', ciphertext);
+      setMyMessage("Product details added successfully");
+      setSucessSnackBarOpen(!sucessSnackBarOpen);
+      getLocalCartData()
+
+    } else {
+      setMyMessage("This product details is already stored");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  }
+
+  const deleteProductFromLocalCart = async (productId) => {
+    let currentCartData = localStorage.getItem('cartPostData');
+    if (!currentCartData) {
+      setMyMessage("Cart is empty");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+    const bytes = CryptoJS.AES.decrypt(currentCartData, process.env.REACT_APP_JWT_SECRET_KEY);
+    currentCartData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    // Find the product in the cart
+    const productIndex = currentCartData.findIndex(item => item.product_id === productId);
+    if (productIndex === -1) {
+      setMyMessage("Product not found in the cart");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+
+    // Remove the product from the cart
+    currentCartData?.splice(productIndex, 1);
+
+    // Convert object to string and encrypt
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+    // Save updated cart data
+    localStorage.setItem('cartPostData', ciphertext);
+
+    setMyMessage("Product removed from cart successfully");
+    setSucessSnackBarOpen(!sucessSnackBarOpen);
+  }
+
+  const deleteProductDetailsFromLocal = async (productId) => {
+    let currentProductDetails = localStorage.getItem('productDetails');
+    if (!currentProductDetails) {
+      setMyMessage("No product details stored");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+    const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
+    currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    // Find the product in the stored details
+    const productIndex = currentProductDetails.items.findIndex(item => item.product_id === productId);
+    if (productIndex === -1) {
+      setMyMessage("Product details not found");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+
+    // Update subtotal
+    currentProductDetails.subtotal -= currentProductDetails.items[productIndex].total_price; // Updated this line.
+
+    // Remove the product details from storage
+    currentProductDetails.items.splice(productIndex, 1);
+
+    // Convert object to string and encrypt
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+    // Save updated product details
+    localStorage.setItem('productDetails', ciphertext);
+    getLocalCartData()
+    setMyMessage("Product details removed successfully");
+    setSucessSnackBarOpen(!sucessSnackBarOpen);
+  }
+
+  const increaseProductQuantity = async (productId) => {
+    let currentProductDetails = localStorage.getItem('productDetails');
+    if (!currentProductDetails) {
+      setMyMessage("No product details stored");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+    const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
+    currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    // Find the product in the stored details
+    const productIndex = currentProductDetails.items.findIndex(item => item.product_id === productId);
+    if (productIndex === -1) {
+      setMyMessage("Product details not found");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+
+    // Increase the product quantity
+    currentProductDetails.items[productIndex].qty += 1;
+
+    // Update total price for the product
+    currentProductDetails.items[productIndex].total_price = parseFloat((currentProductDetails.items[productIndex].qty * currentProductDetails.items[productIndex].individual_price).toFixed(2));
+
+    // Update subtotal
+    currentProductDetails.subtotal = parseFloat((currentProductDetails.items.reduce((sum, item) => sum + item.total_price, 0)).toFixed(2));
+
+    // Convert object to string and encrypt
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+    // Save updated product details
+    localStorage.setItem('productDetails', ciphertext);
+    getLocalCartData()
+    setMyMessage("Product quantity increased successfully");
+    setSucessSnackBarOpen(!sucessSnackBarOpen);
+  }
+
+  const decreaseProductQuantity = async (productId) => {
+    let currentProductDetails = localStorage.getItem('productDetails');
+    if (!currentProductDetails) {
+      setMyMessage("No product details stored");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+    const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
+    currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    // Find the product in the stored details
+    const productIndex = currentProductDetails.items.findIndex(item => item.product_id === productId);
+    if (productIndex === -1) {
+      setMyMessage("Product details not found");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+      return;
+    }
+
+    // Decrease the product quantity, but don't go below 1
+    if (currentProductDetails.items[productIndex].qty > 1) {
+      // Decrease the product quantity
+      currentProductDetails.items[productIndex].qty -= 1;
+      // Update total price for the product
+      currentProductDetails.items[productIndex].total_price = parseFloat((currentProductDetails.items[productIndex].qty * currentProductDetails.items[productIndex].individual_price).toFixed(2));
+      // Update subtotal
+      currentProductDetails.subtotal = parseFloat((currentProductDetails.items.reduce((sum, item) => sum + item.total_price, 0)).toFixed(2));
+
+      // Convert object to string and encrypt
+      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+      // Save updated product details
+      localStorage.setItem('productDetails', ciphertext);
+      getLocalCartData()
+      setMyMessage("Product quantity decreased successfully");
+      setSucessSnackBarOpen(!sucessSnackBarOpen);
+    } else {
+      setMyMessage("Product quantity cannot be less than 1");
+      setWarningSnackBarOpen(!warningSnackBarOpen);
+    }
+  }
+
+  const getLocalCartData = async () => {
+    try {
+      let currentProductDetails = localStorage.getItem('productDetails');
+      if (currentProductDetails) {
+        const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
+        currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      } else {
+        currentProductDetails = [];
+      }
+      setLocalCart(currentProductDetails)
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getLocalCartPostData = async () => {
+    try {
+      let currentCartData = localStorage.getItem('cartPostData');
+      if (currentCartData) {
+        const bytes = CryptoJS.AES.decrypt(currentCartData, process.env.REACT_APP_JWT_SECRET_KEY);
+        currentCartData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      } else {
+        currentCartData = [];
+      }
+      setLocalCartPostData(currentCartData)
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getWishList = async () => {
 
     try {
@@ -191,6 +450,7 @@ export const CartProvider = ({ children }) => {
 
   const deleteWishList = async (id) => {
     startAnimation()
+    setMainLoder(true)
     try {
       const res = await api.postWithToken(`${serverURL + WISHLIST}`, { "action": "product-delete-wishlist", "product_id": id })
       if (res.data.success == true) {
@@ -202,10 +462,12 @@ export const CartProvider = ({ children }) => {
         setMyMessage(res.data.message);
         setWarningSnackBarOpen(!warningSnackBarOpen);
       }
-
-      // setWishList(res.data.data.list)
-
       stopAnimation()
+
+      setTimeout(() => {
+        setMainLoder(false)
+      }, 1000);
+
     } catch (error) {
       errorResponse(error, setMyMessage);
       setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -514,8 +776,11 @@ export const CartProvider = ({ children }) => {
   };
 
   // dynamic link functions 
+  // const call = (link) => {
+  //   window.open(link, '_blank');
+  // };
   const call = (link) => {
-    window.open(link, '_blank');
+    return window.open(link, '_blank');
   };
 
   const generateDynamicLink = async (productId) => {
@@ -538,7 +803,12 @@ export const CartProvider = ({ children }) => {
         }
       }
     );
-    call(response.data.shortLink)
+    // call(response.data.shortLink)
+    const newWindow = call(response.data.shortLink);
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+      //POPUP BLOCKED
+      alert('Please disable your popup blocker and try again.');
+    }
   };
 
   //chnage for redirect ios user
@@ -572,7 +842,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      handleDrawerShow, handleDrawerClose, drawer,
+      handleDrawerShow, handleDrawerClose, drawer, addcartLocal, addProductDetailsToLocal, localCart, getLocalCartData, deleteProductDetailsFromLocal, deleteProductFromLocalCart, increaseProductQuantity, decreaseProductQuantity, localCartPostData, getLocalCartPostData,
       playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
       , categoryHome, setcategoryHome, categoryLoading, setCategoryLoading, catwebLoading, setCatwebLoading, ProductLoading, setProductLoading, sellProLoading, setSellProLoading,
       mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer,

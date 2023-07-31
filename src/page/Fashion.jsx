@@ -123,8 +123,6 @@ const Fashion = () => {
                     return accumulator;
                 }, {});
 
-                // console.log(newColorProductList, "newColorProductList");
-
                 setColorProductList(newColorProductList);
                 setColorLoading(false);
             })
@@ -133,8 +131,6 @@ const Fashion = () => {
                 console.log(error);
             });
     }, [isLoggedIn]);
-
-
 
 
     return (

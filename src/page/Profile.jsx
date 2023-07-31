@@ -232,7 +232,7 @@ const Profile = () => {
                 window.location.reload()
             } else {
                 setMainLoder(false)
-                setMymessageProfileProfile("please fill out all required fields");
+                setMymessageProfileProfile("please fill out all required fields with user profile");
                 setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             }
 
@@ -441,6 +441,8 @@ const Profile = () => {
         getNotificationList()
     }, [pageNotification]);
 
+
+    console.log(values_2,"profile");
 
     return (
         <>
