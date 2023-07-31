@@ -386,13 +386,13 @@ const WrappedCart = () => {
                 setCountryList(responses[0].data.data.country);
 
                 // Find United States country from list and set it
-                const USCountry = responses[0].data.data.country.find(country => country.name === 'United States');
-                if (USCountry) {
-                    setValues(prevValues => ({
-                        ...prevValues,
-                        country_id: USCountry._id
-                    }))
-                }
+                // const USCountry = responses[0].data.data.country.find(country => country.name === 'United States');
+                // if (USCountry) {
+                //     setValues(prevValues => ({
+                //         ...prevValues,
+                //         country_id: USCountry._id
+                //     }))
+                // }
 
             } catch (error) {
                 console.error(error);
@@ -1147,7 +1147,7 @@ checkbox1: event.target.checked,
                                             value={values.country_id}
                                             onChange={handleChange}
                                             className='select-arrow'>
-                                            <option value="United States">United States</option>
+                                            <option value="" >Select country</option>
                                             {(countryList.length <= 0) && <option
                                             >loding....</option>}
                                             {
