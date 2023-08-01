@@ -128,7 +128,7 @@ const AddCartModal = (props) => {
         e.preventDefault();
 
         try {
-            var data 
+            var data
             if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size == undefined)) {
 
                 data = {
@@ -254,13 +254,14 @@ const AddCartModal = (props) => {
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={(e) => (setPerActive('Individual'), handleCart(e))}>Individual Price <br />
-                                                    ${modelProduct.productList?.individual_price}</Button>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(modelProduct.productList?._id)
                                                     props.handleClose()
                                                 }}>Group Price: <br />
                                                     ${modelProduct.productList?.group_price} </Button>
+                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={(e) => (setPerActive('Individual'), handleCart(e))}>Individual Price <br />
+                                                    ${modelProduct.productList?.individual_price}</Button>
+
                                             </div>
 
                                             <div className='product-color mt-4'>

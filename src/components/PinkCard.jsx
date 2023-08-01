@@ -60,8 +60,8 @@ const PinkCard = (props) => {
                 </div>
                 <div className='pink-card-text d-flex align-items-center justify-content-between px-3 py-2'>
                     <div>
-                        <h5>${props.img.individual_price}</h5>
                         <p>Group Price: <b>${props.img.group_price}</b></p>
+                        <h5>${props.img.individual_price}</h5>
                     </div>
                     {/* {props.img.wishList === 0
                         &&

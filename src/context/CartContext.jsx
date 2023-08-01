@@ -538,6 +538,8 @@ export const CartProvider = ({ children }) => {
       setProductLoading(false)
     } catch (error) {
       console.log(error);
+      errorResponse(error, setMyMessage);
+      setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
