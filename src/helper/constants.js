@@ -1,28 +1,29 @@
 
 export const errorResponse = (error, setMyMessage, props) => {
-    console.log(error,"error");
-    // if (error.response) {
-    //     const { status, data } = error.response;
-    //     if (status === 403) {
-    //         setMyMessage(data.message)
-    //         setTimeout(() => {
-    //             localStorage.removeItem('token');
-    //             localStorage.removeItem('name');
-    //             localStorage.removeItem('user');
-    //             localStorage.removeItem('profile_image');
-    //             window.location.href = "/login";
-    //         }, 5000);
-    //     } else {
-    //         setMyMessage(data.message)
-    //         if (props !== undefined) {
-    //             setTimeout(() => {
-    //                 props.handleClose()
-    //             }, 1000);
-    //         }
-    //     }
-    // } else {
-    //     return { status: 0, message: "try again" };
-    // }
+
+    if (error.response) {
+        const { status, data } = error.response;
+
+        if (status === 403) {
+            setMyMessage(data.message)
+            setTimeout(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('name');
+                localStorage.removeItem('user');
+                localStorage.removeItem('profile_image');
+                window.location.href = "/login";
+            }, 1000);
+        } else {
+            setMyMessage(data.message)
+            if (props !== undefined) {
+                setTimeout(() => {
+                    props.handleClose()
+                }, 1000);
+            }
+        }
+    } else {
+        return { status: 0, message: "try again" };
+    }
 };
 
 export const afterLogin = (setMyMessage) => {

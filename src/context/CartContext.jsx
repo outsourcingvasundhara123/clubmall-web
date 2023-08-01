@@ -428,10 +428,10 @@ export const CartProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error, "error");
-      if (window.location.pathname == "/wishlist") {
-        errorResponse(error, setMyMessage);
-        setWarningSnackBarOpen(!warningSnackBarOpen);
-      }
+      // if (window.location.pathname == "/wishlist") {
+      //   errorResponse(error, setMyMessage);
+      //   setWarningSnackBarOpen(!warningSnackBarOpen);
+      // }
     }
 
   };
@@ -538,8 +538,6 @@ export const CartProvider = ({ children }) => {
       setProductLoading(false)
     } catch (error) {
       console.log(error);
-      errorResponse(error, setMyMessage);
-      setWarningSnackBarOpen(!warningSnackBarOpen);
     }
   };
 
@@ -765,10 +763,10 @@ export const CartProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
-      if (window.location.pathname == "/cart") {
-        errorResponse(error, setMyMessage);
-        setWarningSnackBarOpen(!warningSnackBarOpen);
-      }
+      // if (window.location.pathname == "/cart") {
+      //   errorResponse(error, setMyMessage);
+      //   setWarningSnackBarOpen(!warningSnackBarOpen);
+      // }
     }
   };
 
