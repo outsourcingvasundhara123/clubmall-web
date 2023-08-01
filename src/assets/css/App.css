@@ -4467,6 +4467,7 @@ input[type='radio'] {
     color: #223263;
 }
 
+
 .select-arrow {
     appearance: none;
     background-image: url('../img/select-bg.png');
@@ -6295,4 +6296,14 @@ input[type='radio'] {
     .thankyou-img svg {
         font-size: 70px;
     }
+}
+
+.rect-select-cos{
+    margin-top: 5px;
+}
+
+
+.rect-select-cos .css-13cymwt-control{
+    height: 46px !important;
+
 }
