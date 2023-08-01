@@ -6298,12 +6298,10 @@ input[type='radio'] {
     }
 }
 
-.rect-select-cos{
+.rect-select-cos {
     margin-top: 5px;
 }
 
-
-.rect-select-cos .css-13cymwt-control{
-    height: 46px !important;
-
+.rect-select-cos input {
+    height: 30px;
 }
