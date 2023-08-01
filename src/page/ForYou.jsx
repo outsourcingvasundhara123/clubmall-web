@@ -26,7 +26,7 @@ import { CartContext } from '../context/CartContext'
 import { isMobile } from 'react-device-detect';
 
 const ForYou = () => {
-  
+
   const { generateDynamicLink, handleShowhandleClose, getCartData, getWishList, add_wished_Called, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
@@ -393,7 +393,7 @@ const ForYou = () => {
   const groupPriceShare = (id) => {
     if (isMobile) {
       generateDynamicLink(id)
-    }  else {
+    } else {
       // If the device is not mobile, log 'false' to the console
       handleShow();
       setPerActive('Group')
@@ -405,7 +405,7 @@ const ForYou = () => {
     if (muted === false) {
 
       setMuted(true);
-    } else if(muted === true) {
+    } else if (muted === true) {
       setMuted(false);
     }
   };
@@ -497,11 +497,11 @@ const ForYou = () => {
                 {e.products_obj.length !== 0 &&
                   <>
                     <div className='price'>
-                      <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} >Individual Price <br />
-                        ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
-                      <Button onClick={() => 
+                      <Button onClick={() =>
                         groupPriceShare(e.products_obj[0]?.product_id?._id)} >Group Price: <br />
                         ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
+                      <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} >Individual Price <br />
+                        ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
                     </div>
 
                     <div className='reel-items'>
@@ -763,10 +763,11 @@ const ForYou = () => {
 
                       </div>
                       <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                        <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
-                          $ {e.product_id?.individual_price} </Button>
+
                         <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => groupPriceShare(e.product_id?._id)}>Group Price <br />
                           ${e.product_id?.group_price} </Button>
+                        <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
+                          $ {e.product_id?.individual_price} </Button>
                       </div>
                     </div>
                   </div>

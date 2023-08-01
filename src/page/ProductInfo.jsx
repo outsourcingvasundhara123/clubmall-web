@@ -43,7 +43,7 @@ import { createJsonLdSchema } from './productjson';
 const ProductInfo = () => {
 
 
-    const {addcartLocal,addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -334,12 +334,12 @@ const ProductInfo = () => {
                         setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                     }
                 } else {
-                // User is not logged in, redirect to the login page
-                //    afterLogin(setMyMessageProductDtl)
-                //    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
-                // handleDrawerShow()
-                addProductDetailsToLocal(data,Product,sizeActive,productColorActive)
-                addcartLocal(data,handleDrawerShow)
+                    // User is not logged in, redirect to the login page
+                    //    afterLogin(setMyMessageProductDtl)
+                    //    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                    // handleDrawerShow()
+                    addProductDetailsToLocal(data, Product, sizeActive, productColorActive)
+                    addcartLocal(data, handleDrawerShow)
                 }
             } else {
 
@@ -380,7 +380,7 @@ const ProductInfo = () => {
             window.getSelection().removeAllRanges();
         }
     };
-    
+
 
     const groupPriceShare = (id) => {
         if (isMobile) {
@@ -502,7 +502,7 @@ const ProductInfo = () => {
         script.setAttribute('type', 'application/ld+json');
         script.innerHTML = JSON.stringify(schema);
         document.head.appendChild(script);
-        
+
         //Clean-up function to remove the script when component unmounts
         return () => {
             document.head.removeChild(script);
@@ -717,13 +717,14 @@ const ProductInfo = () => {
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handleCart())}>Individual Price <br />
-                                                    ${Product?.productList?.individual_price}</Button>
+
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(Product?.productList?._id)
 
                                                 }}>Group Price: <br />
                                                     ${Product?.productList?.group_price}</Button>
+                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handleCart())}>Individual Price <br />
+                                                    ${Product?.productList?.individual_price}</Button>
                                             </div>
 
 
