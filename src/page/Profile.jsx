@@ -24,6 +24,7 @@ import { CartContext } from '../context/CartContext';
 import { login } from '../helper/auth'
 import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants'
+import Select from 'react-select';
 
 const Profile = () => {
 
@@ -48,7 +49,7 @@ const Profile = () => {
         profile_image: ""
     };
     const defaultProfile = `../img/for_you/defaultuser.png`
-    const Userprofile =  defaultProfile
+    const Userprofile = defaultProfile
     const isLoggedIn = Is_Login();
     const [showPass, setShowPass] = useState(true)
     const [showloderUrl, setShowloderUrl] = useState(false)
@@ -428,8 +429,8 @@ const Profile = () => {
                 const responses = await Promise.all([request1, request2]);
                 setStateList(responses[1].data.data.states)
             } else {
-                setMymessageProfileProfile("Country is required");
-                setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
+                // setMymessageProfileProfile("Country is required");
+                // setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             }
         } catch (error) {
             console.error(error);
@@ -442,7 +443,10 @@ const Profile = () => {
     }, [pageNotification]);
 
 
-    console.log(values_2,"profile");
+    useEffect(() => {
+        checkforcounty();
+    }, [values.country_id]);
+
 
     return (
         <>
@@ -931,6 +935,19 @@ const Profile = () => {
                                                         <div className='location-main'>
                                                             <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
 
+
+
+                                                            {myAddress?.length === 0 &&
+                                                                <div className='d-flex align-items-center justify-content-center h-100 '>
+                                                                    <div className='text-center found'>
+                                                                        <img src='../img/not-found.png' alt='' className='my-20 ' />
+                                                                        <p className='mt-3'>No addresses available. Please add a new address.</p>
+                                                                        {/* <Button className='mt-3 submit-btn' type='button' onClick={() => handleShow("add")}  >Add address</Button> */}
+                                                                    </div>
+                                                                </div>
+                                                            }
+
+
                                                             {myAddress && myAddress.map((e, i) => {
                                                                 return (
                                                                     <div className='address-box mt-3'>
@@ -1132,7 +1149,7 @@ const Profile = () => {
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Ship to Address</label>
-                                        <select name='country_id'
+                                        {/* <select name='country_id'
                                             value={values.country_id}
                                             onChange={handleChange}
                                             className='select-arrow'>
@@ -1145,7 +1162,21 @@ const Profile = () => {
                                                     <option key={i} value={e?._id}  >{e?.name}</option>
                                                 ))
                                             }
-                                        </select>
+                                        </select> */}
+                                        <Select
+                                            name='country_id'
+                                            className='rect-select-cos'
+                                            value={countryList.find(option => option.value === values.country_id)} // sets the selected value
+                                            onChange={option => {
+                                                handleChange({
+                                                    target: {
+                                                        name: 'country_id',
+                                                        value: option.value,
+                                                    },
+                                                })
+                                            }} // set selected value
+                                            options={countryList.map(country => ({ value: country._id, label: country.name }))}
+                                        />
                                         <div className='error' >{errors?.country_id}</div>
                                     </div>
                                 </Col>
@@ -1189,7 +1220,7 @@ const Profile = () => {
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>State</label>
-                                        <select
+                                        {/* <select
                                             onClick={checkforcounty} onChange={handleChange}
                                             value={values.state_id}
                                             name='state_id' className='select-arrow'>
@@ -1206,7 +1237,25 @@ const Profile = () => {
                                                 </>
                                             )}
 
-                                        </select>
+                                        </select> */}
+                                        <Select
+                                            className='rect-select-cos'
+                                            name='state_id'
+                                            value={values.state_id ? stateList.find(option => option.value === values.state_id) : null}
+                                            onChange={option => {
+                                                handleChange({
+                                                    target: {
+                                                        name: 'state_id',
+                                                        value: option ? option.value : "",
+                                                    },
+                                                })
+                                            }} // set selected value
+                                            options={
+                                                values.country_id
+                                                    ? stateList.map(state => ({ value: state._id, label: state.name }))
+                                                    : [{ value: '', label: 'Please select a country first' }]
+                                            }
+                                        />
                                         <div className='error' >{errors?.state_id}</div>
                                     </div>
                                 </Col>

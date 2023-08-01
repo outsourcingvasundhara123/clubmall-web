@@ -22,6 +22,7 @@ import { MdRemove, MdAdd } from 'react-icons/md'
 import { MdDelete } from 'react-icons/md'
 import { AiFillCloseCircle } from 'react-icons/ai'
 import placeOrder from './gtagFunctions'
+import Select from 'react-select';
 
 // Your public Stripe key
 const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
@@ -340,6 +341,43 @@ const WrappedCart = () => {
     //     getMyAddress()
     // }, [isLoggedIn]);
 
+    // const handleChange = (e) => {
+
+    //     const { name, value, checked, type } = e.target;
+    //     let newValue = type === "checkbox" ? checked : value;
+
+    //     // if (name === "state_id") {
+    //     //     const selectedState = stateList.find((state) => state.name === newValue);
+    //     //     newValue = selectedState ? selectedState._id : "";
+    //     // }
+
+    //     if (name === "country_id") {
+    //         setValues((prevValues) => ({
+    //             ...prevValues,
+    //             ["state_id"]: "",
+    //         }));
+    //     }
+
+    //     if (submitCount > 0) {
+    //         const validationErrors = validate({ ...values, [name]: newValue });
+    //         setErrors(validationErrors);
+
+    //         // Remove error message for the specific field if it is valid
+    //         if (Object.keys(validationErrors).length === 0) {
+    //             delete errors[name];
+    //         }
+    //     }
+
+    //     setValues((prevValues) => ({
+    //         ...prevValues,
+    //         [name]: newValue,
+    //     }));
+
+    //     checkforcounty();
+
+    // };
+
+
     const handleChange = (e) => {
 
         const { name, value, checked, type } = e.target;
@@ -374,7 +412,6 @@ const WrappedCart = () => {
         }));
     };
 
-
     // select usa as a default id
     useEffect(() => {
         const fetchData = async () => {
@@ -406,7 +443,6 @@ const WrappedCart = () => {
 
 
     const checkforcounty = async () => {
-
         try {
             if (values.country_id && errors.country_id == undefined) {
                 const request1 = api.get(`${serverURL + "/country-list"}`);
@@ -415,8 +451,8 @@ const WrappedCart = () => {
                 const responses = await Promise.all([request1, request2]);
                 setStateList(responses[1].data.data.states)
             } else {
-                setMymessageProfileProfile("Country is required");
-                setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
+                // setMymessageProfileProfile("Country is required");
+                // setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
             }
         } catch (error) {
             console.error(error);
@@ -604,6 +640,14 @@ const WrappedCart = () => {
             console.log(error);
         }
     };
+
+    useEffect(() => {
+        checkforcounty();
+    }, [values.country_id]);
+
+
+
+
 
 
 
@@ -1140,7 +1184,7 @@ checkbox1: event.target.checked,
                         <h5>Shipping address</h5>
                         <Form>
                             <Row className='mt-2'>
-                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                {/* <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Ship to Address</label>
                                         <select name='country_id'
@@ -1158,6 +1202,26 @@ checkbox1: event.target.checked,
                                             }
                                         </select>
                                         <div className='error' >{errors?.country_id}</div>
+                                    </div>
+                                </Col> */}
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Ship to Address</label>
+                                        <Select
+                                            name='country_id'
+                                            className='rect-select-cos'
+                                            value={countryList.find(option => option.value === values.country_id)} // sets the selected value
+                                            onChange={option => {
+                                                handleChange({
+                                                    target: {
+                                                        name: 'country_id',
+                                                        value: option.value,
+                                                    },
+                                                })
+                                            }} // set selected value
+                                            options={countryList.map(country => ({ value: country._id, label: country.name }))}
+                                        />
+                                        <div className='error'>{errors?.country_id}</div>
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
@@ -1197,7 +1261,7 @@ checkbox1: event.target.checked,
                                         <div className='error' >{errors?.city}</div>
                                     </div>
                                 </Col>
-                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                {/* <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>State</label>
                                         <select
@@ -1220,7 +1284,32 @@ checkbox1: event.target.checked,
                                         </select>
                                         <div className='error' >{errors?.state_id}</div>
                                     </div>
+                                </Col> */}
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>State</label>
+                                        <Select
+                                            name='state_id'
+                                            className='rect-select-cos'
+                                            value={values.state_id ? stateList.find(option => option.value === values.state_id) : null}
+                                            onChange={option => {
+                                                handleChange({
+                                                    target: {
+                                                        name: 'state_id',
+                                                        value: option ? option.value : "",
+                                                    },
+                                                })
+                                            }} // set selected value
+                                            options={
+                                                values.country_id
+                                                    ? stateList.map(state => ({ value: state._id, label: state.name }))
+                                                    : [{ value: '', label: 'Please select a country first' }]
+                                            }
+                                        />
+                                        <div className='error'>{errors?.state_id}</div>
+                                    </div>
                                 </Col>
+
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Zip Code</label>
