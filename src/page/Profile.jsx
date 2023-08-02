@@ -633,13 +633,18 @@ const Profile = () => {
                                                                         })}
 
                                                                         {displayedOrders?.length === 0 &&
-                                                                            <div className='d-flex align-items-center justify-content-center h-100 '>
-                                                                                <div className='text-center found'>
-                                                                                    <img src='../img/not-found.png' alt='' className='my-20 ' />
-                                                                                    <p className='mt-3'>No orders available. Make your first order now</p>
-                                                                                    <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button>
-                                                                                </div>
-                                                                            </div>
+                                                                            <tr>
+                                                                                <td colSpan="5">
+                                                                                    {/* <div className='d-flex align-items-center justify-content-center h-100 '> */}
+                                                                                        <div className='text-center found'>
+                                                                                            {/* <img src='../img/not-found.png' alt='' className='my-20 ' /> */}
+                                                                                            <p className='my-2' style={{color: "#E02E24"}}>No orders available. Make your first order now</p>
+                                                                                            {/* <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button> */}
+                                                                                        </div>
+                                                                                    {/* </div> */}
+                                                                                </td>
+                                                                            </tr>
+
                                                                         }
                                                                     </>
                                                                 )}
@@ -936,7 +941,6 @@ const Profile = () => {
                                                             <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
 
 
-
                                                             {myAddress?.length === 0 &&
                                                                 <div className='d-flex align-items-center justify-content-center h-100 '>
                                                                     <div className='text-center found'>
@@ -946,7 +950,6 @@ const Profile = () => {
                                                                     </div>
                                                                 </div>
                                                             }
-
 
                                                             {myAddress && myAddress.map((e, i) => {
                                                                 return (
@@ -1042,6 +1045,17 @@ const Profile = () => {
 
 
                                                                     {/* {notificationList} */}
+
+                                                                    {notificationList?.length === 0 &&
+                                                                <div className='d-flex align-items-center justify-content-center h-100 '>
+                                                                    <div className='text-center found'>
+                                                                        <img src='../img/not-found.png' alt='' className='my-20 ' />
+                                                                        <p className='mt-3'>No notifications are available.</p>
+                                                                        {/* <Button className='mt-3 submit-btn' type='button' onClick={() => handleShow("add")}  >Add address</Button> */}
+                                                                    </div>
+                                                                </div>
+                                                            }
+
 
 
                                                                     {notificationList && notificationList.map((e, i) => {

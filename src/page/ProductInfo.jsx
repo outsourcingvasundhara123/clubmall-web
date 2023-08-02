@@ -497,6 +497,7 @@ const ProductInfo = () => {
 
     useEffect(() => {
         const schema = createJsonLdSchema(Product);
+        // console.log(schema,"schema");
         const script = document.createElement('script');
         script.setAttribute('type', 'application/ld+json');
         script.innerHTML = JSON.stringify(schema);

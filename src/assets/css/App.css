@@ -3303,13 +3303,13 @@ input[type='radio'] {
     color: #223263;
 }
 
-.security-main p {
+/* .security-main p {
     font-weight: 500;
     font-size: 14px;
     color: #223263;
-}
+} */
 
-.security-main button {
+/* .security-main button {
     background: #E02E24 !important;
     border-radius: 3px;
     font-weight: 500;
@@ -3317,7 +3317,7 @@ input[type='radio'] {
     border: none;
     padding: 5px 15px;
     color: #FFFFFF;
-}
+} */
 
 .third-party h4 {
     font-weight: 700;
