@@ -1,12 +1,15 @@
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useContext } from 'react'
 import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
+import { CartContext } from '../context/CartContext'
 
 const InstallApp = (props) => {
 
+    const { handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+
     return (
         <>
-            <Modal show={props.show} onHide={props.Hide} centered className='welcome-modal'>
+            <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
                 <Modal.Body>
                     <div className='text-center p-3 p-sm-4'>
                         <img src='../img/modal-logo.png' alt='' />

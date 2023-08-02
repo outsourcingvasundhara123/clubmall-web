@@ -26,13 +26,12 @@ import CartDrawer from '../page/CartDrawer'
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const { addcartLocal, addProductDetailsToLocal, handleDrawerShow, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, generateDynamicLink, getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {  handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, generateDynamicLink, getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
     const serverURL = getServerURL();
     const [modelProduct, setModelProduct] = useState({})
-    const [show, setShow] = useState(false);
     const [sizeActive, setSizeActive] = useState("")
     const [productColorActive, setProductColorActive] = useState();
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
@@ -43,11 +42,13 @@ const AddCartModal = (props) => {
     const [colorProduct, setColorProduct] = useState()
     const [url, setUrl] = useState("");
 
-    const handleClose = () => {
-        setShow(false);
-    }
+    // const [show, setShow] = useState(false);
 
-    const handleShow = () => setShow(true);
+    // const handleClose = () => {
+    //     setShow(false);
+    // }
+
+    // const handleShow = () => setShow(true);
 
     // setProductColorActive()
     const startAnimation = () => {
@@ -319,7 +320,6 @@ const AddCartModal = (props) => {
             </Modal>
 
 
-            <InstallApp show={show} Hide={handleClose} />
 
         </>
     )

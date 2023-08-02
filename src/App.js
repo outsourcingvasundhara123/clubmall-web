@@ -14,6 +14,7 @@ import LoaderMain from './components/LoaderMain';
 import CartDrawer from './page/CartDrawer';
 import { Is_Login } from './helper/IsLogin';
 import { BsFillCartCheckFill } from 'react-icons/bs';
+import InstallApp from './components/InstallApp';
 
 
 const ScrollToTop = () => {
@@ -139,6 +140,7 @@ const App = () => {
 
       <CartDrawer />
       <ScrollToTop />
+      <InstallApp  />
 
       <div className='page-layout'>
         <div>
