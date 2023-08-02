@@ -3,7 +3,7 @@ export const createJsonLdSchema = (product) => {
 
   function generateDescription(attributes) {
     let description = "";
-  
+
     Object.entries(attributes || {}).forEach(([key, value]) => {
       if (key === "Product ID") {
         description += `Item ID: ${value[0]} `;
@@ -11,7 +11,7 @@ export const createJsonLdSchema = (product) => {
         description += `${key}: ${Array.isArray(value) ? value.join(", ") : value} `;
       }
     });
-  
+
     return description;
   }
 
@@ -19,7 +19,7 @@ export const createJsonLdSchema = (product) => {
 
     let colors = []; // Create colors as an array instead of an object
     let sizes = [];  // Create sizes as an array instead of an object
-  
+
     product.productList?.sku_details?.forEach((sku) => {
       if (sku.attrs) {
         sku.attrs?.forEach((attr) => {
@@ -43,12 +43,16 @@ export const createJsonLdSchema = (product) => {
       "@type": "Brand",
       "name": "Clubmall"
     },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "USD",
+      "price": product.productList?.individual_price
+      , //assuming there is a price field in product
+      "availability": "http://schema.org/InStock",
+      "itemCondition": "http://schema.org/NewCondition",
+      "url": `https://clubmall.com/product-info/${product.productList?._id}` //assuming there is an id field in product
+    },
     "gtin8": product.productList?.attributes['Product ID']?.[0],
-    "url": `https://clubmall.com/product-info/${product.productList?._id}`, //assuming there is an id field in product
-    "priceCurrency": "USD",
-    "price": product.productList?.individual_price,
-    "availability": "https://schema.org/InStock",
-    "itemCondition": "https://schema.org/NewCondition",
     "color": colors,
     "size": sizes,
     "material": product.productList?.attributes.Material?.[0],
