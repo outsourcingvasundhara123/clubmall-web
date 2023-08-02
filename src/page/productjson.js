@@ -53,6 +53,7 @@ export const createJsonLdSchema = (product) => {
       "url": `https://clubmall.com/product-info/${product.productList?._id}` //assuming there is an id field in product
     },
     "gtin8": product.productList?.attributes['Product ID']?.[0],
+    "item id": product.productList?.attributes['Product ID']?.[0],
     "color": colors,
     "size": sizes,
     "material": product.productList?.attributes.Material?.[0],
