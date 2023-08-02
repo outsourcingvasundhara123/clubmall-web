@@ -251,7 +251,7 @@ function Register() {
                             // console.log(updatedValues.email,"updatedValues");
                         } else {
                             if (res.data.message === "Duplicate field value entered") {
-                                setMyMessage("This User Name is already exist");
+                                setMyMessage("Your email and username is already registered.Please login.");
                             } else {
                                 setMyMessage(res.data.message);
                             }
