@@ -27,7 +27,7 @@ import { isMobile } from 'react-device-detect';
 
 const ForYou = () => {
 
-  const { generateDynamicLink, handleShowhandleClose, getCartData, getWishList, add_wished_Called, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+  const { show,setShow, generateDynamicLink, handleShowhandleClose, getCartData, getWishList, add_wished_Called, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const ForYou = () => {
   const [loading, setLoading] = useState(true);
   const [Mymessage, setMyMessage] = useState("");
   const [totalPages, setTotalPages] = useState(0); // Declare totalPages state variable
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
   const player = useRef();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelData, setMyModelData] = useState("");
@@ -715,7 +715,7 @@ const ForYou = () => {
         </Modal.Body>
       </Modal>
 
-      <InstallApp show={show} Hide={handleClose} />
+      {/* <InstallApp show={show} Hide={handleClose} /> */}
 
       <Modal show={showAppDownload} onHide={handleAppDownloadClose} centered className='welcome-modal'>
         <Modal.Body>

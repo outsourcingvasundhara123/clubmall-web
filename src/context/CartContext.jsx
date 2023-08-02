@@ -68,7 +68,10 @@ export const CartProvider = ({ children }) => {
   const [localCartPostData, setLocalCartPostData] = useState([]);
 
 
-
+//install app popup
+  const [show, setShow] = useState(false);
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   const serverURL = getServerURL();
   const player = useRef();
@@ -78,10 +81,7 @@ export const CartProvider = ({ children }) => {
   const [couponId, setCouponId] = useState([]);
   const [cartList, setCartList] = useState([]);
 
-  //group price state
-  const [show, setShow] = useState(false);
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+
   const [perActive, setPerActive] = useState('Individual');
 
   //drawer
@@ -807,7 +807,9 @@ export const CartProvider = ({ children }) => {
     const newWindow = call(response.data.shortLink);
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
       //POPUP BLOCKED
-      alert('Please disable your popup blocker and try again.');
+      handleShow();
+      setPerActive('Group')
+      // alert('Please disable your popup blocker and try again.');
     }
   };
 
@@ -818,6 +820,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
+      handleClose,handleShow,show,setShow,
       handleDrawerShow, handleDrawerClose, drawer, addcartLocal, addProductDetailsToLocal, localCart, getLocalCartData, deleteProductDetailsFromLocal, deleteProductFromLocalCart, increaseProductQuantity, decreaseProductQuantity, localCartPostData, getLocalCartPostData,
       playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
       , categoryHome, setcategoryHome, categoryLoading, setCategoryLoading, catwebLoading, setCatwebLoading, ProductLoading, setProductLoading, sellProLoading, setSellProLoading,

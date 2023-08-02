@@ -23,7 +23,6 @@ import { isMobile } from 'react-device-detect';
 import { handelCategorydata } from '../helper/constants';
 
 const Home = () => {
-
     const { handelSearch, getSearchedProduct, searchKeyWord, setSearchKeyWord, categoryHome, setMyMessage, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const textRef = useRef(null);
@@ -488,6 +487,7 @@ const Home = () => {
                                                     style={{ display: imageLoaded ? 'none' : 'block' }}
                                                 />
                                                 <img 
+                                                onLoad={() => setImageLoaded(true)}
                                                 style={{ display: imageLoaded ? 'block' : 'none' }}
                                                 src={productList?.productImagePath && productList?.productImagePath + e._id + "/" + e.product_images[0]?.file_name} alt={e.name} className='w-100' />
                                                 <Button className='shop-now' onClick={() => handelProductDetail(e._id)} >Shop Now</Button>

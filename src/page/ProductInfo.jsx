@@ -43,7 +43,7 @@ import { createJsonLdSchema } from './productjson';
 const ProductInfo = () => {
 
 
-    const { addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -71,15 +71,16 @@ const ProductInfo = () => {
     const player = useRef();
     const [url, setUrl] = useState("");
     const [submitLoderRv, setSubmitLoderRv] = useState(false);
-
     const serverURL = getServerURL();
-    const [show, setShow] = useState(false);
     const [isfilter, setIsFilter] = useState(false);
-    const handleShow = () => {
-        setShow(true);
-    }
+    
+    //install app popup
+    // const [show, setShow] = useState(false);
+    // const handleShow = () => setShow(true);
+    // const handleClose = () => setShow(false);
+
+
     const [page, setPage] = useState(1);
-    const handleClose = () => setShow(false);
     const [Product, setProduct] = useState({})
     const [reviweList, setReviweList] = useState([]);
     const [favoriteProductList, setFavoriteProductList] = useState([]);
@@ -233,8 +234,6 @@ const ProductInfo = () => {
 
                 }
             }
-
-
             setMainLoder(false)
         } catch (error) {
             console.log(error);
@@ -1056,7 +1055,7 @@ const ProductInfo = () => {
                             {/* <CartDrawer /> */}
 
 
-                            <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
+                            {/* <Modal show={show} onHide={handleClose} centered className='welcome-modal'>
                                 <Modal.Body>
                                     <div className='text-center p-3 p-sm-4'>
                                         <img src='../img/modal-logo.png' alt='' />
@@ -1073,7 +1072,7 @@ const ProductInfo = () => {
                                         </div>
                                     </div>
                                 </Modal.Body>
-                            </Modal>
+                            </Modal> */}
 
                             <Modal show={reviewShow} onHide={handlereviewClose} centered className='for_you-modal'>
                                 <Modal.Body>
