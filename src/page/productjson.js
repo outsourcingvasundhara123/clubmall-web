@@ -1,5 +1,4 @@
 export const createJsonLdSchema = (product) => {
-  console.log(product, "sku_details");
   let description = product.productList?.name +
     "Item ID: " + product.productList?.attributes['Product ID']?.[0] +
     "Pattern Type: " + product.productList?.attributes['Pattern Type']?.[0] +
@@ -53,4 +52,5 @@ export const createJsonLdSchema = (product) => {
     "size": sizes,
     "material": product.productList?.attributes.Material?.[0],
   };
+
 }
