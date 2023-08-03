@@ -295,7 +295,6 @@ const ProductInfo = () => {
         return sku ? sku.skuid : null;
     };
 
-
     const handleCart = async (e) => {
 
         try {
@@ -508,7 +507,6 @@ const ProductInfo = () => {
             document.head.removeChild(script);
         }
     }, [Product]);
-
 
 
     return (

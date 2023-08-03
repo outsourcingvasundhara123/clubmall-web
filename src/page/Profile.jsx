@@ -80,6 +80,7 @@ const Profile = () => {
     // const [page, setPage] = useState(1);
     const itemsPerPage = 5; // Set the number of items you want to show on one page
     const navigate = useNavigate();
+    const inputFileRef = useRef(null);
 
     const handleClose = () => {
         setErrors({})
@@ -209,6 +210,10 @@ const Profile = () => {
         reader.readAsDataURL(file);
 
     };
+
+    const handleImageClick = () => {
+        inputFileRef.current.click();
+    }
 
     const submitProfile = async (e) => {
         e.preventDefault();
@@ -447,6 +452,7 @@ const Profile = () => {
         checkforcounty();
     }, [values.country_id]);
 
+    console.log(displayedOrders,"displayedOrders");
 
     return (
         <>
@@ -569,33 +575,33 @@ const Profile = () => {
                                         </Nav.Item>
                                     </Nav>
                                 </Col>
+                                {
+                                    loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
+                                        <>
+                                            <Col xl={9} lg={8} md={6} className='mt-5 mt-md-0'>
+                                                <Tab.Content>
+                                                    <Tab.Pane eventKey="list">
+                                                        <div className='order-list position-relative'>
 
-                                <Col xl={9} lg={8} md={6} className='mt-5 mt-md-0'>
-                                    <Tab.Content>
-                                        <Tab.Pane eventKey="list">
-                                            <div className='order-list position-relative'>
-
-                                                {/* <div className='search-order d-flex align-items-center gap-2'>
+                                                            {/* <div className='search-order d-flex align-items-center gap-2'>
                                                     <img src='./img/header/search-icone.png' alt='' />
                                                     <input type="text" placeholder="Item name / Order ID / Tracking No." class="w-100" spellcheck="false" data-ms-editor="true" />
                                                 </div> */}
 
-                                                <div className='order-table'>
-                                                    <Table bordered responsive>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Products</th>
-                                                                <th>Quantity</th>
-                                                                <th>Amount</th>
-                                                                <th>Shipping To</th>
-                                                                <th>Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
+                                                            <div className='order-table'>
+                                                                <Table bordered responsive>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Products</th>
+                                                                            <th>Quantity</th>
+                                                                            <th>Amount</th>
+                                                                            <th>Shipping To</th>
+                                                                            <th>Status</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
 
-                                                            {
-                                                                loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
-                                                                    <>
+
 
                                                                         {displayedOrders && displayedOrders.map((e, i) => {
                                                                             return (
@@ -636,29 +642,28 @@ const Profile = () => {
                                                                             <tr>
                                                                                 <td colSpan="5">
                                                                                     {/* <div className='d-flex align-items-center justify-content-center h-100 '> */}
-                                                                                        <div className='text-center found'>
-                                                                                            {/* <img src='../img/not-found.png' alt='' className='my-20 ' /> */}
-                                                                                            <p className='my-2' style={{color: "#E02E24"}}>No orders available. Make your first order now</p>
-                                                                                            {/* <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button> */}
-                                                                                        </div>
+                                                                                    <div className='text-center found'>
+                                                                                        {/* <img src='../img/not-found.png' alt='' className='my-20 ' /> */}
+                                                                                        <p className='my-2' style={{ color: "#E02E24" }}>No orders available. Make your first order now</p>
+                                                                                        {/* <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button> */}
+                                                                                    </div>
                                                                                     {/* </div> */}
                                                                                 </td>
                                                                             </tr>
 
                                                                         }
-                                                                    </>
-                                                                )}
-                                                        </tbody>
 
-                                                    </Table>
-                                                    {displayedOrders?.length > 0 && displayedOrders?.length !== is_lastItem &&
-                                                        <div className='w-100 d-flex justify-content-center'>
-                                                            <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} > View More <MdKeyboardDoubleArrowRight /></Button>
-                                                        </div>
-                                                    }
-                                                </div>
+                                                                    </tbody>
 
-                                                {/* <div className='error'>
+                                                                </Table>
+                                                                {displayedOrders?.length > 0 && displayedOrders?.length !== is_lastItem &&
+                                                                    <div className='w-100 d-flex justify-content-center'>
+                                                                        <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} > View More <MdKeyboardDoubleArrowRight /></Button>
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                            {/* <div className='error'>
                                                     <div className='d-flex justify-content-center py-5'>
                                                         <div className='text-center found'>
                                                             <img src='./img/not-found.png' alt='' />
@@ -685,7 +690,7 @@ const Profile = () => {
                                                     </div>
                                                 </div> */}
 
-                                                {/* <Tabs
+                                                            {/* <Tabs
                                                     defaultActiveKey="all-orders"
                                                     id="uncontrolled-tab-example"
                                                     className="mb-3"
@@ -730,11 +735,11 @@ const Profile = () => {
                                                     </Tab>
                                                 </Tabs> */}
 
-                                            </div>
+                                                        </div>
 
-                                        </Tab.Pane>
+                                                    </Tab.Pane>
 
-                                        {/* <Tab.Pane eventKey="review">
+                                                    {/* <Tab.Pane eventKey="review">
                                             <div className='d-flex align-items-center justify-content-center w-100 h-400'>
                                                 <div className='text-center found'>
                                                     <img src='./img/profile/review.png' alt='' />
@@ -745,10 +750,10 @@ const Profile = () => {
                                         </Tab.Pane> */}
 
 
-                                        <Tab.Pane eventKey="user">
-                                            {
+                                                    <Tab.Pane eventKey="user">
+                                                        {/* {
                                                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
-                                                    <>
+                                                    <> */}
                                                         <div className='user-main'>
                                                             <Row>
                                                                 <Col xl={4} lg={6} md={12}>
@@ -756,8 +761,8 @@ const Profile = () => {
                                                                         <div className='preview position-relative'>
                                                                             <img src={imagePreview || values_2.profile_image}
                                                                                 onError={(e) => { e.target.onerror = null; e.target.src = defaultProfile }}
-                                                                                alt='' className=' preview_profile ' />
-                                                                            <input type="file" name='profile_image' onChange={handlePhoto} id='file' />
+                                                                                alt='' className=' preview_profile ' onClick={handleImageClick} />
+                                                                            <input ref={inputFileRef} type="file" name='profile_image' onChange={handlePhoto} id='file' style={{ display: "none" }} />
                                                                             <label htmlFor='file' className='file-label'>
                                                                                 <img src='./img/profile/select-btn.png' alt='' />
                                                                             </label>
@@ -828,11 +833,11 @@ const Profile = () => {
                                                                 </Col>
                                                             </Row>
                                                         </div>
-                                                    </>
-                                                )}
-                                        </Tab.Pane>
+                                                        {/* </>
+                                                )} */}
+                                                    </Tab.Pane>
 
-                                        {/* <Tab.Pane eventKey="shop">
+                                                    {/* <Tab.Pane eventKey="shop">
                                             <div className='d-flex align-items-center justify-content-center w-100 h-400'>
                                                 <div className='text-center found'>
                                                     <img src='./img/not-found.png' alt='' />
@@ -932,11 +937,11 @@ const Profile = () => {
                                             </div>
                                         </Tab.Pane> */}
 
-                                        <Tab.Pane eventKey="location">
+                                                    <Tab.Pane eventKey="location">
 
-                                            {
+                                                        {/* {
                                                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
-                                                    <>
+                                                    <> */}
                                                         <div className='location-main'>
                                                             <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
 
@@ -974,68 +979,68 @@ const Profile = () => {
                                                             })}
 
                                                         </div>
-                                                    </>
-                                                )}
-                                        </Tab.Pane>
+                                                        {/* </>
+                                                )} */}
+                                                    </Tab.Pane>
 
 
-                                        <Tab.Pane eventKey="security">
-                                            <div className='security-main'>
-                                                <div className='d-flex align-items-center justify-content-between pb-4 total-usd'>
-                                                    <h5>Mobile phone number</h5>
-                                                    <Button>Add</Button>
-                                                </div>
-                                                <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
-                                                    <div>
-                                                        <h5>Email</h5>
-                                                        <p>rohan.vasundhara19@gmail.com</p>
-                                                    </div>
-                                                    <Button>Edit</Button>
-                                                </div>
-                                                <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
-                                                    <h5>Password</h5>
-                                                    <Button>Add</Button>
-                                                </div>
+                                                    <Tab.Pane eventKey="security">
+                                                        <div className='security-main'>
+                                                            <div className='d-flex align-items-center justify-content-between pb-4 total-usd'>
+                                                                <h5>Mobile phone number</h5>
+                                                                <Button>Add</Button>
+                                                            </div>
+                                                            <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
+                                                                <div>
+                                                                    <h5>Email</h5>
+                                                                    <p>rohan.vasundhara19@gmail.com</p>
+                                                                </div>
+                                                                <Button>Edit</Button>
+                                                            </div>
+                                                            <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
+                                                                <h5>Password</h5>
+                                                                <Button>Add</Button>
+                                                            </div>
 
-                                                <div className='third-party mt-5'>
-                                                    <h4>Third-party accounts</h4>
-                                                    <div className='d-flex align-items-center justify-content-between pb-4 total-usd' style={{ marginTop: "30px" }}>
-                                                        <div className='d-flex align-items-center gap-3'>
-                                                            <img src='./img/profile/google.png' alt='' />
-                                                            <h5>Password</h5>
-                                                        </div>
-                                                        <Button className='linked'>Linked</Button>
-                                                    </div>
-                                                    <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
-                                                        <div className='d-flex align-items-center gap-3'>
-                                                            <img src='./img/profile/facebook.png' alt='' />
-                                                            <h5>Facebook</h5>
-                                                        </div>
-                                                        <Button>Link</Button>
-                                                    </div>
-                                                    {/* <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
+                                                            <div className='third-party mt-5'>
+                                                                <h4>Third-party accounts</h4>
+                                                                <div className='d-flex align-items-center justify-content-between pb-4 total-usd' style={{ marginTop: "30px" }}>
+                                                                    <div className='d-flex align-items-center gap-3'>
+                                                                        <img src='./img/profile/google.png' alt='' />
+                                                                        <h5>Password</h5>
+                                                                    </div>
+                                                                    <Button className='linked'>Linked</Button>
+                                                                </div>
+                                                                <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
+                                                                    <div className='d-flex align-items-center gap-3'>
+                                                                        <img src='./img/profile/facebook.png' alt='' />
+                                                                        <h5>Facebook</h5>
+                                                                    </div>
+                                                                    <Button>Link</Button>
+                                                                </div>
+                                                                {/* <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
                                                         <div className='d-flex align-items-center gap-3'>
                                                             <img src='./img/profile/twitter.png' alt='' />
                                                             <h5>Twitter</h5>
                                                         </div>
                                                         <Button>Link</Button>
                                                     </div> */}
-                                                    <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
-                                                        <div className='d-flex align-items-center gap-3'>
-                                                            <img src='./img/profile/apple.png' alt='' />
-                                                            <h5>Apple</h5>
+                                                                <div className='d-flex align-items-center justify-content-between pb-4 total-usd mt-4'>
+                                                                    <div className='d-flex align-items-center gap-3'>
+                                                                        <img src='./img/profile/apple.png' alt='' />
+                                                                        <h5>Apple</h5>
+                                                                    </div>
+                                                                    <Button>Link</Button>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <Button>Link</Button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <Button className='delete-account'>Delete your Clubmall account <MdKeyboardArrowRight /></Button>
-                                        </Tab.Pane>
+                                                        <Button className='delete-account'>Delete your Clubmall account <MdKeyboardArrowRight /></Button>
+                                                    </Tab.Pane>
 
 
-                                        {
+                                                    {/* {
                                             loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
-                                                <>
+                                                <> */}
 
 
                                                     <Tab.Pane eventKey="notification">
@@ -1047,14 +1052,14 @@ const Profile = () => {
                                                                     {/* {notificationList} */}
 
                                                                     {notificationList?.length === 0 &&
-                                                                <div className='d-flex align-items-center justify-content-center h-100 '>
-                                                                    <div className='text-center found'>
-                                                                        <img src='../img/not-found.png' alt='' className='my-20 ' />
-                                                                        <p className='mt-3'>No notifications are available.</p>
-                                                                        {/* <Button className='mt-3 submit-btn' type='button' onClick={() => handleShow("add")}  >Add address</Button> */}
-                                                                    </div>
-                                                                </div>
-                                                            }
+                                                                        <div className='d-flex align-items-center justify-content-center h-100 '>
+                                                                            <div className='text-center found'>
+                                                                                <img src='../img/not-found.png' alt='' className='my-20 ' />
+                                                                                <p className='mt-3'>No notifications are available.</p>
+                                                                                {/* <Button className='mt-3 submit-btn' type='button' onClick={() => handleShow("add")}  >Add address</Button> */}
+                                                                            </div>
+                                                                        </div>
+                                                                    }
 
 
 
@@ -1069,6 +1074,7 @@ const Profile = () => {
                                                                             </div>
                                                                         )
                                                                     })}
+
                                                                     {/* <div className='list-not d-flex align-items-center justify-content-between pb-3 total-usd mt-4'>
                                                             <div>
                                                                 <h5>Your recommendations</h5>
@@ -1111,9 +1117,11 @@ const Profile = () => {
                                                             </Row>
                                                         </div>
                                                     </Tab.Pane>
-                                                </>)}
-                                    </Tab.Content>
-                                </Col>
+                                                    {/* </>)} */}
+                                                </Tab.Content>
+                                            </Col>
+                                        </>
+                                    )}
                             </Row>
                         </Tab.Container>
                     </div>

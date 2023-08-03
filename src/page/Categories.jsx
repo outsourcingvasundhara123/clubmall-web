@@ -198,22 +198,7 @@ const Categories = () => {
         setRange(values);
     };
 
-    // useEffect(() => {
-    //     const handleResize = () => {
-    //         if (window.innerWidth < 991) {
-    //             setFilterShow(false);
-    //         } else {
-    //             setFilterShow(true);
-    //         }
-    //     };
 
-    //     window.addEventListener('resize', handleResize);
-
-    //     return () => {
-    //         window.removeEventListener('resize', handleResize);
-    //     };
-
-    // }, []);
 
 
     useEffect(() => {
