@@ -98,12 +98,12 @@ const CartDrawer = () => {
 
                         {isLoggedIn ?
                             <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                                <img src='./img/product_def/right-black.png' alt='' width="18px" />
+                                <img src='../img/product_def/right-black.png' alt='' width="18px" />
                                 <h5>Added ({cartList.list ? cartList.list?.length : 0}) items to cart</h5>
                             </div> :
 
                             <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                                <img src='./img/product_def/right-black.png' alt='' width="18px" />
+                                <img src='../img/product_def/right-black.png' alt='' width="18px" />
                                 <h5>Added ({localCart.items ? localCart.items?.length : 0}) items to cart</h5>
                             </div>
                         }
@@ -184,6 +184,7 @@ const CartDrawer = () => {
 
                             {localCart.items?.length > 0 && localCart?.items.map((e, i) => {
                                 return (
+                                    
                                     <div className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_id)} >
                                         <img className='pointer' src={e.image} alt='' width="150px" />
                                         <div className='cart-items-text w-100'>
