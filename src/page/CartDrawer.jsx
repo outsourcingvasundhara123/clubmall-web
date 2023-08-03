@@ -184,6 +184,7 @@ const CartDrawer = () => {
 
                             {localCart.items?.length > 0 && localCart?.items.map((e, i) => {
                                 return (
+                                    
                                     <div className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_id)} >
                                         <img className='pointer' src={e.image} alt='' width="150px" />
                                         <div className='cart-items-text w-100'>
