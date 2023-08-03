@@ -43,20 +43,16 @@ export const createJsonLdSchema = (product) => {
       "@type": "Brand",
       "name": "Clubmall"
     },
-    "offers": {
-      "@type": "Offer",
-      "priceCurrency": "USD",
-      "price": product.productList?.individual_price
-      , //assuming there is a price field in product
-      "availability": "http://schema.org/InStock",
-      "itemCondition": "http://schema.org/NewCondition",
-      "url": `https://clubmall.com/product-info/${product.productList?._id}` //assuming there is an id field in product
-    },
     "gtin8": product.productList?.attributes['Product ID']?.[0],
-    "item id": product.productList?.attributes['Product ID']?.[0],
-    "color": colors,
+    "url": `https://clubmall.com/product-info/${product.productList?._id}`, //assuming there is an id field in product
+    "priceCurrency": "USD",
+    "price": product.productList?.individual_price,
+    "availability": "https://schema.org/InStock",
+    "itemCondition": "https://schema.org/NewCondition",
     "size": sizes,
+    "color": colors,
     "material": product.productList?.attributes.Material?.[0],
+    "item-id": product.productList?._id,
   };
 
 }
