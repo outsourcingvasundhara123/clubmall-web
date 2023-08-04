@@ -23,7 +23,7 @@ import { BiSearch } from 'react-icons/bi'
 const Header = (props) => {
 
     const navigate = useNavigate();
-    const { setMainLoder,itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const { getcartcount, getwishlistcount, setMainLoder, itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const [selectedFlag, setSelectedFlag] = useState("../img/header/ind.svg");
 
@@ -67,14 +67,12 @@ const Header = (props) => {
 
         if (!searchKeyWord) {
             setMyMessage("Please enter a keyword for the search");
-            setWarningSnackBarOpen(!warningSnackBarOpen);    
-            }else{
+            setWarningSnackBarOpen(!warningSnackBarOpen);
+        } else {
             handelSearch(searchKeyWord)
             navigate("/search")
             getSearchedProduct()
         }
-
-
 
     };
     const handleKeyPress = (e) => {
@@ -123,9 +121,9 @@ const Header = (props) => {
                     }
                     setMainLoder(false)
                 });
-            } catch (error) {
-                setMainLoder(false)
-                console.error(error);
+        } catch (error) {
+            setMainLoder(false)
+            console.error(error);
         }
     };
 
@@ -153,8 +151,6 @@ const Header = (props) => {
         window.location.href = "/categories";
     };
 
-
-
     const handelProfile = (page) => {
         setProfileOption(page)
         navigate("/profile")
@@ -181,8 +177,15 @@ const Header = (props) => {
         return () => clearInterval(intervalId);
     }, []);
 
+    useEffect(() => {
+        if(isLoggedIn){
+        getcartcount()
+        getwishlistcount()
+        }
+    }, [isLoggedIn]);
 
-// console.log(category,"category");
+
+    // console.log(category,"category");
 
     return (
         <Fragment>
@@ -346,8 +349,8 @@ const Header = (props) => {
                                                 <Button className='pre-label-btn user-account' >
                                                     <div className='d-flex align-items-center gap-2'>
                                                         <img className='myprofile' src={Userprofile}
-                                                             onError={(e)=>{e.target.onerror = null; e.target.src=defaultProfile}}
-                                                        alt='' />
+                                                            onError={(e) => { e.target.onerror = null; e.target.src = defaultProfile }}
+                                                            alt='' />
                                                         <div className='price-text text-start'>
                                                             <h6>Hello, {UserName}</h6>
                                                             <span>Orders & Account</span>
@@ -360,8 +363,8 @@ const Header = (props) => {
                                             <div className='drop-items'>
                                                 <div className='d-flex align-items-center gap-2 border-bot-cos pb-2'>
                                                     <img className='myprofile' src={Userprofile}
-                                                         onError={(e)=>{e.target.onerror = null; e.target.src=defaultProfile}}
-                                                    alt='' />
+                                                        onError={(e) => { e.target.onerror = null; e.target.src = defaultProfile }}
+                                                        alt='' />
                                                     <h6>Hello, {UserName}</h6>
                                                 </div>
                                             </div>

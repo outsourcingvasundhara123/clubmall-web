@@ -275,7 +275,7 @@ const ProductInfo = () => {
 
     useEffect(() => {
         getproductlist();
-        getWishList()
+        // getWishList()
     }, [sellIs_wished, isLoggedIn, add_wished_Called]);
 
 

@@ -56,7 +56,7 @@ const Home = () => {
 
     useEffect(() => {
         getProducts();
-        getWishList()
+        // getWishList()
         setSearchKeyWord("")
     }, [isLoggedIn]);
 

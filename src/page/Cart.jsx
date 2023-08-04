@@ -840,7 +840,6 @@ const WrappedCart = () => {
                                                     Return to  shipping
                                                 </Button>
 
-
                                                 {correntAddess.data && correntAddess.data.map((e, i) => {
                                                     return (
                                                         <>

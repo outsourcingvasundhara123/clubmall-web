@@ -34,25 +34,26 @@ export const createJsonLdSchema = (product) => {
     });
 
   return {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    "name": product.productList?.name,
-    "image": product.productImagePath + product.productList?._id + "/" + product.productList?.product_images[0]?.file_name,
-    "description": description,
-    "brand": {
-      "@type": "Brand",
-      "name": "Clubmall"
+    "@context": {
+      "schema": "http://schema.org/"
     },
-    "gtin8": product.productList?.attributes['Product ID']?.[0],
+   "@type": "Product",
+   "@id": `https://clubmall.com/product-info/${product.productList?._id}`,
+    "itemID": product.productList?.attributes['Product ID']?.[0],
+    "name": product.productList?.name,
+    "description": description,
     "url": `https://clubmall.com/product-info/${product.productList?._id}`, //assuming there is an id field in product
-    "priceCurrency": "USD",
-    "price": product.productList?.individual_price,
-    "availability": "https://schema.org/InStock",
-    "itemCondition": "https://schema.org/NewCondition",
-    "size": sizes,
-    "color": colors,
+    "image": product.productImagePath + product.productList?._id + "/" + product.productList?.product_images[0]?.file_name,
+    "brand": "Clubmall",
     "material": product.productList?.attributes.Material?.[0],
-    "item-id": product.productList?._id,
+    "size": sizes,
+    "offers": {
+      "@type": "Offer",
+      "price": product.productList?.individual_price,
+      "priceCurrency": "USD",
+      "availability": "http://schema.org/InStock"
+    },
+    "color": colors,
   };
 
 }

@@ -68,12 +68,10 @@ const Selling = () => {
     }, [womanpage, manpage, kidspage, favoritepage, sellingCategory, sellIs_wished, isLoggedIn]);
 
     useEffect(() => {
-        getWishList()
+        // getWishList()
         getCategoryWeb()
         getCategory()
     }, []);
-
-
 
     return (
 

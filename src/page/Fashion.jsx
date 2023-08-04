@@ -66,7 +66,7 @@ const Fashion = () => {
 
     useEffect(() => {
         getProducts();
-        getWishList()
+        // getWishList()
     }, [isLoggedIn]);
 
     useEffect(() => {

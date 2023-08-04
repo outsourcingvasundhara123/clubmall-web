@@ -11,7 +11,7 @@ import { CartContext } from '../context/CartContext';
 const ProCard = (props) => {
 
 
-    const [isWishlist, setIsWishlist] = useState(!!props.is_wishList); // We use !! to convert to a boolean
+    const [isWishlist, setIsWishlist] = useState(props.is_wishList === 1); // We use !! to convert to a boolean
     const { handelwishSell, addWishList } = useContext(CartContext);
     const location = useLocation(window.location.pathname);
     const navigate = useNavigate();
@@ -30,6 +30,11 @@ const ProCard = (props) => {
         setProduct_id(id)
         setShow(true);
     }
+
+    
+    useEffect(() => {
+        setIsWishlist(props.is_wishList === 1);
+    }, [props.is_wishList]);
 
     // new function for wishlist on dome 
     const handleWishlistClick = async () => {
