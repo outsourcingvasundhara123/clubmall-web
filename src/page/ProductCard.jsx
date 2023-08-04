@@ -9,9 +9,8 @@ import { CartContext } from '../context/CartContext';
 const ProductCard = ({ product, productImagePath, handleShow }) => {
 
     const { addWishList } = useContext(CartContext);
-    const [isWishlist, setIsWishlist] = useState(!!product.wishList);
+    const [isWishlist, setIsWishlist] = useState(product.wishList === 1);
     const [imageLoaded, setImageLoaded] = useState(false);
-
 
     const handleWishlistClick = async ()=> {
         const newWishlistStatus = !isWishlist;
@@ -25,7 +24,7 @@ const ProductCard = ({ product, productImagePath, handleShow }) => {
     }
 
     useEffect(() => {
-        setIsWishlist(!!product.wishList);
+        setIsWishlist(product.wishList === 1);
     }, [product.wishList]);
 
     return (

@@ -411,7 +411,7 @@ const Profile = () => {
         getMyAddress()
         getUserProfile()
         getOrderList()
-        getWishList()
+        // getWishList()
     }, [isLoggedIn]);
 
 
@@ -442,7 +442,6 @@ const Profile = () => {
         }
     };
 
-
     useEffect(() => {
         getNotificationList()
     }, [pageNotification]);
@@ -452,7 +451,8 @@ const Profile = () => {
         checkforcounty();
     }, [values.country_id]);
 
-    console.log(displayedOrders,"displayedOrders");
+
+console.log(values,"value");
 
     return (
         <>
@@ -1188,7 +1188,7 @@ const Profile = () => {
                                         <Select
                                             name='country_id'
                                             className='rect-select-cos'
-                                            value={countryList.find(option => option.value === values.country_id)} // sets the selected value
+                                            value={countryList?.find(option => option?.value === values?.country_id)} // sets the selected value
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
@@ -1197,7 +1197,7 @@ const Profile = () => {
                                                     },
                                                 })
                                             }} // set selected value
-                                            options={countryList.map(country => ({ value: country._id, label: country.name }))}
+                                            options={countryList?.map(country => ({ value: country._id, label: country.name }))}
                                         />
                                         <div className='error' >{errors?.country_id}</div>
                                     </div>

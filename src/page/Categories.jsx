@@ -23,7 +23,7 @@ import 'rc-slider/assets/index.css';
 
 const Categories = () => {
 
-    const { setAdd_wished_Called, add_wished_Called, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
+    const {getwishlistcount, setAdd_wished_Called, add_wished_Called, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const initial = {
@@ -161,9 +161,9 @@ const Categories = () => {
         getCategory();
     }, [ Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive]);
 
-
     useEffect(() => {
-        getWishList()
+        // getWishList()
+        getwishlistcount()
     }, [ add_wished_Called]);
 
     useEffect(() => {
@@ -197,8 +197,6 @@ const Categories = () => {
         setViewCalled(false)
         setRange(values);
     };
-
-
 
 
     useEffect(() => {

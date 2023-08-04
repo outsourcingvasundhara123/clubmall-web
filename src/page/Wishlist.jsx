@@ -22,8 +22,6 @@ const Wishlist = () => {
     }, [isLoggedIn]);
 
 
-
-
     return (
         <>
             <h1 className='d-none'></h1>

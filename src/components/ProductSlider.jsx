@@ -4,11 +4,6 @@ import ImageGallery from 'react-image-gallery';
 const ProductSlider = ({ productImagePath, productList, id, colorProduct, activeImage }) => {
   const imageGalleryRef = useRef(); // create a ref
 
-  // const images = productList?.map((product) => ({
-  //   original: productImagePath + id + "/" + product?.file_name,
-  //   thumbnail: productImagePath + id + "/" + product.thumbnail,
-  // }));
-
   const images = productList?.map((product) => ({
     original: productImagePath + id + "/" + product?.file_name,
     thumbnail: productImagePath + id + "/" + product.thumbnail,

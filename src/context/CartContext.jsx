@@ -138,6 +138,7 @@ export const CartProvider = ({ children }) => {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setSellIs_wished(sellIs_wished + 1)
           setAdd_wished_Called(true)
+          getwishlistcount()
           // getSellProducts()
           // getProducts()
           // getWishList()
@@ -436,6 +437,25 @@ export const CartProvider = ({ children }) => {
 
   };
 
+  const getwishlistcount = async () => {
+    try {
+        const res = await api.postWithToken(`${serverURL + "get-count"}`, { "action": "wishlist" })
+        setWishlistCount(res.data.data.count)
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
+
+  const getcartcount = async () => {
+    try {
+        const res = await api.postWithToken(`${serverURL + "get-count"}`, { "action": "cart" })
+        setCart(res.data.data.count)
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
+
+
   // const handleWishlistClick = async (productId) => {
   //   const newWishlistStatus = !isWishlist;
   //   setIsWishlist(newWishlistStatus); // Update the local state
@@ -457,6 +477,7 @@ export const CartProvider = ({ children }) => {
         setMyMessage(res.data.message);
         setSucessSnackBarOpen(!sucessSnackBarOpen);
         getWishList()
+        getwishlistcount()
         // getProducts()
       } else {
         setMyMessage(res.data.message);
@@ -754,7 +775,7 @@ export const CartProvider = ({ children }) => {
         ]);
 
         const poroductData = poroductResponse.data.data;
-        setCart(poroductResponse.data.data.list?.length)
+        // setCart(poroductResponse.data.data.list?.length)
         let ids = poroductData.list?.map((e) => e._id)
         setCouponId(ids)
         setCartList(poroductData);
@@ -820,7 +841,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      handleClose,handleShow,show,setShow,
+      handleClose,handleShow,show,setShow,getwishlistcount,getcartcount,
       handleDrawerShow, handleDrawerClose, drawer, addcartLocal, addProductDetailsToLocal, localCart, getLocalCartData, deleteProductDetailsFromLocal, deleteProductFromLocalCart, increaseProductQuantity, decreaseProductQuantity, localCartPostData, getLocalCartPostData,
       playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
       , categoryHome, setcategoryHome, categoryLoading, setCategoryLoading, catwebLoading, setCatwebLoading, ProductLoading, setProductLoading, sellProLoading, setSellProLoading,

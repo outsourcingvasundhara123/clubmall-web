@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext,useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 import AddCartModal from './AddCartModal'
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { handelProductDetail } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 
 const PinkCard = (props) => {
-    const [isWishlist, setIsWishlist] = useState(!!props.img.wishList); // We use !! to convert to a boolean
+    const [isWishlist, setIsWishlist] = useState(props.img.wishList === true); // We use !! to convert to a boolean
     const navigate = useNavigate();
     const [imageLoaded, setImageLoaded] = useState(false);
     const {addWishList } = useContext(CartContext);
@@ -21,7 +21,10 @@ const PinkCard = (props) => {
         setProduct_id(id)
         setShow(true);
     }
-
+    useEffect(() => {
+        setIsWishlist(props.img.wishList === 1);
+    }, [props.img.wishList]);
+    
     // new function for wishlist on dome 
     const handleWishlistClick = async () => {
         const newWishlistStatus = !isWishlist;
