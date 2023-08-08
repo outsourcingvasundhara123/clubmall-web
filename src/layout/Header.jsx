@@ -178,14 +178,19 @@ const Header = (props) => {
     }, []);
 
     useEffect(() => {
-        if(isLoggedIn){
-        getcartcount()
-        getwishlistcount()
+        if (isLoggedIn) {
+            getcartcount()
+            getwishlistcount()
         }
     }, [isLoggedIn]);
 
-
-    // console.log(category,"category");
+    const today = new Date();
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const dateList = Array.from({ length: 8 }, (_, index) => {
+      const date = new Date(today);
+      date.setDate(today.getDate() + index);
+      return date.toLocaleDateString('en-US', options);
+    });
 
     return (
         <Fragment>
@@ -544,14 +549,9 @@ const Header = (props) => {
                                 <div className='new-in-box2'>
                                     <h5>NEW IN TODAY</h5>
                                     <ul>
-                                        <li className='mt-3'>27/06/2023</li>
-                                        <li>26/06/2023</li>
-                                        <li>25/06/2023</li>
-                                        <li>24/06/2023</li>
-                                        <li>23/06/2023</li>
-                                        <li>22/06/2023</li>
-                                        <li>21/06/2023</li>
-                                        <li>20/06/2023</li>
+                                        {dateList.map((date, index) => (
+                                            <li key={index}>{date}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </Col>

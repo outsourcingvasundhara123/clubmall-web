@@ -27,7 +27,7 @@ import { isMobile } from 'react-device-detect';
 
 const ForYou = () => {
 
-  const { show,setShow, generateDynamicLink, handleShowhandleClose, getCartData, getWishList, add_wished_Called, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+  const {setMainLoder, show,setShow, generateDynamicLink, handleShowhandleClose, getCartData, getWishList, add_wished_Called, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ const ForYou = () => {
   const currentPageRef = useRef(page);
   const [loading, setLoading] = useState(true);
   const [Mymessage, setMyMessage] = useState("");
-  const [totalPages, setTotalPages] = useState(0); // Declare totalPages state variable
+  const [totalPages, setTotalPages] = useState(1000); // Declare totalPages state variable
   // const [show, setShow] = useState(false);
   const player = useRef();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +58,7 @@ const ForYou = () => {
   const [report, setReport] = useState({});
   const [muted, setMuted] = useState(true);
   const [playerRefs, setPlayerRefs] = useState({});
+  const [currentVideoId, setCurrentVideoId] = useState();
 
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => {
@@ -122,7 +123,7 @@ const ForYou = () => {
         setPostId(id)
         setProfileUrl(commentListResponse.data.data.profileImagePath)
         const postsCommentData = commentListResponse.data.data.postsComment;
-        setTotalPages(postsCommentData.length);
+        // setTotalPages(postsCommentData.length);
         setMyModelData(postsCommentData)
         setIsFetching(false);
         stopAnimation();
@@ -145,7 +146,7 @@ const ForYou = () => {
       ]);
       setPostUrl(postListResponse.data.data.productImagePath)
       const postsData = postListResponse.data.data.postList;
-      setTotalPages(postsData.length);
+      // setTotalPages(postsData.length);
       const updatedfavoriteProductList = [...postList, ...postsData]
         .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
       if (!isLoggedIn) {
@@ -166,10 +167,10 @@ const ForYou = () => {
 
   const handleSlideChange = (swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
-
-    if (isLoggedIn && swiper.activeIndex === postList.length - 2) {
+    setCurrentVideoId(postList[swiper.activeIndex]._id)
+    if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
       // Check if the last video is being rendered
-      if (swiper.activeIndex === postList.length - 2) { // Change to -2 instead of -1
+      if (swiper.activeIndex === postList.length - 3) { 
         if (page < totalPages) {
           setIsFetching(true);
           setPage((prevPage) => prevPage + 1);
@@ -205,6 +206,7 @@ const ForYou = () => {
   const followUnfollow = async (user_id) => {
     try {
       if (isLoggedIn) {
+        setMainLoder(true)
         const res = await api.postWithToken(`${serverURL + "user-follow-unfollow"}`, { following: user_id });
         if (res.data.success === true) {
           setMyMessage(res.data.message);
@@ -222,10 +224,12 @@ const ForYou = () => {
             return post;
           });
           setPostList(updatedPostList);
+        
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
+        setMainLoder(false)
       } else {
         // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
@@ -240,6 +244,7 @@ const ForYou = () => {
   const LikeDissliek = async (post_id) => {
     try {
       if (isLoggedIn) {
+        setMainLoder(true)
         const res = await api.postWithToken(`${serverURL}post-like-dislike`, { post_id: post_id });
         if (res.data.success === true) {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
@@ -263,6 +268,7 @@ const ForYou = () => {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
+        setMainLoder(false)
       } else {
 
         // User is not logged in, redirect to the login page
@@ -278,6 +284,7 @@ const ForYou = () => {
   const submitReport = async () => {
     try {
       if (isLoggedIn) {
+        setMainLoder(true)
         if (report && report.report_type && report.content && report.report_type !== " ") {
           report.action = "create-post-report"
           report.post_id = postId
@@ -304,10 +311,12 @@ const ForYou = () => {
             setMyMessage(res.data.message);
             setWarningSnackBarOpen(!warningSnackBarOpen);
           }
+          setMainLoder(false)
         } else {
           setMyMessage("select a report type  and description ");
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
+        setMainLoder(false)
       } else {
         // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
@@ -322,6 +331,7 @@ const ForYou = () => {
   const postComment = async () => {
     try {
       if (isLoggedIn) {
+        setMainLoder(true)
         if (comment && comment !== null && comment !== " ") {
           const res = await api.postWithToken(`${serverURL}post-comment-create`, { post_id: postId, content: comment });
           if (res.data.success === true) {
@@ -339,6 +349,7 @@ const ForYou = () => {
             setMyMessage(res.data.message);
             setWarningSnackBarOpen(!warningSnackBarOpen);
           }
+          setMainLoder(false)
         } else {
           setMyMessage("Enter a comment");
           setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -359,6 +370,7 @@ const ForYou = () => {
     try {
       if (isLoggedIn) {
         const res = await api.postWithToken(`${serverURL}post-comment-delete`, { post_id: postId, comment_id: id });
+        setMainLoder(true)
         if (res.data.success === true) {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setMyMessage(res.data.message);
@@ -373,7 +385,7 @@ const ForYou = () => {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
         }
-
+        setMainLoder(false)
       } else {
         // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
@@ -387,7 +399,7 @@ const ForYou = () => {
 
   useEffect(() => {
     getPosts();
-  }, [page, isLoggedIn]);
+  }, [page, isLoggedIn,currentVideoId]);
 
 
   const groupPriceShare = (id) => {
@@ -400,10 +412,8 @@ const ForYou = () => {
     }
   }
 
-
   const handleVolumeChange = ({ played, playedSeconds, loaded, loadedSeconds, volume }) => {
     if (muted === false) {
-
       setMuted(true);
     } else if (muted === true) {
       setMuted(false);
@@ -414,7 +424,6 @@ const ForYou = () => {
   //   setMuted(false);
   // };
   // console.log(modelData, "modelData");
-
   // console.log(muted, "muted");
 
   return (
@@ -463,7 +472,8 @@ const ForYou = () => {
                     height="100%"
                     controls={true}
                     // onPlay={handleOnUnmute}
-                    playing={currentVideoIndex === i}
+                    
+                    playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
                     onVolumeChange={handleVolumeChange}
                     muted={muted}
                     loop={true}
@@ -577,61 +587,6 @@ const ForYou = () => {
 
           ))}
         </Swiper>
-        {/* <div className='reels-box position-relative'>
-                    <img alt='' src='./img/for_you/reels.png' width="100%" />
-                    <div className='user-name px-3'>
-                        <div className='d-flex align-items-center gap-2'>
-                            <img alt='' src='./img/header/user-pic.png' />
-                            <div>
-                                <p>Hello, Ali</p>
-                                <span>
-                                    <img alt='' src='./img/for_you/eye.png' className='me-1' />
-                                    13K</span>
-                            </div>
-                        </div>
-                        <Button className='follow-btn'>+ Follow (12K)</Button>
-                    </div>
-                    <div className='reel-items'>
-                        <p>2+ More Products</p>
-                        <div className='items-box p-2 mt-2'>
-                            <img alt='' src='./img/for_you/item.png' width="100%" />
-                            <del>$299,43</del>
-                        </div>
-                    </div>
-                    <div className='additional-icon'>
-                        <div className='additional-box'>
-                            <Button>
-                                <img alt='' src='./img/for_you/doc.png' />
-                            </Button>
-                            <Button>
-                                <img alt='' src='./img/for_you/like.png' />
-                                <p>1</p>
-                            </Button>
-                            <Button>
-                                <img alt='' src='./img/for_you/dlike.png' />
-                                <p>1</p>
-                            </Button>
-                            <Button>
-                                <img alt='' src='./img/for_you/msg.png' />
-                                <p>5</p>
-                            </Button>
-                        </div>
-                        <div className='additional-box mt-2'>
-                            <Button>
-                                <img alt='' src='./img/for_you/tip.png' />
-                            </Button>
-                            <Button>
-                                <img alt='' src='./img/for_you/share.png' />
-                            </Button>
-                            <Button>
-                                <img alt='' src='./img/for_you/add.png' />
-                            </Button>
-                            <Button>
-                                <img alt='' src='./img/for_you/flag.png' />
-                            </Button>
-                        </div>
-                    </div>
-                </div> */}
 
       </div>
 

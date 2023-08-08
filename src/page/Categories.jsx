@@ -71,6 +71,7 @@ const Categories = () => {
 
     const getCategory = async () => {
         try {
+            console.log(add_wished_Called,"add_wished_Called");
             if (add_wished_Called === false) {
                 startAnimation()
             }
@@ -159,7 +160,9 @@ const Categories = () => {
 
     useEffect(() => {
         getCategory();
-    }, [ Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive]);
+    }, [ Categorie_id, subCat, page, viewCalled, subCatId, sellIs_wished, myFilter, range, productColorActive,
+        // add_wished_Called
+    ]);
 
     useEffect(() => {
         // getWishList()
