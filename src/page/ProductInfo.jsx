@@ -43,7 +43,7 @@ import { createJsonLdSchema } from './productjson';
 const ProductInfo = () => {
 
 
-    const { handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const {getcartcount,handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -59,8 +59,6 @@ const ProductInfo = () => {
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [values, setValues] = useState(initialValues);
-
-
 
     const defaultProfile = `../img/for_you/defaultuser.png`
     const [perActive, setPerActive] = useState('Individual');
@@ -194,12 +192,11 @@ const ProductInfo = () => {
                 const productData = productDetail.data.data;
                 setProduct(productData);
                 setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
+                setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size)
                 stopAnimation()
                 setUrl(productData.productImagePath)
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
-
                 const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath + productData.productList._id + "/" + e.file_name}`);
-
                 const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
@@ -316,9 +313,9 @@ const ProductInfo = () => {
 
                     setMainLoder(true)
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
-
                     if (res.data.success == true) {
                         getCartData()
+                        getcartcount()
                         setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
                         setMyMessageProductDtl(res.data.message);
                         setProductColorActive(" ")

@@ -26,7 +26,7 @@ import CartDrawer from '../page/CartDrawer'
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const {  handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, generateDynamicLink, getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount, handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, generateDynamicLink, getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -83,6 +83,7 @@ const AddCartModal = (props) => {
                 const productData = productDetail.data.data;
                 setModelProduct(productData);
                 setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
+                setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size)
                 stopAnimation()
                 setUrl(productData.productImagePath)
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
@@ -152,6 +153,7 @@ const AddCartModal = (props) => {
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
                         getCartData()
+                        getcartcount()
                         setProductColorActive(" ")
                         setSizeActive(" ")
 
@@ -250,8 +252,8 @@ const AddCartModal = (props) => {
 
                                             <div className='per-pro d-flex align-items-end gap-2'>
                                                 <h3> ${modelProduct.productList?.individual_price}</h3>
-                                                <del>${modelProduct?.productList?.group_price}</del>
-                                                <span>{Math.round(modelProduct?.productList?.group_price * 100 / modelProduct?.productList?.individual_price)}% Off</span>
+                                                {/* <del>${modelProduct?.productList?.group_price}</del> */}
+                                                {/* <span>{Math.round(modelProduct?.productList?.group_price * 100 / modelProduct?.productList?.individual_price)}% Off</span> */}
                                             </div>
 
                                             <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>

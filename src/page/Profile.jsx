@@ -228,6 +228,9 @@ const Profile = () => {
                 formData.append('last_name', values_2.last_name);
                 formData.append('gender', values_2.gender);
                 formData.append('profile_image', values_2.profile_image);
+                // formData.append('phone_code_country', "636c8e4cce909ce9bf2510f2");
+                // formData.append('contact_no', 9998801748);
+                // formData.append('phone_code', +1);
                 const response = await Promise.all([
                     api.postWithToken(`${serverURL}profile-update`, formData)
                 ]);
@@ -452,7 +455,7 @@ const Profile = () => {
     }, [values.country_id]);
 
 
-console.log(values,"value");
+// console.log(values_2,"values_2");
 
     return (
         <>

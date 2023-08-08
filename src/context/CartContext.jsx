@@ -132,12 +132,12 @@ export const CartProvider = ({ children }) => {
           action: action,
           product_id: id
         }
+        setAdd_wished_Called(true)
         const res = await api.postWithToken(`${serverURL + WISHLIST}`, data)
         if (res.data.success == true) {
           setMyMessage(res.data.message);
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setSellIs_wished(sellIs_wished + 1)
-          setAdd_wished_Called(true)
           getwishlistcount()
           // getSellProducts()
           // getProducts()

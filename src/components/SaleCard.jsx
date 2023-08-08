@@ -50,7 +50,7 @@ const SaleCard = (props) => {
                     <p className='title truncate-after-words'>{props.img.name}</p>
                     <p className='group-price'>${props.img.group_price}(Group Price)</p>
                     <p className='individual-price mt-1 mb-3 in-per'>${props.img.individual_price}(Individual Price)</p>
-                    <ProgressBar now={60} className='mt-1' />
+                    <ProgressBar now={props.img.total_order} className='mt-1' />
                     <p className='stock py-2'>({props.img.total_order == 0  ? props.img.total_order : props.img.total_order + "+"}) Sold</p>
                 </div>
             </div>

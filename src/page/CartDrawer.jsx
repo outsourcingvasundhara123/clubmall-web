@@ -29,7 +29,7 @@ import CryptoJS from 'crypto-js';
 
 
 const CartDrawer = () => {
-    const { localCartPostData, getLocalCartPostData, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount,localCartPostData, getLocalCartPostData, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [sucessSnackBarOpenCart, setSucessSnackBarOpenCart] = useState(false);
@@ -61,6 +61,7 @@ const CartDrawer = () => {
             const res = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
             if (res.data.success === true) {
                 getCartData()
+                getcartcount()
                 setMyMessageCart(res.data.message);
                 setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
             } else {

@@ -37,7 +37,7 @@ const WrappedCart = () => {
 
     const [step, setStep] = useState(1);
 
-    const { setMainLoder, couponId, itemShow, setItemShow, add_wished_Called, getCartData, cartList, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, userProductList, wishProductUrl, category, currentUser,
+    const { getcartcount, setMainLoder, couponId, itemShow, setItemShow, add_wished_Called, getCartData, cartList, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, userProductList, wishProductUrl, category, currentUser,
         productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
 
     const initialValues = {
@@ -145,7 +145,6 @@ const WrappedCart = () => {
     };
 
     // for address
-
     const getMyAddress = async () => {
         startAnimation()
         try {
@@ -465,6 +464,7 @@ const WrappedCart = () => {
 
     const endDate = new Date();
     endDate.setDate(endDate.getDate() + 14);
+    
 
     const formatDate = (date) => {
         return date.toLocaleDateString('en-US', {
@@ -624,13 +624,13 @@ const WrappedCart = () => {
             const res = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
             if (res.data.success === true) {
                 getCartData()
+                getcartcount()
                 setMyMessageCart(res.data.message);
                 setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
             } else {
                 setMyMessageCart(res.data.message);
                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             }
-
             setTimeout(() => {
                 setMainLoder(false)
             }, 1000);
