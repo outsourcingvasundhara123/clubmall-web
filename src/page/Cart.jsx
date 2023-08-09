@@ -645,7 +645,8 @@ const WrappedCart = () => {
         checkforcounty();
     }, [values.country_id]);
 
-
+    const defaultCountry = countryList.find(country => country._id === values.country_id);
+    const defaultState = stateList.find(state => state._id === values.state_id);
 
 
     return (
@@ -1206,7 +1207,8 @@ checkbox1: event.target.checked,
                                         <Select
                                             name='country_id'
                                             className='rect-select-cos'
-                                            value={countryList.find(option => option.value === values.country_id)} // sets the selected value
+                                            value={defaultCountry && { value: defaultCountry._id, label: defaultCountry.name }} 
+                                            // value={countryList.find(option => option.value === values.country_id)} // sets the selected value
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
@@ -1214,9 +1216,9 @@ checkbox1: event.target.checked,
                                                         value: option.value,
                                                     },
                                                 })
-                                            }} // set selected value
-                                            options={countryList.map(country => ({ value: country._id, label: country.name }))}
-                                        />
+                                            }} //set selected value
+                                            options={countryList.map(country => ({ value: country._id, label: country.name }))} 
+                                            />
                                         <div className='error'>{errors?.country_id}</div>
                                     </div>
                                 </Col>
@@ -1287,7 +1289,8 @@ checkbox1: event.target.checked,
                                         <Select
                                             name='state_id'
                                             className='rect-select-cos'
-                                            value={values.state_id ? stateList.find(option => option.value === values.state_id) : null}
+                                            // value={ values.state_id ? stateList.find(option => option.value === values.state_id) : null}
+                                            value={ defaultState && { value: defaultState._id , label: defaultState.name }}
                                             onChange={option => {
                                                 handleChange({
                                                     target: {

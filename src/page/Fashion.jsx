@@ -86,7 +86,8 @@ const Fashion = () => {
             "64868f11b60a664b6e52c686",
             "64868a1fcd7dafd7b3646f11",
             "64867a7952b0e7657d84b88f",
-            "64858a0a47a981c1dddf72c1"
+            "64858a0a47a981c1dddf72c1",
+            "6485ee123d634c69fdac5ad6"
         ];
 
         const getProductsByColor = async (color, ignoreIds) => {
@@ -131,7 +132,6 @@ const Fashion = () => {
                 console.log(error);
             });
     }, [isLoggedIn]);
-
 
     return (
         <>
@@ -257,7 +257,6 @@ const Fashion = () => {
                                                 )
                                             })
                                         }
-
 
                                         {
                                             colorProductList?.pink?.length <= 0 && trendingProductList.productListArrObj && trendingProductList.productListArrObj?.map((e) => {

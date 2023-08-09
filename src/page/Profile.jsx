@@ -455,7 +455,8 @@ const Profile = () => {
     }, [values.country_id]);
 
 
-// console.log(values_2,"values_2");
+    const defaultCountry = countryList.find(country => country._id === values.country_id);
+    const defaultState = stateList.find(state => state._id === values.state_id);
 
     return (
         <>
@@ -1191,7 +1192,7 @@ const Profile = () => {
                                         <Select
                                             name='country_id'
                                             className='rect-select-cos'
-                                            value={countryList?.find(option => option?.value === values?.country_id)} // sets the selected value
+                                            value={defaultCountry && { value: defaultCountry._id, label: defaultCountry.name }} 
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
@@ -1266,7 +1267,7 @@ const Profile = () => {
                                         <Select
                                             className='rect-select-cos'
                                             name='state_id'
-                                            value={values.state_id ? stateList.find(option => option.value === values.state_id) : null}
+                                            value={ defaultState && { value: defaultState._id , label: defaultState.name }}
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
