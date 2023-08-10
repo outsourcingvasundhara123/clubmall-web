@@ -700,11 +700,12 @@ const ProductInfo = () => {
                                                             <Rating name="simple-controlled" value={Product?.productList?.rating} readOnly />
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div className='d-flex align-items-center gap-2 verified'>
+                                                    <div className='d-flex align-items-center gap-2 verified'>
                                                     <img src='../img/product_def/verified.png' alt='' />
                                                     <span>All reviews are from verified buyers</span>
                                                 </div>
+                                                </div>
+                                                
                                             </div>
 
                                             {/* <div className='brand my-3'>
