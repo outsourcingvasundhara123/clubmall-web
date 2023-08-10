@@ -1,9 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
+import { Button, Col, Modal, Row } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
-    MdAdd,
-    MdRemove,
     MdOutlineClose
 } from "react-icons/md"
 import ProductSlider from './ProductSlider'
@@ -13,20 +11,18 @@ import { PRODUCTDETAIL, ADDTOCART } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { errorResponse, afterLogin } from '../helper/constants'
+import { errorResponse } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { handelProductDetail } from '../helper/constants';
-import InstallApp from '../components/InstallApp';
 import { CartContext } from '../context/CartContext'
 import { useLocation } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
-import CartDrawer from '../page/CartDrawer'
 
 
 const AddCartModal = (props) => {
     let location = useLocation();
-    const { getcartcount, handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, mainloder, setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, generateDynamicLink, getCartData, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount,handleShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, setMainLoder, generateDynamicLink, getCartData, activeImage, setActiveImage } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -42,15 +38,7 @@ const AddCartModal = (props) => {
     const [colorProduct, setColorProduct] = useState()
     const [url, setUrl] = useState("");
 
-    // const [show, setShow] = useState(false);
-
-    // const handleClose = () => {
-    //     setShow(false);
-    // }
-
-    // const handleShow = () => setShow(true);
-
-    // setProductColorActive()
+   
     const startAnimation = () => {
         if (player.current) {
             player.current.play();
@@ -106,14 +94,6 @@ const AddCartModal = (props) => {
         getProductDetail();
     }, [props.show]);
 
-
-    // const findSKUId = () => {
-    //     const sku = modelProduct.productList.sku_details.find((sku) => {
-    //         return sku.attrs[0].color === productColorActive && sku.attrs[0].size === sizeActive;
-    //     });
-
-    //     return sku ? sku.skuid : null;
-    // };
 
     const findSKUId = () => {
         const sku = modelProduct?.productList.sku_details.find((sku) => {
@@ -295,15 +275,6 @@ const AddCartModal = (props) => {
                                                             })
                                                         }
                                                     </div>
-
-                                                    {/* <div className='qty mt-4 pt-2 d-flex align-items-center gap-3'>
-                                        <h5>Qty:</h5>
-                                        <div className='count-product'>
-                                            <Button onClick={(e) => setCount((e) => e - 1)}> <MdRemove /></Button>
-                                            <span>{count}</span>
-                                            <Button onClick={(e) => setCount((e) => e + 1)}><MdAdd /></Button>
-                                        </div>
-                                    </div> */}
                                                 </div>
 
                                             </div>

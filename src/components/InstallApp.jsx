@@ -1,11 +1,11 @@
 
-import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Button, Col, Modal, NavLink, Row } from 'react-bootstrap'
+import React, {  useContext } from 'react'
+import {  Modal, NavLink } from 'react-bootstrap'
 import { CartContext } from '../context/CartContext'
 
 const InstallApp = (props) => {
 
-    const { handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { handleClose,show } = useContext(CartContext);
 
     return (
         <>

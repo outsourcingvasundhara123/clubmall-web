@@ -24,7 +24,7 @@ import { ADDTOCART } from '../../helper/endpoints';
 
 const LogIn = () => {
 
-  const { localCartPostData, getLocalCartPostData, localCart, getLocalCartData, setMainLoder, itemShow, setItemShow, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+  const { localCartPostData, getLocalCartPostData, localCart, getLocalCartData, setMainLoder } = useContext(CartContext);
 
   const navigate = useNavigate();
   const isLoggedIn = Is_Login();

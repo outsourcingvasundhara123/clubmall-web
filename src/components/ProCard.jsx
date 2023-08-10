@@ -60,14 +60,6 @@ const ProCard = (props) => {
     }
 
 
-    // useEffect(() => {
-    //     if (props?.color && props.color.length > 0) {
-    //         setProductColorActive(props.color[0]?.name);
-    //         setActiveImage(props.path + props.id + "/" + props.colorUrl[0]?.file_name); // Set the default activeImage here
-    //     }
-    // }, []);
-
-
     useEffect(() => {
         let defaultColor;
         if (props.productActiveColor) {
@@ -112,19 +104,6 @@ const ProCard = (props) => {
                                 <p className='per' >${props.group_price} <span >(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>
                             </div>
-
-                            {/* {props.is_wishList === 0
-                                &&
-                                <Button className='like-btn' onClick={() => (addWishList(props.id, "product-wishlist"))} >
-                                    <img src='./img/new_in/like.png' className='like-size' alt='' />
-                                </Button>
-                            }
-                            {
-                                props.is_wishList === 1 &&
-                                <Button className='like-btn' onClick={() => (addWishList(props.id, "product-delete-wishlist"))} >
-                                    <img src='./img/Vector.png' alt='' />
-                                </Button>
-                            } */}
 
                             {(isWishlist === false) && (location.pathname !== "/trending" && location.pathname !== "/search") &&
 
