@@ -2250,8 +2250,7 @@ del {
 }
 
 .product-info .shipping-def {
-    border-bottom: 1px solid #E0E0E0;
-    padding-bottom: 30px;
+    padding-bottom: 10px;
     flex-wrap: wrap;
     row-gap: 15px;
 }
@@ -2313,12 +2312,13 @@ del {
 .product-info .review h5 {
     width: fit-content;
     padding-right: 15px;
+    font-size: 16px;
 }
 
 .product-info .review .rate span {
     font-weight: 600;
-    font-size: 20px;
-    color: #223263;
+    font-size: 16px;
+    color: #e02e24;
 }
 
 .product-info .verified span {
@@ -6304,4 +6304,38 @@ input[type='radio'] {
 
 .rect-select-cos input {
     height: 30px;
+}
+
+.coupon-code-text {
+    background-color: #fef8f8;
+    border: 1px solid #e02e24;
+    padding: 14px 10px;
+    border-radius: 8px;
+    margin-top: 40px;
+}
+
+.coupon-code-text p {
+    color: #223263;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.coupon-code-text p span {
+    font-weight: 800;
+    color: #e02e24;
+}
+
+.coupon-code-text .clubmalltry {
+    font-weight: 700;
+    margin-top: 0 !important;
+}
+
+@media (max-width: 425px) {
+    .coupon-code-text p {
+        font-size: 11px;
+    }
+
+    .coupon-code-text .clubmalltry {
+        font-size: 10px;
+    }
 }

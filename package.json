@@ -19,6 +19,7 @@
     "color-name": "^2.0.0",
     "crypto-js": "^4.1.1",
     "formik": "^2.2.9",
+    "gifshot": "^0.4.5",
     "jquery": "^3.6.4",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.0",

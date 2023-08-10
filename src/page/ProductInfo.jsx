@@ -39,11 +39,12 @@ import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
 import CartDrawer from './CartDrawer'
 import { createJsonLdSchema } from './productjson';
+import ProductGif from '../components/ProductGif'
 
 const ProductInfo = () => {
 
 
-    const {getcartcount,handleClose,handleShow,show,setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount, handleClose, handleShow, show, setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -71,7 +72,7 @@ const ProductInfo = () => {
     const [submitLoderRv, setSubmitLoderRv] = useState(false);
     const serverURL = getServerURL();
     const [isfilter, setIsFilter] = useState(false);
-    
+
     //install app popup
     // const [show, setShow] = useState(false);
     // const handleShow = () => setShow(true);
@@ -506,6 +507,7 @@ const ProductInfo = () => {
     }, [Product]);
 
 
+
     return (
         <>
             <h1 className='d-none'></h1>
@@ -594,23 +596,11 @@ const ProductInfo = () => {
                                                 <Button className='wishlist-btn'><FiUpload /></Button>
                                             </RWebShare>
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
+                                      
+                                      <ProductGif  activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id}/>
                                         </div>
 
-                                        <div className='review shipping-def py-4 d-flex align-items-center justify-content-between'>
-                                            <div className='d-flex align-items-center gap-3'>
-                                                <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
-                                                <div className='rate d-flex align-items-center gap-2'>
-                                                    <span className='cos-title'>{Product?.productList?.rating}</span>
-                                                    <div className='d-flex align-items-center gap-1'>
-                                                        <Rating name="simple-controlled" value={Product?.productList?.rating} readOnly />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className='d-flex align-items-center gap-2 verified'>
-                                                <img src='../img/product_def/verified.png' alt='' />
-                                                <span>All reviews are from verified buyers</span>
-                                            </div>
-                                        </div>
+
                                         {Product?.productList?.rating_count == 0 &&
                                             <div className='no-review py-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
@@ -620,7 +610,7 @@ const ProductInfo = () => {
                                                 {/* <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p> */}
                                             </div>
                                         }
-                                        <div className='together web-together'>
+                                        <div className='together web-together mt-4'>
                                             <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
                                                 {/* <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button> */}
@@ -700,6 +690,22 @@ const ProductInfo = () => {
                                     <Col lg={6} md={12} className='mt-4 mt-lg-0'>
                                         <div className='pro-def'>
                                             <h6> {Product?.productList?.name}</h6>
+
+                                            <div className='review shipping-def pb-2 mt-3 d-flex align-items-center justify-content-between'>
+                                                <div className='d-flex align-items-center gap-3'>
+                                                    <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
+                                                    <div className='rate d-flex align-items-center gap-2'>
+                                                        <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                        <div className='d-flex align-items-center gap-1'>
+                                                            <Rating name="simple-controlled" value={Product?.productList?.rating} readOnly />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className='d-flex align-items-center gap-2 verified'>
+                                                    <img src='../img/product_def/verified.png' alt='' />
+                                                    <span>All reviews are from verified buyers</span>
+                                                </div>
+                                            </div>
 
                                             {/* <div className='brand my-3'>
                                                 <p><span>By</span> <img src='./img/product_def/uppack.png' alt='' />  {Product.stockData?.recent_bought_name} ({Product.stockData?.order_count}K + sold)</p>
