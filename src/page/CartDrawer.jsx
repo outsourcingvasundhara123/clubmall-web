@@ -29,7 +29,7 @@ import CryptoJS from 'crypto-js';
 
 
 const CartDrawer = () => {
-    const { getcartcount,localCartPostData, getLocalCartPostData, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount, localCartPostData, getLocalCartPostData, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [sucessSnackBarOpenCart, setSucessSnackBarOpenCart] = useState(false);
@@ -83,7 +83,7 @@ const CartDrawer = () => {
     useEffect(() => {
         getLocalCartData()
         getCartData()
-    }, [isLoggedIn,drawer]);
+    }, [isLoggedIn, drawer]);
 
     let subtotal = parseFloat(localCart.subtotal).toFixed(2);
 
@@ -109,7 +109,7 @@ const CartDrawer = () => {
                             </div>
                         }
 
-                        {((!cartList || !cartList.list || cartList.list.length === 0) && isLoggedIn ) &&
+                        {((!cartList || !cartList.list || cartList.list.length === 0) && isLoggedIn) &&
                             <div className='d-flex align-items-center justify-content-center h-100'>
                                 <div className='text-center found'>
                                     <img src='../img/not-found.png' alt='' className='my-4' />
@@ -120,7 +120,7 @@ const CartDrawer = () => {
                         }
 
 
-                        {((!localCart || !localCart.items || localCart.items.length === 0 ) && !isLoggedIn) &&
+                        {((!localCart || !localCart.items || localCart.items.length === 0) && !isLoggedIn) &&
                             <div className='d-flex align-items-center justify-content-center h-100'>
                                 <div className='text-center found'>
                                     <img src='../img/not-found.png' alt='' className='my-4' />
@@ -185,7 +185,7 @@ const CartDrawer = () => {
 
                             {localCart.items?.length > 0 && localCart?.items.map((e, i) => {
                                 return (
-                                    
+
                                     <div className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_id)} >
                                         <img className='pointer' src={e.image} alt='' width="150px" />
                                         <div className='cart-items-text w-100'>
@@ -235,9 +235,14 @@ const CartDrawer = () => {
 
                             }
 
+                            <div className='coupon-code-text d-flex align-items-center gap-3'>
+                                <Button className='submit-btn clubmalltry'>CLUBMALLTRY</Button>
+                                <p><span>GET FLAT 10%</span> discount on spend <span>$34</span> or more using clubmalltry coupon code</p>
+                            </div>
+
                             {localCart.items?.length > 0 &&
                                 <>
-                                    <div className='sub-total d-flex gap-2 align-items-center p-10 mt-5'>
+                                    <div className='sub-total d-flex gap-2 align-items-center p-10 mt-3'>
                                         <h5 className=''>Subtotal:</h5>
                                         <span>${subtotal}</span>
                                     </div>
