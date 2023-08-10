@@ -39,6 +39,7 @@ import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
 import CartDrawer from './CartDrawer'
 import { createJsonLdSchema } from './productjson';
+import ProductGif from '../components/ProductGif'
 
 const ProductInfo = () => {
 
@@ -506,6 +507,7 @@ const ProductInfo = () => {
     }, [Product]);
 
 
+
     return (
         <>
             <h1 className='d-none'></h1>
@@ -594,6 +596,8 @@ const ProductInfo = () => {
                                                 <Button className='wishlist-btn'><FiUpload /></Button>
                                             </RWebShare>
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
+                                      
+                                      <ProductGif  activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id}/>
                                         </div>
 
 

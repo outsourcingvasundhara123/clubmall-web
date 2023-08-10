@@ -35,6 +35,16 @@ const CartDrawer = () => {
     const [sucessSnackBarOpenCart, setSucessSnackBarOpenCart] = useState(false);
     const [warningSnackBarOpenCart, setWarningSnackBarOpenCart] = useState(false);
     const [, setLocalCart] = useState([]);
+    const textRef = useRef(null);
+    const [timeRemaining, setTimeRemaining] = useState(null); // time in seconds
+    // Define discount offers and their corresponding thresholds
+    const offers = [
+        { discount: 10, threshold: 49 },
+        { discount: 15, threshold: 89 },
+        { discount: 20, threshold: 120 }
+    ];
+    const [applicableOffer, setApplicableOffer] = useState(offers[0]); // Start with the default offer
+
     const [MymessageCart, setMyMessageCart] = useState("");
     const serverURL = getServerURL();
     const getimagename = (list, id) => {
@@ -79,6 +89,70 @@ const CartDrawer = () => {
         }
     };
 
+    //------Timer------- 
+
+    useEffect(() => {
+        // On component mount, check if there's an end-time saved in localStorage
+        const endTime = localStorage.getItem('end-time');
+
+        if (endTime) {
+            const now = new Date().getTime();
+            const remaining = Math.floor((endTime - now) / 1000);
+            setTimeRemaining(remaining > 0 ? remaining : null);
+        }
+    }, []);
+
+    useEffect(() => {
+        const itemsCount = (localCart.items?.length || 0) + (cartList.list?.length || 0);
+
+        if (itemsCount > 0 && timeRemaining === null) {
+            const newRemaining = 2 * 60 * 60; // 2 hours in seconds
+            setTimeRemaining(newRemaining);
+
+            const now = new Date().getTime();
+            const endTime = now + newRemaining * 1000;
+            localStorage.setItem('end-time', endTime.toString());
+        }
+
+        if (timeRemaining === 0) {
+            setTimeRemaining(null);
+            localStorage.removeItem('end-time');
+
+            // If you want to restart the timer automatically when it ends
+            if (itemsCount > 0) {
+                const newRemaining = 2 * 60 * 60;
+                setTimeRemaining(newRemaining);
+
+                const now = new Date().getTime();
+                const endTime = now + newRemaining * 1000;
+                localStorage.setItem('end-time', endTime.toString());
+            }
+            return;
+        }
+
+        const timerId = timeRemaining !== null ? setInterval(() => {
+            setTimeRemaining(prevTime => prevTime - 1);
+        }, 1000) : null;
+
+        return () => clearInterval(timerId);
+    }, [cartList, localCart, timeRemaining]);
+
+    const formatTime = () => {
+        if (timeRemaining === null) return { hours: '00', minutes: '00', seconds: '00' };
+        const hours = Math.floor(timeRemaining / 3600);
+        const minutes = Math.floor((timeRemaining % 3600) / 60);
+        const seconds = timeRemaining % 60;
+        return {
+            hours: hours.toString().padStart(2, '0'),
+            minutes: minutes.toString().padStart(2, '0'),
+            seconds: seconds.toString().padStart(2, '0')
+        };
+    };
+
+    const { hours, minutes, seconds } = formatTime();
+
+    // ------ Timer END ------- // 
+
 
     useEffect(() => {
         getLocalCartData()
@@ -86,6 +160,40 @@ const CartDrawer = () => {
     }, [isLoggedIn, drawer]);
 
     let subtotal = parseFloat(localCart.subtotal).toFixed(2);
+
+
+
+    // Calculate cart total based on localCart and cartList
+    const cartTotal = cartList.cartAmountDetails?.total_amount || subtotal;
+
+    // Calculate the remaining amount needed for the next offer threshold
+    const nextOffer = offers.find(offer => cartTotal < offer.threshold);
+    const remainingForNextOffer = nextOffer ? (nextOffer.threshold - cartTotal) : 0;
+
+    // Update applicable offer whenever the cart total changes
+    useEffect(() => {
+        if (cartTotal >= offers[2].threshold) {
+            setApplicableOffer(offers[2]);
+        } else if (cartTotal >= offers[1].threshold) {
+            setApplicableOffer(offers[1]);
+        } else if (cartTotal >= offers[0].threshold) {
+            setApplicableOffer(offers[0]);
+        }
+    }, [cartTotal]);
+
+    const handleCopy = () => {
+        if (textRef.current) {
+            setMyMessage("Coupon code copied successfully");
+            setSucessSnackBarOpen(!sucessSnackBarOpen);
+            navigator.clipboard.writeText(textRef.current.innerText)
+                .then(() => {
+                    console.log('Text copied to clipboard');
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        }
+    };
 
     return (
         <>
@@ -109,7 +217,7 @@ const CartDrawer = () => {
                             </div>
                         }
 
-                        {((!cartList || !cartList.list || cartList.list.length === 0) && isLoggedIn) &&
+                        {((!cartList || !cartList.list || cartList.list?.length === 0) && isLoggedIn) &&
                             <div className='d-flex align-items-center justify-content-center h-100'>
                                 <div className='text-center found'>
                                     <img src='../img/not-found.png' alt='' className='my-4' />
@@ -120,7 +228,7 @@ const CartDrawer = () => {
                         }
 
 
-                        {((!localCart || !localCart.items || localCart.items.length === 0) && !isLoggedIn) &&
+                        {((!localCart || !localCart.items || localCart.items?.length === 0) && !isLoggedIn) &&
                             <div className='d-flex align-items-center justify-content-center h-100'>
                                 <div className='text-center found'>
                                     <img src='../img/not-found.png' alt='' className='my-4' />
@@ -129,9 +237,34 @@ const CartDrawer = () => {
                                 </div>
                             </div>
                         }
-
+                        <div className="product-info mt-3">
+                            {localCart.items?.length > 0 || cartList.list?.length > 0 ? (
+                                <div className="order-time d-flex align-items-center justify-content-between">
+                                    <div className="d-flex align-items-center gap-3">
+                                        <h5>Hurry Up Shoppers </h5>
+                                    </div>
+                                    <div className="d-flex align-items-center gap-3 order-time-cos">
+                                        <span>Offer Ends in</span>
+                                        <div className="time d-flex align-items-center gap-2">
+                                            <span>{hours}</span>
+                                            <p>:</p>
+                                            <span>{minutes}</span>
+                                            <p>:</p>
+                                            <span>{seconds}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : ("")}
+                        </div>
 
                         <div className='cart-list border-bottom-cos mt-4 pb-4'>
+
+                            {/* {timeRemaining !== null && (
+                                <div>
+                                    Time remaining: {formatTime()}
+                                </div>
+                            )} */}
+
                             {
                                 isLoggedIn && cartList.list && cartList.list?.map((e, i) => {
                                     return (
@@ -235,10 +368,62 @@ const CartDrawer = () => {
 
                             }
 
-                            <div className='coupon-code-text d-flex align-items-center gap-3'>
-                                <Button className='submit-btn clubmalltry'>CLUBMALLTRY</Button>
-                                <p><span>GET FLAT 10%</span> discount on spend <span>$34</span> or more using clubmalltry coupon code</p>
-                            </div>
+
+                            {/* ... other code ... */}
+                            {/* {localCart.items?.length > 0 || cartList.list?.length > 0 ? (
+                                <div className='coupon-code-text d-flex align-items-center gap-3'>
+                                    <Button className='submit-btn clubmalltry' onClick={handleCopy} >CLUBMALLTRY</Button>
+                                    {applicableOffer && (
+                                        <p>
+                                            <span>GET {applicableOffer.discount}% OFF</span> on spend ${applicableOffer.threshold} or more using <span ref={textRef}>clubmalltry</span> coupon code
+                                        </p>
+                                    )}
+
+                                </div>
+                            ) : (
+                                ""
+                            )} */}
+
+
+                            {(localCart.items?.length > 0 || cartList.list?.length > 0) && nextOffer?.discount ? (
+                                <div className='coupon-code-text d-flex align-items-center gap-3'>
+                                    <Button className='submit-btn clubmalltry' onClick={handleCopy} >CLUBMALLTRY</Button>
+                                    {/* Display the remaining amount needed for the next offer */}
+
+                                    <p>
+                                        <span>GET {nextOffer.discount}% OFF</span> on spend more ${parseFloat(remainingForNextOffer).toFixed(2)}   using <span ref={textRef}>clubmalltry</span> coupon code
+                                    </p>
+
+                                    {/* 
+                                    {remainingForNextOffer > 0 && (
+                                        <p>Spend ${parseFloat(remainingForNextOffer).toFixed(2)} more for {nextOffer.discount}% OFF</p>
+                                    )} */}
+
+                                </div>
+                            ) : (
+                                ""
+                            )}
+
+
+                            { cartTotal >= 120  ? (
+                                <div className='coupon-code-text d-flex align-items-center gap-3'>
+                                    <Button className='submit-btn clubmalltry' onClick={handleCopy} >CLUBMALLTRY</Button>
+                                    {/* Display the remaining amount needed for the next offer */}
+
+                                    <p>
+                                        <span>GET 20% OFF</span>  using <span ref={textRef}>clubmalltry</span> coupon code
+                                    </p>
+
+                                    {/* 
+                                    {remainingForNextOffer > 0 && (
+                                        <p>Spend ${parseFloat(remainingForNextOffer).toFixed(2)} more for {nextOffer.discount}% OFF</p>
+                                    )} */}
+                                </div>
+                            ) : (
+                                ""
+                            )}
+
+
 
                             {localCart.items?.length > 0 &&
                                 <>
@@ -249,7 +434,6 @@ const CartDrawer = () => {
                                     <Button className='go-cart mt-2' onClick={() => (navigate("/login"), handleDrawerClose(), localStorage.setItem('lastVisitedPath', "/cart"))}  >Go to cart</Button>
                                 </>
                             }
-
 
                             {((cartList.list?.length > 0 && isLoggedIn)) &&
                                 <>
