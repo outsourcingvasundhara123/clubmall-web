@@ -23,8 +23,8 @@ import 'rc-slider/assets/index.css';
 
 const Categories = () => {
 
-    const {getwishlistcount, setAdd_wished_Called, add_wished_Called, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
-        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const {getwishlistcount, setAdd_wished_Called, add_wished_Called, handelwishSell, sellIs_wished,
+         sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const initial = {
         color: "",
@@ -71,7 +71,6 @@ const Categories = () => {
 
     const getCategory = async () => {
         try {
-            console.log(add_wished_Called,"add_wished_Called");
             if (add_wished_Called === false) {
                 startAnimation()
             }

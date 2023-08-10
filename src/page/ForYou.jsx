@@ -420,11 +420,6 @@ const ForYou = () => {
     }
   };
 
-  // const handleOnUnmute = () => {
-  //   setMuted(false);
-  // };
-  // console.log(modelData, "modelData");
-  // console.log(muted, "muted");
 
   return (
 
