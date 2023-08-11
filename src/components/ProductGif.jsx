@@ -1,5 +1,4 @@
 import { useRef, useEffect, useState } from 'react';
-import * as GIF from 'gif.js';
 
 const ProductGif = ({ productImagePath, productList, id, colorProduct }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
