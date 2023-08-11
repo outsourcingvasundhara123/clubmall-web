@@ -565,7 +565,21 @@ const ProductInfo = () => {
 
                                 <Row className='mt-4'>
                                     <Col lg={6} md={12}>
-
+                                        <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together'>
+                                            <div className='d-flex align-items-center flex-wrap gap-3'>
+                                                <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
+                                                <div className='rate d-flex align-items-center gap-2'>
+                                                    <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                    <div className='d-flex align-items-center gap-1'>
+                                                        <Rating name="simple-controlled" value={Product?.productList?.rating} readOnly />
+                                                    </div>
+                                                </div>
+                                                <div className='d-flex align-items-center gap-2 verified'>
+                                                    <img src='../img/product_def/verified.png' alt='' />
+                                                    <span>All reviews are from verified buyers</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className='position-relative'>
 
                                             {
@@ -687,12 +701,13 @@ const ProductInfo = () => {
                                         </div>
 
                                     </Col>
+
                                     <Col lg={6} md={12} className='mt-4 mt-lg-0'>
                                         <div className='pro-def'>
                                             <h6> {Product?.productList?.name}</h6>
 
-                                            <div className='review shipping-def pb-2 mt-3 d-flex align-items-center justify-content-between'>
-                                                <div className='d-flex align-items-center gap-3'>
+                                            <div className='review shipping-def pb-2 mt-3 d-flex align-items-center justify-content-between web-together'>
+                                                <div className='d-flex align-items-center flex-wrap gap-3'>
                                                     <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
                                                         <span className='cos-title'>{Product?.productList?.rating}</span>
