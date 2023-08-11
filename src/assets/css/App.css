@@ -6013,7 +6013,7 @@ input[type='radio'] {
 }
 
 .mobile-together {
-    display: none;
+    display: none !important;
 }
 
 .wrap-line-cos {
@@ -6022,11 +6022,11 @@ input[type='radio'] {
 
 @media (max-width: 991px) {
     .mobile-together {
-        display: block;
+        display: block !important;
     }
 
     .web-together {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -6337,5 +6337,20 @@ input[type='radio'] {
 
     .coupon-code-text .clubmalltry {
         font-size: 10px;
+    }
+}
+
+
+.gif_position {
+    width: 200px;
+}
+
+.gif_position img {
+    width: 100%;
+}
+
+@media (max-width: 512px) {
+    .gif_position {
+        width: 100%;
     }
 }
