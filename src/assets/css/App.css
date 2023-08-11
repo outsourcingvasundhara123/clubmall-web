@@ -6339,3 +6339,18 @@ input[type='radio'] {
         font-size: 10px;
     }
 }
+
+
+.gif_position {
+    width: 200px;
+}
+
+.gif_position img {
+    width: 100%;
+}
+
+@media (max-width: 512px) {
+    .gif_position {
+        width: 100%;
+    }
+}

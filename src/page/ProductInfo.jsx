@@ -612,7 +612,9 @@ const ProductInfo = () => {
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
 
                                         </div>
-                                        <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
+
+
+
 
 
                                         {Product?.productList?.rating_count == 0 &&
@@ -808,6 +810,12 @@ const ProductInfo = () => {
                                             </div>
 
                                             <Button onClick={handleCart} className='add-cart-items mt-4'>Add to cart</Button>
+
+                                            <div className='d-flex align-items-center gap-4 justify-content-left overflow-auto mt-4'>
+
+                                                <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
+
+                                            </div>
 
 
                                             <div className='shipping-def mt-4'>

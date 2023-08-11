@@ -22,7 +22,7 @@ const ProductGif = ({ productImagePath, productList, id, colorProduct }) => {
 
 
     return (
-        <div>
+        <div className='gif_position'>
             <img src={data[currentImageIndex]?.original} alt="product" />
         </div>
     );
