@@ -140,11 +140,11 @@ const ProductInfo = () => {
     const [imagePreview, setImagePreview] = useState([]);
 
     // wishlist 
-    const [isWishlist, setIsWishlist] = useState(Product.isWishList === 1);
+    const [isWishlist, setIsWishlist] = useState(Product?.isWishList === 1);
 
     useEffect(() => {
-        setIsWishlist(Product.isWishList === 1);
-    }, [Product.isWishList]);
+        setIsWishlist(Product?.isWishList === 1);
+    }, [Product?.isWishList]);
 
     const handleWishlistClick = async () => {
         const newWishlistStatus = !isWishlist;
