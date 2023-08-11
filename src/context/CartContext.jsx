@@ -68,7 +68,7 @@ export const CartProvider = ({ children }) => {
   const [localCartPostData, setLocalCartPostData] = useState([]);
 
 
-//install app popup
+  //install app popup
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -439,8 +439,8 @@ export const CartProvider = ({ children }) => {
 
   const getwishlistcount = async () => {
     try {
-        const res = await api.postWithToken(`${serverURL + "get-count"}`, { "action": "wishlist" })
-        setWishlistCount(res.data.data.count)
+      const res = await api.postWithToken(`${serverURL + "get-count"}`, { "action": "wishlist" })
+      setWishlistCount(res.data.data.count)
     } catch (error) {
       console.log(error, "error");
     }
@@ -448,8 +448,8 @@ export const CartProvider = ({ children }) => {
 
   const getcartcount = async () => {
     try {
-        const res = await api.postWithToken(`${serverURL + "get-count"}`, { "action": "cart" })
-        setCart(res.data.data.count)
+      const res = await api.postWithToken(`${serverURL + "get-count"}`, { "action": "cart" })
+      setCart(res.data.data.count)
     } catch (error) {
       console.log(error, "error");
     }
@@ -826,11 +826,16 @@ export const CartProvider = ({ children }) => {
     );
     // call(response.data.shortLink)
     const newWindow = call(response.data.shortLink);
+
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-      //POPUP BLOCKED
-      handleShow();
-      setPerActive('Group')
-      // alert('Please disable your popup blocker and try again.');
+      const iosdeeplink = call(`com.clubmall.deeplink://product-details/${productId}?w=g`)
+      if (!iosdeeplink || iosdeeplink.closed || typeof iosdeeplink.closed == 'undefined') {
+        //POPUP BLOCKED
+        handleShow();
+        setPerActive('Group')
+        // alert('Please disable your popup blocker and try again.');
+      }
+
     }
   };
 
@@ -841,7 +846,7 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      handleClose,handleShow,show,setShow,getwishlistcount,getcartcount,
+      handleClose, handleShow, show, setShow, getwishlistcount, getcartcount,
       handleDrawerShow, handleDrawerClose, drawer, addcartLocal, addProductDetailsToLocal, localCart, getLocalCartData, deleteProductDetailsFromLocal, deleteProductFromLocalCart, increaseProductQuantity, decreaseProductQuantity, localCartPostData, getLocalCartPostData,
       playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
       , categoryHome, setcategoryHome, categoryLoading, setCategoryLoading, catwebLoading, setCatwebLoading, ProductLoading, setProductLoading, sellProLoading, setSellProLoading,
