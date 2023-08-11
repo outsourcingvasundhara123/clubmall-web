@@ -391,7 +391,7 @@ const CartDrawer = () => {
                                     {/* Display the remaining amount needed for the next offer */}
 
                                     <p>
-                                        <span>GET {nextOffer.discount}% OFF</span> on spend more ${parseFloat(remainingForNextOffer).toFixed(2)}   using <span ref={textRef}>clubmalltry</span> coupon code
+                                        <span>GET {nextOffer.discount}% OFF</span> on orders of  ${parseFloat(remainingForNextOffer).toFixed(2)} or more using coupon code <span ref={textRef}>clubmalltry</span> 
                                     </p>
 
                                     {/* 
@@ -411,7 +411,7 @@ const CartDrawer = () => {
                                     {/* Display the remaining amount needed for the next offer */}
 
                                     <p>
-                                        <span>GET 20% OFF</span>  using <span ref={textRef}>clubmalltry</span> coupon code
+                                        <span>GET 20% OFF</span> using  coupon code <span ref={textRef}>clubmalltry</span> 
                                     </p>
 
                                     {/* 
@@ -422,7 +422,6 @@ const CartDrawer = () => {
                             ) : (
                                 ""
                             )}
-
 
 
                             {localCart.items?.length > 0 &&

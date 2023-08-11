@@ -1,10 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
 import * as GIF from 'gif.js';
 
-const ProductGif = ({ productImagePath, productList, id, colorProduct, activeImage }) => {
-
-    const imageGalleryRef = useRef();
-    const [gifSrc, setGifSrc] = useState(null);
+const ProductGif = ({ productImagePath, productList, id, colorProduct }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const images = productList?.map((product) => ({
         original: productImagePath + id + "/" + product?.file_name,
@@ -13,44 +11,20 @@ const ProductGif = ({ productImagePath, productList, id, colorProduct, activeIma
 
     const data = [...images, ...(colorProduct || [])];
 
+    // Change image at an interval
     useEffect(() => {
-        const index = data.findIndex(image => image.original === activeImage);
-        if (index !== -1 && imageGalleryRef.current) {
-            imageGalleryRef.current.slideToIndex(index);
-        }
-    }, [activeImage, data]);
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prevIndex) => (prevIndex + 1) % data.length);
+        }, 150);  // Change image every second. Adjust as needed.
 
-    useEffect(() => {
-        let loadedImages = [];
-        const gif = new GIF({
-            workers: 2,
-            quality: 10
-        });
-
-        data.forEach(({ original }) => {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.src = original;
-            
-            img.onload = () => {
-                loadedImages.push(img);
-                if (loadedImages.length === data.length) {
-                    loadedImages.forEach(loadedImg => gif.addFrame(loadedImg, { delay: 200 }));
-                    gif.on('finished', blob => {
-                        const gifURL = URL.createObjectURL(blob);
-                        setGifSrc(gifURL);
-                    });
-                    gif.render();
-                }
-            };
-        });
+        // Cleanup interval on unmount
+        return () => clearInterval(interval);
     }, [data]);
 
-// console.log(gifSrc,"gifSrc");
 
     return (
         <div>
-            <img id="generatedGif" src={gifSrc} />
+            <img src={data[currentImageIndex]?.original} alt="product" />
         </div>
     );
 }

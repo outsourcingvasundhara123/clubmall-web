@@ -596,9 +596,9 @@ const ProductInfo = () => {
                                                 <Button className='wishlist-btn'><FiUpload /></Button>
                                             </RWebShare>
                                             <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
-                                      
-                                      {/* <ProductGif  activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id}/> */}
+
                                         </div>
+                                        <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
 
 
                                         {Product?.productList?.rating_count == 0 &&
@@ -701,11 +701,11 @@ const ProductInfo = () => {
                                                         </div>
                                                     </div>
                                                     <div className='d-flex align-items-center gap-2 verified'>
-                                                    <img src='../img/product_def/verified.png' alt='' />
-                                                    <span>All reviews are from verified buyers</span>
+                                                        <img src='../img/product_def/verified.png' alt='' />
+                                                        <span>All reviews are from verified buyers</span>
+                                                    </div>
                                                 </div>
-                                                </div>
-                                                
+
                                             </div>
 
                                             {/* <div className='brand my-3'>
