@@ -715,7 +715,6 @@ const ProductInfo = () => {
                                                         <span className='cos-title'>{Product?.productList?.rating}</span>
                                                         <div className='d-flex align-items-center gap-1'>
                                                             <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} defaultValue={0} readOnly />
-                                                            <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} defaultValue={0} readOnly />
                                                         </div>
                                                     </div>
                                                     <div className='d-flex align-items-center gap-2 verified'>
