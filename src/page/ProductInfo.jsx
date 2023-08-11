@@ -140,11 +140,11 @@ const ProductInfo = () => {
     const [imagePreview, setImagePreview] = useState([]);
 
     // wishlist 
-    const [isWishlist, setIsWishlist] = useState(Product?.isWishList === 1);
+    const [isWishlist, setIsWishlist] = useState(Product.isWishList === 1);
 
     useEffect(() => {
-        setIsWishlist(Product?.isWishList === 1);
-    }, [Product?.isWishList]);
+        setIsWishlist(Product.isWishList === 1);
+    }, [Product.isWishList]);
 
     const handleWishlistClick = async () => {
         const newWishlistStatus = !isWishlist;
@@ -714,7 +714,6 @@ const ProductInfo = () => {
                                                     <div className='rate d-flex align-items-center gap-2'>
                                                         <span className='cos-title'>{Product?.productList?.rating}</span>
                                                         <div className='d-flex align-items-center gap-1'>
-                                                            <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} defaultValue={0} readOnly />
                                                             <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} defaultValue={0} readOnly />
                                                         </div>
                                                     </div>
