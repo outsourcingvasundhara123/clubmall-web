@@ -829,6 +829,7 @@ export const CartProvider = ({ children }) => {
 
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
       const iosdeeplink = call(`com.clubmall.deeplink://product-details/${productId}?w=g`)
+      console.log(iosdeeplink,"iosdeeplink");
       if (!iosdeeplink || iosdeeplink.closed || typeof iosdeeplink.closed == 'undefined') {
         //POPUP BLOCKED
         handleShow();
