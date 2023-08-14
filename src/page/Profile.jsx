@@ -5,6 +5,7 @@ import {
     MdOutlineKeyboardArrowRight,
     MdKeyboardDoubleArrowRight,
     MdKeyboardArrowRight,
+    MdDelete,
 } from "react-icons/md"
 import ProCard from '../components/ProCard'
 import { data } from "../page/Data"
@@ -601,6 +602,7 @@ const Profile = () => {
                                                                             <th>Amount</th>
                                                                             <th>Shipping To</th>
                                                                             <th>Status</th>
+                                                                            <th>Action</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -636,7 +638,13 @@ const Profile = () => {
                                                                                                 {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
                                                                                                 {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>}
                                                                                             </td>
-                                                                                        </tr>
+                                                                                            <td>
+                                                                                                <Button className='submit-btn mt-0 d-flex align-items-center mx-auto' style={{
+                                                                                                    fontSize: "15px",
+                                                                                                    padding: "10px"
+                                                                                                }}>cancel</Button>
+                                                                                            </td>
+                                                                                        </tr >
                                                                                     }
                                                                                 </>
                                                                             )
@@ -1161,7 +1169,7 @@ const Profile = () => {
                             </div> : ""}
 
                 </div>
-            </div>
+            </div >
 
             <Modal show={show} onHide={handleClose} className='add-address' centered>
                 <Modal.Body>
@@ -1192,7 +1200,7 @@ const Profile = () => {
                                         <Select
                                             name='country_id'
                                             className='rect-select-cos'
-                                            value={defaultCountry && { value: defaultCountry._id, label: defaultCountry.name }} 
+                                            value={defaultCountry && { value: defaultCountry._id, label: defaultCountry.name }}
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
@@ -1267,7 +1275,7 @@ const Profile = () => {
                                         <Select
                                             className='rect-select-cos'
                                             name='state_id'
-                                            value={ defaultState && { value: defaultState._id , label: defaultState.name }}
+                                            value={defaultState && { value: defaultState._id, label: defaultState.name }}
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
