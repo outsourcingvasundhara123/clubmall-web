@@ -613,10 +613,6 @@ const ProductInfo = () => {
 
                                         </div>
 
-
-
-
-
                                         {Product?.productList?.rating_count == 0 &&
                                             <div className='no-review py-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>

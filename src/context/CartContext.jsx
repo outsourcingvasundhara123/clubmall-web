@@ -67,7 +67,6 @@ export const CartProvider = ({ children }) => {
   const [localCart, setLocalCart] = useState([]);
   const [localCartPostData, setLocalCartPostData] = useState([]);
 
-
   //install app popup
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
@@ -828,7 +827,6 @@ export const CartProvider = ({ children }) => {
     const newWindow = call(response.data.shortLink);
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
       const iosdeeplink = call(`com.clubmall.deeplink://product-details/${productId}?w=g`)
-      console.log(iosdeeplink,"iosdeeplink");
       if (!iosdeeplink || iosdeeplink.closed || typeof iosdeeplink.closed == 'undefined') {
         //POPUP BLOCKED
         handleShow();
