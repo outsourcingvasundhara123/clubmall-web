@@ -44,7 +44,7 @@ import ProductGif from '../components/ProductGif'
 const ProductInfo = () => {
 
 
-    const {print, getcartcount, handleClose, handleShow, show, setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount, handleClose, handleShow, show, setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -613,10 +613,6 @@ const ProductInfo = () => {
 
                                         </div>
 
-
-
-
-
                                         {Product?.productList?.rating_count == 0 &&
                                             <div className='no-review py-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
@@ -810,7 +806,6 @@ const ProductInfo = () => {
                                             </div>
 
                                             <Button onClick={handleCart} className='add-cart-items mt-4'>Add to cart</Button>
-                                            <h1>{print && print}</h1>
 
                                             <div className='d-flex align-items-center gap-4 justify-content-left overflow-auto mt-4'>
 

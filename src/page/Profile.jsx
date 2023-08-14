@@ -476,19 +476,20 @@ const Profile = () => {
                 type="error"
             />
 
-            <SucessSnackBar
-                open={sucessSnackBarOpen}
-                setOpen={setsucessSnackBarOpen}
-                text={Mymessage}
+            {/* <SucessSnackBar
+                open={sucessSnackBarOpen &&  sucessSnackBarOpen}
+                setOpen={setsucessSnackBarOpen && setsucessSnackBarOpen}
+                text={Mymessage && Mymessage}
                 type="success"
             />
 
             <ErrorSnackBar
-                open={warningSnackBarOpen}
-                setOpen={setwarningSnackBarOpen}
-                text={Mymessage}
+                open={warningSnackBarOpen && warningSnackBarOpen}
+                setOpen={setwarningSnackBarOpen && setwarningSnackBarOpen}
+                text={ Mymessage && Mymessage}
                 type="error"
-            />
+            /> */}
+            
             <div className='profile pb-5'>
 
                 <div className='container-cos'>

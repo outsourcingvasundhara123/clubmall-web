@@ -66,8 +66,6 @@ export const CartProvider = ({ children }) => {
   const [is_search, setIs_search] = useState(0);
   const [localCart, setLocalCart] = useState([]);
   const [localCartPostData, setLocalCartPostData] = useState([]);
-  const [print , setPrint] = useState("0");
-
 
   //install app popup
   const [show, setShow] = useState(false);
@@ -829,8 +827,6 @@ export const CartProvider = ({ children }) => {
     const newWindow = call(response.data.shortLink);
     if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
       const iosdeeplink = call(`com.clubmall.deeplink://product-details/${productId}?w=g`)
-      setPrint(iosdeeplink)
-      console.log(iosdeeplink,"iosdeeplink");
       if (!iosdeeplink || iosdeeplink.closed || typeof iosdeeplink.closed == 'undefined') {
         //POPUP BLOCKED
         handleShow();
@@ -848,7 +844,6 @@ export const CartProvider = ({ children }) => {
   return (
 
     <CartContext.Provider value={{
-      print , setPrint,
       handleClose, handleShow, show, setShow, getwishlistcount, getcartcount,
       handleDrawerShow, handleDrawerClose, drawer, addcartLocal, addProductDetailsToLocal, localCart, getLocalCartData, deleteProductDetailsFromLocal, deleteProductFromLocalCart, increaseProductQuantity, decreaseProductQuantity, localCartPostData, getLocalCartPostData,
       playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
