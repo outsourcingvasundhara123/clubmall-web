@@ -51,6 +51,7 @@ const PinkCard = (props) => {
                         style={{ display: imageLoaded ? 'none' : 'block' }}
                     />
                     {props.color ? <img alt=''
+                        className='img-size'
                         onLoad={() => setImageLoaded(true)}
                         style={{ display: imageLoaded ? 'block' : 'none' }}
                         src={props.path + props.img._id + "/" + pinkProduct?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} /> :
