@@ -1,4 +1,4 @@
-import React, { useState, useContext,useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 import AddCartModal from './AddCartModal'
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ const PinkCard = (props) => {
     const [isWishlist, setIsWishlist] = useState(props.img.wishList === true); // We use !! to convert to a boolean
     const navigate = useNavigate();
     const [imageLoaded, setImageLoaded] = useState(false);
-    const {addWishList } = useContext(CartContext);
+    const { addWishList } = useContext(CartContext);
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setProduct_id({})
@@ -24,7 +24,7 @@ const PinkCard = (props) => {
     useEffect(() => {
         setIsWishlist(props.img.wishList === 1);
     }, [props.img.wishList]);
-    
+
     // new function for wishlist on dome 
     const handleWishlistClick = async () => {
         const newWishlistStatus = !isWishlist;
@@ -44,21 +44,22 @@ const PinkCard = (props) => {
         <>
             <div className='pink-card  pointer'>
                 <div className='pink-img position-relative'>
-                <img
-                            src="./img/placeholder_img.png"
-                            alt=''
-                            className='img-fluid'
-                            style={{ display: imageLoaded ? 'none' : 'block' }}
-                        />
-              {props.color ? <img alt=''
-               onLoad={() => setImageLoaded(true)}
-               style={{ display: imageLoaded ? 'block' : 'none' }}
-              src={props.path + props.img._id + "/" + pinkProduct?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} /> :
-                    <img alt=''
-                    onLoad={() => setImageLoaded(true)}
-                    style={{ display: imageLoaded ? 'block' : 'none' }}
-                    src={props.path + props.img._id + "/" + props.img?.product_images[0]?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} />
-              }  
+                    <img
+                        src="./img/placeholder_img.png"
+                        alt=''
+                        className='img-fluid'
+                        style={{ display: imageLoaded ? 'none' : 'block' }}
+                    />
+                    {props.color ? <img alt=''
+                        onLoad={() => setImageLoaded(true)}
+                        style={{ display: imageLoaded ? 'block' : 'none' }}
+                        src={props.path + props.img._id + "/" + pinkProduct?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} /> :
+                        <img alt=''
+                            onLoad={() => setImageLoaded(true)}
+                            style={{ display: imageLoaded ? 'block' : 'none' }}
+                            className='img-size'
+                            src={props.path + props.img._id + "/" + props.img?.product_images[0]?.file_name} width="100%" onClick={() => handelProductDetail(props.img._id)} />
+                    }
                     <Button className='add-to-card-btn' onClick={() => handleShow(props.img._id)}>Add to Cart</Button>
                 </div>
                 <div className='pink-card-text d-flex align-items-center justify-content-between px-3 py-2'>

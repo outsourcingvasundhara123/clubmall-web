@@ -1424,6 +1424,8 @@ del {
 
 .categories .categories-slider-img img {
     width: 74% !important;
+    aspect-ratio: 3/4;
+    object-fit: cover;
 }
 
 .stylist-card {
@@ -1706,6 +1708,8 @@ del {
 .shop-categories .cate-box img {
     border-radius: 10px;
     width: 75%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
 }
 
 /* shop-categories end */
@@ -6353,4 +6357,9 @@ input[type='radio'] {
     .gif_position {
         width: 100%;
     }
+}
+
+.img-size {
+    aspect-ratio: 3/4;
+    object-fit: cover;
 }

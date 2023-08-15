@@ -31,7 +31,7 @@ const ProCard = (props) => {
         setShow(true);
     }
 
-    
+
     useEffect(() => {
         setIsWishlist(props.is_wishList === 1);
     }, [props.is_wishList]);
@@ -90,7 +90,7 @@ const ProCard = (props) => {
                         <img
                             src={activeImage ? activeImage : props.path + props.id + "/" + props.img}
                             alt=''
-                            className='img-fluid'
+                            className='img-fluid img-size'
                             onClick={() => handelProductDetail(props.id)}
                             onLoad={() => setImageLoaded(true)}
                             style={{ display: imageLoaded ? 'block' : 'none' }}
@@ -99,7 +99,7 @@ const ProCard = (props) => {
                     </div>
                     <div className='py-3 px-3 space-card' >
                         <h5 onClick={() => handelProductDetail(props.id)}>{props.name}</h5>
-                        <div  className='d-flex align-items-center justify-content-between'>
+                        <div className='d-flex align-items-center justify-content-between'>
                             <div onClick={() => handelProductDetail(props.id)} >
                                 <p className='per' >${props.group_price} <span >(Group Price)</span></p>
                                 <span className='sub-per in-per'>${props.individual_price} (Individual Price)</span>

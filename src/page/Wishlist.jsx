@@ -73,7 +73,7 @@ const Wishlist = () => {
                                                 return (
                                                     <div className='product-card explore-card wishlist-card'>
                                                         <div className='position-relative'>
-                                                            <img src={wishProductUrl + e.product_id._id + "/" + e.product_id.product_images[0]?.file_name} alt='' />
+                                                            <img src={wishProductUrl + e.product_id._id + "/" + e.product_id.product_images[0]?.file_name} alt='' className='img-size' />
                                                             <div className='d-flex align-items-center gap-2 share-del-btn'>
                                                                 <Button type='button' onClick={() => deleteWishList(e.product_id._id)} ><MdDelete /></Button>
                                                             </div>

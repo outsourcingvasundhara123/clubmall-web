@@ -12,7 +12,7 @@ const ProductCard = ({ product, productImagePath, handleShow }) => {
     const [isWishlist, setIsWishlist] = useState(product.wishList === 1);
     const [imageLoaded, setImageLoaded] = useState(false);
 
-    const handleWishlistClick = async ()=> {
+    const handleWishlistClick = async () => {
         const newWishlistStatus = !isWishlist;
         setIsWishlist(newWishlistStatus);
 
@@ -31,16 +31,16 @@ const ProductCard = ({ product, productImagePath, handleShow }) => {
         <div className='product-card explore-card  pointer'>
             <h1 className='d-none'></h1>
             <div className='position-relative'>
-            <img
-                            src="./img/placeholder_img.png"
-                            alt=''
-                            className='img-fluid'
-                            style={{ display: imageLoaded ? 'none' : 'block' }}
-                        />
-                <img 
-                 onLoad={() => setImageLoaded(true)}
-                 style={{ display: imageLoaded ? 'block' : 'none' }}
-                onClick={() => handelProductDetail(product._id)} alt={product.name} src={productImagePath + product._id + "/" + product.product_images[0]?.file_name} className='img-fluid' />
+                <img
+                    src="./img/placeholder_img.png"
+                    alt=''
+                    className='img-fluid'
+                    style={{ display: imageLoaded ? 'none' : 'block' }}
+                />
+                <img
+                    onLoad={() => setImageLoaded(true)}
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                    onClick={() => handelProductDetail(product._id)} alt={product.name} src={productImagePath + product._id + "/" + product.product_images[0]?.file_name} className='img-fluid img-size' />
                 <Button className='add-to-card-btn' onClick={() => handleShow(product._id)} >Add to Cart</Button>
             </div>
             <div className='py-3 px-3 space-card'>
