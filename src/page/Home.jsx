@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import { Button, Col, Row } from 'react-bootstrap'
 import "swiper/css/pagination";
@@ -14,7 +13,7 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import { getServerURL } from '../helper/envConfig';
 import CategoryList from './CategoryList';
 import Loader from '../components/Loader';
-import { handelProductDetail, handelCategory } from '../helper/constants';
+import { handelProductDetail } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
@@ -23,8 +22,8 @@ import { isMobile } from 'react-device-detect';
 import { handelCategorydata } from '../helper/constants';
 
 const Home = () => {
-    const { handelSearch, getSearchedProduct, searchKeyWord, setSearchKeyWord, categoryHome, setMyMessage, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
-        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const { handelSearch, getSearchedProduct, searchKeyWord, setSearchKeyWord,  setMyMessage, startAnimation, stopAnimation, player, loading, 
+        productList, trendingProductList, getProducts,  sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const textRef = useRef(null);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();

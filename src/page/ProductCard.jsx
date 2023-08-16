@@ -1,9 +1,8 @@
-import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
-import { Button, Col, Row } from 'react-bootstrap'
+import React, {  useState, useEffect, useContext } from 'react'
+import { Button } from 'react-bootstrap'
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { handelProductDetail, handelCategorydata } from '../helper/constants';
+import { handelProductDetail } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 
 const ProductCard = ({ product, productImagePath, handleShow }) => {

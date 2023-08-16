@@ -2,7 +2,6 @@ import Selling from '../page/Selling';
 import Trending from '../page/Trending';
 import Categories from '../page/Categories';
 import ProductInfo from '../page/ProductInfo';
-import CartNew from '../page/CartNew';
 import Profile from '../page/Profile';
 import Fashion from '../page/Fashion';
 import Home from '../page/Home';

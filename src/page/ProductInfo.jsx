@@ -1,14 +1,11 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
-import { Button, Col, Form, Modal, NavLink, Offcanvas, Row, } from 'react-bootstrap'
+import { Button, Col, Form, Modal, NavLink,  Row, } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
-    MdOutlineKeyboardArrowDown,
     MdKeyboardDoubleArrowRight,
     MdOutlineClose
 
 } from "react-icons/md"
-import { Link } from 'react-router-dom'
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -16,9 +13,7 @@ import { Pagination, Navigation } from "swiper";
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import ProCard from '../components/ProCard';
-import { data } from "../page/Data"
 import ProductSlider from '../components/ProductSlider';
-import { cartListData, colors } from '../helper/constants';
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
@@ -28,23 +23,21 @@ import { useNavigate } from 'react-router-dom'
 import { errorResponse, afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
-import { BsThreeDots } from 'react-icons/bs'
 import { CartContext } from '../context/CartContext'
-import { Divider, Rating } from '@mui/material'
+import {  Rating } from '@mui/material'
 import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
 import { useParams } from 'react-router-dom';
 import { RWebShare } from "react-web-share";
 import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
-import CartDrawer from './CartDrawer'
 import { createJsonLdSchema } from './productjson';
 import ProductGif from '../components/ProductGif'
 
 const ProductInfo = () => {
 
 
-    const { getcartcount, handleClose, handleShow, show, setShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount,  handleShow,  addcartLocal, addProductDetailsToLocal, handleDrawerShow, setMainLoder, addWishList, generateDynamicLink, getCartData,  add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -807,10 +800,10 @@ const ProductInfo = () => {
 
                                             <Button onClick={handleCart} className='add-cart-items mt-4'>Add to cart</Button>
 
-                                            <div className='d-flex align-items-center gap-4 justify-content-left overflow-auto mt-4'>
-
+                                            <div className='d-flex align-items-start gap-4 justify-content-left overflow-hidden mt-4 ' 
+                                            style={{maxHeight: "300px"}}
+                                            >
                                                 <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
-
                                             </div>
 
 
@@ -828,6 +821,8 @@ const ProductInfo = () => {
                                                     </div>
                                                 </ul>
                                             </div>
+
+                                            {/* <a id="dynamicLink" href="#" target="_blank" style={{ display: 'none' }}></a> */}
 
                                             <div className='shipping-def description mt-4'>
                                                 <h5 className='info-title mt-4 mb-2'>Description</h5>

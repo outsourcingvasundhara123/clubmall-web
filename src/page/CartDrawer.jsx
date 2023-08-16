@@ -1,40 +1,28 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-
 import { Is_Login } from '../helper/IsLogin'
 import { CartContext } from '../context/CartContext'
-import { Button, Col, Form, Modal, NavLink, Offcanvas, Row, } from 'react-bootstrap'
+import { Button, Offcanvas, } from 'react-bootstrap'
 import {
-    MdOutlineKeyboardArrowRight,
-    MdOutlineKeyboardArrowDown,
-    MdKeyboardDoubleArrowRight,
+
     MdOutlineClose,
     MdDelete
 
 } from "react-icons/md"
-import ProCard from '../components/ProCard'
-import { useLocation } from 'react-router-dom'
 import { handelProductDetail } from '../helper/constants';
-import { ADDTOCART, PRODUCTList } from "../helper/endpoints";
+import { ADDTOCART } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-import Loader from '../components/Loader';
-import SucessSnackBar from "../components/SnackBar";
-import ErrorSnackBar from "../components/SnackBar";
-import { errorResponse, afterLogin } from '../helper/constants'
-import { AiFillCloseCircle } from 'react-icons/ai'
-import { handelCategorydata } from '../helper/constants'
 import { MdRemove, MdAdd } from 'react-icons/md'
-import CryptoJS from 'crypto-js';
+
 
 
 const CartDrawer = () => {
-    const { getcartcount, localCartPostData, getLocalCartPostData, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart, handleDrawerShow, handleDrawerClose, drawer, cartList, setMainLoder, addWishList, generateDynamicLink, getCartData, getWishList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+    const { getcartcount, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart,  handleDrawerClose, drawer, cartList, setMainLoder,  getCartData,  setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage,  } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [sucessSnackBarOpenCart, setSucessSnackBarOpenCart] = useState(false);
     const [warningSnackBarOpenCart, setWarningSnackBarOpenCart] = useState(false);
-    const [, setLocalCart] = useState([]);
     const textRef = useRef(null);
     const [timeRemaining, setTimeRemaining] = useState(null); // time in seconds
     // Define discount offers and their corresponding thresholds
@@ -268,7 +256,7 @@ const CartDrawer = () => {
                             {
                                 isLoggedIn && cartList.list && cartList.list?.map((e, i) => {
                                     return (
-                                        <div className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_details?._id)} >
+                                        <div key={i} className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_details?._id)} >
                                             <img className='pointer' src={cartList.productImagePath + e.product_id + "/" + getimagename(e.sku_details, e.skuid)} alt='' width="150px" />
                                             <div className='cart-items-text w-100'>
                                                 <h5>{e.product_name}</h5>
@@ -319,7 +307,7 @@ const CartDrawer = () => {
                             {localCart.items?.length > 0 && localCart?.items.map((e, i) => {
                                 return (
 
-                                    <div className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_id)} >
+                                    <div key={i} className='cart-items d-flex align-items-start gap-3 mt-4 pointer' onClick={() => handelProductDetail(e.product_id)} >
                                         <img className='pointer' src={e.image} alt='' width="150px" />
                                         <div className='cart-items-text w-100'>
                                             <h5>{e.name}</h5>

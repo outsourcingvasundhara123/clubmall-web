@@ -1,15 +1,11 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
-import { Badge, Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, Tabs, } from 'react-bootstrap'
+import { Badge, Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table,  } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdKeyboardDoubleArrowRight,
     MdKeyboardArrowRight,
-    MdDelete,
 } from "react-icons/md"
 import ProCard from '../components/ProCard'
-import { data } from "../page/Data"
-import { handelCategorydata } from '../helper/constants'
 import { MdOutlineClose } from 'react-icons/md'
 import api from '../helper/api';
 import { getServerURL } from '../helper/envConfig'
@@ -17,9 +13,6 @@ import { validate } from './AddressSchima';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
-import FacebookLogin from '@greatsumini/react-facebook-login';
-import axios from 'axios';
 import Loader from '../components/Loader'
 import { CartContext } from '../context/CartContext';
 import { login } from '../helper/auth'
@@ -29,8 +22,7 @@ import Select from 'react-select';
 
 const Profile = () => {
 
-    const { setMainLoder, itemShow, setItemShow, sucessSnackBarOpenCart, setwarningSnackBarOpen, setsucessSnackBarOpen, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, profileOption, setProfileOption, myAddress, getMyAddress, userProductList, wishProductUrl, category, currentUser,
-        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
+    const { setMainLoder, itemShow, setItemShow, profileOption, setProfileOption, myAddress, getMyAddress, trendingProductList} = useContext(CartContext);
 
     const initialValues = {
         country_id: "",
@@ -591,7 +583,7 @@ const Profile = () => {
 
                                                             {/* <div className='search-order d-flex align-items-center gap-2'>
                                                     <img src='./img/header/search-icone.png' alt='' />
-                                                    <input type="text" placeholder="Item name / Order ID / Tracking No." class="w-100" spellcheck="false" data-ms-editor="true" />
+                                                    <input type="text" placeholder="Item name / Order ID / Tracking No." className="w-100" spellcheck="false" data-ms-editor="true" />
                                                 </div> */}
 
                                                             <div className='order-table'>

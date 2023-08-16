@@ -1,5 +1,4 @@
 import React from 'react'
-import Layout from '../layout/Layout'
 import { Col, NavLink, Row } from 'react-bootstrap'
 
 const TermsUse = () => {

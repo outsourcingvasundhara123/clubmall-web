@@ -4,8 +4,6 @@ import { getServerURL } from '../helper/envConfig';
 import api from '../helper/api';
 import { Is_Login } from '../helper/IsLogin'
 import { errorResponse, afterLogin } from '../helper/constants';
-import { data } from 'jquery';
-import { isMobile } from 'react-device-detect';
 import CryptoJS from 'crypto-js';
 
 // Create the cart context
@@ -455,18 +453,6 @@ export const CartProvider = ({ children }) => {
   };
 
 
-  // const handleWishlistClick = async (productId) => {
-  //   const newWishlistStatus = !isWishlist;
-  //   setIsWishlist(newWishlistStatus); // Update the local state
-
-  //   // Then update the context or the backend asynchronously
-  //   if (newWishlistStatus) {
-  //     await addWishList(productId, "product-wishlist"); // Add to wishlist
-  //   } else {
-  //     await addWishList(productId, "product-delete-wishlist"); // Remove from wishlist
-  //   }
-  // }
-
   const deleteWishList = async (id) => {
     startAnimation()
     setMainLoder(true)
@@ -803,9 +789,32 @@ export const CartProvider = ({ children }) => {
     return window.open(link, '_blank');
   };
 
+  function openLink(link) {
+    window.location.href = link;
+  }
+
+  function isAndroid() {
+    return /Android/i.test(navigator.userAgent);
+  }
+  
+  function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
+
+  function tryOpenAppOrFallback(deepLink, fallbackUrl) {
+    const isBrowserVisible = () => !document.hidden; // If the browser isn't hidden, it means the app didn't launch
+
+    window.location.href = deepLink; // Try to open the app using the custom URL scheme
+
+    setTimeout(() => {
+        if (isBrowserVisible()) {
+            window.location.href = fallbackUrl;
+        }
+    }, 2000); // Let's wait for 2 seconds
+}
+
   const generateDynamicLink = async (productId) => {
     const response = await api.post(
-
       `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${process.env.REACT_APP_API_FIREBASE}`,
       {
         "dynamicLinkInfo": {
@@ -823,18 +832,25 @@ export const CartProvider = ({ children }) => {
         }
       }
     );
-    // call(response.data.shortLink)
     const newWindow = call(response.data.shortLink);
-    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-      const iosdeeplink = call(`com.clubmall.deeplink://product-details/${productId}?w=g`)
-      if (!iosdeeplink || iosdeeplink.closed || typeof iosdeeplink.closed == 'undefined') {
-        //POPUP BLOCKED
-        handleShow();
-        setPerActive('Group')
-        // alert('Please disable your popup blocker and try again.');
-      }
 
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+      //POPUP BLOCKED
+      handleShow();
+      setPerActive('Group')
+      // alert('Please disable your popup blocker and try again.');
     }
+
+    // if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+    //   if (isIOS()) {
+    //     // openLink(`https://clubmall.com/.well-known/apple-app-site-association`)
+    //     openLink(`com.clubmall.deeplink://product-details/${productId}?w=g`)
+    //     // tryOpenAppOrFallback(`com.clubmall.deeplink://product-details/${productId}?w=g`, "https://apps.apple.com/us/app/clubmall/id6444752184");
+    //   } else if (isAndroid()) {
+    //     handleShow();
+    //     setPerActive('Group');
+    //   }
+    // }
   };
 
 

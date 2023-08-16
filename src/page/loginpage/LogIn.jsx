@@ -8,7 +8,7 @@ import { getServerURL } from '../../helper/envConfig';
 import api from '../../helper/api';
 import { useNavigate } from 'react-router-dom'
 import { validate } from './LoginSchema';
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import {  useGoogleLogin } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import { Link } from 'react-router-dom';

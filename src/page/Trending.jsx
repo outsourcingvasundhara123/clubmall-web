@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react'
-import Layout from '../layout/Layout'
 import { Button } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import ProCard from '../components/ProCard'
@@ -7,7 +6,6 @@ import { PRODUCTList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
-import { handelCategorydata } from '../helper/constants'
 const Trending = () => {
 
     const [active, setActive] = useState("1");
@@ -26,6 +24,7 @@ const Trending = () => {
 
     const startAnimation = () => {
         if (player.current) {
+
             player.current.play(); // Check if player.current is not null before accessing play()
         }
     };

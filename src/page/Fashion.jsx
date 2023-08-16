@@ -1,7 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
-import { Button, Col, Row } from 'react-bootstrap'
-
+import { Col, Row } from 'react-bootstrap'
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,20 +10,19 @@ import AddCartModal from '../components/AddCartModal';
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
-import { handelProductDetail, handelCategorydata } from '../helper/constants';
+import {handelCategorydata } from '../helper/constants';
 import { CartContext } from '../context/CartContext';
 import { Is_Login } from '../helper/IsLogin';
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import ProductCard from './ProductCard';
 import { PRODUCTList } from "../helper/endpoints";
-import { errorResponse } from '../helper/constants';
 
 const Fashion = () => {
 
     const isLoggedIn = Is_Login();
-    const { setMyMessage, userProductList, loading, setLoading, wishProductUrl, category, currentUser,
-        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const { loading, setLoading,
+        productList, trendingProductList, getProducts, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
     const serverURL = getServerURL();
 
     const navigate = useNavigate();

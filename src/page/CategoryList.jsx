@@ -129,7 +129,7 @@ const CategoryList = () => {
                                 return (
                                     <div className='item' key={i}>
                                         <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >
-                                            <div className='categories-slider-img '>   {/* "active-catagories" use this class to active catagories */}
+                                            <div className='categories-slider-img '>   {/* "active-catagories" use this className to active catagories */}
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
                                             </div>
                                             <h6 className='mt-3'>{e.name}</h6>
