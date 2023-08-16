@@ -1,5 +1,4 @@
 import React from 'react'
-import { Button, NavLink } from 'react-bootstrap'
 
 const ReturnPolicy = () => {
     return (

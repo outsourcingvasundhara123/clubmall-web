@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { Col, Row, Button } from 'react-bootstrap'
 import { CartContext } from '../context/CartContext'
 import SucessSnackBar from "./SnackBar/SnackBar";

@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
+import React, { useState,  useEffect, useContext } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import { CartContext } from '../context/CartContext'
 import SucessSnackBar from "./SnackBar/SnackBar";
@@ -12,8 +11,7 @@ import { getServerURL } from '../helper/envConfig'
 
 const Influencer = () => {
 
-    const { getcartcount, setMainLoder, couponId, itemShow, setItemShow, add_wished_Called, getCartData, cartList, profileOption, setProfileOption, userProductList, wishProductUrl, category, currentUser,
-        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList } = useContext(CartContext);
+    const {  setMainLoder } = useContext(CartContext);
 
     const initialValues = {
         first_name: "",
@@ -34,9 +32,7 @@ const Influencer = () => {
 
     const serverURL = getServerURL();
     const isLoggedIn = Is_Login();
-    const [showPass, setShowPass] = useState(true)
-    const [otpShow, SetOtpShow] = useState(false)
-    const [show, setShow] = useState(false);
+
     const [values, setValues] = useState(initialValues);
     const [submitCount, setSubmitCount] = useState(0);
     const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
@@ -52,11 +48,6 @@ const Influencer = () => {
 
         const { name, value, checked, type } = e.target;
         let newValue = type === "checkbox" ? checked : value;
-
-        // if (name === "state_id") {
-        //     const selectedState = stateList.find((state) => state.name === newValue);
-        //     newValue = selectedState ? selectedState._id : "";
-        // }
 
         if (name === "country_id") {
 
@@ -92,15 +83,6 @@ const Influencer = () => {
                 const responses = await Promise.all([request1, request2]);
 
                 setCountryList(responses[0].data.data.country);
-
-                // Find United States country from list and set it
-                // const USCountry = responses[0].data.data.country.find(country => country.name === 'United States');
-                // if (USCountry) {
-                //     setValues(prevValues => ({
-                //         ...prevValues,
-                //         country_id: USCountry._id
-                //     }))
-                // }
 
             } catch (error) {
                 console.error(error);
@@ -141,35 +123,7 @@ const Influencer = () => {
                 setMainLoder(true)
                 setMyMessage("Your influencer details have been successfully submitted.");
                 setSucessSnackBarOpen(!sucessSnackBarOpen);
-                // api.post(`${serverURL}login`, updatedValues)
-                //   .then((res) => {
-                //     if (res.data.success === true) {
-                //       if (res.data.data.user) {
-                //         setMyMessage(res.data.message);
-                //         setSucessSnackBarOpen(!sucessSnackBarOpen);
-                //         login(res.data.data.user);
-                //         setTimeout(() => {
-                //           setValues(initialValues);
-                //           setMainLoder(false)
-                //           if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
-                //             window.location.href = "/"
-                //           } else {
-                //             window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
-                //           }
-                //           // navigate("");
-                //         }, 1000);
-                //       } else {
-                //         SetOtpShow(true)
-                //         SetEmail(updatedValues.email);
-                //         setMyMessage(res.data.message);
-                //         setSucessSnackBarOpen(!sucessSnackBarOpen);
-                //       }
-                //     } else if (res.data.success === false) {
-                //       setMyMessage(res.data.message);
-                //       setWarningSnackBarOpen(!warningSnackBarOpen);
-                //     }
-                //     setMainLoder(false)
-                //   });
+              
                 setValues(initialValues);
                 setMainLoder(false)
             } catch (error) {

@@ -1,12 +1,8 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
-import SliderTwo from '../components/SliderTwo'
 import { Accordion, Button, Col, Row } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
-import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
-import { colors, categoriesSliderData } from '../helper/constants'
-import { PRODUCTList, PRODUCTSEARCH, PRODUCTCATEGORY, PRODUCTDEPENDENTCATEGORY } from "../helper/endpoints";
+import { PRODUCTList, PRODUCTDEPENDENTCATEGORY } from "../helper/endpoints";
 import { useNavigate } from 'react-router-dom'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
@@ -17,8 +13,7 @@ import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
 import { Is_Login } from '../helper/IsLogin'
 import colorNameToHex from 'color-name';
-import { errorResponse } from '../helper/constants'
-import Slider, { Range } from 'rc-slider';
+import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 const Categories = () => {
@@ -52,7 +47,6 @@ const Categories = () => {
     const [viewCalled, setViewCalled] = useState(false);
     const [loading, setLoading] = useState(true);
     const player = useRef();
-    const [message, setMyMessage] = useState("");
     const Categorie_id = localStorage.getItem("selectedcategories") && localStorage.getItem("selectedcategories")
     const [subCatId, setSubCatId] = useState("");
     const [viewMoreLodr, setViewmoreLoder] = useState(false);
@@ -405,7 +399,7 @@ const Categories = () => {
                                                     }
                                                     <div className='filter-box mt-20 range'>
                                                         <h5>Price Range</h5>
-                                                        <div class="price-range-slider mt-4 mb-3">
+                                                        <div className="price-range-slider mt-4 mb-3">
                                                             <Slider range min={0} max={100} value={range} onChange={handleRangeChange} />
                                                             <div className='d-flex align-items-center justify-content-between mt-2'>
                                                                 <span> {range[0]}</span>

@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
-import Layout from '../../layout/Layout'
 import { Button, Col, Form, NavLink, Row, Modal } from 'react-bootstrap'
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import { Link } from 'react-router-dom';
 import api from '../../helper/api';
@@ -10,7 +8,7 @@ import { validate } from './RegisterSchema';
 import SucessSnackBar from "../SnackBar/SnackBar";
 import ErrorSnackBar from "../SnackBar/SnackBar";
 import { useNavigate } from 'react-router-dom'
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import axios from 'axios';
@@ -19,14 +17,13 @@ import AppleLogin from 'react-apple-login';
 import { BsApple } from 'react-icons/bs'
 import { SOCIALLOGIN } from '../../helper/endpoints';
 import { login } from '../../helper/auth';
-import { Is_Login } from '../../helper/IsLogin';
 import { ADDTOCART } from '../../helper/endpoints';
 import { CartContext } from '../../context/CartContext'
 
 
 function Register() {
 
-    const { localCartPostData, getLocalCartPostData, localCart, getLocalCartData, setMainLoder, itemShow, setItemShow, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const { localCartPostData, localCart, setMainLoder } = useContext(CartContext);
 
     const navigate = useNavigate();
 

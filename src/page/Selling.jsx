@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import { Button, Col, Row, Tab, Tabs } from 'react-bootstrap'
 import ProCard from '../components/ProCard'
@@ -16,9 +15,8 @@ import { PRODUCTCATEGORY } from '../helper/endpoints'
 
 const Selling = () => {
 
-    const { playersellproduct, startAnimationsellpro, stopAnimationsellpro, playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
-        , catwebLoading, setCatwebLoading, ProductLoading, setProductLoading, sellProLoading, setSellProLoading, handelwishSell, sellIs_wished, setLoading, loading, viewMoreLodr, startAnimation, stopAnimation, player, setViewmoreLoder, sellProducUrl, setFavoritePage, setKidPage, setManPage, setWomanPage, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, stopAnimationcategory, startAnimationcategory, playercategory, userProductList, wishsellProducUrl, category, currentUser,
-        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const { playercategoryweb, startAnimationcategoryweb, stopAnimationcategoryweb
+        , catwebLoading, handelwishSell, sellIs_wished, sellProducUrl, favoritepage, kidspage, manpage, womanpage, favoriteProductList, kidsProductList, manProductList, womanProductList, getSellProducts, sellingCategory, getCategoryWeb, categoryWeb, trendingProductList, getProducts, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();

@@ -68,19 +68,6 @@ const PinkCard = (props) => {
                         <p>Group Price: <b>${props.img.group_price}</b></p>
                         <h5>${props.img.individual_price}</h5>
                     </div>
-                    {/* {props.img.wishList === 0
-                        &&
-                        <Button className='like-btn' onClick={() => addWishList(props.img._id, "product-wishlist")} >
-                            <img src='./img/new_in/like.png' className='like-size' alt='' />
-                        </Button>
-                    }
-                    {
-                        props.img.wishList === 1 &&
-                        <Button className='like-btn' onClick={() => addWishList(props.img._id, "product-delete-wishlist")} >
-                            <img src='./img/Vector.png' alt='' />
-                        </Button>
-                    } */}
-
                     {isWishlist === false
                         &&
                         <Button className='like-btn' onClick={handleWishlistClick} >

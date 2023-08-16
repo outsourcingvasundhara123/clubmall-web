@@ -1,8 +1,6 @@
 import React, { useRef } from 'react'
-import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
-import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md"
 import CategoryList from '../page/CategoryList';
 
 const SliderTwo = (props) => {

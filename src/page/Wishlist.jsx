@@ -14,8 +14,7 @@ import { handelProductDetail } from '../helper/constants'
 const Wishlist = () => {
 
     const isLoggedIn = Is_Login();
-    const { startAnimation, stopAnimation, player, deleteWishList, wishProductUrl, wishlist, userProductList, loading, setLoading, category, currentUser,
-        productList, trendingProductList, getProducts, getWishList, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const { startAnimation, stopAnimation, player, deleteWishList, wishProductUrl, wishlist, loading,  getWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
 
     useEffect(() => {
         getWishList()

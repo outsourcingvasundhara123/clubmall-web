@@ -1,24 +1,19 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
-import { Button, Dropdown, Form, Modal, NavLink } from 'react-bootstrap'
+import { Button,  Form, Modal, NavLink } from 'react-bootstrap'
 import { POSTSList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
 import ReactPlayer from 'react-player';
 import { Swiper, SwiperSlide } from "swiper/react";
 import Loader from '../components/Loader';
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-// import required modules
 import { Mousewheel } from "swiper";
 import { Is_Login } from '../helper/IsLogin'
 import { errorResponse, afterLogin, handelProductDetail } from '../helper/constants'
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
-import { useNavigate } from 'react-router-dom'
 import { RiSendPlaneFill } from "react-icons/ri"
-import InstallApp from '../components/InstallApp';
 import { MdOutlineClose } from 'react-icons/md'
 import { Rating } from '@mui/material';
 import { MdDelete } from 'react-icons/md'
@@ -27,10 +22,9 @@ import { isMobile } from 'react-device-detect';
 
 const ForYou = () => {
 
-  const {setMainLoder, show,setShow, generateDynamicLink, handleShowhandleClose, getCartData, getWishList, add_wished_Called, sellIs_wished, activeImage, setActiveImage, setCart, cart } = useContext(CartContext);
+  const {setMainLoder, setShow, generateDynamicLink } = useContext(CartContext);
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
-  const navigate = useNavigate();
   const swiperRef = useRef(null);
   const defaultProfile = `./img/for_you/defaultuser.png`
   const Userprofile = localStorage.getItem("profile_image") ? localStorage.getItem("profile_image") : defaultProfile
@@ -40,16 +34,13 @@ const ForYou = () => {
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const serverURL = getServerURL();
   const [page, setPage] = useState(1);
-  const [like, setLike] = useState(1);
   const [profilUrl, setProfileUrl] = useState(" ");
   const [postlUrl, setPostUrl] = useState(" ");
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isFetching, setIsFetching] = useState(false);
-  const currentPageRef = useRef(page);
   const [loading, setLoading] = useState(true);
   const [Mymessage, setMyMessage] = useState("");
   const [totalPages, setTotalPages] = useState(1000); // Declare totalPages state variable
-  // const [show, setShow] = useState(false);
   const player = useRef();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelData, setMyModelData] = useState("");
@@ -123,7 +114,6 @@ const ForYou = () => {
         setPostId(id)
         setProfileUrl(commentListResponse.data.data.profileImagePath)
         const postsCommentData = commentListResponse.data.data.postsComment;
-        // setTotalPages(postsCommentData.length);
         setMyModelData(postsCommentData)
         setIsFetching(false);
         stopAnimation();
@@ -146,7 +136,6 @@ const ForYou = () => {
       ]);
       setPostUrl(postListResponse.data.data.productImagePath)
       const postsData = postListResponse.data.data.postList;
-      // setTotalPages(postsData.length);
       const updatedfavoriteProductList = [...postList, ...postsData]
         .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
       if (!isLoggedIn) {
@@ -169,25 +158,21 @@ const ForYou = () => {
     setCurrentVideoIndex(swiper.activeIndex);
     setCurrentVideoId(postList[swiper.activeIndex]._id)
     if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
-      // Check if the last video is being rendered
       if (swiper.activeIndex === postList.length - 3) { 
         if (page < totalPages) {
           setIsFetching(true);
           setPage((prevPage) => prevPage + 1);
-          setCurrentVideoIndex(0); // Redirect user to the first video on the new page
+          setCurrentVideoIndex(0);
         } else {
           console.log("Last video on the last page");
         }
       }
 
-      // Check if the first video is being rendered
       if (swiper.activeIndex === 0 && page > 1) {
         setCurrentVideoIndex(0); // Reset the current video index to 0
         setIsFetching(true);
         setPage((prevPage) => prevPage - 1);
       }
-
-      // Redirect user to the top of the video when page changes and new data is loaded
       if (
         swiperRef.current &&
         swiper.activeIndex === 0 &&
@@ -211,10 +196,8 @@ const ForYou = () => {
         if (res.data.success === true) {
           setMyMessage(res.data.message);
           setSucessSnackBarOpen(!sucessSnackBarOpen);
-          // Update the postList state with the updated data
           const updatedPostList = postList.map((post) => {
             if (post.user_id === user_id) {
-              // Toggle the following status for the specific post
               return {
                 ...post,
                 is_follower: post.is_follower === 1 ? 0 : 1,
@@ -231,7 +214,6 @@ const ForYou = () => {
         }
         setMainLoder(false)
       } else {
-        // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
         setWarningSnackBarOpen(!warningSnackBarOpen);
       }
@@ -249,19 +231,15 @@ const ForYou = () => {
         if (res.data.success === true) {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setMyMessage(res.data.message);
-          // Find the index of the post within the postList array
           const postIndex = postList.findIndex((post) => post._id === post_id);
           if (postIndex !== -1) {
-            // Toggle the like status and like count for the specific post
             const updatedPost = {
               ...postList[postIndex],
               is_like: postList[postIndex].is_like === 0 ? 1 : 0,
               total_like: postList[postIndex].is_like === 0 ? postList[postIndex].total_like + 1 : postList[postIndex].total_like - 1,
             };
-            // Create a new array with the updated post
             const updatedPostList = [...postList];
             updatedPostList[postIndex] = updatedPost;
-            // Update the postList state with the updated data
             setPostList(updatedPostList);
           }
         } else if (res.data.success === false) {
@@ -270,8 +248,6 @@ const ForYou = () => {
         }
         setMainLoder(false)
       } else {
-
-        // User is not logged in, redirect to the login page
         afterLogin(setMyMessage);
         setWarningSnackBarOpen(!warningSnackBarOpen);
       }
@@ -298,13 +274,6 @@ const ForYou = () => {
             setTimeout(() => {
               handleReportClose()
             }, 1000);
-
-            // for update count of total comments 
-            // setPostList((prevPostList) =>
-            //   prevPostList.map((post) =>
-            //     post._id === postId ? { ...post, total_comment: post.total_comment + 1 } : post
-            //   )
-            // );
 
             setCommnet("")
           } else if (res.data.success === false) {
@@ -420,7 +389,7 @@ const ForYou = () => {
     }
   };
 
-
+  
   return (
 
     <>
@@ -535,11 +504,6 @@ const ForYou = () => {
                       <p>{e.total_like}</p>
                     </Button>
 
-                    {/* <Button>
-                      <img alt='' src='./img/for_you/dlike.png' />
-                      <p>{e.total_like}</p>
-                    </Button> */}
-
                     <Button onClick={() => handleCommentsShow(e._id)}>
                       <img alt='' src='./img/for_you/msg.png' />
                       <p>{e.total_comment}</p>
@@ -548,34 +512,9 @@ const ForYou = () => {
                       <img alt='' src='./img/for_you/flag.png' />
                     </Button>
                   </div>
-                  {/* <div className='additional-box mt-2'> */}
-                  {/* <Button>
-                      <img alt='' src='./img/for_you/tip.png' />
-                    </Button> */}
-                  {/* <Button>
-                            <img alt='' src='./img/for_you/share.png' />
-                          </Button>
-                          <Button>
-                            <img alt='' src='./img/for_you/add.png' />
-                          </Button> */}
-
-                  {/* </div> */}
+                 
                 </div>
 
-                {/* <div className='cart-btn-reels'>
-                        <Dropdown>
-                          <Dropdown.Toggle id="dropdown-basic">
-                            <img alt='' src='./img/for_you/cart.png' width="22px" />
-                            <img alt='' src='./img/for_you/up.png' width="10px" />
-                          </Dropdown.Toggle>
-
-                          <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </div> */}
               </div>
 
             </SwiperSlide>
@@ -592,9 +531,7 @@ const ForYou = () => {
               <MdOutlineClose />
             </Button>
             <h5>Comments</h5>
-            {/* <div className='show-all-comments d-flex align-items-center justify-content-center'>
-              <p>No Comments yet</p>
-            </div> */}
+
             <div className='show-all-comments'>
               <ul className='mt-4'>
                 {isFetching ? <p> Loding..... </p> :

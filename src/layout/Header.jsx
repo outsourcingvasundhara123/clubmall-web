@@ -8,9 +8,9 @@ import { product_data } from '../helper/constants'
 import { Is_Login } from '../helper/IsLogin'
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
-import { PRODUCTCATEGORY, ADDTOCART } from "../helper/endpoints";
+import { PRODUCTCATEGORY } from "../helper/endpoints";
 import Loader from '../components/Loader';
-import { handelCategorydata, errorResponse } from '../helper/constants';
+import { handelCategorydata } from '../helper/constants';
 import { CartContext } from '../context/CartContext'
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";

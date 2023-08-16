@@ -1,21 +1,15 @@
 
-import React, { useRef, useState, useEffect, useContext } from 'react'
-import Layout from '../layout/Layout'
+import React, {  useEffect, useContext } from 'react'
 import { Button } from 'react-bootstrap'
 import { MdKeyboardDoubleArrowRight } from "react-icons/md"
 import ProCard from '../components/ProCard'
-import { PRODUCTList } from "../helper/endpoints";
-import api from "../helper/api";
-import { getServerURL } from '../helper/envConfig';
 import Loader from '../components/Loader';
-import { handelCategorydata } from '../helper/constants'
 import { CartContext } from '../context/CartContext';
 
 const Search = () => {
 
     //   const [searchPage, setSearchPage] = useState(1);
-    const { is_search, sellIs_wished, setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchKeyWord, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading, setLoading, wishProductUrl, category, currentUser,
-        productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+    const { is_search,  setIs_search, setViewmoreLoder, viewMoreLodr, searchUrl, searchpostList, setSearchPage, searchPage, getSearchedProduct, startAnimation, stopAnimation, player, loading } = useContext(CartContext);
 
     useEffect(() => {
         getSearchedProduct();
