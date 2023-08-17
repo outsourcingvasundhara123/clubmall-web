@@ -25,7 +25,6 @@ const Header = (props) => {
     const navigate = useNavigate();
     const { getcartcount, getwishlistcount, setMainLoder, itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
     const isLoggedIn = Is_Login();
-    const [selectedFlag, setSelectedFlag] = useState("../img/header/ind.svg");
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -319,34 +318,7 @@ const Header = (props) => {
                         {
                             isLoggedIn ?
                                 <>
-                                    {/* <Dropdown>
-                                        <Dropdown.Toggle id="dropdown-basic">
-                                            <NavLink className='flag-selector'>
-                                                <Button className='pre-label-btn user-account p-0 '>
-                                                    <img src={selectedFlag} alt='' width="26px" height="26px" />
-                                                </Button>
-                                            </NavLink>
-                                        </Dropdown.Toggle>
-
-                                        <Dropdown.Menu className='select-country'>
-                                            <h5>Change country / region</h5>
-
-                                            {
-                                                countryData.map((event, i) => {
-                                                    return (
-                                                        <Dropdown.Item href="#/action-1" className='mt-2'>
-                                                            <div className='d-flex align-items-center justify-content-between w-100'>
-                                                                <label htmlFor={event.id} className='d-flex align-items-center gap-3' onClick={() => setSelectedFlag(event.flag)}>
-                                                                    <img src={event.flag} alt='' width="20px" height="20px" />
-                                                                    {event.name}</label>
-                                                                <input type='radio' id={event.id} name='country' />
-                                                            </div>
-                                                        </Dropdown.Item>
-                                                    )
-                                                })
-                                            }
-                                        </Dropdown.Menu>
-                                    </Dropdown> */}
+         
 
                                     <Dropdown className='order-lg-1 order-4'>
                                         <Dropdown.Toggle id="dropdown-basic" className='p-0'>
@@ -380,40 +352,21 @@ const Header = (props) => {
                                                     My orders
                                                 </Link>
                                             </Dropdown.Item>
-                                            {/* <Dropdown.Item href="#/action-1">
-                                                <img src='../img/header/review.png' alt='' />
-                                                Your reviews
-                                            </Dropdown.Item> */}
+  
                                             <Dropdown.Item onClick={() => (handelProfile("user"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/user.png' alt='' />
                                                     Your profile
                                                 </Link>
                                             </Dropdown.Item>
-                                            {/* <Dropdown.Item href="#/action-1">
-                                                <img src='../img/header/offer.png' alt='' />
-                                                Coupon & offers
-                                            </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='../img/header/balance.png' alt='' />
-                                                Credit balance
-                                            </Dropdown.Item>
-                                            <Dropdown.Item href="#/action-1">
-                                                <img src='../img/header/shop.png' alt='' />
-                                                Followed shops
-                                            </Dropdown.Item> */}
+                                           
                                             <Dropdown.Item onClick={() => (handelProfile("location"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/location.png' alt='' />
                                                     Addresses
                                                 </Link>
                                             </Dropdown.Item>
-                                            {/* <Dropdown.Item onClick={() => (handelProfile("security"), setItemShow(false), props.setActive(false))}>
-                                                <Link to="/profile" className='p-0 w-100'>
-                                                    <img src='../img/header/security.png' alt='' />
-                                                    Account security
-                                                </Link>
-                                            </Dropdown.Item> */}
+
                                             <Dropdown.Item className='pb-3' onClick={() => (handelProfile("notification"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/notification.png' alt='' />
@@ -421,10 +374,7 @@ const Header = (props) => {
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-                                            {/* <Dropdown.Item className='w-100'>
-                                                <img src='../img/header/switch.png' alt='' />
-                                                Switch accounts
-                                            </Dropdown.Item> */}
+        
                                             <Dropdown.Item onClick={handleLogout} className='w-100'>
                                                 <img src='../img/header/logout.png' alt='' />
                                                 Sign out
@@ -560,41 +510,7 @@ const Header = (props) => {
                                     <h4>Coming soon</h4>
                                 </div>
                             </Col>
-                            {/* <Col lg={4} md={6} sm={12} className='mt-3 mt-md-0'>
-                                <div className='new-in-box3'>
-                                    <h5>NEW IN WOMEN’S CLOTHING</h5>
-                                    <ul>
-                                        <li className='mt-3'><NavLink>Dresses</NavLink></li>
-                                        <li><NavLink>Top</NavLink></li>
-                                        <li><NavLink>Blouses</NavLink></li>
-                                        <li><NavLink>Bottoms</NavLink></li>
-                                        <li><NavLink>Two-pieces</NavLink></li>
-                                        <li><NavLink>Denim</NavLink></li>
-                                        <li><NavLink>Jumpsuits & Bodysuits</NavLink></li>
-                                        <li><NavLink>Blazer & Suits</NavLink></li>
-                                        <li><NavLink>Linerie & Loungewear</NavLink></li>
-                                        <li><NavLink>Sweaters & Sweatshirts</NavLink></li>
-                                        <li><NavLink>Outerwear</NavLink></li>
-                                    </ul>
-                                </div>
-                            </Col>
-                            <Col lg={4} md={6} sm={12} className='mt-3 mt-lg-0'>
-                                <div className='new-in-box4'>
-                                    <h5 className='mt-0'><NavLink>NEW IN BEACHWEAR</NavLink></h5>
-                                    <h5><NavLink>NEW IN MATERNITY</NavLink></h5>
-                                    <h5><NavLink>NEW IN ACTIVERWEAR</NavLink></h5>
-                                    <h5><NavLink>NEW IN WEDDING</NavLink></h5>
-                                    <h5><NavLink>NEW IN HOME</NavLink></h5>
-                                    <h5><NavLink>NEW IN ACCESSORIES</NavLink></h5>
-                                    <h5><NavLink>NEW IN SHOES</NavLink></h5>
-                                    <h5><NavLink>NEW IN BAGS</NavLink></h5>
-                                    <h5><NavLink>NEW IN JEWELARY</NavLink></h5>
-                                    <h5><NavLink>NEW IN STATIONARY</NavLink></h5>
-                                    <h5><NavLink>NEW IN ELECTRONICS</NavLink></h5>
-                                    <h5><NavLink>NEW IN PETS</NavLink></h5>
-                                    <h5><NavLink>NEW IN BEAUTY</NavLink></h5>
-                                </div>
-                            </Col> */}
+                          
                         </Row>
                     </div>
                 </Modal.Body>

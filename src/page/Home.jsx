@@ -27,15 +27,8 @@ const Home = () => {
     const textRef = useRef(null);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
-    const [sucessSnackBarOpenProductDtl, setSucessSnackBarOpenProductDtl] = useState(false);
-    const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
-    const [MymessageProductDtl, setMyMessageProductDtl] = useState("");
-    // const [category, setcategory] = useState([]);
-    // const [currentUser, setCorrectUser] = useState("");
-    // const [productList, setProductList] = useState([]);
-    // const [trendingProductList, setTrendingProductList] = useState([]);
-    const serverURL = getServerURL();
-    // const [loading, setLoading] = useState(true);
+
+   
     const [active, setActive] = useState("1");
     const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -457,7 +450,7 @@ const Home = () => {
                                                     <SwiperSlide>
                                                         <div className='product-card stylist-card1 position-relative p-0 position-relative shop-btn-up'>
                                                             <img
-                                                                src="./img/placeholder_img.png"
+                                                                src="./img/placeholder_img.webp"
                                                                 alt=''
                                                                 className='img-fluid'
                                                                 style={{ display: imageLoaded ? 'none' : 'block' }}
@@ -480,7 +473,7 @@ const Home = () => {
                                                     <SwiperSlide>
                                                         <div className='product-card stylist-card1 position-relative p-0 position-relative shop-btn-up'>
                                                             <img
-                                                                src="./img/placeholder_img.png"
+                                                                src="./img/placeholder_img.webp"
                                                                 alt=''
                                                                 className='img-fluid'
                                                                 style={{ display: imageLoaded ? 'none' : 'block' }}
@@ -508,17 +501,6 @@ const Home = () => {
                             <div className='container-cos d-flex justify-content-center'>
                                 <div className='btns-home'>
 
-                                    {/* {
-                                    categoryHome.firstHalf && categoryHome.firstHalf?.map((d,i) => {
-                                                return (
-
-                                                    <Button className={active === d._id ? "active" : undefined} style={{ backgroundColor: colorMap[i] }} id={d._id}  onClick={(e) => (handelCategorydata(d._id), localStorage.removeItem("selectedSubcategories"), handleClick(e))} >{d.name}</Button>
-
-                                                    )
-                                                })
-    
-    
-                                            } */}
 
                                     <Button className={active === "2" ? "active" : undefined} style={{ backgroundColor: "#2D4658" }} id={"2"} onClick={(e) => (handleClick(e), handleChange("Spring"))} >Spring</Button>
                                     <Button className={active === "3" ? "active" : undefined} style={{ backgroundColor: "#893350" }} id={"3"} onClick={(e) => (handleClick(e), handleChange("Makeup"))} >Makeup</Button>

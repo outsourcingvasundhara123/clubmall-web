@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import route from "./helper/route"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'swiper/css';
@@ -8,11 +8,9 @@ import { Button } from 'react-bootstrap';
 import { MdOutlineKeyboardArrowUp } from 'react-icons/md'
 import Header from './layout/Header';
 import Footer from './layout/Footer';
-import Loader from './components/Loader';
 import { CartContext } from './context/CartContext';
 import LoaderMain from './components/LoaderMain';
 import CartDrawer from './page/CartDrawer';
-import { Is_Login } from './helper/IsLogin';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import InstallApp from './components/InstallApp';
 
@@ -33,9 +31,7 @@ const ScrollToTop = () => {
 const App = () => {
 
   const [active, setActive] = useState(window.location.pathname);
-  const { drawer, mainloder,  handleDrawerShow,  setMainLoder, mainstopAnimation, mainstartAnimation, mainplayer, startAnimation, stopAnimation, player, handelwishSell, sellIs_wished, categoryWeb, getCategoryWeb, wishProductUrl, currentUser,
-    productList, trendingProductList, getProducts, getWishList, wishlist, addWishList, sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
-  const isLoggedIn = Is_Login();
+  const { drawer, mainloder,  handleDrawerShow,  mainstopAnimation, mainstartAnimation, mainplayer} = useContext(CartContext);
 
   useEffect(() => {
     if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
