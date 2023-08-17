@@ -82,7 +82,7 @@ const ProCard = (props) => {
                 <div className='product-card   pointer'>
                     <div className='position-relative'>
                         <img
-                            src="./img/placeholder_img.png"
+                            src="./img/placeholder_img.webp"
                             alt=''
                             className='img-fluid'
                             style={{ display: imageLoaded ? 'none' : 'block' }}

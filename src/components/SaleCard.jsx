@@ -11,8 +11,6 @@ const SaleCard = (props) => {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const navigate = useNavigate();
-
-
     const [show, setShow] = useState(false);
     const handleClose = () => {
         setProduct_id({})
@@ -32,7 +30,7 @@ const SaleCard = (props) => {
                 <div className='position-relative'>
 
                     <img
-                        src="./img/placeholder_img.png"
+                        src="./img/placeholder_img.webp"
                         alt=''
                         className='img-fluid'
                         style={{ display: imageLoaded ? 'none' : 'block' }}
