@@ -834,23 +834,23 @@ export const CartProvider = ({ children }) => {
     );
     const newWindow = call(response.data.shortLink);
 
-    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-      //POPUP BLOCKED
-      handleShow();
-      setPerActive('Group')
-      // alert('Please disable your popup blocker and try again.');
-    }
-
     // if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-    //   if (isIOS()) {
-    //     // openLink(`https://clubmall.com/.well-known/apple-app-site-association`)
-    //     openLink(`com.clubmall.deeplink://product-details/${productId}?w=g`)
-    //     // tryOpenAppOrFallback(`com.clubmall.deeplink://product-details/${productId}?w=g`, "https://apps.apple.com/us/app/clubmall/id6444752184");
-    //   } else if (isAndroid()) {
-    //     handleShow();
-    //     setPerActive('Group');
-    //   }
+    //   //POPUP BLOCKED
+    //   handleShow();
+    //   setPerActive('Group')
+    //   // alert('Please disable your popup blocker and try again.');
     // }
+
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+      if (isIOS()) {
+        // openLink(`https://clubmall.com/.well-known/apple-app-site-association`)
+        openLink(`com.clubmall.deeplink://product-details/${productId}?w=g`)
+        // tryOpenAppOrFallback(`com.clubmall.deeplink://product-details/${productId}?w=g`, "https://apps.apple.com/us/app/clubmall/id6444752184");
+      } else if (isAndroid()) {
+        handleShow();
+        setPerActive('Group');
+      }
+    }
   };
 
 
