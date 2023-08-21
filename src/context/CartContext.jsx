@@ -793,12 +793,13 @@ export const CartProvider = ({ children }) => {
     window.location.href = link;
   }
 
-  function isAndroid() {
-    return /Android/i.test(navigator.userAgent);
-  }
-  
-  function isIOS() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  // function isIOS() {
+  //   return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  // }
+
+  const isIOS = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    return /iphone|ipad|ipod/.test(userAgent);
   }
 
   function tryOpenAppOrFallback(deepLink, fallbackUrl) {
@@ -812,6 +813,48 @@ export const CartProvider = ({ children }) => {
         }
     }, 2000); // Let's wait for 2 seconds
 }
+
+
+function openAppOrRedirectToStore(universalLink, appStoreURL) {
+  // Try to open the app using the Universal Link.
+  window.location.href = universalLink;
+
+  // Create an event listener to check page visibility
+  const visibilityChangeEvent = "hidden" in document ? "visibilitychange" : "pagehide";
+
+  // Set up the event listener function
+  const handleVisibilityChange = function() {
+      // If the page is hidden (app has opened), remove the event listener
+      if (document[visibilityChangeEvent]) {
+          document.removeEventListener(visibilityChangeEvent, handleVisibilityChange);
+      }
+  };
+
+  // Add the event listener
+  document.addEventListener(visibilityChangeEvent, handleVisibilityChange, false);
+
+  // Set a short delay to check if the page is still visible (app hasn't opened)
+  setTimeout(() => {
+      // Remove the event listener regardless of the result
+      document.removeEventListener(visibilityChangeEvent, handleVisibilityChange);
+
+      // If the page is still visible, redirect to the App Store
+      if (!document[visibilityChangeEvent]) {
+          window.location.href = appStoreURL;
+      }
+  }, 2500);  // 2.5 seconds delay
+}
+
+
+const tryOpenAppWithCustomScheme = () => {
+  let iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = 'https://apps.apple.com/us/app/clubmall/id6444752184';
+  document.body.appendChild(iframe);
+  setTimeout(() => {
+      document.body.removeChild(iframe);
+  }, 1000);
+};
 
   const generateDynamicLink = async (productId) => {
     const response = await api.post(
@@ -851,6 +894,32 @@ export const CartProvider = ({ children }) => {
     //     setPerActive('Group');
     //   }
     // }
+
+// ------------- for block popup -------
+
+    // const response = await api.post(
+    //   `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${process.env.REACT_APP_API_FIREBASE}`,
+    //   {
+    //     "dynamicLinkInfo": {
+    //       "domainUriPrefix": "https://clubmall.page.link",
+    //       "link": `https://www.clubmall.com/product-details/${productId}?w=g`,
+    //       "androidInfo": {
+    //         "androidPackageName": "com.clubmall"
+    //       },
+    //       "iosInfo": {
+    //         "iosBundleId": "com.clubmall",
+    //         "iosAppStoreId": "6444752184",
+    //       }
+    //     },
+    //     "suffix": {
+    //       "option": "SHORT"
+    //     },
+    //   }
+    // );
+
+    // window.location.href = response.data.shortLink;
+  
+
   };
 
 
