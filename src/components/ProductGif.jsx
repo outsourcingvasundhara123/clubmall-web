@@ -14,7 +14,7 @@ const ProductGif = ({ productImagePath, productList, id, colorProduct }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentImageIndex((prevIndex) => (prevIndex + 1) % data.length);
-        }, 150);  // Change image every second. Adjust as needed.
+        }, 1500);  // Change image every second. Adjust as needed.
 
         // Cleanup interval on unmount
         return () => clearInterval(interval);

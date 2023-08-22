@@ -7,12 +7,12 @@ import "./assets/css/App.css"
 import { Button } from 'react-bootstrap';
 import { MdOutlineKeyboardArrowUp } from 'react-icons/md'
 import Header from './layout/Header';
-import Footer from './layout/Footer';
 import { CartContext } from './context/CartContext';
 import LoaderMain from './components/LoaderMain';
 import CartDrawer from './page/CartDrawer';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import InstallApp from './components/InstallApp';
+import  { Suspense } from 'react';
 
 
 const ScrollToTop = () => {
@@ -139,9 +139,10 @@ const App = () => {
       <InstallApp  />
 
       <div className='page-layout'>
-        <div>
-          <Header active={active} setActive={setActive} />
-          <div className='mar-cos'>
+      <div>
+        <Header active={active} setActive={setActive} />
+        <div className='mar-cos'>
+          <Suspense fallback={<div></div>}>
             <Routes>
               {route.map((route, index) => {
                 return (
@@ -154,11 +155,10 @@ const App = () => {
                 );
               })}
             </Routes>
-          </div>
+          </Suspense>
         </div>
-
-        <Footer setActive={setActive} />
       </div>
+    </div>
 
     </BrowserRouter >
   )
