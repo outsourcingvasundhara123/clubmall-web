@@ -157,7 +157,7 @@ const Header = (props) => {
 
 
     useEffect(() => {
-        getCategory();
+        // getCategory();
         getCartData();
     }, []);
 
@@ -186,9 +186,9 @@ const Header = (props) => {
     const today = new Date();
     const options = { day: 'numeric', month: 'long', year: 'numeric' };
     const dateList = Array.from({ length: 8 }, (_, index) => {
-      const date = new Date(today);
-      date.setDate(today.getDate() + index);
-      return date.toLocaleDateString('en-US', options);
+        const date = new Date(today);
+        date.setDate(today.getDate() + index);
+        return date.toLocaleDateString('en-US', options);
     });
 
     return (
@@ -236,7 +236,7 @@ const Header = (props) => {
                                 <Link to="/trending" className={`${props.active === "/trending" ? "active" : ""} `} onClick={() => props.setActive("/trending")}>Trending</Link>
                             </li>
                             <li>
-                                <Link className={`${props.active === "/categories" ? "active" : ""} `} >Categories <MdOutlineKeyboardArrowDown /></Link>
+                                <Link onMouseEnter={getCategory} className={`${props.active === "/categories" ? "active" : ""} `} >Categories <MdOutlineKeyboardArrowDown /></Link>
                                 {/* names of the main categorys */}
                                 <div className='mega-menu'>
 
@@ -318,7 +318,7 @@ const Header = (props) => {
                         {
                             isLoggedIn ?
                                 <>
-         
+
 
                                     <Dropdown className='order-lg-1 order-4'>
                                         <Dropdown.Toggle id="dropdown-basic" className='p-0'>
@@ -352,14 +352,14 @@ const Header = (props) => {
                                                     My orders
                                                 </Link>
                                             </Dropdown.Item>
-  
+
                                             <Dropdown.Item onClick={() => (handelProfile("user"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/user.png' alt='' />
                                                     Your profile
                                                 </Link>
                                             </Dropdown.Item>
-                                           
+
                                             <Dropdown.Item onClick={() => (handelProfile("location"), setItemShow(false), props.setActive(false))}>
                                                 <Link to="/profile" className='p-0 w-100'>
                                                     <img src='../img/header/location.png' alt='' />
@@ -374,7 +374,7 @@ const Header = (props) => {
                                                 </Link>
                                             </Dropdown.Item>
                                             <Dropdown.Divider />
-        
+
                                             <Dropdown.Item onClick={handleLogout} className='w-100'>
                                                 <img src='../img/header/logout.png' alt='' />
                                                 Sign out
@@ -435,7 +435,7 @@ const Header = (props) => {
                                     <Accordion defaultActiveKey="0">
                                         <Accordion.Item eventKey="1">
                                             <Accordion.Header>
-                                                <Link className={`${props.active === "/categories" ? "active" : ""} `}>
+                                                <Link onMouseEnter={getCategory} className={`${props.active === "/categories" ? "active" : ""} `}>
                                                     Categories
                                                 </Link>
                                                 <MdOutlineKeyboardArrowDown />
@@ -444,33 +444,35 @@ const Header = (props) => {
                                                 <div className='h-100 sub-catagories'>
                                                     <Accordion defaultActiveKey="0">
 
-                                                        {category && category?.productsCategoryList?.map((e, i) => (
-                                                            <Accordion.Item eventKey={i}>
-                                                                <Accordion.Header>
-                                                                    <li onClick={() => HandelShowData(e.name, e)}>
-                                                                        <p>{e.name}</p>
-                                                                        <img src='../img/header/mega-menu-arrow.png' alt='' />
-                                                                    </li>
-                                                                </Accordion.Header>
+                                                        {
+                                                            loading ?
+                                                                <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
+                                                                :
+                                                                category && category?.productsCategoryList?.map((e, i) => (
+                                                                    <Accordion.Item eventKey={i}>
+                                                                        <Accordion.Header>
+                                                                            <li onClick={() => HandelShowData(e.name, e)}>
+                                                                                <p>{e.name}</p>
+                                                                                <img src='../img/header/mega-menu-arrow.png' alt='' />
+                                                                            </li>
+                                                                        </Accordion.Header>
 
-                                                                <Accordion.Body>
-                                                                    <div className='mobile-menu-cat-box d-flex align-items-center justify-content-center gap-3 flex-wrap'>
-                                                                        {loading ?
-                                                                            <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
-                                                                            :
-                                                                            subCategory && subCategory?.map((e, i) => (
-                                                                                <div key={i} className='cate-box text-center pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))}>
-                                                                                    <div className='cat-img-round'>
-                                                                                        <img src={Url + e.product_icon} alt='' width="100%" />
-                                                                                    </div>
-                                                                                    <h5 className='mt-3'>{e.name}</h5>
-                                                                                </div>
-                                                                            ))
-                                                                        }
-                                                                    </div>
-                                                                </Accordion.Body>
-                                                            </Accordion.Item>
-                                                        ))}
+                                                                        <Accordion.Body>
+                                                                            <div className='mobile-menu-cat-box d-flex align-items-center justify-content-center gap-3 flex-wrap'>
+                                                                                {
+                                                                                    subCategory && subCategory?.map((e, i) => (
+                                                                                        <div key={i} className='cate-box text-center pointer' onClick={() => (handelSubCat(e._id), handelCategorydata(e.parent_id))}>
+                                                                                            <div className='cat-img-round'>
+                                                                                                <img src={Url + e.product_icon} alt='' width="100%" />
+                                                                                            </div>
+                                                                                            <h5 className='mt-3'>{e.name}</h5>
+                                                                                        </div>
+                                                                                    ))
+                                                                                }
+                                                                            </div>
+                                                                        </Accordion.Body>
+                                                                    </Accordion.Item>
+                                                                ))}
                                                     </Accordion>
                                                 </div>
                                             </Accordion.Body>
@@ -510,7 +512,7 @@ const Header = (props) => {
                                     <h4>Coming soon</h4>
                                 </div>
                             </Col>
-                          
+
                         </Row>
                     </div>
                 </Modal.Body>
