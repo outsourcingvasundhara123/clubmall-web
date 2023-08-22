@@ -1,25 +1,27 @@
-import Selling from '../page/Selling';
-import Trending from '../page/Trending';
-import Categories from '../page/Categories';
-import ProductInfo from '../page/ProductInfo';
-import Profile from '../page/Profile';
-import Fashion from '../page/Fashion';
-import Home from '../page/Home';
-import ForYou from '../page/ForYou';
-import LogIn from '../page/loginpage/LogIn';
-import Register from '../page/registerpage/Register';
-import Wishlist from '../page/Wishlist';
-import About from '../page/About';
-import Policy from '../page/Policy';
-import TermsUse from '../page/TermsUse';
-import Influencer from '../page/Influencer';
-import Search from '../page/Search';
-import ContactUs from '../page/ContactUs';
-import ReturnPolicy from '../page/ReturnPolicy';
-import ShippingInfo from '../page/ShippingInfo';
-import ThankYou from '../page/ThankYou';
+import React from 'react';
 import PrivateRoute from './PrivateRoute';
-import Cart from '../page/Cart';
+const Selling = React.lazy(() => import('../page/Selling'));
+const Trending = React.lazy(() => import('../page/Trending'));
+const Categories = React.lazy(() => import('../page/Categories'));
+const ProductInfo = React.lazy(() => import('../page/ProductInfo'));
+const Profile = React.lazy(() => import('../page/Profile'));
+const Fashion = React.lazy(() => import('../page/Fashion'));
+const Home = React.lazy(() => import('../page/Home'));
+const LogIn = React.lazy(() => import('../page/loginpage/LogIn'));
+const Register = React.lazy(() => import('../page/registerpage/Register'));
+const Wishlist = React.lazy(() => import('../page/Wishlist'));
+const About = React.lazy(() => import('../page/About'));
+const Policy = React.lazy(() => import('../page/Policy'));
+const TermsUse = React.lazy(() => import('../page/TermsUse'));
+const Influencer = React.lazy(() => import('../page/Influencer'));
+const Search = React.lazy(() => import('../page/Search'));
+const ContactUs = React.lazy(() => import('../page/ContactUs'));
+const ReturnPolicy = React.lazy(() => import('../page/ReturnPolicy'));
+const ShippingInfo = React.lazy(() => import('../page/ShippingInfo'));
+const ThankYou = React.lazy(() => import('../page/ThankYou'));
+const Cart = React.lazy(() => import('../page/Cart'));
+const ForYou = React.lazy(() => import('../page/ForYou'));
+
 export default [
 
   {
