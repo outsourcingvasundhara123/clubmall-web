@@ -1,10 +1,10 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect, useContext, useState,Suspense } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import route from "./helper/route"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'swiper/css';
 import "./assets/css/App.css"
-import { Button } from 'react-bootstrap';
+import  Button  from 'react-bootstrap/Button';
 import { MdOutlineKeyboardArrowUp } from 'react-icons/md'
 import Header from './layout/Header';
 import { CartContext } from './context/CartContext';
@@ -12,7 +12,6 @@ import LoaderMain from './components/LoaderMain';
 import CartDrawer from './page/CartDrawer';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import InstallApp from './components/InstallApp';
-import  { Suspense } from 'react';
 
 
 const ScrollToTop = () => {
