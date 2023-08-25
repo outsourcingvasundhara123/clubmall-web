@@ -19,7 +19,7 @@ import { Rating } from '@mui/material';
 import { MdDelete } from 'react-icons/md'
 import { CartContext } from '../context/CartContext'
 import { isMobile } from 'react-device-detect';
-
+import axios from 'axios';
 const ForYou = () => {
 
   const {setMainLoder, setShow, generateDynamicLink } = useContext(CartContext);
@@ -50,6 +50,7 @@ const ForYou = () => {
   const [muted, setMuted] = useState(true);
   const [playerRefs, setPlayerRefs] = useState({});
   const [currentVideoId, setCurrentVideoId] = useState();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => {
@@ -122,6 +123,17 @@ const ForYou = () => {
         afterLogin(setMyMessage);
         setWarningSnackBarOpen(!warningSnackBarOpen);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPostsStatic = async () => {
+    try {
+      const postListResponse = await axios.get(`${serverURL + POSTSList + `?action=list&page=${1}`}`);
+      setPostUrl(postListResponse.data.data.productImagePath)
+      const postsData = postListResponse.data.data.postList;
+        setPostList(postsData.slice(0, 4));
     } catch (error) {
       console.log(error);
     }
@@ -367,8 +379,17 @@ const ForYou = () => {
   };
 
   useEffect(() => {
-    getPosts();
+    if(isLoggedIn){
+      getPosts();
+    }
   }, [page, isLoggedIn,currentVideoId]);
+
+  
+  useEffect(() => {
+    if(!isLoggedIn){
+      getPostsStatic();
+    }
+  }, []);
 
 
   const groupPriceShare = (id) => {
@@ -436,7 +457,6 @@ const ForYou = () => {
                     height="100%"
                     controls={true}
                     // onPlay={handleOnUnmute}
-                    
                     playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
                     onVolumeChange={handleVolumeChange}
                     muted={muted}
@@ -452,12 +472,16 @@ const ForYou = () => {
                     }}
                   />
                 ) : (
-                  <img className='reels-img' src={e.post_video_link} alt="Image" />
+                  <>
+                  <img
+                  className='reels-img' src={e.post_video_link} alt="Image" />
+                  </>
                 )}
 
                 <div className='user-name px-3'>
                   <div className='d-flex align-items-center gap-2'>
-                    <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} />
+                    <img alt='profile'
+                     className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} />
                     <div>
                       <p>{e.user_name}</p>
                       {/* <span>
@@ -481,7 +505,16 @@ const ForYou = () => {
                     <div className='reel-items'>
                       <p onClick={() => handleProductShow(e.products_obj)} className='pointer'>{e.products_obj.length}+ More Products</p>
                       <div className='items-box p-2 mt-2'>
-                        <img alt='' src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%" />
+                      <img
+                    src="./img/placeholder_img.webp"
+                    alt=''
+                    className='img-fluid'
+                    style={{ display: imageLoaded ? 'none' : 'block' }}
+                />
+                        <img 
+                         onLoad={() => setImageLoaded(true)}
+                         style={{ display: imageLoaded ? 'block' : 'none' }}
+                        alt='' src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%" />
                         <del>${e.products_obj[0]?.product_id?.group_price}</del>
                       </div>
                     </div>
