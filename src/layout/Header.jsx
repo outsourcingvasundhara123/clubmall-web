@@ -210,7 +210,7 @@ const Header = (props) => {
             <div className='header-main'>
                 <div className='header d-flex align-items-center gap-5 position-relative'>
                     <div className='logo'>
-                        <Link to="/home" className='py-0'><img src='../img/logo.svg' alt='' /></Link>
+                        <Link to="/home" className='py-0'><img src='../img/logo.svg' alt=''  loading="lazy" /></Link>
                     </div>
                     <div className='menu-box h-100'>
                         <ul className='h-100'>
@@ -319,7 +319,6 @@ const Header = (props) => {
                             isLoggedIn ?
                                 <>
 
-
                                     <Dropdown className='order-lg-1 order-4'>
                                         <Dropdown.Toggle id="dropdown-basic" className='p-0'>
                                             <NavLink className='py-0'>
@@ -327,7 +326,9 @@ const Header = (props) => {
                                                     <div className='d-flex align-items-center gap-2'>
                                                         <img className='myprofile' src={Userprofile}
                                                             onError={(e) => { e.target.onerror = null; e.target.src = defaultProfile }}
-                                                            alt='' />
+                                                            alt=''
+                                                            loading="lazy"
+                                                            />
                                                         <div className='price-text text-start'>
                                                             <h6>Hello, {UserName}</h6>
                                                             <span>Orders & Account</span>
