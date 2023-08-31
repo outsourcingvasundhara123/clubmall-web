@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Button,  Form, Modal, NavLink } from 'react-bootstrap'
+import { Button, Form, Modal, NavLink } from 'react-bootstrap'
 import { POSTSList } from "../helper/endpoints";
 import api from "../helper/api";
 import { getServerURL } from '../helper/envConfig';
@@ -11,8 +11,6 @@ import "swiper/css/pagination";
 import { Mousewheel } from "swiper";
 import { Is_Login } from '../helper/IsLogin'
 import { errorResponse, afterLogin, handelProductDetail } from '../helper/constants'
-import SucessSnackBar from "../components/SnackBar";
-import ErrorSnackBar from "../components/SnackBar";
 import { RiSendPlaneFill } from "react-icons/ri"
 import { MdOutlineClose } from 'react-icons/md'
 import { Rating } from '@mui/material';
@@ -20,9 +18,15 @@ import { MdDelete } from 'react-icons/md'
 import { CartContext } from '../context/CartContext'
 import { isMobile } from 'react-device-detect';
 import axios from 'axios';
+import { useCallback } from 'react';
+// import SucessSnackBar from "../components/SnackBar";
+// import ErrorSnackBar from "../components/SnackBar";
+const SucessSnackBar = React.lazy(() => import('../components/SnackBar'));
+const ErrorSnackBar = React.lazy(() => import('../components/SnackBar'));
+
 const ForYou = () => {
 
-  const {setMainLoder, setShow, generateDynamicLink } = useContext(CartContext);
+  const { setMainLoder, setShow, generateDynamicLink } = useContext(CartContext);
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
   const swiperRef = useRef(null);
@@ -133,7 +137,7 @@ const ForYou = () => {
       const postListResponse = await axios.get(`${serverURL + POSTSList + `?action=list&page=${1}`}`);
       setPostUrl(postListResponse.data.data.productImagePath)
       const postsData = postListResponse.data.data.postList;
-        setPostList(postsData.slice(0, 4));
+      setPostList(postsData.slice(0, 4));
     } catch (error) {
       console.log(error);
     }
@@ -166,11 +170,11 @@ const ForYou = () => {
     return url && /\.(mp4|webm|ogg)$/i.test(url);
   }
 
-  const handleSlideChange = (swiper) => {
+  const handleSlideChange = useCallback((swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
     setCurrentVideoId(postList[swiper.activeIndex]._id)
     if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
-      if (swiper.activeIndex === postList.length - 3) { 
+      if (swiper.activeIndex === postList.length - 3) {
         if (page < totalPages) {
           setIsFetching(true);
           setPage((prevPage) => prevPage + 1);
@@ -198,7 +202,7 @@ const ForYou = () => {
     } else if (!isLoggedIn && swiper.activeIndex === 3) {
       handleShow()
     }
-  }
+  }, [isLoggedIn, postList, page, totalPages]);
 
   const followUnfollow = async (user_id) => {
     try {
@@ -219,7 +223,7 @@ const ForYou = () => {
             return post;
           });
           setPostList(updatedPostList);
-        
+
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -379,14 +383,14 @@ const ForYou = () => {
   };
 
   useEffect(() => {
-    if(isLoggedIn){
+    if (isLoggedIn) {
       getPosts();
     }
-  }, [page, isLoggedIn,currentVideoId]);
+  }, [page, isLoggedIn, currentVideoId]);
 
-  
+
   useEffect(() => {
-    if(!isLoggedIn){
+    if (!isLoggedIn) {
       getPostsStatic();
     }
   }, []);
@@ -410,7 +414,7 @@ const ForYou = () => {
     }
   };
 
-  
+
   return (
 
     <>
@@ -473,15 +477,31 @@ const ForYou = () => {
                   />
                 ) : (
                   <>
-                  <img
-                  className='reels-img' src={e.post_video_link} alt="Image" />
+                    {/* <img
+                  className='reels-img' src={e.post_video_link} alt="Image" /> */}
+                    <img
+                      className='reels-img'
+                      src={e.post_video_link ? e.post_video_link : "./img/placeholder_img.webp"}
+                      alt="Image"
+                      loading="lazy"
+                    />
                   </>
                 )}
 
                 <div className='user-name px-3'>
                   <div className='d-flex align-items-center gap-2'>
-                    <img alt='profile'
-                     className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} />
+                    {/* <img alt='profile'
+                     className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} /> */}
+                    <img
+                      alt='profile'
+                      className='myprofile'
+                      width="34px"
+                      height="34px"
+                      style={{ borderRadius: "50%", objectFit: "cover" }}
+                      src={e.user_profile ? e.user_profile : `${defaultProfile}`}
+                      loading="lazy"
+                    />
+
                     <div>
                       <p>{e.user_name}</p>
                       {/* <span>
@@ -505,16 +525,26 @@ const ForYou = () => {
                     <div className='reel-items'>
                       <p onClick={() => handleProductShow(e.products_obj)} className='pointer'>{e.products_obj.length}+ More Products</p>
                       <div className='items-box p-2 mt-2'>
-                      <img
-                    src="./img/placeholder_img.webp"
-                    alt=''
-                    className='img-fluid'
-                    style={{ display: imageLoaded ? 'none' : 'block' }}
-                />
-                        <img 
-                         onLoad={() => setImageLoaded(true)}
-                         style={{ display: imageLoaded ? 'block' : 'none' }}
-                        alt='' src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%" />
+                        {/* <img
+                          src="./img/placeholder_img.webp"
+                          alt=''
+                          className='img-fluid'
+                          style={{ display: imageLoaded ? 'none' : 'block' }}
+                        /> */}
+                        {/* <img
+                          alt=''
+                          className='img-fluid'
+                          src="./img/placeholder_img.webp"
+                          style={{ display: imageLoaded ? 'none' : 'block' }}
+                          loading="lazy"
+                        /> */}
+                        <img
+                          // onLoad={() => setImageLoaded(true)}
+                          // style={{ display: imageLoaded ? 'block' : 'none' }}
+                          alt='' 
+                          src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%" 
+                          loading="lazy"
+                          />
                         <del>${e.products_obj[0]?.product_id?.group_price}</del>
                       </div>
                     </div>
@@ -545,7 +575,7 @@ const ForYou = () => {
                       <img alt='' src='./img/for_you/flag.png' />
                     </Button>
                   </div>
-                 
+
                 </div>
 
               </div>
