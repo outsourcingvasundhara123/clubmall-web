@@ -236,7 +236,7 @@ const AddCartModal = (props) => {
                                                 {/* <span>{Math.round(modelProduct?.productList?.group_price * 100 / modelProduct?.productList?.individual_price)}% Off</span> */}
                                             </div>
 
-                                            <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
+                                            {/* <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
                                                 <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(modelProduct.productList?._id)
                                                     props.handleClose()
@@ -245,7 +245,7 @@ const AddCartModal = (props) => {
                                                 <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={(e) => (setPerActive('Individual'), handleCart(e))}>Individual Price <br />
                                                     ${modelProduct.productList?.individual_price}</Button>
 
-                                            </div>
+                                            </div> */}
 
                                             <div className='product-color mt-4'>
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
@@ -278,7 +278,7 @@ const AddCartModal = (props) => {
                                                 </div>
 
                                             </div>
-                                            <Button onClick={handleCart} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
+                                            <Button onClick={handleCart} style={{ width: "100%" , borderRadius: "30px"}} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
 
                                             <div>
                                                 <Button type='button' onClick={() => handelProductDetail(modelProduct.productList._id)} className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>

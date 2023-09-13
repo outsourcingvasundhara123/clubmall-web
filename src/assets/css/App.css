@@ -72,10 +72,23 @@
     font-display: swap;
 }
 
+/* ------------ togale scroller issues Start --- */
+
+::-webkit-scrollbar {
+    width: 12px; /* Adjust width as needed */
+}
 
 body {
     font-family: 'Lato';
+    overflow-y: scroll; /* Always show vertical scrollbar */
 }
+
+/* ------------ togale scroller issue END --- */
+
+
+/* body {
+    font-family: 'Lato';
+} */
 
 h1,
 h2,

@@ -31,6 +31,7 @@ const CartDrawer = () => {
         { discount: 15, threshold: 89 },
         { discount: 20, threshold: 120 }
     ];
+
     const [applicableOffer, setApplicableOffer] = useState(offers[0]); // Start with the default offer
 
     const [MymessageCart, setMyMessageCart] = useState("");
@@ -148,8 +149,6 @@ const CartDrawer = () => {
     }, [isLoggedIn, drawer]);
 
     let subtotal = parseFloat(localCart.subtotal).toFixed(2);
-
-
 
     // Calculate cart total based on localCart and cartList
     const cartTotal = cartList.cartAmountDetails?.total_amount || subtotal;
