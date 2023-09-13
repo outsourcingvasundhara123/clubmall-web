@@ -65,7 +65,7 @@ const PinkCard = (props) => {
                 </div>
                 <div className='pink-card-text d-flex align-items-center justify-content-between px-3 py-2'>
                     <div>
-                        <p>Group Price: <b>${props.img.group_price}</b></p>
+                        {/* <p>Group Price: <b>${props.img.group_price}</b></p> */}
                         <h5>${props.img.individual_price}</h5>
                     </div>
                     {isWishlist === false

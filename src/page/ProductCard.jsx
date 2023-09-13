@@ -46,8 +46,8 @@ const ProductCard = ({ product, productImagePath, handleShow }) => {
                 <h5 onClick={() => handelProductDetail(product._id)}>{product.name}</h5>
                 <div className='d-flex align-items-center justify-content-between'>
                     <div onClick={() => handelProductDetail(product._id)}>
-                        <p className='per'>${product.group_price} <span>(Group Price)</span></p>
-                        <span className='sub-per'>${product.individual_price} (Individual Price)</span>
+                        <p className='per'>${product.individual_price}</p>
+                        {/* <span className='sub-per'>${product.individual_price}</span> */}
                     </div>
                     {isWishlist === false
                         &&

@@ -46,8 +46,9 @@ const SaleCard = (props) => {
                 <Button className='discount'><RiFlashlightFill /><p style={{ fontSize: "13px", fontWeight: "600" }}> -{Math.round(props.img.group_price * 100 / props.img.individual_price)}%</p></Button>
                 <div className='desc' onClick={() => handelProductDetail(props.img._id)} >
                     <p className='title truncate-after-words'>{props.img.name}</p>
-                    <p className='group-price'>${props.img.group_price}(Group Price)</p>
-                    <p className='individual-price mt-1 mb-3 in-per'>${props.img.individual_price}(Individual Price)</p>
+                    {/* <p className='group-price'>${props.img.group_price}(Group Price)</p> */}
+                    {/* <p className='individual-price mt-1 mb-3 in-per'>${props.img.individual_price}(Individual Price)</p> */}
+                    <p className='group-price mt-1 mb-3 in-per'>${props.img.individual_price}</p>
                     <ProgressBar now={props.img.total_order} className='mt-1' />
                     <p className='stock py-2'>({props.img.total_order == 0 ? props.img.total_order : props.img.total_order + "+"}) Sold</p>
                 </div>

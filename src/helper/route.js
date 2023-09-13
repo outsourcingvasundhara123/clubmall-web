@@ -1,5 +1,6 @@
 import React from 'react';
 import PrivateRoute from './PrivateRoute';
+import { Navigate } from 'react-router-dom';
 const Selling = React.lazy(() => import('../page/Selling'));
 const Trending = React.lazy(() => import('../page/Trending'));
 const Categories = React.lazy(() => import('../page/Categories'));
@@ -21,6 +22,7 @@ const ShippingInfo = React.lazy(() => import('../page/ShippingInfo'));
 const ThankYou = React.lazy(() => import('../page/ThankYou'));
 const Cart = React.lazy(() => import('../page/Cart'));
 const ForYou = React.lazy(() => import('../page/ForYou'));
+
 
 export default [
 
@@ -109,11 +111,18 @@ export default [
     element: <ReturnPolicy />,
   },
   {
+
+
+    
     path: "/shipping-info",
     element: <ShippingInfo />,
   },
   {
     path: "/thankyou",
     element: <PrivateRoute><ThankYou /></PrivateRoute>,
+  },
+  {
+    path: "*",
+    element: <Navigate to="/" />,
   },
 ];

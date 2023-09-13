@@ -244,6 +244,7 @@ const ProductInfo = () => {
 
 
     const getproductlist = async () => {
+        
         const apiTyp = isLoggedIn ? api.postWithToken : api.post;
 
         try {
@@ -724,16 +725,16 @@ const ProductInfo = () => {
                                                 {/* <span>{Math.round(Product?.productList?.group_price * 100 / Product?.productList?.individual_price)}% Off</span> */}
                                             </div>
 
-                                            <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
+                                            {/* <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'> */}
 
-                                                <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
+                                                {/* <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
                                                     groupPriceShare(Product?.productList?._id)
 
                                                 }}>Group Price: <br />
-                                                    ${Product?.productList?.group_price}</Button>
-                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handleCart())}>Individual Price <br />
-                                                    ${Product?.productList?.individual_price}</Button>
-                                            </div>
+                                                    ${Product?.productList?.group_price}</Button> */}
+                                                {/* <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handleCart())}>Individual Price <br />
+                                                    ${Product?.productList?.individual_price}</Button> */}
+                                            {/* </div> */}
 
 
                                             {/* <p className='interest mt-3'>4 interest-free installments of <span>$4.25</span> with
@@ -798,7 +799,7 @@ const ProductInfo = () => {
 
                                             </div>
 
-                                            <Button onClick={handleCart} className='add-cart-items mt-4'>Add to cart</Button>
+                                            <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%" , borderRadius: "30px"}} >Add to cart</Button>
 
                                             <div className='d-flex align-items-start gap-4 justify-content-left overflow-hidden mt-4 ' 
                                             style={{maxHeight: "300px"}}

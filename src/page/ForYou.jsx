@@ -414,6 +414,7 @@ const ForYou = () => {
     }
   };
 
+  console.log(postList,"postList");
 
   return (
 
@@ -514,13 +515,15 @@ const ForYou = () => {
                   </Button>                </div>
                 {e.products_obj.length !== 0 &&
                   <>
-                    <div className='price'>
+                    {/* <div className='price '>
                       <Button onClick={() =>
                         groupPriceShare(e.products_obj[0]?.product_id?._id)} >Group Price: <br />
                         ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
-                      <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} >Individual Price <br />
+                               <Button type='button'  style={{width:"90%"}} onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} > Add to cart <br />
                         ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
-                    </div>
+                      <Button type='button' className='active btn btn-primary' style={{width:"90%"}} onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} > Add to cart <br />
+                        ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
+                    </div> */}
 
                     <div className='reel-items'>
                       <p onClick={() => handleProductShow(e.products_obj)} className='pointer'>{e.products_obj.length}+ More Products</p>
@@ -712,11 +715,11 @@ const ForYou = () => {
                         <Rating name="read-only" value={e.product_id?.rating} readOnly />
 
                       </div>
-                      <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
+                      <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row' >
 
-                        <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => groupPriceShare(e.product_id?._id)}>Group Price <br />
-                          ${e.product_id?.group_price} </Button>
-                        <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}>Individual Price <br />
+                        {/* <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => groupPriceShare(e.product_id?._id)}>Group Price <br />
+                          ${e.product_id?.group_price} </Button> */}
+                        <Button className={`${perActive === "Individual" ? "active" : ""}`}  onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}> Add to cart  <br />
                           $ {e.product_id?.individual_price} </Button>
                       </div>
                     </div>
