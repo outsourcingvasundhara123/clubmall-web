@@ -200,7 +200,7 @@ const ForYou = () => {
         }, 100);
       }
     } else if (!isLoggedIn && swiper.activeIndex === 3) {
-      handleShow()
+      // handleShow()
     }
   }, [isLoggedIn, postList, page, totalPages]);
 
@@ -414,7 +414,6 @@ const ForYou = () => {
     }
   };
 
-  console.log(postList,"postList");
 
   return (
 
@@ -719,8 +718,8 @@ const ForYou = () => {
 
                         {/* <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => groupPriceShare(e.product_id?._id)}>Group Price <br />
                           ${e.product_id?.group_price} </Button> */}
-                        <Button className={`${perActive === "Individual" ? "active" : ""}`}  onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}> Add to cart  <br />
-                          $ {e.product_id?.individual_price} </Button>
+                        {/* <Button className={`${perActive === "Individual" ? "active" : ""}`}  onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}> Add to cart  <br />
+                          $ {e.product_id?.individual_price} </Button> */}
                       </div>
                     </div>
                   </div>
