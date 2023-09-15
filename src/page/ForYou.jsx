@@ -154,11 +154,11 @@ const ForYou = () => {
       const postsData = postListResponse.data.data.postList;
       const updatedfavoriteProductList = [...postList, ...postsData]
         .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-      if (!isLoggedIn) {
-        setPostList(updatedfavoriteProductList.slice(0, 4));
-      } else {
+      // if (!isLoggedIn) {
+        // setPostList(updatedfavoriteProductList.slice(0, 4));
+      // } else {
         setPostList(updatedfavoriteProductList);
-      }
+      // }
       setIsFetching(false);
       stopAnimation();
     } catch (error) {
@@ -173,7 +173,8 @@ const ForYou = () => {
   const handleSlideChange = useCallback((swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
     setCurrentVideoId(postList[swiper.activeIndex]._id)
-    if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
+    if ( swiper.activeIndex === postList.length - 3) {
+    // if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
       if (swiper.activeIndex === postList.length - 3) {
         if (page < totalPages) {
           setIsFetching(true);
@@ -383,17 +384,17 @@ const ForYou = () => {
   };
 
   useEffect(() => {
-    if (isLoggedIn) {
+    // if (isLoggedIn) {
       getPosts();
-    }
+    // }
   }, [page, isLoggedIn, currentVideoId]);
 
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      getPostsStatic();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     getPostsStatic();
+  //   }
+  // }, []);
 
 
   const groupPriceShare = (id) => {
@@ -715,11 +716,10 @@ const ForYou = () => {
 
                       </div>
                       <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row' >
-
                         {/* <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => groupPriceShare(e.product_id?._id)}>Group Price <br />
-                          ${e.product_id?.group_price} </Button> */}
-                        {/* <Button className={`${perActive === "Individual" ? "active" : ""}`}  onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}> Add to cart  <br />
-                          $ {e.product_id?.individual_price} </Button> */}
+                          ${e.product_id?.group_price} </Button>  */}
+                         <Button className={`${perActive === "Individual" ? "active" : ""}`}  onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}> Add to cart  <br />
+                          $ {e.product_id?.individual_price} </Button>
                       </div>
                     </div>
                   </div>
