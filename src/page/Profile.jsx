@@ -595,12 +595,10 @@ const Profile = () => {
                                                                             <th>Amount</th>
                                                                             <th>Shipping To</th>
                                                                             <th>Status</th>
-                                                                            <th>Action</th>
+                                                                            {/* <th>Action</th> */}
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-
-
 
                                                                         {displayedOrders && displayedOrders.map((e, i) => {
                                                                             return (
@@ -629,14 +627,14 @@ const Profile = () => {
                                                                                                 {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
                                                                                                 {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
                                                                                                 {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
-                                                                                                {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>}
+                                                                                                {/* {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>} */}
                                                                                             </td>
-                                                                                            <td>
+                                                                                            {/* <td>
                                                                                                 <Button className='submit-btn mt-0 d-flex align-items-center mx-auto' style={{
                                                                                                     fontSize: "15px",
                                                                                                     padding: "10px"
                                                                                                 }}>cancel</Button>
-                                                                                            </td>
+                                                                                            </td> */}
                                                                                         </tr >
                                                                                     }
                                                                                 </>
