@@ -1,27 +1,31 @@
-import React from 'react';
-import PrivateRoute from './PrivateRoute';
+// Route-related imports
 import { Navigate } from 'react-router-dom';
-const Selling = React.lazy(() => import('../page/Selling'));
-const Trending = React.lazy(() => import('../page/Trending'));
-const Categories = React.lazy(() => import('../page/Categories'));
-const ProductInfo = React.lazy(() => import('../page/ProductInfo'));
-const Profile = React.lazy(() => import('../page/Profile'));
-const Fashion = React.lazy(() => import('../page/Fashion'));
-const Home = React.lazy(() => import('../page/Home'));
-const LogIn = React.lazy(() => import('../page/loginpage/LogIn'));
-const Register = React.lazy(() => import('../page/registerpage/Register'));
-const Wishlist = React.lazy(() => import('../page/Wishlist'));
-const About = React.lazy(() => import('../page/About'));
-const Policy = React.lazy(() => import('../page/Policy'));
-const TermsUse = React.lazy(() => import('../page/TermsUse'));
-const Influencer = React.lazy(() => import('../page/Influencer'));
-const Search = React.lazy(() => import('../page/Search'));
-const ContactUs = React.lazy(() => import('../page/ContactUs'));
-const ReturnPolicy = React.lazy(() => import('../page/ReturnPolicy'));
-const ShippingInfo = React.lazy(() => import('../page/ShippingInfo'));
-const ThankYou = React.lazy(() => import('../page/ThankYou'));
-const Cart = React.lazy(() => import('../page/Cart'));
-const ForYou = React.lazy(() => import('../page/ForYou'));
+import PrivateRoute from './PrivateRoute';
+
+// Component imports
+import React, { lazy } from 'react';
+
+const Selling = lazy(() => import('../page/Selling'));
+const Trending = lazy(() => import('../page/Trending'));
+const Categories = lazy(() => import('../page/Categories'));
+const ProductInfo = lazy(() => import('../page/ProductInfo'));
+const Profile = lazy(() => import('../page/Profile'));
+const Fashion = lazy(() => import('../page/Fashion'));
+const Home = lazy(() => import('../page/Home'));
+const LogIn = lazy(() => import('../page/loginpage/LogIn'));
+const Register = lazy(() => import('../page/registerpage/Register'));
+const Wishlist = lazy(() => import('../page/Wishlist'));
+const About = lazy(() => import('../page/About'));
+const Policy = lazy(() => import('../page/Policy'));
+const TermsUse = lazy(() => import('../page/TermsUse'));
+const Influencer = lazy(() => import('../page/Influencer'));
+const Search = lazy(() => import('../page/Search'));
+const ContactUs = lazy(() => import('../page/ContactUs'));
+const ReturnPolicy = lazy(() => import('../page/ReturnPolicy'));
+const ShippingInfo = lazy(() => import('../page/ShippingInfo'));
+const ThankYou = lazy(() => import('../page/ThankYou'));
+const Cart = lazy(() => import('../page/Cart'));
+const ForYou = lazy(() => import('../page/ForYou'));
 
 
 export default [
@@ -111,8 +115,6 @@ export default [
     element: <ReturnPolicy />,
   },
   {
-
-
     
     path: "/shipping-info",
     element: <ShippingInfo />,

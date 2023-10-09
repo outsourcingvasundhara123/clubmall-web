@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { Button, Col, Form, NavLink, Row, Modal } from 'react-bootstrap'
 import "react-phone-input-2/lib/bootstrap.css";
+import PhoneInput from 'react-phone-input-2'
 import { Link } from 'react-router-dom';
 import api from '../../helper/api';
 import { getServerURL } from '../../helper/envConfig';

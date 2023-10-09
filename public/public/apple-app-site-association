@@ -1,0 +1,12 @@
+        
+        {
+          "applinks": {
+            "apps": [],
+            "details": [
+              {
+                "appID": "GRCLPT9AD5.com.clubmall",
+                  "paths": [ "/product-details/*"]
+              }
+            ]
+          }
+        }
