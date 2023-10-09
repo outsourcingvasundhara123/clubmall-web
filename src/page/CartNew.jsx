@@ -8,7 +8,7 @@ import {
 } from "react-icons/md"
 import { data } from "../page/Data"
 import ProCard from '../components/ProCard'
-import { useLocation, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import { handelProductDetail } from '../helper/constants';
 import { ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import api from "../helper/api";

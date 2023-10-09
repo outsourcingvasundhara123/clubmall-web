@@ -184,6 +184,7 @@ const ProductInfo = () => {
                     apiTyp(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
                 ]);
                 const productData = productDetail.data.data;
+                console.log(productData,"productData");
                 setProduct(productData);
                 setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
                 setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size)

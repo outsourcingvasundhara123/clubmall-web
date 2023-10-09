@@ -4673,6 +4673,12 @@ input[type='radio'] {
     color: #E02E24;
     font-size: 15px;
 }
+.errorAdmin {
+    color: #E02E24;
+    font-size: 15px;
+    text-align: left;
+    margin-top: 10px;
+}
 
 .truncate-after-words {
     white-space: nowrap;
