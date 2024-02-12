@@ -21,7 +21,7 @@ const Footer = (props) => {
                     <div className='info footer-box'>
                         <h5>Customer Services</h5>
                         <div className='mt-2 mt-sm-3'>
-                            <Link to="/terms-use" onClick={() => props.setActive(false)}>Terms of use</Link>
+                            <Link to="/terms-use" onClick={() => props.setActive(false)}>Terms of Use</Link>
                             <Link to="/shipping-info" onClick={() => props.setActive(false)}>Shipping Info</Link>
                             {/* <NavLink>Return and refund policy</NavLink>
                             <NavLink>Intellectual property policy</NavLink>

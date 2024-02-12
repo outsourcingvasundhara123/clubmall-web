@@ -5516,7 +5516,7 @@ input[type='radio'] {
     }
 
     .in-per {
-        display: none;
+        /* display: none; */
     }
 
     .footer {
@@ -6382,3 +6382,33 @@ input[type='radio'] {
     aspect-ratio: 3/4;
     object-fit: cover;
 }
+
+.terms-use-header {
+
+    margin-top: 20px; /* Adjust as needed for spacing */
+    font-size: 50px ;
+    color: #000 ;
+    font-weight: 800 ;
+
+}
+
+.progress-bar-2{
+ margin-bottom: 30px;  
+}
+
+.progress-bar-2 {
+    margin-bottom: 30px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .progress-bar-2 {
+      margin-bottom: 20px; /* Adjust as needed for smaller screens */
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    .progress-bar-2 {
+      margin-bottom: 10px; /* Adjust as needed for even smaller screens */
+    }
+  }
+  

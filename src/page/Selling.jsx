@@ -126,7 +126,7 @@ const Selling = () => {
             <section className='basket'>
                 <div className='container-cos'>
                     <div className='title w-100 text-center'>
-                        <h2><span>B</span>ASKET STUFFERS FOR EVERTONE FROM $0.39</h2>
+                        <h2><span>B</span>ASKET STUFFERS FOR EVERYONE FROM $0.39</h2>
                     </div>
                     <Row className='mt-4'>
                         {catwebLoading ?

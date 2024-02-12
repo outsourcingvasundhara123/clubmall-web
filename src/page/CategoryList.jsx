@@ -128,7 +128,11 @@ const CategoryList = () => {
                             {category && category.firstHalf && category.firstHalf.map((e, i) => {
                                 return (
                                     <div className='item' key={i}>
-                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))} >
+                                        <div className='cate-slider-box text-center px-0 px-md-3 pointer' key={i} onClick={() => (handelCategorydata(e._id), localStorage.removeItem("selectedSubcategories"))}
+                                        role="button"
+                                        tabIndex="0"
+
+                                         >
                                             <div className='categories-slider-img '>   {/* "active-catagories" use this className to active catagories */}
                                                 <img src={category.productsCategoryIconPath + e.product_icon} alt='' />
                                             </div>

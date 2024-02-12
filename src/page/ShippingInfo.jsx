@@ -21,7 +21,7 @@ const ShippingInfo = () => {
                             <tbody>
                                 <tr>
                                     <td>Individual Price</td>
-                                    <td className='text-gray'>Estimated to be delivered by 10 to 12 days </td>
+                                    <td className='text-gray'>Estimated to be delivered within 10 to 12 days </td>
                                     <td>
                                         <div className='shipping-per'>
                                             <span>$5 for orders under $18.00</span>
@@ -31,7 +31,7 @@ const ShippingInfo = () => {
                                 </tr>
                                 <tr>
                                     <td>Group Price</td>
-                                    <td className='text-gray'>Estimated to be delivered by 10 to 12 days</td>
+                                    <td className='text-gray'>Estimated to be delivered within 10 to 12 days</td>
                                     <td>
                                         <div className='shipping-per'>
                                             <span>$5 for orders under $19.00</span>
@@ -55,8 +55,8 @@ const ShippingInfo = () => {
                     </div>
 
                     <div className='nots'>
-                        <h5>Nots :</h5>
-                        <p>1) Express Shipping is not available for P.O. Boxes and APO/FPO addresses</p>
+                        <h5>Notes :</h5>
+                        <p>1) Express Shipping is not available for P.O. Boxes and APO/FPO addresses.</p>
                         <p>2) After the order has been paid, the warehouse needs 1-3 days to process your order. You will receive a notification once your order has been shipped.</p>
                         <p>3) In most cases, the package will be delivered within the estimated time of arrival. However, the actual delivery date may be affected by flight arrangements, weather conditions and other external factors. Please refer to the tracking information for the most accurate delivery date.</p>
                         <p>4) If your package has not been delivered or your tracking information shows that your package has been delivered but you have not received it, you must contact Customer Service to verify within 45 days of the order date. For other orders, products, and logistics related issues, you must contact customer service within 90 days of the order date.</p>

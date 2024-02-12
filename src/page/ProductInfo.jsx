@@ -184,7 +184,6 @@ const ProductInfo = () => {
                     apiTyp(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
                 ]);
                 const productData = productDetail.data.data;
-                console.log(productData,"productData");
                 setProduct(productData);
                 setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
                 setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size)
@@ -257,7 +256,7 @@ const ProductInfo = () => {
                     page: 1
                 })]);
             const favoriteproductData = favorites.data.data;
-            const trendingproductData = trendingproductListResponse.data.data
+            const trendingproductData = trendingproductListResponse.data.data;
             setFavoriteProductList(favoriteproductData);
             setTrendingProductList(trendingproductData)
             stopAnimation()
@@ -588,10 +587,12 @@ const ProductInfo = () => {
 
                                             <RWebShare
                                                 data={{
-                                                    text: "Hy Check out this product on Clubmall you will get a big discount",
+                                                
+                                                    text: "Hey, check out this product on Clubmall. Limited stock available. It’s going fast!",
                                                     url: window.location.href,
                                                     title: "Clubmall",
                                                 }}
+
                                                 sites={[
                                                     "facebook",
                                                     "twitter",

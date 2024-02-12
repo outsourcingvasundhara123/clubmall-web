@@ -64,7 +64,6 @@ const ProductData = ({ search }) => {
       });
 
       // Handle the response if needed
-      console.log(response);
 
       // You might want to update the productList state after a successful API call
       // Example: Call getProducts() again to refresh the product list
@@ -76,7 +75,6 @@ const ProductData = ({ search }) => {
     }
   };
 
-  console.log(productList, "product");
 
 
   return (

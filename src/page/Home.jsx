@@ -24,6 +24,7 @@ import { handelCategorydata } from '../helper/constants';
 const Home = () => {
     const { handelSearch, getSearchedProduct, searchKeyWord, setSearchKeyWord,  setMyMessage, startAnimation, stopAnimation, player, loading, 
         productList, trendingProductList, getProducts,  sucessSnackBarOpen, warningSnackBarOpen, Mymessage, setWarningSnackBarOpen, setSucessSnackBarOpen } = useContext(CartContext);
+   
     const textRef = useRef(null);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
@@ -71,11 +72,9 @@ const Home = () => {
     };
 
     const handleKeyUp = () => {
-
         handelSearch(searchKeyWord)
         getSearchedProduct()
         navigate("/search")
-
     };
 
     const handleChange = (value) => {
@@ -239,7 +238,7 @@ const Home = () => {
                                                 <img src='./img/img4.svg' alt='' />
                                                 <div className='card-text-bottom big-box'>
                                                     <div className='card-text'>
-                                                        <h5>Jewellery</h5>
+                                                        <h5>Jewelry</h5>
                                                         <span className='my-2 d-block'>From $0.29</span>
                                                     </div>
                                                     <Button className='shop-btn mt-0 mt-3' >Shop Now <MdKeyboardDoubleArrowRight /></Button>

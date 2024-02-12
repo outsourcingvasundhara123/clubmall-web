@@ -67,7 +67,6 @@ const EditProduct = () => {
     getProductDetail();
   }, [id]);
 
-  console.log(product,"product");
 
   return (
     <Layout>
