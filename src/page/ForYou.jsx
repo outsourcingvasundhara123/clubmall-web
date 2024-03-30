@@ -472,6 +472,7 @@ const ForYou = () => {
                           controlsList: 'nodownload',
                           preload: 'auto',
                           'webkit-playsinline': true,
+                          playsInline: 'true', // This is the correct attribute for modern browsers
                         },
                       },
                     }}
