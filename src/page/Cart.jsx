@@ -191,6 +191,7 @@ const WrappedCart = () => {
 
         if (Object.keys(validationErrors).length === 0) {
 
+
             try {
 
                 let type = mood == "add" ? "shipping-address-create" : "shipping-address-manage"
@@ -477,11 +478,9 @@ const WrappedCart = () => {
                 setMyMessageCart(res.data.message);
                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             }
-
             setTimeout(() => {
                 setMainLoder(false)
             }, 1000);
-
         } catch (error) {
             console.log(error, "error");
         }
@@ -557,7 +556,7 @@ const WrappedCart = () => {
                                 setMyMessageCart(payment.error.message);
                                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
                             } else {
-                                setMyMessageCart("Your order has been successfully placed");
+                                setMyMessageCart(paymentStatus.data.message);
                                 setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
 
                                 //run  order js 
