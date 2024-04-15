@@ -4,6 +4,8 @@ import PrivateRoute from './PrivateRoute';
 
 // Component imports
 import React, { lazy } from 'react';
+import DeleteAccount from '../page/DeleteAccount';
+import PaymentUnsuccessful from '../page/PaymentUnsuccessful';
 
 const Selling = lazy(() => import('../page/Selling'));
 const Trending = lazy(() => import('../page/Trending'));
@@ -33,6 +35,10 @@ export default [
   {
     path: "/home",
     element: <Home />,
+  },
+  {
+    path: "/delete-account",
+    element: <DeleteAccount />,
   },
   {
     path: "/selling",
@@ -122,6 +128,10 @@ export default [
   {
     path: "/thankyou",
     element: <PrivateRoute><ThankYou /></PrivateRoute>,
+  },
+  {
+    path: "/cancel",
+    element: <PrivateRoute><PaymentUnsuccessful /></PrivateRoute>,
   },
   {
     path: "*",

@@ -55,7 +55,8 @@ const ForYou = () => {
   const [playerRefs, setPlayerRefs] = useState({});
   const [currentVideoId, setCurrentVideoId] = useState();
   const [imageLoaded, setImageLoaded] = useState(false);
-
+  const [showButton, setShowButton] = useState(true);
+  const playerRef = useRef();
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => {
     setCommnet(" ")
@@ -155,9 +156,9 @@ const ForYou = () => {
       const updatedfavoriteProductList = [...postList, ...postsData]
         .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
       // if (!isLoggedIn) {
-        // setPostList(updatedfavoriteProductList.slice(0, 4));
+      // setPostList(updatedfavoriteProductList.slice(0, 4));
       // } else {
-        setPostList(updatedfavoriteProductList);
+      setPostList(updatedfavoriteProductList);
       // }
       setIsFetching(false);
       stopAnimation();
@@ -173,8 +174,8 @@ const ForYou = () => {
   const handleSlideChange = useCallback((swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
     setCurrentVideoId(postList[swiper.activeIndex]._id)
-    if ( swiper.activeIndex === postList.length - 3) {
-    // if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
+    if (swiper.activeIndex === postList.length - 3) {
+      // if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
       if (swiper.activeIndex === postList.length - 3) {
         if (page < totalPages) {
           setIsFetching(true);
@@ -385,7 +386,7 @@ const ForYou = () => {
 
   useEffect(() => {
     // if (isLoggedIn) {
-      getPosts();
+    getPosts();
     // }
   }, [page, isLoggedIn, currentVideoId]);
 
@@ -407,11 +408,19 @@ const ForYou = () => {
     }
   }
 
-  const handleVolumeChange = ({ played, playedSeconds, loaded, loadedSeconds, volume }) => {
-    if (muted === false) {
-      setMuted(true);
-    } else if (muted === true) {
-      setMuted(false);
+  // const handleVolumeChange = ({ played, playedSeconds, loaded, loadedSeconds, volume }) => {
+  //   if (muted === false) {
+  //     setMuted(true);
+  //   } else if (muted === true) {
+  //     setMuted(false);
+  //   }
+  // };
+
+  const toggleMute = () => {
+    const newMutedStatus = !muted;
+    setMuted(newMutedStatus);
+    if (playerRef.current) {
+      playerRef.current.getInternalPlayer().muted = newMutedStatus; // Directly set muted property on the player
     }
   };
 
@@ -456,26 +465,31 @@ const ForYou = () => {
             <SwiperSlide key={i}>
               <div className='reels-box position-relative pointer'>
                 {e.post_video_link && isVideo(e.post_video_link) ? (
-                  <ReactPlayer
-                    url={e.post_video_link}
-                    width="100%"
-                    height="100%"
-                    controls={true}
-                    // onPlay={handleOnUnmute}
-                    playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
-                    onVolumeChange={handleVolumeChange}
-                    muted={muted}
-                    loop={true}
-                    config={{
-                      file: {
-                        attributes: {
-                          controlsList: 'nodownload',
-                          preload: 'auto',
-                          'webkit-playsinline': true,
+
+                    <ReactPlayer
+                      url={e.post_video_link}
+                      width="100%"
+                      height="100%"
+                      controls={true}
+                      // onPlay={handleOnUnmute}
+                      playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
+                      // onVolumeChange={handleVolumeChange}
+                      muted={muted}
+                      volume={0.5} // Set a fixed volume level, as you cannot entirely remove the volume control for all browsers
+                      loop={true}
+                      config={{
+                        file: {
+                          attributes: {
+                            controlsList: 'nodownload',
+                            preload: 'auto',
+                            'webkit-playsinline': true,
+                            playsInline: 'true', // This is the correct attribute for modern browsers
+
+                          },
                         },
-                      },
-                    }}
-                  />
+                      }}
+                    />
+                   
                 ) : (
                   <>
                     {/* <img
@@ -544,10 +558,10 @@ const ForYou = () => {
                         <img
                           // onLoad={() => setImageLoaded(true)}
                           // style={{ display: imageLoaded ? 'block' : 'none' }}
-                          alt='' 
-                          src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%" 
+                          alt=''
+                          src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%"
                           loading="lazy"
-                          />
+                        />
                         <del>${e.products_obj[0]?.product_id?.group_price}</del>
                       </div>
                     </div>
@@ -577,6 +591,11 @@ const ForYou = () => {
                     <Button onClick={() => handleReportShow(e._id)}>
                       <img alt='' src='./img/for_you/flag.png' />
                     </Button>
+
+                    <Button onClick={toggleMute} className='foryou-voice'>
+                      {muted ?   <img alt='' src='./img/for_you/mute.png' /> :   <img alt='' src='./img/for_you/unmute.png' />}
+                    </Button>
+
                   </div>
 
                 </div>
@@ -718,7 +737,7 @@ const ForYou = () => {
                       <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row' >
                         {/* <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => groupPriceShare(e.product_id?._id)}>Group Price <br />
                           ${e.product_id?.group_price} </Button>  */}
-                         <Button className={`${perActive === "Individual" ? "active" : ""}`}  onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}> Add to cart  <br />
+                        <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handelProductDetail(e.product_id?._id && e.product_id?._id))}> Add to cart  <br />
                           $ {e.product_id?.individual_price} </Button>
                       </div>
                     </div>
