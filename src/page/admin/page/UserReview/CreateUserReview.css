@@ -1,0 +1,32 @@
+.upload-img{
+    width: 24% !important;
+}
+.rating
+{
+    width: 100%;
+    border-radius: 3.997px;
+    border: 1px solid #e02e24;
+    background: #e02d2415;
+    outline: none;
+    color: #85908c;
+    height: 38px;
+    align-items: center;
+    gap: 1px !important;
+    padding: 6px;
+}
+.css-1vooibu-MuiSvgIcon-root
+{
+    width: 25px !important;
+    height: 25px !important;
+    
+}
+
+.css-iljtu2-MuiRating-root .MuiRating-visuallyHidden
+{
+    width: 26px;
+}
+.fees-input label
+{
+    position: relative;
+    
+}

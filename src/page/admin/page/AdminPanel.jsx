@@ -9,6 +9,9 @@ import './assets/css/admin.css';
 import PrivateRoute from '../../../helper/PrivateRouteAdmin';
 import { CartContext } from '../../../context/CartContext';
 import LoaderMain from '../../../components/LoaderMain';
+import CreateUserReview from './UserReview/CreateUserReview';
+import ListUserReview from './UserReview/ListUserReview';
+
 const AdminPanel = () => {
 
   const { mainloder, mainstopAnimation, mainstartAnimation, mainplayer } = useContext(CartContext);
@@ -36,6 +39,8 @@ const AdminPanel = () => {
         <Route path="/product" element={<PrivateRoute> <ProductDetails /> </PrivateRoute>} />
         <Route path="/edit-product/:id" element={<PrivateRoute> <EditProduct /> </PrivateRoute>} />
         <Route path="/add-product" element={<PrivateRoute> <AddProduct /> </PrivateRoute>} />
+        <Route path="/create-user-review/:id" element={<PrivateRoute> <CreateUserReview /> </PrivateRoute>} />
+        <Route path="/list-user-review/:id" element={<PrivateRoute> <ListUserReview /> </PrivateRoute>} />
       </Routes>
     </Fragment>
   );

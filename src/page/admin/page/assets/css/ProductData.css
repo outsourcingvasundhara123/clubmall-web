@@ -1,0 +1,16 @@
+.upload-img
+{
+    width: 18px;
+    color: white !important;
+    position: relative;
+    right: -12px;
+}
+.fixed-fee
+{
+    position: relative;
+ bottom:20px !important;
+}
+.user-review-icon
+{
+    width: 18px;
+}
