@@ -106,7 +106,9 @@ const ForYou = () => {
   };
 
   const stopAnimation = () => {
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   };
 
   const handleCommentsShow = async (id) => {
@@ -429,10 +431,10 @@ const ForYou = () => {
 
     <>
       <h1 className='d-none'></h1>
-      {/* {
+      {
         loading && (
           <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
-        )} */}
+        )}
       <div className='for-you'>
         <SucessSnackBar
           open={sucessSnackBarOpen}
