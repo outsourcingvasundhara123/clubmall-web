@@ -31,6 +31,7 @@ const ClientPanel = () => {
   const { drawer, mainloder, handleDrawerShow, mainstopAnimation, mainstartAnimation, mainplayer } = useContext(CartContext);
 
   const showHeaderAndFooter = window.location.pathname !== "/delete-account";
+  const hideFooter = window.location.pathname === "/";
 
 
   useEffect(() => {
@@ -220,7 +221,7 @@ const ClientPanel = () => {
             </Routes>
           </Suspense>
         </div>
-        {showHeaderAndFooter && <Footer />}
+        {showHeaderAndFooter && !hideFooter && <Footer />}
       </div>
 
     </div>

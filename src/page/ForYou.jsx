@@ -45,6 +45,7 @@ const ForYou = () => {
   const [loading, setLoading] = useState(true);
   const [Mymessage, setMyMessage] = useState("");
   const [totalPages, setTotalPages] = useState(1000); // Declare totalPages state variable
+  const [modelCount, setModelCount] = useState(1); // Declare totalPages state variable
   const player = useRef();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelData, setMyModelData] = useState("");
@@ -95,9 +96,13 @@ const ForYou = () => {
   };
 
   const handleShow = () => {
-    setIsModalOpen(true);
-    setShow(true);
+    if(modelCount <= 1){
+      setIsModalOpen(true);
+      setShow(true);
+      setModelCount(modelCount + 1)
+    }
   };
+
 
   const startAnimation = () => {
     if (player.current) {
@@ -204,7 +209,7 @@ const ForYou = () => {
         }, 100);
       }
     } else if (!isLoggedIn && swiper.activeIndex === 3) {
-      // handleShow()
+      handleShow()
     }
   }, [isLoggedIn, postList, page, totalPages]);
 

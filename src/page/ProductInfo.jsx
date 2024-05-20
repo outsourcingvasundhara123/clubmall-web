@@ -52,7 +52,7 @@ const CustEmailModal = ({ onHide }) => {
                 </div>
             </Modal.Body>
             <style jsx>{`
-            .footer-bottom p
+            .contact-us p
             {
                 position: relative;
                 top: -21px;
