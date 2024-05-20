@@ -43,7 +43,7 @@ const CustEmailModal = ({ onHide }) => {
                 Report an issue
             </Modal.Header>
             <Modal.Body>
-                <div className='footer-bottom' >
+                <div className='contact-us' >
                     <p className='custemailtext' >
                         If you want to leave any positive or negative feedback, you can always mail to
                         <a href="mailto:asouare@clubmall.com"> asouare@clubmall.com </a>

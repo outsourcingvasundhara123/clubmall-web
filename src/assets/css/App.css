@@ -6670,14 +6670,14 @@ video::-webkit-media-controls-mute-button {
     align-items: baseline;
 }
 
-.footer-bottom
+.contact-us
 {
     background-color: white !important;
     height: 42px;
 }
-.footer-bottom p{
+.contact-us p{
     color: black !important;
 }
-.footer-bottom a{
+.contact-us a{
     color: rgb(238, 51, 51) !important;
 }
