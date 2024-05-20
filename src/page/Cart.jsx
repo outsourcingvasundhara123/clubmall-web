@@ -80,6 +80,7 @@ const WrappedCart = () => {
     const [is_Wait, setIs_Wait] = useState(false);
     const [myAddress, setMyAddess] = useState([]);
     const [correntAddess, setCorrentAddess] = useState({});
+    const [returnPolicyChecked, setReturnPolicyChecked] = useState(false);
 
     // for steps manage 
     const nextStep = () => {
@@ -120,6 +121,12 @@ const WrappedCart = () => {
     const stopAnimation = () => {
         setLoading(false);
     };
+    
+    //for checkbox 
+    const handleCheckboxChange = (e) => {
+        setReturnPolicyChecked(e.target.checked);
+    };
+    const isButtonDisabled = !stripe || !returnPolicyChecked;
 
     // for address
     const getMyAddress = async () => {
@@ -894,11 +901,24 @@ const WrappedCart = () => {
                                                         </div>
                                                     </div> */}
                                                 </div>
+
+                                                <div className="return-policy-checkbox">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="return_policy_checkbox"
+                                                        checked={returnPolicyChecked}
+                                                        onChange={handleCheckboxChange}
+                                                    />
+                                                    <label htmlFor="return_policy_checkbox" className='return-policy-label ms-2'>
+                                                        If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
+                                                    </label>
+                                                </div>
+
                                                 {stripe ? (
                                                     <ElementsConsumer>
                                                         {({ elements, stripe }) => (
                                                             <div>
-                                                                <Button className='checkout mt-3' disabled={!stripe} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Make payment"} </Button>
+                                                                <Button className='checkout mt-3' disabled={isButtonDisabled} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Make payment"} </Button>
                                                             </div>
                                                         )}
                                                     </ElementsConsumer>

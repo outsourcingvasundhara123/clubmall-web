@@ -212,7 +212,7 @@ const ClientPanel = () => {
       <div className="page-layout">
         {showHeaderAndFooter && <Header active={active} setActive={setActive} />}
         <div className="mar-cos">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div></div>}>
             <Routes>
               {route.map((route, index) => (
                 <Route key={index} exact path={route.path} element={route.element} />

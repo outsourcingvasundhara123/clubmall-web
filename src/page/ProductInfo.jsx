@@ -33,6 +33,40 @@ import { FiUpload } from 'react-icons/fi'
 import { isMobile } from 'react-device-detect';
 import { createJsonLdSchema } from './productjson';
 import ProductGif from '../components/ProductGif'
+import reporticon from '../assets/img/fluent-mdl2_message-1.png';
+
+
+const CustEmailModal = ({ onHide }) => {
+    return (
+        <Modal show={true} onHide={onHide} size="lg" centered >
+            <Modal.Header closeButton>
+                Report an issue
+            </Modal.Header>
+            <Modal.Body>
+                <div className='footer-bottom' >
+                    <p className='custemailtext' >
+                        If you want to leave any positive or negative feedback, you can always mail to
+                        <a href="mailto:asouare@clubmall.com"> asouare@clubmall.com </a>
+                        – We are thankful for any feedback.
+                    </p>
+                </div>
+            </Modal.Body>
+            <style jsx>{`
+            .footer-bottom p
+            {
+                position: relative;
+                top: -21px;
+            }
+                @media (max-width: 768px) {
+                    .modal-content {
+                        height: 200px; /* Example height for smaller screens */
+                    }
+                }
+            `}</style>
+        </Modal>
+    );
+};
+
 
 const ProductInfo = () => {
 
@@ -78,6 +112,7 @@ const ProductInfo = () => {
     const [favoriteProductList, setFavoriteProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
     const [sizeActive, setSizeActive] = useState("")
+    const [product_qtyActive, setProduct_QtyActive] = useState(1);
     const [productColorActive, setProductColorActive] = useState()
     const [colorProduct, setColorProduct] = useState()
     // const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")  
@@ -104,6 +139,14 @@ const ProductInfo = () => {
 
     };
     const [filters, setFilters] = useState(initialValues_2);
+    const [showcustemail, setShowCustEmail] = useState(false);
+
+    const handleCustEmailClick = () => {
+        setShowCustEmail(true);
+    };
+    const handleCustEmailClose = () => {
+        setShowCustEmail(false);
+    };
 
     const handelreviewFilter = (e) => {
         setPage(1)
@@ -849,6 +892,25 @@ const ProductInfo = () => {
 
                                             </div>
                                         </div>
+
+
+                                        <div>
+                                            <div>
+                                                <a onClick={handleCustEmailClick} style={{ cursor: 'pointer', color: "#223263" }} >
+                                                    <img src={reporticon} className='custemailicon'  style={{ width:"20px"}} /> &nbsp; Report an issue with this product
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                            {showcustemail && (
+                                                <CustEmailModal
+
+                                                    onHide={handleCustEmailClose}
+                                                    className="size-chart-modal"
+                                                />
+                                            )}
+
+
                                     </Col>
                                 </Row>
 
