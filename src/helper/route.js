@@ -6,6 +6,7 @@ import PrivateRoute from './PrivateRoute';
 import React, { lazy } from 'react';
 import DeleteAccount from '../page/DeleteAccount';
 import PaymentUnsuccessful from '../page/PaymentUnsuccessful';
+import ForYouPost from '../page/ForYouPost';
 
 const Selling = lazy(() => import('../page/Selling'));
 const Trending = lazy(() => import('../page/Trending'));
@@ -79,6 +80,10 @@ export default [
   {
     path: "/",
     element: <ForYou />,
+  },
+  {
+    path: "post/:id",
+    element: <ForYouPost />,
   },
   {
     path: "/fashion",

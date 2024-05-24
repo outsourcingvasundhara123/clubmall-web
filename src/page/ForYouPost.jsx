@@ -19,22 +19,26 @@ import { CartContext } from '../context/CartContext'
 import { isMobile } from 'react-device-detect';
 import axios from 'axios';
 import { useCallback } from 'react';
-import { RWebShare } from 'react-web-share'
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { RWebShare } from 'react-web-share';
 // import SucessSnackBar from "../components/SnackBar";
 // import ErrorSnackBar from "../components/SnackBar";
 const SucessSnackBar = React.lazy(() => import('../components/SnackBar'));
 const ErrorSnackBar = React.lazy(() => import('../components/SnackBar'));
 
-const ForYou = () => {
+
+const ForYouPost = () => {
 
   const { setMainLoder, setShow, generateDynamicLink } = useContext(CartContext);
+  const location = useLocation();
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
+  const navigate = useNavigate();
   const swiperRef = useRef(null);
-  const defaultProfile = `./img/for_you/defaultuser.png`
+  const defaultProfile = `../img/for_you/defaultuser.png`
   const Userprofile = localStorage.getItem("profile_image") ? localStorage.getItem("profile_image") : defaultProfile
   const UserId = localStorage.getItem("user") && localStorage.getItem("user")
-  const [postList, setPostList] = useState([]);
+  const [postList, setPostList] = useState({});
   const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
   const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
   const serverURL = getServerURL();
@@ -46,7 +50,6 @@ const ForYou = () => {
   const [loading, setLoading] = useState(true);
   const [Mymessage, setMyMessage] = useState("");
   const [totalPages, setTotalPages] = useState(1000); // Declare totalPages state variable
-  const [modelCount, setModelCount] = useState(1); // Declare totalPages state variable
   const player = useRef();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modelData, setMyModelData] = useState("");
@@ -58,6 +61,7 @@ const ForYou = () => {
   const [currentVideoId, setCurrentVideoId] = useState();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showButton, setShowButton] = useState(true);
+  const { id } = useParams(); // Extracting the id from the URL
   const playerRef = useRef();
   const [showComments, setShowComments] = useState(false);
   const handleCommentsClose = () => {
@@ -97,13 +101,9 @@ const ForYou = () => {
   };
 
   const handleShow = () => {
-    if(modelCount <= 1){
-      setIsModalOpen(true);
-      setShow(true);
-      setModelCount(modelCount + 1)
-    }
+    setIsModalOpen(true);
+    setShow(true);
   };
-
 
   const startAnimation = () => {
     if (player.current) {
@@ -112,9 +112,7 @@ const ForYou = () => {
   };
 
   const stopAnimation = () => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    setLoading(false);
   };
 
   const handleCommentsShow = async (id) => {
@@ -143,7 +141,7 @@ const ForYou = () => {
 
   const getPostsStatic = async () => {
     try {
-      const postListResponse = await axios.get(`${serverURL + POSTSList + `?action=list&page=${1}`}`);
+      const postListResponse = await axios.get(`${serverURL + "post-detail" + `?action=list&page=${1}`}`);
       setPostUrl(postListResponse.data.data.productImagePath)
       const postsData = postListResponse.data.data.postList;
       setPostList(postsData.slice(0, 4));
@@ -155,19 +153,15 @@ const ForYou = () => {
   const getPosts = async () => {
     startAnimation();
     try {
-      const getTyp = isLoggedIn ? api.getWithToken : api.get;
-      const [postListResponse] = await Promise.all([
-        getTyp(`${serverURL + POSTSList + `?action=list&page=${page}`}`),
-      ]);
-      setPostUrl(postListResponse.data.data.productImagePath)
+
+      const endpoint = isLoggedIn ? `${serverURL}post-details` : `${serverURL}post-detail`;
+      const apiMethod = isLoggedIn ? api.postWithToken : api.post;
+      const postListResponse = await apiMethod(endpoint, { post_id: id });
+      console.log(postListResponse.data.data, "postListResponse.data.data");
+      setPostUrl(postListResponse.data.data.productImagePath);
+      setProfileUrl(postListResponse.data.data.profileImagePath);
       const postsData = postListResponse.data.data.postList;
-      const updatedfavoriteProductList = [...postList, ...postsData]
-        .filter((product, index, self) => self.findIndex(p => p._id === product._id) === index);
-      // if (!isLoggedIn) {
-      // setPostList(updatedfavoriteProductList.slice(0, 4));
-      // } else {
-      setPostList(updatedfavoriteProductList);
-      // }
+      setPostList(postsData);
       setIsFetching(false);
       stopAnimation();
     } catch (error) {
@@ -175,44 +169,17 @@ const ForYou = () => {
     }
   };
 
+
+  useEffect(() => {
+    // if (isLoggedIn) {
+    getPosts();
+    // }
+  }, [id]);
+
   function isVideo(url) {
     return url && /\.(mp4|webm|ogg)$/i.test(url);
   }
 
-  const handleSlideChange = useCallback((swiper) => {
-    setCurrentVideoIndex(swiper.activeIndex);
-    setCurrentVideoId(postList[swiper.activeIndex]._id)
-    if (swiper.activeIndex === postList.length - 3) {
-      // if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
-      if (swiper.activeIndex === postList.length - 3) {
-        if (page < totalPages) {
-          setIsFetching(true);
-          setPage((prevPage) => prevPage + 1);
-          setCurrentVideoIndex(0);
-        } else {
-          console.log("Last video on the last page");
-        }
-      }
-
-      if (swiper.activeIndex === 0 && page > 1) {
-        setCurrentVideoIndex(0); // Reset the current video index to 0
-        setIsFetching(true);
-        setPage((prevPage) => prevPage - 1);
-      }
-      if (
-        swiperRef.current &&
-        swiper.activeIndex === 0 &&
-        page > 1 &&
-        swiper.isEnd
-      ) {
-        setTimeout(() => {
-          swiperRef.current.slideTo(0, 0);
-        }, 100);
-      }
-    } else if (!isLoggedIn && swiper.activeIndex === 3) {
-      handleShow()
-    }
-  }, [isLoggedIn, postList, page, totalPages]);
 
   const followUnfollow = async (user_id) => {
     try {
@@ -222,18 +189,7 @@ const ForYou = () => {
         if (res.data.success === true) {
           setMyMessage(res.data.message);
           setSucessSnackBarOpen(!sucessSnackBarOpen);
-          const updatedPostList = postList.map((post) => {
-            if (post.user_id === user_id) {
-              return {
-                ...post,
-                is_follower: post.is_follower === 1 ? 0 : 1,
-                total_followers: post.is_follower === 1 ? post.total_followers - 1 : post.total_followers + 1,
-              };
-            }
-            return post;
-          });
-          setPostList(updatedPostList);
-
+          getPosts()
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -257,17 +213,7 @@ const ForYou = () => {
         if (res.data.success === true) {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setMyMessage(res.data.message);
-          const postIndex = postList.findIndex((post) => post._id === post_id);
-          if (postIndex !== -1) {
-            const updatedPost = {
-              ...postList[postIndex],
-              is_like: postList[postIndex].is_like === 0 ? 1 : 0,
-              total_like: postList[postIndex].is_like === 0 ? postList[postIndex].total_like + 1 : postList[postIndex].total_like - 1,
-            };
-            const updatedPostList = [...postList];
-            updatedPostList[postIndex] = updatedPost;
-            setPostList(updatedPostList);
-          }
+          getPosts()
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
           setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -296,7 +242,7 @@ const ForYou = () => {
           if (res.data.success === true) {
             setMyMessage(res.data.message);
             setSucessSnackBarOpen(!sucessSnackBarOpen);
-            setPostList((prevPostList) => prevPostList.filter((post) => post._id !== postId));
+            getPosts()
             setTimeout(() => {
               handleReportClose()
             }, 1000);
@@ -333,11 +279,17 @@ const ForYou = () => {
             setSucessSnackBarOpen(!sucessSnackBarOpen);
             setMyMessage(res.data.message);
             // for update count of total comments 
-            setPostList((prevPostList) =>
-              prevPostList.map((post) =>
-                post._id === postId ? { ...post, total_comment: post.total_comment + 1 } : post
-              )
-            );
+            setPostList((prevPostList) => {
+              // Ensure prevPostList is defined
+              if (!prevPostList) {
+                console.error('Previous post data is not defined');
+                return prevPostList; // No changes made if prevPostList is not defined
+              }
+              return {
+                ...prevPostList,
+                total_comment: prevPostList.total_comment - 1,
+              };
+            });
             setCommnet("")
             handleCommentsShow(postId)
           } else if (res.data.success === false) {
@@ -369,12 +321,18 @@ const ForYou = () => {
         if (res.data.success === true) {
           setSucessSnackBarOpen(!sucessSnackBarOpen);
           setMyMessage(res.data.message);
-          // for update count of total comments 
-          setPostList((prevPostList) =>
-            prevPostList.map((post) =>
-              post._id === postId ? { ...post, total_comment: post.total_comment - 1 } : post
-            )
-          );
+          setPostList((prevPostList) => {
+            // Ensure prevPostList is defined
+            if (!prevPostList) {
+              console.error('Previous post data is not defined');
+              return prevPostList; // No changes made if prevPostList is not defined
+            }
+      
+            return {
+              ...prevPostList,
+              total_comment: prevPostList.total_comment - 1,
+            };
+          });
           handleCommentsShow(postId)
         } else if (res.data.success === false) {
           setMyMessage(res.data.message);
@@ -392,37 +350,6 @@ const ForYou = () => {
     }
   };
 
-  useEffect(() => {
-    // if (isLoggedIn) {
-    getPosts();
-    // }
-  }, [page, isLoggedIn, currentVideoId]);
-
-
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     getPostsStatic();
-  //   }
-  // }, []);
-
-
-  const groupPriceShare = (id) => {
-    if (isMobile) {
-      generateDynamicLink(id)
-    } else {
-      // If the device is not mobile, log 'false' to the console
-      handleShow();
-      setPerActive('Group')
-    }
-  }
-
-  // const handleVolumeChange = ({ played, playedSeconds, loaded, loadedSeconds, volume }) => {
-  //   if (muted === false) {
-  //     setMuted(true);
-  //   } else if (muted === true) {
-  //     setMuted(false);
-  //   }
-  // };
 
   const toggleMute = () => {
     const newMutedStatus = !muted;
@@ -432,15 +359,17 @@ const ForYou = () => {
     }
   };
 
+  // console.log(postList, "postList");
 
   return (
 
     <>
       <h1 className='d-none'></h1>
       {
-        loading && (
+        loading  && (
           <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
         )}
+
       <div className='for-you'>
         <SucessSnackBar
           open={sucessSnackBarOpen}
@@ -465,177 +394,129 @@ const ForYou = () => {
           followFinger={true}
           modules={[Mousewheel]}
           className="mySwiper"
-          onSlideChange={handleSlideChange}
+          // onSlideChange={handleSlideChange}
           ref={swiperRef}
-          initialSlide={currentVideoIndex}
+          initialSlide={0}
         >
-          {postList?.length > 0 && postList?.map((e, i) => (
-            <SwiperSlide key={i}>
-              <div className='reels-box position-relative pointer'>
-                {e.post_video_link && isVideo(e.post_video_link) ? (
-
-                  <ReactPlayer
-                    url={e.post_video_link}
-                    width="100%"
-                    height="100%"
-                    controls={true}
-                    // onPlay={handleOnUnmute}
-                    playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
-                    // onVolumeChange={handleVolumeChange}
-                    muted={muted}
-                    volume={0.5} // Set a fixed volume level, as you cannot entirely remove the volume control for all browsers
-                    loop={true}
-                    config={{
-                      file: {
-                        attributes: {
-                          controlsList: 'nodownload',
-                          preload: 'auto',
-                          'webkit-playsinline': true,
-                          playsInline: 'true', // This is the correct attribute for modern browsers
-
-                        },
+          <SwiperSlide>
+            <div className='reels-box position-relative pointer'>
+              {postList.post_video_link && isVideo(postList.post_video_link) ? (
+                <ReactPlayer
+                  url={postList.post_video_link}
+                  width="100%"
+                  height="100%"
+                  controls={true}
+                  playing
+                  muted={muted}
+                  volume={0.5}
+                  loop={true}
+                  config={{
+                    file: {
+                      attributes: {
+                        controlsList: 'nodownload',
+                        preload: 'auto',
+                        'webkit-playsinline': true,
+                        playsInline: 'true',
                       },
-                    }}
+                    },
+                  }}
+                />
+              ) : (
+                <img
+                  className='reels-img'
+                  src={postList.post_image}
+                  alt="Image"
+                  loading="lazy"
+                />
+              )}
+              <div className='user-name px-3'>
+                <div className='d-flex align-items-center gap-2'>
+                  <img
+                    alt='profile'
+                    className='myprofile'
+                    width="34px"
+                    height="34px"
+                    style={{ borderRadius: "50%", objectFit: "cover" }}
+                    src={postList?.user_id?.profile_image ? profilUrl + postList.user_id.profile_image  :  `${ defaultProfile}`}
+                    loading="lazy"
                   />
-
-                ) : (
-                  <>
-                    {/* <img
-                  className='reels-img' src={e.post_video_link} alt="Image" /> */}
-                    <img
-                      className='reels-img'
-                      src={e.post_video_link ? e.post_video_link : "./img/placeholder_img.webp"}
-                      alt="Image"
-                      loading="lazy"
-                    />
-                  </>
-                )}
-
-                <div className='user-name px-3'>
-                  <div className='d-flex align-items-center gap-2'>
-                    {/* <img alt='profile'
-                     className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={e.user_profile ? e.user_profile : `${defaultProfile}`} /> */}
-                    <img
-                      alt='profile'
-                      className='myprofile'
-                      width="34px"
-                      height="34px"
-                      style={{ borderRadius: "50%", objectFit: "cover" }}
-                      src={e.user_profile ? e.user_profile : `${defaultProfile}`}
-                      loading="lazy"
-                    />
-
-                    <div>
-                      <p>{e.user_name}</p>
-                      {/* <span>
-                              <img alt='' src='./img/for_you/eye.png' className='me-1' />
-                              13K</span> */}
-                    </div>
+                  <div>
+                    <p>{postList?.user_id?.username}</p>
                   </div>
-                  <Button className='follow-btn' onClick={() => followUnfollow(e.user_id)}>
-                    {e.is_follower === 0 ? "+ Follow" : "Following"} ({e.total_followers})
-                  </Button>                </div>
-                {e.products_obj?.length !== 0 &&
-                  <>
-                    {/* <div className='price '>
-                      <Button onClick={() =>
-                        groupPriceShare(e.products_obj[0]?.product_id?._id)} >Group Price: <br />
-                        ${e.products_obj[0]?.product_id?.group_price ? e.products_obj[0]?.product_id?.group_price : 0}</Button>
-                               <Button type='button'  style={{width:"90%"}} onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} > Add to cart <br />
-                        ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
-                      <Button type='button' className='active btn btn-primary' style={{width:"90%"}} onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)} > Add to cart <br />
-                        ${e.products_obj[0]?.product_id?.individual_price ? e.products_obj[0]?.product_id?.individual_price : 0}</Button>
-                    </div> */}
-
-                    <div className='reel-items'>
-                      <p onClick={() => handleProductShow(e.products_obj)} className='pointer'>{e.products_obj.length}+ More Products</p>
-                      <div className='items-box p-2 mt-2'>
-                        {/* <img
-                          src="./img/placeholder_img.webp"
-                          alt=''
-                          className='img-fluid'
-                          style={{ display: imageLoaded ? 'none' : 'block' }}
-                        /> */}
-                        {/* <img
-                          alt=''
-                          className='img-fluid'
-                          src="./img/placeholder_img.webp"
-                          style={{ display: imageLoaded ? 'none' : 'block' }}
-                          loading="lazy"
-                        /> */}
+                </div>
+                <Button className='follow-btn' onClick={() => followUnfollow(postList.user_id._id)}>
+                  {postList?.user_id?.is_follower === 0 ? "+ Follow" : "Following"} ({postList.user_id?.total_followers})
+                </Button>
+              </div>
+              {postList?.products_obj && postList.products_obj.length > 0 && (
+                <div className='reel-items'>
+                  <p onClick={() => handleProductShow(postList.products_obj)} className='pointer'>
+                    {postList?.products_obj?.length}+ More Products
+                  </p>
+                  <div className='items-box p-2 mt-2'>
+                    {postList.products_obj[0]?.product_id && postList.products_obj[0]?.product_id?.product_images && (
+                      <>
                         <img
-                          // onLoad={() => setImageLoaded(true)}
-                          // style={{ display: imageLoaded ? 'block' : 'none' }}
                           alt=''
-                          src={postlUrl + e.products_obj[0]?.product_id?._id + "/" + e.products_obj[0]?.product_id?.product_images[0]?.file_name} width="100%"
+                          src={`${postlUrl}${postList.products_obj[0].product_id._id}/${postList.products_obj[0].product_id.product_images[0]?.file_name}`}
+                          width="100%"
                           loading="lazy"
                         />
-                        <del>${e.products_obj[0]?.product_id?.group_price}</del>
-                      </div>
-                    </div>
-
-                  </>
-                }
-
-                <div className='additional-icon'>
-                  <div className='additional-box'>
-                    {e?._id &&
-                      <RWebShare
-                        data={{
-                          text: "Hey! Checkout this amazing post on Clubmall.",
-                          url: `${window.location.href}post/${e?._id}`,
-                          title: "Clubmall",
-                        }}
-                        sites={[
-                          "facebook",
-                          "twitter",
-                          "whatsapp",
-                          "telegram",
-                          "linkedin",
-                          "instagram"
-                        ]}
-                        onClick={() => console.log("shared successfully!")}
-                      >
-                        <Button>
-                          <img style={{ width: "22px" }} alt=''
-                            src='./img/for_you/share.png' />
-                        </Button>
-                      </RWebShare>
-
-                    }
-                    {e.products_obj.length !== 0 &&
-                      <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)}  >
-                        <img alt='' src='./img/for_you/doc.png' />
-                      </Button>
-                    }
-
-                    <Button>
-                      {e.is_like == 0 && <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/like.png' />}
-                      {e.is_like == 1 && <img alt='' onClick={() => LikeDissliek(e._id)} src='./img/for_you/liked.png' />}
-                      <p>{e.total_like}</p>
-                    </Button>
-
-                    <Button onClick={() => handleCommentsShow(e._id)}>
-                      <img alt='' src='./img/for_you/msg.png' />
-                      <p>{e.total_comment}</p>
-                    </Button>
-                    <Button onClick={() => handleReportShow(e._id)}>
-                      <img alt='' src='./img/for_you/flag.png' />
-                    </Button>
-
-                    <Button onClick={toggleMute} className='foryou-voice'>
-                      {muted ? <img alt='' src='./img/for_you/mute.png' /> : <img alt='' src='./img/for_you/unmute.png' />}
-                    </Button>
-
+                        <del>${postList.products_obj[0].product_id.group_price}</del>
+                      </>
+                    )}
                   </div>
-
                 </div>
-
+              )}
+              <div className='additional-icon'>
+                <div className='additional-box'>
+                  <RWebShare
+                    data={{
+                      text: "Hey! Checkout this amazing post on Clubmall.",
+                      url: `${window.location.href}`,
+                      title: "Clubmall",
+                    }}
+                    sites={[
+                      "facebook",
+                      "twitter",
+                      "whatsapp",
+                      "telegram",
+                      "linkedin",
+                      "instagram"
+                    ]}
+                    onClick={() => console.log("shared successfully!")}
+                  >
+                    <Button>
+                      <img style={{ width: "22px" }} alt='' src='../img/for_you/share.png' />
+                    </Button>
+                  </RWebShare>
+                  {postList.products_obj?.length !== 0 && (
+                    <Button type='button' onClick={() => handelProductDetail(postList.products_obj[0]?.product_id?._id && postList.products_obj[0]?.product_id?._id)}  >
+                      <img alt='' src='../img/for_you/doc.png' />
+                    </Button>
+                  )}
+                  <Button>
+                    {postList.is_like == 0 ? (
+                      <img alt='' onClick={() => LikeDissliek(postList._id)} src='../img/for_you/like.png' />
+                    ) : (
+                      <img alt='' onClick={() => LikeDissliek(postList._id)} src='../img/for_you/liked.png' />
+                    )}
+                    <p>{postList.total_like}</p>
+                  </Button>
+                  <Button onClick={() => handleCommentsShow(postList._id)}>
+                    <img alt='' src='../img/for_you/msg.png' />
+                    <p>{postList.total_comment}</p>
+                  </Button>
+                  <Button onClick={() => handleReportShow(postList._id)}>
+                    <img alt='' src='../img/for_you/flag.png' />
+                  </Button>
+                  <Button onClick={toggleMute} className='foryou-voice'>
+                    {muted ? <img alt='' src='../img/for_you/mute.png' /> : <img alt='' src='../img/for_you/unmute.png' />}
+                  </Button>
+                </div>
               </div>
-
-            </SwiperSlide>
-
-          ))}
+            </div>
+          </SwiperSlide>
         </Swiper>
 
       </div>
@@ -674,7 +555,7 @@ const ForYou = () => {
 
                   ))
                 }
-                {(modelData.length <= 0) && (!isFetching) && <p>No Commnets are available</p>}
+                {(modelData?.length <= 0) && (!isFetching) && <p>No Commnets are available</p>}
               </ul>
             </div>
             <div className='sent-comment d-flex align-items-center gap-3'>
@@ -723,16 +604,16 @@ const ForYou = () => {
       <Modal show={showAppDownload} onHide={handleAppDownloadClose} centered className='welcome-modal'>
         <Modal.Body>
           <div className='text-center p-3 p-sm-4'>
-            <img src='./img/modal-logo.png' alt='' />
+            <img src='../img/modal-logo.png' alt='' />
             <h5 className='my-3'>Get the full experience on <br /> the app</h5>
             <p>Follow you favoritevendor accounts,
               explore new product and message the <br /> vendor</p>
             <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
               <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
-                <img src='./img/playstore.png' alt='' />
+                <img src='../img/playstore.png' alt='' />
               </NavLink>
               <NavLink href='https://apps.apple.com/us/app/clubmall/id6444752184' target='_blank'>
-                <img src='./img/app.png' alt='' />
+                <img src='../img/app.png' alt='' />
               </NavLink>
             </div>
           </div>
@@ -785,5 +666,5 @@ const ForYou = () => {
   )
 }
 
-export default ForYou
+export default ForYouPost
 
