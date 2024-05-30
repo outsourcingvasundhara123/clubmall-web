@@ -58,7 +58,6 @@ const ForYou = () => {
   const [postId, setPostId] = useState(null);
   const [report, setReport] = useState({});
   const [muted, setMuted] = useState(true);
-  const [modelCount, setModelCount] = useState(1); // Declare totalPages state variable
   const [playerRefs, setPlayerRefs] = useState({});
   const [currentVideoId, setCurrentVideoId] = useState();
   const [imageLoaded, setImageLoaded] = useState(false);
