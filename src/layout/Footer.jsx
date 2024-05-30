@@ -106,13 +106,13 @@ const Footer = (props) => {
                 <p className='last pb-3'>@{currentYear} Clubmall.</p>
 
             </div>
-            <div className='footer-bottom'>
+            {/* <div className='footer-bottom'>
                 <p>
                     If you want to leave any positive or negative feedback, you can always mail to
                     <a href="mailto:asouare@clubmall.com"> asouare@clubmall.com </a>
                     – We are thankful for any feedback.
                 </p>
-            </div>
+            </div> */}
         </div>
     )
 }

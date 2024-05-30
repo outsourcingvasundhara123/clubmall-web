@@ -183,7 +183,7 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  const addProductDetailsToLocal = async (data, Product, sizeActive, productColorActive) => {
+  const addProductDetailsToLocal = async (data, Product, sizeActive, productColorActive,product_qtyActive) => {
     let currentProductDetails = localStorage.getItem('productDetails');
     if (currentProductDetails) {
       const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
@@ -211,8 +211,8 @@ export const CartProvider = ({ children }) => {
         product_id: data.product_id,
         name: Product.productList.name,
         image: `${Product.productImagePath}${data.product_id}/${skuDetail.file_name}`,
-        qty: 1,
-        total_price: Product.productList.individual_price,
+        qty: product_qtyActive,
+        total_price: Product.productList.individual_price * product_qtyActive,
         individual_price: Product.productList.individual_price,
         size: sizeActive,
         color: productColorActive
@@ -302,7 +302,7 @@ export const CartProvider = ({ children }) => {
     setSucessSnackBarOpen(!sucessSnackBarOpen);
   }
 
-  const increaseProductQuantity = async (productId) => {
+  const increaseProductQuantity = async (productId, increaseBy = 1) => {
     let currentProductDetails = localStorage.getItem('productDetails');
     if (!currentProductDetails) {
       setMyMessage("No product details stored");
@@ -311,33 +311,25 @@ export const CartProvider = ({ children }) => {
     }
     const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
     currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-    // Find the product in the stored details
+  
     const productIndex = currentProductDetails.items.findIndex(item => item.product_id === productId);
     if (productIndex === -1) {
       setMyMessage("Product details not found");
       setWarningSnackBarOpen(!warningSnackBarOpen);
       return;
     }
-
-    // Increase the product quantity
-    currentProductDetails.items[productIndex].qty += 1;
-
-    // Update total price for the product
-    currentProductDetails.items[productIndex].total_price = parseFloat((currentProductDetails.items[productIndex].qty * currentProductDetails.items[productIndex].individual_price).toFixed(2));
-
-    // Update subtotal
-    currentProductDetails.subtotal = parseFloat((currentProductDetails.items.reduce((sum, item) => sum + item.total_price, 0)).toFixed(2));
-
-    // Convert object to string and encrypt
+  
+    currentProductDetails.items[productIndex].qty += increaseBy;
+    currentProductDetails.items[productIndex].total_price = currentProductDetails.items[productIndex].qty * currentProductDetails.items[productIndex].individual_price;
+    currentProductDetails.subtotal = currentProductDetails.items.reduce((sum, item) => sum + item.total_price, 0);
+  
     const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
-
-    // Save updated product details
     localStorage.setItem('productDetails', ciphertext);
-    getLocalCartData()
+    getLocalCartData();
     setMyMessage("Product quantity increased successfully");
     setSucessSnackBarOpen(!sucessSnackBarOpen);
   }
+  
 
   const decreaseProductQuantity = async (productId) => {
     let currentProductDetails = localStorage.getItem('productDetails');

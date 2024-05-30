@@ -1323,5 +1323,17 @@ table tbody td {
 }
 
 .ck-content{
-  height: 200px;
+  height: 260px;
+}
+.width-video
+{
+  gap: 15rem !important;
+}
+.width-title
+{
+  width: 250px;
+}
+.table-border
+{
+border: 1px solid;
 }

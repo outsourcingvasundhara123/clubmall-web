@@ -20,9 +20,25 @@ import { useLocation } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 
 
+
+
+const ProductChartModal = ({ url, productId, sizeChartFileName, onHide }) => {
+    return (
+        <Modal show={true} onHide={onHide} size="lg" centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Size Chart</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <img className='size-chart-img' src={`${url}${productId}/${sizeChartFileName}`} alt='Size Chart' />
+            </Modal.Body>
+        </Modal>
+    );
+};
+
+
 const AddCartModal = (props) => {
     let location = useLocation();
-    const { getcartcount,handleShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, setMainLoder, generateDynamicLink, getCartData, activeImage, setActiveImage } = useContext(CartContext);
+    const { getcartcount, handleShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, setMainLoder, generateDynamicLink, getCartData, activeImage, setActiveImage } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [perActive, setPerActive] = useState('Individual');
@@ -37,8 +53,18 @@ const AddCartModal = (props) => {
     const player = useRef();
     const [colorProduct, setColorProduct] = useState()
     const [url, setUrl] = useState("");
+    const [product_qtyActive, setProduct_QtyActive] = useState("");
 
-   
+    const [showSizeChart, setShowSizeChart] = useState(false);
+    const [showcustemail, setShowCustEmail] = useState(false);
+
+    const handleSizeChartClick = () => {
+        setShowSizeChart(true);
+    };
+    const handleSizeChartClose = () => {
+        setShowSizeChart(false);
+    };
+
     const startAnimation = () => {
         if (player.current) {
             player.current.play();
@@ -72,6 +98,7 @@ const AddCartModal = (props) => {
                 setModelProduct(productData);
                 setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
                 setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size)
+                setProduct_QtyActive(productData?.productList?.product_qty[0]);
                 stopAnimation()
                 setUrl(productData.productImagePath)
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
@@ -132,10 +159,20 @@ const AddCartModal = (props) => {
                     if (res.data.success == true) {
                         setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
+
+                        var data = {
+                            action: "update-to-cart-qty",
+                            _id: res.data.data._id,
+                            qty: product_qtyActive
+                        }
+                        const updateData = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
+
+
                         getCartData()
                         getcartcount()
                         setProductColorActive(" ")
                         setSizeActive(" ")
+                        setProduct_QtyActive(" ");
 
                         setTimeout(() => {
                             if (location.pathname == "/cart") {
@@ -169,6 +206,7 @@ const AddCartModal = (props) => {
             setMainLoder(false)
             setProductColorActive(" ")
             setSizeActive(" ")
+            addProductDetailsToLocal(data, modelProduct, sizeActive, productColorActive, product_qtyActive)
             errorResponse(error, setMyMessage, props)
             setWarningSnackBarOpen(!warningSnackBarOpen);
         }
@@ -191,7 +229,7 @@ const AddCartModal = (props) => {
                 show={props.show}
                 onHide={props.handleClose}
                 centered
-                className='cart-modal product-info ps-0'
+                className='cart-modal product-info add-modal ps-0'
             >
 
                 {
@@ -261,6 +299,43 @@ const AddCartModal = (props) => {
                                                     }
                                                 </div>
 
+
+
+                                                {modelProduct?.productList?.product_qty !== undefined && modelProduct?.productList?.product_qty.length > 0 ? (
+                                                    <div className='size mt-4'>
+                                                        <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+                                                        <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
+                                                            {modelProduct?.productList?.product_qty?.map((e, i) => (
+                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActive(e)}>
+                                                                    {e}
+                                                                </Button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <></>
+                                                )}
+
+
+                                                {/* <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
+                                                {modelProduct?.productList?.sizechart_image && (
+                                                    <Button className="size-chart-button" style={{ backgroundColor: "rgb(224, 46, 36, 1)" }} onClick={handleSizeChartClick}>
+                                                        Show Size Chart
+                                                    </Button>
+                                                )}
+                                            </div> */}
+
+
+                                            {showSizeChart && (
+                                                <ProductChartModal
+                                                    url={url}
+                                                    productId={modelProduct.productList._id}
+                                                    sizeChartFileName={modelProduct.productList.sizechart_image.file_name}
+                                                    onHide={handleSizeChartClose}
+                                                    className="size-chart-modal"
+                                                />
+                                            )}
+
                                                 <div className='size mt-4'>
                                                     {modelProduct?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
                                                     {/* <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5> */}
@@ -278,7 +353,7 @@ const AddCartModal = (props) => {
                                                 </div>
 
                                             </div>
-                                            <Button onClick={handleCart} style={{ width: "100%" , borderRadius: "30px"}} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
+                                            <Button onClick={handleCart} style={{ width: "100%", borderRadius: "30px" }} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
 
                                             <div>
                                                 <Button type='button' onClick={() => handelProductDetail(modelProduct.productList._id)} className='show-more mt-3'>All details <MdOutlineKeyboardArrowRight /></Button>

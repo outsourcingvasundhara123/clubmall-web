@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Badge, Button, Modal, Pagination, Table } from "react-bootstrap";
+import React, {useState, useEffect, useContext } from 'react'
+import { Button,Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from '../../../helper/apiAdmin'
 import { getServerURL } from '../../../helper/envConfig'
@@ -7,46 +7,37 @@ import { CartContext } from '../../../context/CartContext'
 import { handelProductDetail } from '../../../helper/constants';
 import DynamicPagination from './DynamicPagination';
 import createreview from '../../../page/admin/page/assets/img/createuserreview.png';
-
+import edit_product from '../../../page/admin/page/assets/img/edit.png';
 import '../../../page/admin/page/assets/css/ProductData.css'
 const ProductData = ({ search }) => {
 
   const { setMainLoder } = useContext(CartContext);
-  const [showPass, setShowPass] = useState();
-  const [errors, setErrors] = useState({});
   const [page, setPage] = useState(1);
   const [productList, setProductList] = useState([]);
-  const [Mymessage, setMyMessage] = useState("");
-  const [submitCount, setSubmitCount] = useState(0);
   const serverURL = getServerURL();
-  const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
-  const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
-  const [edit, setEdit] = useState(false);
-  const handleEditClose = () => setEdit(false);
-  const handleEditShow = () => setEdit(true);
   const navigate = useNavigate();
   const itemsPerPage = 5;
 
   const getProducts = async () => {
 
+setMainLoder(true);
     try {
-      setMainLoder(true)
+     
       var [productListResponse] = await Promise.all([
         api.postWithToken(`${serverURL + "product-list-admin"}`, {
           page: page, limit: itemsPerPage, search: search
         })]);
       setProductList(productListResponse.data)
-      //var productListData = productListResponse.data.data;
-      setMainLoder(false)
+
     } catch (error) {
       console.log(error);
+    }finally{
+      setMainLoder(false)
     }
   };
-
   useEffect(() => {
     getProducts();
   }, [page, search]);
-
   const handleToggle = async (productId, currentStatus) => {
     try {
       // Perform API call to update the is_active status
@@ -64,7 +55,8 @@ const ProductData = ({ search }) => {
 
   return (
     <>
-      <Table responsive bordered className="mb-0">
+    
+                  <Table responsive bordered className="mb-0">
         <thead>
           <tr>
             <th width="3%">No.</th>
@@ -73,6 +65,7 @@ const ProductData = ({ search }) => {
             <th width="15%">Sub Category</th>
             <th width="18%">Product Name</th>
             <th width="18%">Sales Quantity</th>
+
             <th width="10%">Individual Price</th>
             <th width="10%">Group Price</th>
             <th width="8%">Status</th>
@@ -90,7 +83,7 @@ const ProductData = ({ search }) => {
                   <td className='text-pre-line'>{list.product_category_keys?.product_category_one?.name}</td>
                   <td className='text-pre-line'>{list.product_category_keys?.product_category_two?.name}</td>
                   <td className='text-pre-line'>{list?.name}</td>
-                  <td> {list?.total_order ? list?.total_order : 0}</td>
+                  <td> {list?.total_order}</td>
                   <td>$ {list?.individual_price}</td>
                   <td>$ {list?.group_price}</td>
                   <td>
@@ -114,6 +107,9 @@ const ProductData = ({ search }) => {
                       }
                       <Button onClick={() => navigate(`/admin/create-user-review/${list?._id}`)}>
                         <img src={createreview} className='user-review-icon' alt="" />
+                      </Button>
+                      <Button onClick={() => navigate(`/admin/edit-product/${list?._id}`)}>
+                        <img src={edit_product  } className='user-review-icon' alt="" />
                       </Button>
                     </div>
                   </td>

@@ -19,17 +19,21 @@ import { CartContext } from '../context/CartContext'
 import { isMobile } from 'react-device-detect';
 import axios from 'axios';
 import { useCallback } from 'react';
-import { RWebShare } from 'react-web-share'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { RWebShare } from 'react-web-share';
 // import SucessSnackBar from "../components/SnackBar";
 // import ErrorSnackBar from "../components/SnackBar";
 const SucessSnackBar = React.lazy(() => import('../components/SnackBar'));
 const ErrorSnackBar = React.lazy(() => import('../components/SnackBar'));
 
+
 const ForYou = () => {
 
   const { setMainLoder, setShow, generateDynamicLink } = useContext(CartContext);
+  const location = useLocation();
   const [perActive, setPerActive] = useState('Individual');
   const isLoggedIn = Is_Login();
+  const navigate = useNavigate();
   const swiperRef = useRef(null);
   const defaultProfile = `./img/for_you/defaultuser.png`
   const Userprofile = localStorage.getItem("profile_image") ? localStorage.getItem("profile_image") : defaultProfile
@@ -54,16 +58,19 @@ const ForYou = () => {
   const [postId, setPostId] = useState(null);
   const [report, setReport] = useState({});
   const [muted, setMuted] = useState(true);
+  const [modelCount, setModelCount] = useState(1); // Declare totalPages state variable
   const [playerRefs, setPlayerRefs] = useState({});
   const [currentVideoId, setCurrentVideoId] = useState();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showButton, setShowButton] = useState(true);
   const playerRef = useRef();
   const [showComments, setShowComments] = useState(false);
+  
   const handleCommentsClose = () => {
     setCommnet(" ")
     setShowComments(false);
   }
+
   const [showAppDownload, setShowAppDownload] = useState(false);
   const handleAppDownloadShow = () => setShowAppDownload(true);
   const handleAppDownloadClose = () => setShowAppDownload(false);
@@ -114,8 +121,8 @@ const ForYou = () => {
   const stopAnimation = () => {
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
-  };
+    }, 2000);
+  }
 
   const handleCommentsShow = async (id) => {
     startAnimation();
@@ -175,6 +182,13 @@ const ForYou = () => {
     }
   };
 
+
+  useEffect(() => {
+    // if (isLoggedIn) {
+    getPosts();
+    // }
+  }, [page, isLoggedIn, currentVideoId]);
+
   function isVideo(url) {
     return url && /\.(mp4|webm|ogg)$/i.test(url);
   }
@@ -213,6 +227,7 @@ const ForYou = () => {
       handleShow()
     }
   }, [isLoggedIn, postList, page, totalPages]);
+
 
   const followUnfollow = async (user_id) => {
     try {
@@ -392,19 +407,11 @@ const ForYou = () => {
     }
   };
 
-  useEffect(() => {
-    // if (isLoggedIn) {
-    getPosts();
-    // }
-  }, [page, isLoggedIn, currentVideoId]);
-
-
   // useEffect(() => {
   //   if (!isLoggedIn) {
   //     getPostsStatic();
   //   }
   // }, []);
-
 
   const groupPriceShare = (id) => {
     if (isMobile) {
@@ -441,6 +448,7 @@ const ForYou = () => {
         loading && (
           <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} />
         )}
+        
       <div className='for-you'>
         <SucessSnackBar
           open={sucessSnackBarOpen}
@@ -469,35 +477,35 @@ const ForYou = () => {
           ref={swiperRef}
           initialSlide={currentVideoIndex}
         >
-          {postList?.length > 0 && postList?.map((e, i) => (
+          {postList.length > 0 && postList?.map((e, i) => (
             <SwiperSlide key={i}>
               <div className='reels-box position-relative pointer'>
                 {e.post_video_link && isVideo(e.post_video_link) ? (
 
-                  <ReactPlayer
-                    url={e.post_video_link}
-                    width="100%"
-                    height="100%"
-                    controls={true}
-                    // onPlay={handleOnUnmute}
-                    playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
-                    // onVolumeChange={handleVolumeChange}
-                    muted={muted}
-                    volume={0.5} // Set a fixed volume level, as you cannot entirely remove the volume control for all browsers
-                    loop={true}
-                    config={{
-                      file: {
-                        attributes: {
-                          controlsList: 'nodownload',
-                          preload: 'auto',
-                          'webkit-playsinline': true,
-                          playsInline: 'true', // This is the correct attribute for modern browsers
+                    <ReactPlayer
+                      url={e.post_video_link}
+                      width="100%"
+                      height="100%"
+                      controls={true}
+                      // onPlay={handleOnUnmute}
+                      playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
+                      // onVolumeChange={handleVolumeChange}
+                      muted={muted}
+                      volume={0.5} // Set a fixed volume level, as you cannot entirely remove the volume control for all browsers
+                      loop={true}
+                      config={{
+                        file: {
+                          attributes: {
+                            controlsList: 'nodownload',
+                            preload: 'auto',
+                            'webkit-playsinline': true,
+                            playsInline: 'true', // This is the correct attribute for modern browsers
 
+                          },
                         },
-                      },
-                    }}
-                  />
-
+                      }}
+                    />
+                   
                 ) : (
                   <>
                     {/* <img
@@ -603,6 +611,7 @@ const ForYou = () => {
                       </RWebShare>
 
                     }
+
                     {e.products_obj.length !== 0 &&
                       <Button type='button' onClick={() => handelProductDetail(e.products_obj[0]?.product_id?._id && e.products_obj[0]?.product_id?._id)}  >
                         <img alt='' src='./img/for_you/doc.png' />

@@ -7,6 +7,7 @@ import SucessSnackBar from "../../../../components/SnackBar";
 import ErrorSnackBar from "../../../../components/SnackBar";
 import { logoutAdmin } from "../../../../helper/authAdmin";
 import { CartContext } from "../../../../context/CartContext";
+import user_review from '../assets/img/User_review.png';
 import {  useParams } from "react-router-dom";
 
 const Sidebar = (props) => {
@@ -70,12 +71,21 @@ const Sidebar = (props) => {
             <div className='menu'>
                 <ul>
                     <li>
-                        <Link to="/admin/product" className={location.pathname === "/admin/product" ? "active" : ""}>
+                        <Link to="/admin/product" className={location.pathname === "/admin/product" ||  location.pathname === "/admin/add-product" ? "active" : ""}>
                             <span className='menu-icon'>
                                 <img alt='' src='../../admin-img/sidebar/fees.svg' width="19px" />
                             </span>
                             Product
                         </Link>
+                    </li>
+                    <li>
+                    <NavLink to={`/admin/list-user-review/${product_id}`} className={`${location.pathname === `/admin/list-user-review/${product_id}` || location.pathname === `/admin/create-user-review/${product_id}` ? "active" : ""}`}>
+                        <span className='menu-icon'>
+                            <img alt='' src={user_review} width="19px" />
+                        </span>
+                        User Review
+                    </NavLink>
+
                     </li>
                     <li>
                         <NavLink onClick={handleLogout}>
