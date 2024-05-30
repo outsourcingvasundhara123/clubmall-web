@@ -13,7 +13,7 @@ const ThankYou = () => {
                 <h1>Thank You!</h1>
                 <p>Thank you for visiting CLUBMALL website. You will <br /> received an email massage shortly.</p>
                 <span className='thankyou-img'><BsFillCheckCircleFill /></span>
-                <h3 className='my-2'>Please check your Email</h3>
+                <h3 className='my-2'>Please check your email</h3>
                 <div>
                     <Button onClick={() => navigate("/trending")} className='submit-btn mt-2'>Continue Shopping</Button>
                 </div>

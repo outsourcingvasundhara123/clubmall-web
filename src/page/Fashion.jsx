@@ -161,7 +161,7 @@ const Fashion = () => {
                         <section className='sec-2'>
                             <div className='container-cos blue-bg'>
                                 <div className='shop-care-bears text-center pb-5'>
-                                    <p>Dress for sunny days ahead with the help of our very caring friends!</p>
+                                    <p>Dress for sunny days ahead!</p>
                                     {/* <div className='d-flex justify-content-center'>
                                         <Button className='shop-care-bears-btn mt-3'>Shop Care Bears</Button>
                                     </div> */}

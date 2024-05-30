@@ -9,7 +9,7 @@ const Policy = () => {
             <div className='policy pb-5'>
                 <div className='container-cos'>
                     <h3>Privacy Policy</h3>
-                    <p className='mt-4'>Protecting your private information is our priority. This Statement of Privacy applies to Clubmall, and Clubmall and governs data collection and usage. For the purposes of this Privacy Policy, unless otherwise noted, all references to Clubmall include <NavLink href="" className='red-color'> www.clubmall.com</NavLink>, Clubmall and Clubmall.com. The Clubmall application is a Socal shopping app and e-commerce application. By using the Clubmall application, you consent to the data practices described in this statement.</p>
+                    <p className='mt-4'>Protecting your private information is our priority. This Statement of Privacy applies to Clubmall, and Clubmall and governs data collection and usage. For the purposes of this Privacy Policy, unless otherwise noted, all references to Clubmall include <NavLink href="" className='red-color'> www.clubmall.com</NavLink>, Clubmall and Clubmall.com. The Clubmall application is a social shopping app and e-commerce application. By using the Clubmall application, you consent to the data practices described in this statement.</p>
 
                     <h5>Collection of your Personal Information</h5>
                     <p className='mt-2'>In order to better provide you with products and services offered, Clubmall may collect personally identifiable information, such as your:</p>
@@ -36,15 +36,15 @@ const Policy = () => {
 
                     <h5>Sharing Information with Third Parties</h5>
                     <p className='mt-2'>Clubmall does not sell, rent or lease its customer lists to third parties.</p>
-                    <p className='mt-2'>Clubmall may share data with trusted partners to help perform statistical analysis, send you email or postal mail, provide customer support, or arrange for deliveries. All such third parties are prohibited from using your personal information except to provide these services to Clubmall, and they are required to maintain the confidentiality of your information.</p>
+                    <p className='mt-2'>Clubmall may share data with trusted partners to help perform a statistical analysis, send you emails or postal mail, provide customer support, or arrange for deliveries. All such third parties are prohibited from using your personal information except to provide these services to Clubmall, and they are required to maintain the confidentiality of your information.</p>
                     <p className='mt-2'>Clubmall may disclose your personal information, without notice, if required to do so by law or in the good faith belief that such action is necessary to: (a) conform to the edicts of the law or comply with legal process served on Clubmall or the site; (b) protect and defend the rights or property of Clubmall; and/or (c) act under exigent circumstances to protect the personal safety of users of Clubmall, or the public.</p>
 
                     <h5>Declarations</h5>
-                    <p className='mt-2'>There is no tolerance for objectionable content or abusive users on this Clubmall App. Clubmall is not promoting any abusive content on this application. If a user will find any abusive content then User easily report it to Clubmall. Any users have the right to block abusive users.</p>
-                    <p className='mt-2'>All product details are owned by clubmall. Clubmall has rights for all the products.</p>
+                    <p className='mt-2'>There is no tolerance for objectionable content or abusive users on Clubmall. Clubmall is not promoting any abusive content on this application. If a user finds any abusive content, they can easily report it to Clubmall. Any users have the right to block abusive users.</p>
+                    <p className='mt-2'>All product details are owned by Clubmall. Clubmall has rights for all the products.</p>
 
                     <h5>Right to Deletion</h5>
-                    <p className='mt-2'>Subject to certain exceptions set out below, on receipt of a verifiable request from you, we will:</p>
+                    <p className='mt-2'>Subject to certain exceptions set out below, upon receipt of a verifiable request from you, we will:</p>
                     <ul className='mt-3'>
                         <li><span>Delete your personal information from our records; and</span></li>
                         <li><span>Direct any service providers to delete your personal information from their records.</span></li>
@@ -64,35 +64,35 @@ const Policy = () => {
                     </ul>
 
                     <h5>Children’s Privacy</h5>
-                    <p className='mt-2'>I do not knowingly collect personally identifiable information from children. I encourage all children to never submit any personally identifiable information through the Application and/or Services. I encourage parents and legal guardians to monitor their children's Internet usage and to help enforce this Policy by instructing their children never to provide personally identifiable information through the Application and/or Services without their permission. If you have reason to believe that a child has provided personally identifiable information to us through the Application and/or Services, please contact us. You must also be at least 16 years of age to consent to the processing of your personally identifiable information in your country (in some countries we may allow your parent or guardian to do so on your behalf).</p>
+                    <p className='mt-2'>Clubmall do not knowingly collect personally identifiable information from children. Clubmall encourage all children to never submit any personally identifiable information through the application and/or services. Clubmall encourage parents and legal guardians to monitor their children's Internet usage and to help enforce this policy by instructing their children never to provide personally identifiable information through the application and/or services without their permission. If you have reason to believe that a child has provided personally identifiable information to us through the application and/or services, please contact us. You must also be at least 16 years of age to consent to the processing of your personally identifiable information in your country (in some countries we may allow your parent or guardian to do so on your behalf).</p>
 
                     <h5>Cookies</h5>
                     <p className='mt-2'>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.</p>
-                    <p className='mt-2'>This Service does not use these “cookies” explicitly. However, the app may use third-party code and libraries that use “cookies” to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.</p>
+                    <p className='mt-2'>This service does not use these “cookies” explicitly. However, the app may use third-party code and libraries that use “cookies” to collect information and improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.</p>
 
 
                     <h5>Service Providers</h5>
-                    <p className='mt-2'>I may employ third-party companies and individuals due to the following reasons:</p>
+                    <p className='mt-2'>Clubmall may employ third-party companies and individuals due to the following reasons:</p>
                     <ul className='mt-3'>
-                        <li><span>To facilitate our Service;</span></li>
-                        <li><span>To provide the Service on our behalf;</span></li>
-                        <li><span>To perform Service-related services; or</span></li>
-                        <li><span>To assist us in analyzing how our Service is used.</span></li>
+                        <li><span>To facilitate our service;</span></li>
+                        <li><span>To provide the service on our behalf;</span></li>
+                        <li><span>To perform service-related services; or</span></li>
+                        <li><span>To assist us in analyzing how our service is used.</span></li>
                     </ul>
-                    <p>I want to inform users of this Service that these third parties have access to their Personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</p>
+                    <p>Clubmall want to inform users of this service that these third parties have access to their personal Information. The reason is to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</p>
 
                     <h5>Security</h5>
-                    <p className='mt-2'>I value your trust in providing us your Personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and I cannot guarantee its absolute security.</p>
+                    <p className='mt-2'>Clubmall value your trust in providing us your personal Information, thus we are striving to use commercially acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and Clubmall cannot guarantee its absolute security.</p>
 
                     <h5>Links to Other Sites</h5>
-                    <p className='mt-2'>This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by me. Therefore, I strongly advise you to review the Privacy Policy of these websites. I have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</p>
+                    <p className='mt-2'>This service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by Clubmall. Therefore, Clubmall strongly advise you to review the Privacy Policy of these websites. Clubmall have no control over and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</p>
 
                     <h5>Changes to This Privacy Policy</h5>
-                    <p className='mt-2'>I may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. I will notify you of any changes by posting the new Privacy Policy on this page.</p>
+                    <p className='mt-2'>Clubmall may update our privacy policy from time to time. Thus, you are advised to review this page periodically for any changes. Clubmall will notify you of any changes by posting the new Privacy Policy on this page.</p>
                     <p className='mt-2'>This policy is effective as of 2023-02-09</p>
 
                     <h5>Contact Information</h5>
-                    <p className='mt-2'>Clubmall welcomes your questions or comments regarding this Statement of Privacy. If you believe that Clubmall has not adhered to this Statement, please contact Clubmall at:</p>
+                    <p className='mt-2'>Clubmall welcomes your questions or comments regarding this Statement of Privacy. If you believe that Clubmall has not adhered to this statement, please contact Clubmall at:</p>
                     <p className='mt-2'>Clubmall <br />
                         4710 S Ellis Ave <br />
                         Chicago, Illinois 60615</p>

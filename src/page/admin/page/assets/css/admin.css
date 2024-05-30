@@ -1317,3 +1317,11 @@ table tbody td {
 .text-pre-line{
   white-space: pre-line;
 }
+
+.ck.ck-editor {
+ width: 100% !important;
+}
+
+.ck-content{
+  height: 200px;
+}

@@ -5,6 +5,9 @@ const TermsUse = () => {
     return (
         <>
             <h1 className='d-none'></h1>
+            <div className=' text-center mt-2'>
+                <h2 className='terms-use-header'>Terms of Use</h2>
+            </div>
             <div className='about pt-4 pt-lg-0 pb-5'>
                 <div className='clubmall-work space-top'>
                     <div className='container-cos'>

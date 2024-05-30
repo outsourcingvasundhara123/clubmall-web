@@ -3,8 +3,10 @@ import { Col, NavLink, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 const Footer = (props) => {
+    const currentYear = new Date().getFullYear();
+
     return (
-        <div className='footer'>
+        <div className='footer pb-0'>
             <div className='container-cos'>
                 <div className='footer-working'>
                     <div className='info footer-box'>
@@ -21,7 +23,7 @@ const Footer = (props) => {
                     <div className='info footer-box'>
                         <h5>Customer Services</h5>
                         <div className='mt-2 mt-sm-3'>
-                            <Link to="/terms-use" onClick={() => props.setActive(false)}>Terms of use</Link>
+                            <Link to="/terms-use" onClick={() => props.setActive(false)}>Terms of Use</Link>
                             <Link to="/shipping-info" onClick={() => props.setActive(false)}>Shipping Info</Link>
                             {/* <NavLink>Return and refund policy</NavLink>
                             <NavLink>Intellectual property policy</NavLink>
@@ -100,7 +102,16 @@ const Footer = (props) => {
                         </div>
                     </Col>
                 </Row>
-                <p className='last'>@2023 Clubmall.</p>
+                
+                <p className='last pb-3'>@{currentYear} Clubmall.</p>
+
+            </div>
+            <div className='footer-bottom'>
+                <p>
+                    If you want to leave any positive or negative feedback, you can always mail to
+                    <a href="mailto:asouare@clubmall.com"> asouare@clubmall.com </a>
+                    – We are thankful for any feedback.
+                </p>
             </div>
         </div>
     )

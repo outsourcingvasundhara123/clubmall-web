@@ -1,22 +1,17 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
 import { Badge, Button, Modal, Pagination, Table } from "react-bootstrap";
-import { IoMdClose } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import api from '../../../helper/apiAdmin'
 import { getServerURL } from '../../../helper/envConfig'
-import { Is_Login } from '../../../helper/IsLogin'
-import ErrorSnackBar from "../../SnackBar/SnackBar";
-import SucessSnackBar from "../../SnackBar/SnackBar";
 import { CartContext } from '../../../context/CartContext'
-import { validate } from './SigninSchima';
-import secureLocalStorage from "react-secure-storage";
-import { loginAdmin } from '../../../helper/authAdmin'
 import { handelProductDetail } from '../../../helper/constants';
 import DynamicPagination from './DynamicPagination';
+import createreview from '../../../page/admin/page/assets/img/createuserreview.png';
+
+import '../../../page/admin/page/assets/css/ProductData.css'
 const ProductData = ({ search }) => {
 
   const { setMainLoder } = useContext(CartContext);
-
   const [showPass, setShowPass] = useState();
   const [errors, setErrors] = useState({});
   const [page, setPage] = useState(1);
@@ -31,7 +26,6 @@ const ProductData = ({ search }) => {
   const handleEditShow = () => setEdit(true);
   const navigate = useNavigate();
   const itemsPerPage = 5;
-
 
   const getProducts = async () => {
 
@@ -53,8 +47,6 @@ const ProductData = ({ search }) => {
     getProducts();
   }, [page, search]);
 
-
-  // Function to handle toggle switch changes
   const handleToggle = async (productId, currentStatus) => {
     try {
       // Perform API call to update the is_active status
@@ -62,26 +54,16 @@ const ProductData = ({ search }) => {
         productId: productId,
         is_active: currentStatus === 1 ? 0 : 1  // Toggle the status (0 to 1 or 1 to 0)
       });
-
-      // Handle the response if needed
-      console.log(response);
-
-      // You might want to update the productList state after a successful API call
-      // Example: Call getProducts() again to refresh the product list
-
-      
       getProducts();
     } catch (error) {
       console.error(error);
     }
   };
 
-  console.log(productList, "product");
 
 
   return (
     <>
-
       <Table responsive bordered className="mb-0">
         <thead>
           <tr>
@@ -90,6 +72,7 @@ const ProductData = ({ search }) => {
             <th width="15%">Category</th>
             <th width="15%">Sub Category</th>
             <th width="18%">Product Name</th>
+            <th width="18%">Sales Quantity</th>
             <th width="10%">Individual Price</th>
             <th width="10%">Group Price</th>
             <th width="8%">Status</th>
@@ -97,12 +80,6 @@ const ProductData = ({ search }) => {
           </tr>
         </thead>
         <tbody>
-          {/* <tr>
-          <td colSpan={7}>
-            <p className="text-center">*** No Data ***</p>
-          </td>
-        </tr> */}
-
           {
             productList?.data && productList?.data?.map((list, index) => {
               const currentNumber = (page - 1) * itemsPerPage + index + 1; // this gives the serial number
@@ -113,6 +90,7 @@ const ProductData = ({ search }) => {
                   <td className='text-pre-line'>{list.product_category_keys?.product_category_one?.name}</td>
                   <td className='text-pre-line'>{list.product_category_keys?.product_category_two?.name}</td>
                   <td className='text-pre-line'>{list?.name}</td>
+                  <td> {list?.total_order ? list?.total_order : 0}</td>
                   <td>$ {list?.individual_price}</td>
                   <td>$ {list?.group_price}</td>
                   <td>
@@ -134,10 +112,9 @@ const ProductData = ({ search }) => {
                           <img src="../admin-img/profile/info.svg" alt="" />
                         </Button>
                       }
-                      {/* <Button onClick={() => navigate(`/admin/edit-product/${list?._id}`)}>
-                        <img src="../admin-img/profile/Edit.svg" alt="" />
-                      </Button> */}
-
+                      <Button onClick={() => navigate(`/admin/create-user-review/${list?._id}`)}>
+                        <img src={createreview} className='user-review-icon' alt="" />
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -146,7 +123,6 @@ const ProductData = ({ search }) => {
           }
         </tbody>
       </Table>
-
       <DynamicPagination
         currentPage={productList.currentPage}
         totalPages={productList.totalPages}
@@ -154,9 +130,7 @@ const ProductData = ({ search }) => {
           setPage(newPage);
         }}
       />
-
     </>
   );
 };
-
 export default ProductData;

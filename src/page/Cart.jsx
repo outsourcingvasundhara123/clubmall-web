@@ -36,7 +36,7 @@ const WrappedCart = () => {
 
     const [step, setStep] = useState(1);
 
-    const { getcartcount, setMainLoder, couponId,  getCartData, cartList, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen,  setProfileOption } = useContext(CartContext);
+    const { getcartcount, setMainLoder, couponId, getCartData, cartList, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, warningSnackBarOpen, setWarningSnackBarOpen, setProfileOption } = useContext(CartContext);
 
     const initialValues = {
         country_id: "",
@@ -48,11 +48,11 @@ const WrappedCart = () => {
         zipcode: "",
     };
 
-
+   
     const stripe = useStripe();
     const elements = useElements();
 
-    
+    // colleague
     const isLoggedIn = Is_Login();
 
     const [values, setValues] = useState(initialValues);
@@ -62,7 +62,7 @@ const WrappedCart = () => {
     const [warningSnackBarOpenProfile, setwarningSnackBarOpenProfile] = useState(false);
     const [stateList, setStateList] = useState([]);
     const [countryList, setCountryList] = useState([]);
-   
+
     const [submitCount, setSubmitCount] = useState(0);
     const serverURL = getServerURL();
     const [modelMood, setIModelMood] = useState("add");
@@ -80,9 +80,9 @@ const WrappedCart = () => {
     const [is_Wait, setIs_Wait] = useState(false);
     const [myAddress, setMyAddess] = useState([]);
     const [correntAddess, setCorrentAddess] = useState({});
+    const [returnPolicyChecked, setReturnPolicyChecked] = useState(false);
 
     // for steps manage 
-
     const nextStep = () => {
         if (step < 3 && correntAddess) {
             if (cartList.list?.length <= 0) {
@@ -121,6 +121,12 @@ const WrappedCart = () => {
     const stopAnimation = () => {
         setLoading(false);
     };
+    
+    //for checkbox 
+    const handleCheckboxChange = (e) => {
+        setReturnPolicyChecked(e.target.checked);
+    };
+    const isButtonDisabled = !stripe || !returnPolicyChecked;
 
     // for address
     const getMyAddress = async () => {
@@ -300,60 +306,6 @@ const WrappedCart = () => {
 
     };
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const request1 = api.get(`${serverURL + "/country-list"}`);
-    //             const request2 = api.get(`${serverURL + "/state-list"}`);
-    //             const responses = await Promise.all([request1, request2]);
-    //             setCountryList(responses[0].data.data.country);
-    //             // setStateList(responses[1].data.data.states);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-
-    //     getCartData();
-    //     fetchData();
-    //     getMyAddress()
-    // }, [isLoggedIn]);
-
-    // const handleChange = (e) => {
-
-    //     const { name, value, checked, type } = e.target;
-    //     let newValue = type === "checkbox" ? checked : value;
-
-    //     // if (name === "state_id") {
-    //     //     const selectedState = stateList.find((state) => state.name === newValue);
-    //     //     newValue = selectedState ? selectedState._id : "";
-    //     // }
-
-    //     if (name === "country_id") {
-    //         setValues((prevValues) => ({
-    //             ...prevValues,
-    //             ["state_id"]: "",
-    //         }));
-    //     }
-
-    //     if (submitCount > 0) {
-    //         const validationErrors = validate({ ...values, [name]: newValue });
-    //         setErrors(validationErrors);
-
-    //         // Remove error message for the specific field if it is valid
-    //         if (Object.keys(validationErrors).length === 0) {
-    //             delete errors[name];
-    //         }
-    //     }
-
-    //     setValues((prevValues) => ({
-    //         ...prevValues,
-    //         [name]: newValue,
-    //     }));
-
-    //     checkforcounty();
-
-    // };
-
 
     const handleChange = (e) => {
 
@@ -486,108 +438,108 @@ const WrappedCart = () => {
         }
     };
 
-    // create order with payment
-    const handleCheckout = async (event) => {
+    // create order with payment-init 
+    // const handleCheckout = async (event) => {
 
-        try {
-            setIsOpen(!isOpen);
+    //     try {
+    //         setIsOpen(!isOpen);
 
-            if (Object.keys(correntAddess)?.length === 0) {
-                setMyMessageCart("Add  or select  Address")
-                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
-            } else {
-                if (cartList.list?.length === 0) {
-                    setMyMessageCart("You don't have any product in a cart")
-                    setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
-                } else {
+    //         if (Object.keys(correntAddess)?.length === 0) {
+    //             setMyMessageCart("Add  or select  Address")
+    //             setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+    //         } else {
+    //             if (cartList.list?.length === 0) {
+    //                 setMyMessageCart("You don't have any product in a cart")
+    //                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+    //             } else {
 
-                    if (correntAddess?.data?.length !== 0) {
-                        const amountInCents = Math.round(cartList?.cartAmountDetails?.net_amount * 100);
-                        const data = {
-                            order_items: cartList.list,
-                            shipping_address_id: correntAddess.data[0]._id,
-                            shipping_method_id: correntAddess.shipping_method_id
-                        }
-                        //validation for card detail
-                        const cardElement = elements.getElement(CardElement);
+    //                 if (correntAddess?.data?.length !== 0) {
+    //                     const amountInCents = Math.round(cartList?.cartAmountDetails?.net_amount * 100);
+    //                     const data = {
+    //                         order_items: cartList.list,
+    //                         shipping_address_id: correntAddess.data[0]._id,
+    //                         shipping_method_id: correntAddess.shipping_method_id
+    //                     }
+    //                     //validation for card detail
+    //                     const cardElement = elements.getElement(CardElement);
 
-                        if (cardElement) {
-                            const cardElementState = cardElement._empty;
+    //                     if (cardElement) {
+    //                         const cardElementState = cardElement._empty;
 
-                            if (cardElementState) {
-                                setMyMessageCart('Please enter your card details');
-                                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
-                                return;
-                            }
-                        }
+    //                         if (cardElementState) {
+    //                             setMyMessageCart('Please enter your card details');
+    //                             setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+    //                             return;
+    //                         }
+    //                     }
 
-                        const order = await api.postWithToken(`${serverURL + "order-create"}`, data)
+    //                     const order = await api.postWithToken(`${serverURL + "order-create"}`, data)
 
-                        if (order.data.success == true) {
-                            setIs_Wait(true)
-                            setMainLoder(true)
-                            // create payment intent and get client_secret
-                            const paymentIntentResponse = await api.post(`${serverURL + "create-payment-intent"}`, {
-                                amount: amountInCents,
-                                order_id: order.data.data?.orderObj?._id
-                            });
+    //                     if (order.data.success == true) {
+    //                         setIs_Wait(true)
+    //                         setMainLoder(true)
+    //                         // create payment intent and get client_secret
+    //                         const paymentIntentResponse = await api.post(`${serverURL + "create-payment-intent"}`, {
+    //                             amount: amountInCents,
+    //                             order_id: order.data.data?.orderObj?._id
+    //                         });
 
-                            const clientSecret = paymentIntentResponse.data.clientSecret;
-                            if (!stripe || !elements) {
-                                return;
-                            }
-                            const cardElement = elements.getElement(CardElement);
+    //                         const clientSecret = paymentIntentResponse.data.clientSecret;
+    //                         if (!stripe || !elements) {
+    //                             return;
+    //                         }
+    //                         const cardElement = elements.getElement(CardElement);
 
-                            if (!cardElement) {
-                                console.log("CardElement not loaded");
-                                return;
-                            }
+    //                         if (!cardElement) {
+    //                             console.log("CardElement not loaded");
+    //                             return;
+    //                         }
 
-                            const payment = await stripe.confirmCardPayment(clientSecret, {
-                                payment_method: {
-                                    card: cardElement,
-                                    billing_details: {
-                                    },
-                                },
-                            });
+    //                         const payment = await stripe.confirmCardPayment(clientSecret, {
+    //                             payment_method: {
+    //                                 card: cardElement,
+    //                                 billing_details: {
+    //                                 },
+    //                             },
+    //                         });
 
-                            const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
-                            if (payment.error) {
-                                setMyMessageCart(payment.error.message);
-                                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
-                            } else {
-                                setMyMessageCart(paymentStatus.data.message);
-                                setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
+    //                         const paymentStatus = await api.post(`${serverURL + "order-payment-status"}`, { order_id: order.data.data?.orderObj?._id })
+    //                         if (payment.error) {
+    //                             setMyMessageCart(payment.error.message);
+    //                             setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+    //                         } else {
+    //                             setMyMessageCart("Your order has been successfully placed");
+    //                             setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
 
-                                //run  order js 
-                                placeOrder(cartList?.cartAmountDetails?.net_amount, "USD", payment.paymentIntent.id);
+    //                             //run  order js 
+    //                             placeOrder(cartList?.cartAmountDetails?.net_amount, "USD", payment.paymentIntent.id);
 
-                                setTimeout(() => {
-                                    setProfileOption("list")
-                                    navigate("/thankyou")
-                                }, 1000);
-                                // Continue with the rest of your checkout flow here.
-                            }
-                            setIs_Wait(false)
-                            setMainLoder(false)
-                            getCartData()
-                        } else {
-                            setMyMessageCart(order.data.message);
-                            setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
-                        }
+    //                             setTimeout(() => {
+    //                                 setProfileOption("list")
+    //                                 navigate("/thankyou")
+    //                             }, 3000);
+    //                             // Continue with the rest of your checkout flow here.
+    //                         }
+    //                         setIs_Wait(false)
+    //                         setMainLoder(false)
+    //                         getCartData()
+    //                     } else {
+    //                         setMyMessageCart(order.data.message);
+    //                         setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+    //                     }
 
-                    } else {
-                        setMyMessageCart("Add shipping address")
-                        setWarningSnackBarOpen(!warningSnackBarOpenCart);
-                    }
-                }
-            }
-        } catch (error) {
-            console.log(error);
-            errorResponse(error, setMyMessageCart);
-            setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
-        }
-    };
+    //                 } else {
+    //                     setMyMessageCart("Add shipping address")
+    //                     setWarningSnackBarOpen(!warningSnackBarOpenCart);
+    //                 }
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //         errorResponse(error, setMyMessageCart);
+    //         setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+    //     }
+    // };
 
     const removeCartData = async (id, action, qty) => {
         try {
@@ -625,6 +577,78 @@ const WrappedCart = () => {
 
     const defaultCountry = countryList.find(country => country._id === values.country_id);
     const defaultState = stateList.find(state => state._id === values.state_id);
+
+
+    // payment with stripe checkout 
+    const handleCheckout = async (event) => {
+        try {
+            setIsOpen(!isOpen); // Assuming this toggles a UI element
+
+            // Address Validation
+            if (Object.keys(correntAddess)?.length === 0) {
+                setMyMessageCart("Add or select an Address");
+                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+                return; // Stop execution if no address
+            }
+
+            // Cart Validation
+            if (cartList.list?.length === 0) {
+                setMyMessageCart("You don't have any product in a cart");
+                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+                return; // Stop execution if cart is empty
+            }
+
+            // Further Address Validation
+            if (correntAddess?.data?.length === 0) {
+                setMyMessageCart("Add shipping address");
+                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+                return; // Stop execution if address data is empty
+            }
+
+            // Prepare data for order creation
+            const amountInCents = Math.round(cartList?.cartAmountDetails?.net_amount * 100);
+            const data = {
+                order_items: cartList.list,
+                shipping_address_id: correntAddess.data[0]._id,
+                shipping_method_id: correntAddess.shipping_method_id,
+            };
+
+            // Create Order
+            const order = await api.postWithToken(`${serverURL + "order-create"}`, data);
+            if (order.data.success) {
+              
+                // Switch to Stripe Checkout for payment processing
+                const sessionResponse = await api.post(`${serverURL + "checkout-session"}`, {
+                    amount: amountInCents,
+                    order_id: order.data.data?.orderObj?._id,
+                    cartList: cartList // assuming cartList is available in your current scope
+                });
+
+                const sessionId = sessionResponse.data.sessionId;
+                const stripe = await stripePromise; // Ensure you have initialized Stripe.js
+
+                const { error } = await stripe.redirectToCheckout({
+                    sessionId
+                });
+
+                if (error) {
+                    console.log(error);
+                    setMyMessageCart(error.message);
+                    setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+                } else {
+                    console.log("log ----------");
+                    // After successful payment, Stripe will redirect to success_url
+                }
+            } else {
+                setMyMessageCart(order.data.message);
+                setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+            }
+        } catch (error) {
+            console.log(error);
+            setMyMessageCart("An error occurred during the checkout process.");
+            setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
+        }
+    };
 
 
     return (
@@ -850,10 +874,10 @@ const WrappedCart = () => {
 
 
                                                 <div className='payment mt-4'>
-                                                    <h5 className='sub-all-title'>Payment</h5>
-                                                    <p>All transactions are secure and encrypted.</p>
+                                                    {/* <h5 className='sub-all-title'>Payment</h5> */}
+                                                    {/* <p>All transactions are secure and encrypted.</p> */}
 
-                                                    <div className='card-main mt-3'>
+                                                    {/* <div className='card-main mt-3'>
                                                         <div className='card-title p-3'>
                                                             <h5>Card</h5>
                                                             <div className='d-flex gap-2 align-items-center'>
@@ -873,45 +897,28 @@ const WrappedCart = () => {
                                                             </div>
                                                         </div>
                                                         <div className='card-info p-3'>
-                                                            {/* <div className='login-input text-start'>
-                                                    <input placeholder='Card number'
-                                                        type='number'
-                                                        className='lock'
+                               
+                                                        </div>
+                                                    </div> */}
+                                                </div>
+
+                                                <div className="return-policy-checkbox">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="return_policy_checkbox"
+                                                        checked={returnPolicyChecked}
+                                                        onChange={handleCheckboxChange}
                                                     />
+                                                    <label htmlFor="return_policy_checkbox" className='return-policy-label ms-2'>
+                                                        If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
+                                                    </label>
                                                 </div>
-                                                <div className='login-input text-start mt-2'>
-                                                    <input placeholder='Name on card'
-                                                        type='text'
-                                                    />
-                                                </div>
-                                                <Row>
-                                                    <Col lg={6} md={12}>
-                                                        <div className='login-input text-start mt-2'>
-                                                            <input placeholder='Expiration date (MM/YY)'
-                                                                type='text'
-                                                            />
-                                                        </div>
-                                                    </Col>
-                                                    <Col lg={6} md={12}>
-                                                        <div className='login-input text-start mt-2'>
-                                                            <input placeholder='Security code'
-                                                                type='text'
-                                                                className='alert'
-                                                            />
-                                                        </div>
-                                                    </Col>
-                                                </Row> */}
-                                                            <div className='address-shipped mt-3'>
-                                                                <CardElement />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+
                                                 {stripe ? (
                                                     <ElementsConsumer>
                                                         {({ elements, stripe }) => (
                                                             <div>
-                                                                <Button className='checkout mt-3' disabled={!stripe} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Make payment"} </Button>
+                                                                <Button className='checkout mt-3' disabled={isButtonDisabled} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Make payment"} </Button>
                                                             </div>
                                                         )}
                                                     </ElementsConsumer>
@@ -963,8 +970,6 @@ const WrappedCart = () => {
                                     </div>
                                 </div>
                             </div> */}
-
-
 
                                         <div className='mt-3'>
 
@@ -1185,7 +1190,7 @@ checkbox1: event.target.checked,
                                         <Select
                                             name='country_id'
                                             className='rect-select-cos'
-                                            value={defaultCountry && { value: defaultCountry._id, label: defaultCountry.name }} 
+                                            value={defaultCountry && { value: defaultCountry._id, label: defaultCountry.name }}
                                             // value={countryList.find(option => option.value === values.country_id)} // sets the selected value
                                             onChange={option => {
                                                 handleChange({
@@ -1195,8 +1200,8 @@ checkbox1: event.target.checked,
                                                     },
                                                 })
                                             }} //set selected value
-                                            options={countryList.map(country => ({ value: country._id, label: country.name }))} 
-                                            />
+                                            options={countryList.map(country => ({ value: country._id, label: country.name }))}
+                                        />
                                         <div className='error'>{errors?.country_id}</div>
                                     </div>
                                 </Col>
@@ -1268,7 +1273,7 @@ checkbox1: event.target.checked,
                                             name='state_id'
                                             className='rect-select-cos'
                                             // value={ values.state_id ? stateList.find(option => option.value === values.state_id) : null}
-                                            value={ defaultState && { value: defaultState._id , label: defaultState.name }}
+                                            value={defaultState && { value: defaultState._id, label: defaultState.name }}
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
@@ -1330,7 +1335,7 @@ checkbox1: event.target.checked,
 
 // Wrap your Cart component with Elements component
 const Cart = () => (
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromise} >
         <WrappedCart />
     </Elements>
 );
