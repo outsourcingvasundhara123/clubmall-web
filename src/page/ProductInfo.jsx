@@ -850,8 +850,8 @@ const ProductInfo = () => {
                                         <div className='pro-def'>
                                             <h6 className='product-heading-name'> {Product?.productList?.name}</h6>
 
-                                            <div className='review shipping-def pb-2 mt-3 d-flex align-items-center justify-content-between web-together'>
-                                                <div className='d-flex align-items-center flex-wrap gap-3'>
+                                            <div className='review shipping-def pb-2 d-flex align-items-center justify-content-between web-together'>
+                                                <div className='d-flex align-items-center flex-wrap gap-2 gap-xl-3'>
                                                     <h5 className='info-title border-right-cos cos-title'>{Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
                                                         <span className='cos-title'>{Product?.productList?.rating}</span>
@@ -865,17 +865,17 @@ const ProductInfo = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='per-pro d-flex align-items-end gap-2 mt-2 for-margin' style={{ marginTop: '10px !important ' }}>
+                                            <div className='per-pro d-flex align-items-end gap-2'>
                                                 <h3>${Product?.productList?.individual_price}</h3>
                                             </div>
-                                            <div className='per-pro d-flex align-items-end gap-2 mt-2 for-margin' style={{ marginTop: '10px !important ' }}>
+                                            <div className='per-pro d-flex align-items-end gap-2 mt-2'>
                                                 {Product?.productList?.competitors_price !== 0 && Product?.productList?.competitors_price !== undefined && (
                                                     <h3 className='competitors-text'>Competitors Price : <span className='competitors-price' style={{ fontSize: "unset" }}>${Product?.productList?.competitors_price}</span></h3>
                                                 )}
                                             </div>
 
-                                            <div className='shipping-def description mt-4' style={{ marginBottom: '-6px' }}>
-                                                <h5 className='info-title mt-4 mb-2'>Product Details</h5>
+                                            <div className='shipping-def description mt-2'>
+                                                <h5 className='info-title mt-2'>Product Details</h5>
                                                 <textarea
                                                     value={Product?.productList?.description.split(":").join(":")}
                                                     readOnly
@@ -889,7 +889,7 @@ const ProductInfo = () => {
                                                 />
                                             </div>
                                             {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
-                                            <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
+                                            <div className='d-flex align-items-center flex-wrap gap-2'>
                                                 <Button className="size-chart-button" onClick={handleSizeChartClick}>
                                                     Show Size Chart
                                                 </Button>
@@ -909,8 +909,8 @@ const ProductInfo = () => {
                                             )
                                             }
 
-                                            <div className='product-color mt-4'>
-                                                <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
+                                            <div className='product-color mt-3'>
+                                                <div className='d-flex align-items-center flex-wrap gap-2'>
                                                     {
                                                         Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => {
                                                             return (
@@ -922,9 +922,9 @@ const ProductInfo = () => {
                                                     }
                                                 </div>
                                                 {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 0 ? (
-                                                    <div className='size mt-4'>
+                                                    <div className='size mt-3'>
                                                         <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
-                                                        <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
+                                                        <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                             {Product?.productList?.product_qty?.map((e, i) => (
                                                                 <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActive(e)}>
                                                                     {e}
@@ -936,9 +936,9 @@ const ProductInfo = () => {
                                                     <></>
                                                 )}
 
-                                                <div className='size mt-4'>
+                                                <div className='size mt-3'>
                                                     {Product?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
-                                                    <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
+                                                    <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                         {
                                                             Product?.productList?.sku_attributes.size?.map((e, i) => {
                                                                 return (
@@ -953,8 +953,8 @@ const ProductInfo = () => {
 
                                             </div>
                                             <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
-                                            <div>
-                                                <Swiper
+                                            <div className='mt-4'>
+                                                {/* <Swiper
                                              
                                                     slidesPerView={4}
                                                     spaceBetween={10}
@@ -963,26 +963,30 @@ const ProductInfo = () => {
                                                     
                                                     breakpoints={{
                                                         0: {
-                                                            slidesPerView: 2,
-                                                            spaceBetween: 10
-                                                        },
-                                                        425: {
-                                                            slidesPerView: 2,
-                                                            spaceBetween: 10,
-                                                            
-                                                        },
-                                                        650: {
-                                                            slidesPerView: 2,
-                                                            spaceBetween: 10
-                                                        },
-                                                        991: {
                                                             slidesPerView: 3,
                                                             spaceBetween: 10
                                                         },
+
+                                                        425: {
+                                                            slidesPerView: 4,
+                                                            spaceBetween: 10,
+                                                        },
+
+                                                        650: {
+                                                            slidesPerView: 4,
+                                                            spaceBetween: 10
+                                                        },
+
+                                                        991: {
+                                                            slidesPerView: 4,
+                                                            spaceBetween: 10
+                                                        },
+
                                                         1300: {
                                                             slidesPerView: 4,
                                                             spaceBetween: 10
                                                         }
+
                                                     }}
                                                     navigation={true}
                                                     modules={[Pagination, Navigation]}
@@ -990,30 +994,47 @@ const ProductInfo = () => {
                                                 >
                                                     {Product?.productList?.product_files?.map((video, index) => (
                                                         <SwiperSlide key={index}>
-                                                            <div className='d-flex gap-2 py-2 align-items-center' style={{ marginTop: '30px' }}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <video
                                                                     className='product-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     onClick={handleFullScreen}
-                                                                    style={{
-                                                                        height: 'auto',
-                                                                        border: '1px solid #ccc', // Example border
-                                                                        borderRadius: '8px', // Example border radius
-                                                                    }}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                                
                                                             </div>
-                                                            <div className='d-flex gap-2 py-2 align-items-center'>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
                                                             <p className='amazone-text'>{video.title}</p>
                                                             </div>
                                                         </SwiperSlide>
                                                     ))}
-                                                </Swiper>
+                                                </Swiper> */}
+                                                <div className='overflow-auto d-flex align-items-start gap-3 gap-xl-4'>
+                                                {Product?.productList?.product_files?.map((video, index) => (
+                                                        <div key={index}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <video
+                                                                    className='product-video'
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    onClick={handleFullScreen}
+                                                                >
+                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    Your browser does not support the video.
+                                                                </video>
+                                                               
+                                                            </div>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                            <p className='amazone-text'>{video.title}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                             
                                             
@@ -1044,8 +1065,8 @@ const ProductInfo = () => {
                                             >
                                                 <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
                                             </div> */}
-                                            <div className='shipping-def mt-4'>
-                                                <h5 className='info-title mt-4 mb-2'>Shop with confidence</h5>
+                                            <div className='shipping-def'>
+                                                <h5 className='info-title mb-2'>Shop with confidence</h5>
                                                 <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
                                                 <ul>
                                                     <div>
@@ -1101,23 +1122,23 @@ const ProductInfo = () => {
                                                     loop={true}
                                                     breakpoints={{
                                                         0: {
-                                                            slidesPerView: 2,
+                                                            slidesPerView: 1,
                                                             spaceBetween: 10
                                                         },
                                                         425: {
-                                                            slidesPerView: 2,
+                                                            slidesPerView: 1,
                                                             spaceBetween: 10
                                                         },
                                                         650: {
-                                                            slidesPerView: 2,
+                                                            slidesPerView: 1,
                                                             spaceBetween: 10
                                                         },
                                                         991: {
-                                                            slidesPerView: 3,
+                                                            slidesPerView: 1,
                                                             spaceBetween: 10
                                                         },
                                                         1300: {
-                                                            slidesPerView: 4,
+                                                            slidesPerView: 1,
                                                             spaceBetween: 10
                                                         }
                                                     }}
@@ -1127,18 +1148,13 @@ const ProductInfo = () => {
                                                 >
                                                     {Product?.productList?.description_video?.map((video, index) => (
                                                         <SwiperSlide key={index}>
-                                                            <div className='d-flex gap-2 py-2 align-items-center' style={{ marginTop: '30px' }}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <video
-                                                                    className='product-video'
+                                                                    className='product-video bottom-product-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     onClick={handleFullScreen}
-                                                                    style={{
-                                                                        height: 'auto',
-                                                                        border: '1px solid #ccc', // Example border
-                                                                        borderRadius: '8px', // Example border radius
-                                                                    }}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
@@ -1227,7 +1243,7 @@ const ProductInfo = () => {
                                                                     <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
-                                                                <div className='d-flex gap-2 py-2 align-items-center'>
+                                                                <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                     {e?.review_files?.map((r, i) => (
                                                                         <React.Fragment key={i}>
                                                                             { r.file_name && !r.file_name.includes("mp4") ? (
