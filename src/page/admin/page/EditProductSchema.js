@@ -39,6 +39,7 @@ export const validate = (values) => {
     if (!values.competitors_price) {
         errors.competitors_price = "competitors price details is required";
     }
+    
 
     // Validate group_price field
     if (!values.group_price) {
@@ -50,20 +51,20 @@ export const validate = (values) => {
     // }
 
     // Validate product_images field
-    if (!values.product_images || values.product_images.filter(Boolean).length === 0) {
-        errors.product_images = "You need to add at least  one image 1st";
-    } else {
-        const invalidImage = values.product_images.find(img => {
-            if (img && img.file) {
-                return !['image/jpeg', 'image/png'].includes(img.file.type);
-            }
-            return false;
-        });
+    // if (!values.product_images || values.product_images.filter(Boolean).length === 0) {
+    //     errors.product_images = "You need to add at least  one image 1st";
+    // } else {
+    //     const invalidImage = values.product_images.find(img => {
+    //         if (img && img.file) {
+    //             return !['image/jpeg', 'image/png'].includes(img.file.type);
+    //         }
+    //         return false;
+    //     });
 
-        if (invalidImage) {
-            errors.product_images = "Only jpeg or png images are allowed";
-        }
-    }
+    //     if (invalidImage) {
+    //         errors.product_images = "Only jpeg or png images are allowed";
+    //     }
+    // }
  
     // Validate product_category_keys field
     if (!values.group_price) {
@@ -71,14 +72,14 @@ export const validate = (values) => {
     }
 
     // Validate category field
-    if (!values.category) {
-        errors.category = "category is required";
-    }
+    // if (!values.category) {
+    //     errors.category = "category is required";
+    // }
 
-    // Validate subCategory field
-    if (!values.subcategory) {
-        errors.subcategory = "sub Category is required";
-    }
+    // // Validate subCategory field
+    // if (!values.subcategory) {
+    //     errors.subcategory = "sub Category is required";
+    // }
 
     return errors;
 };

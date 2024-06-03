@@ -18,7 +18,7 @@ import { MdRemove, MdAdd } from 'react-icons/md'
 
 
 const CartDrawer = () => {
-    const { getcartcount, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart,  handleDrawerClose, drawer, cartList, setMainLoder,  getCartData,  setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage,  } = useContext(CartContext);
+    const { getcartcount, localCart, getLocalCartData, increaseProductQuantity, decreaseProductQuantity, deleteProductDetailsFromLocal, deleteProductFromLocalCart,  handleDrawerClose, drawer,cartList, setMainLoder,  getCartData,  setSucessSnackBarOpen, sucessSnackBarOpen, setMyMessage,  } = useContext(CartContext);
     const isLoggedIn = Is_Login();
     const navigate = useNavigate();
     const [sucessSnackBarOpenCart, setSucessSnackBarOpenCart] = useState(false);
@@ -61,6 +61,7 @@ const CartDrawer = () => {
             if (res.data.success === true) {
                 getCartData()
                 getcartcount()
+
                 setMyMessageCart(res.data.message);
                 setSucessSnackBarOpenCart(!sucessSnackBarOpenCart);
             } else {
@@ -141,7 +142,6 @@ const CartDrawer = () => {
     const { hours, minutes, seconds } = formatTime();
 
     // ------ Timer END ------- // 
-
 
     useEffect(() => {
         getLocalCartData()

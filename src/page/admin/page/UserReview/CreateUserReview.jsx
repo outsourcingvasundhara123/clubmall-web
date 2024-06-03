@@ -28,7 +28,7 @@ function CreateUserReview() {
     product_id: "",
     content: "",
     rating: "",
-    title: name,
+    title: "",
     vendor_id: "",
     review_type: "",
     review_files: ""
@@ -60,7 +60,6 @@ function CreateUserReview() {
 
     setValues({ ...values, review_files: files, fileNames: fileNames }); // Setting file names in state
   };
-
 
 
   const startAnimation = () => {

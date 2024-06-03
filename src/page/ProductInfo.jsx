@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Button, Col, Form, Modal, NavLink,  Row, } from 'react-bootstrap'
+import { Button, Col, Form, Modal, NavLink, Row, Table } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdKeyboardDoubleArrowRight,
@@ -24,7 +24,7 @@ import { errorResponse, afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { CartContext } from '../context/CartContext'
-import {  Rating } from '@mui/material'
+import { Rating } from '@mui/material'
 import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
 import { useParams } from 'react-router-dom';
@@ -36,6 +36,55 @@ import ProductGif from '../components/ProductGif'
 import reporticon from '../assets/img/fluent-mdl2_message-1.png';
 
 
+
+const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, toggleSizeChartUnit, isInInch }) => {
+    const maxRows = Math.max(...rows.map(item => columns.filter(col => col.row_name === item.name).length));
+
+    return (
+        <Modal show={true} onHide={onHide} size="lg" centered>
+            <Modal.Header closeButton>
+                <Modal.Title className='amazone-text'>{sizeChartTitle}</Modal.Title>
+                
+            </Modal.Header>
+            <Modal.Body>
+                {sizeChartDescription ? (
+                    <>
+                        <p className='amazone-text'>{sizeChartDescription}</p>
+                        <Button onClick={toggleSizeChartUnit} className="size-chart-button" style={{position:'relative',bottom:'25px',left:'626px'}}>
+                            {isInInch ? 'Size Chart in Cm' : 'Size Chart in Inch'}
+                        </Button>
+                        <br></br>
+                        <Table striped bordered hover className='size-chart-modal amazone-text'>
+                            <tbody className="d-flex amazone-text">
+                                {rows.map((item, i) => {
+                                    const rowData = columns.filter(col => col.row_name === item.name);
+                                    return (
+                                        <div key={i} className='w-100'>
+                                            <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
+                                                <td className="border-0 amazone-text">{item.name}</td>
+                                            </tr>
+                                            <tr className="d-flex flex-column">
+                                                {rowData.map((sub, j) => (
+                                                    <td key={j}>{sub.name}</td>
+                                                ))}
+                                                {[...Array(maxRows - rowData.length)].map((_, j) => (
+                                                    <td key={j} className='amazone-text'>-</td>
+                                                ))}
+                                            </tr>
+                                        </div>
+                                    );
+                                })}
+                            </tbody>
+                        </Table>
+                    </>
+                ) : (
+                    <p style={{ color: 'red', fontSize: '500' }}>Size chart not available</p>
+                )}
+            </Modal.Body>
+        </Modal>
+    );
+};
+
 const CustEmailModal = ({ onHide }) => {
     return (
         <Modal show={true} onHide={onHide} size="lg" centered >
@@ -43,7 +92,7 @@ const CustEmailModal = ({ onHide }) => {
                 Report an issue
             </Modal.Header>
             <Modal.Body>
-                <div className='contact-us' >
+                <div className='footer-bottom' >
                     <p className='custemailtext' >
                         If you want to leave any positive or negative feedback, you can always mail to
                         <a href="mailto:asouare@clubmall.com"> asouare@clubmall.com </a>
@@ -52,7 +101,7 @@ const CustEmailModal = ({ onHide }) => {
                 </div>
             </Modal.Body>
             <style jsx>{`
-            .contact-us p
+            .footer-bottom p
             {
                 position: relative;
                 top: -21px;
@@ -66,12 +115,10 @@ const CustEmailModal = ({ onHide }) => {
         </Modal>
     );
 };
-
-
 const ProductInfo = () => {
 
 
-    const { getcartcount,  handleShow,  addcartLocal, addProductDetailsToLocal, handleDrawerShow, setMainLoder, addWishList, generateDynamicLink, getCartData,  add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage } = useContext(CartContext);
+    const { getcartcount, handleShow, addcartLocal, addProductDetailsToLocal, handleDrawerShow, setMainLoder, addWishList, generateDynamicLink, getCartData, cartList, add_wished_Called, Mymessage, setSucessSnackBarOpen, sucessSnackBarOpen, setWarningSnackBarOpen, warningSnackBarOpen, sellIs_wished, activeImage, setActiveImage } = useContext(CartContext);
     const name = localStorage.getItem("name")
     const initialValues = {
         action: "create",
@@ -127,6 +174,7 @@ const ProductInfo = () => {
         }
 
     }
+
     const handlereviewClose = () => setreviewShow(false);
     const { id } = useParams();
     const product_id = id
@@ -139,14 +187,24 @@ const ProductInfo = () => {
 
     };
     const [filters, setFilters] = useState(initialValues_2);
+
+    const [showSizeChart, setShowSizeChart] = useState(false);
+    const [isInInch, setIsInInch] = useState(true);
     const [showcustemail, setShowCustEmail] = useState(false);
 
+    const handleSizeChartClick = () => {
+        setShowSizeChart(true);
+    };
     const handleCustEmailClick = () => {
         setShowCustEmail(true);
+    };
+    const handleSizeChartClose = () => {
+        setShowSizeChart(false);
     };
     const handleCustEmailClose = () => {
         setShowCustEmail(false);
     };
+    const toggleSizeChartUnit = () => setIsInInch(!isInInch);
 
     const handelreviewFilter = (e) => {
         setPage(1)
@@ -176,10 +234,10 @@ const ProductInfo = () => {
     const [imagePreview, setImagePreview] = useState([]);
 
     // wishlist 
-    const [isWishlist, setIsWishlist] = useState(Product.isWishList === 1);
+    const [isWishlist, setIsWishlist] = useState(Product?.isWishList === 1);
 
     useEffect(() => {
-        setIsWishlist(Product.isWishList === 1);
+        setIsWishlist(Product?.isWishList === 1);
     }, [Product.isWishList]);
 
     const handleWishlistClick = async () => {
@@ -204,6 +262,7 @@ const ProductInfo = () => {
             player.current.play();
         }
     };
+    
     const stopAnimation = () => {
         setLoading(false);
     };
@@ -219,33 +278,34 @@ const ProductInfo = () => {
     }
 
     const getProductDetail = async () => {
-        startAnimation()
+        startAnimation();
         try {
             const apiTyp = isLoggedIn ? api.getWithToken : api.get;
             if (product_id && product_id !== undefined) {
-                const [productDetail] = await Promise.all([
-                    apiTyp(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`)
-                ]);
+                const productDetail = await apiTyp(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`);
+
                 const productData = productDetail.data.data;
                 setProduct(productData);
                 setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
-                setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size)
-                stopAnimation()
-                setUrl(productData.productImagePath)
+                setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size);
+                setProduct_QtyActive(productData?.productList?.product_qty[0]);
+                stopAnimation();
+                setUrl(productData.productImagePath);
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
                 const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath + productData.productList._id + "/" + e.file_name}`);
                 const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
                 }));
-                setColorProduct(mergedImages)
+                setColorProduct(mergedImages);
+
             } else {
-                navigate("/")
+                navigate("/");
             }
 
         } catch (error) {
             console.log(error, "error");
-            navigate("/")
+            navigate("/");
         }
     };
 
@@ -287,7 +347,7 @@ const ProductInfo = () => {
 
 
     const getproductlist = async () => {
-        
+
         const apiTyp = isLoggedIn ? api.postWithToken : api.post;
 
         try {
@@ -352,8 +412,18 @@ const ProductInfo = () => {
                     setMainLoder(true)
                     const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
                     if (res.data.success == true) {
+
+                        var data = {
+                            action: "update-to-cart-qty",
+                            _id: res.data.data._id,
+                            qty: product_qtyActive
+                        }
+
+                        const updateData = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
+
                         getCartData()
                         getcartcount()
+
                         setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
                         setMyMessageProductDtl(res.data.message);
                         setProductColorActive(" ")
@@ -371,7 +441,7 @@ const ProductInfo = () => {
                     //    afterLogin(setMyMessageProductDtl)
                     //    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                     // handleDrawerShow()
-                    addProductDetailsToLocal(data, Product, sizeActive, productColorActive)
+                    addProductDetailsToLocal(data, Product, sizeActive, productColorActive, product_qtyActive)
                     addcartLocal(data, handleDrawerShow)
                 }
             } else {
@@ -387,6 +457,8 @@ const ProductInfo = () => {
             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }
     };
+
+
 
     // const ciphertext = localStorage.getItem('cartPostData');
     // if (ciphertext) {
@@ -543,7 +615,42 @@ const ProductInfo = () => {
         }
     }, [Product]);
 
+    const [modalOpen, setModalOpen] = useState(false);
 
+    const toggleModal = () => {
+        setModalOpen(!modalOpen);
+    };
+
+
+    const [isFullScreen, setIsFullScreen] = useState(false);
+
+    const handleFullScreen = (event) => {
+        const video = event.target;
+
+        if (!isFullScreen) {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.mozRequestFullScreen) { /* Firefox */
+                video.mozRequestFullScreen();
+            } else if (video.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) { /* IE/Edge */
+                video.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { /* Firefox */
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE/Edge */
+                document.msExitFullscreen();
+            }
+        }
+
+        setIsFullScreen(!isFullScreen);
+    };
 
     return (
         <>
@@ -630,7 +737,7 @@ const ProductInfo = () => {
 
                                             <RWebShare
                                                 data={{
-                                                
+
                                                     text: "Hey, check out this product on Clubmall. Limited stock available. It’s going fast!",
                                                     url: window.location.href,
                                                     title: "Clubmall",
@@ -741,15 +848,15 @@ const ProductInfo = () => {
 
                                     <Col lg={6} md={12} className='mt-4 mt-lg-0'>
                                         <div className='pro-def'>
-                                            <h6> {Product?.productList?.name}</h6>
+                                            <h6 className='product-heading-name'> {Product?.productList?.name}</h6>
 
-                                            <div className='review shipping-def pb-2 mt-3 d-flex align-items-center justify-content-between web-together'>
-                                                <div className='d-flex align-items-center flex-wrap gap-3'>
-                                                    <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
+                                            <div className='review shipping-def pb-2 d-flex align-items-center justify-content-between web-together'>
+                                                <div className='d-flex align-items-center flex-wrap gap-2 gap-xl-3'>
+                                                    <h5 className='info-title border-right-cos cos-title'>{Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
                                                         <span className='cos-title'>{Product?.productList?.rating}</span>
                                                         <div className='d-flex align-items-center gap-1'>
-                                                            <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} defaultValue={0} readOnly />
+                                                            <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} />
                                                         </div>
                                                     </div>
                                                     <div className='d-flex align-items-center gap-2 verified'>
@@ -757,57 +864,53 @@ const ProductInfo = () => {
                                                         <span>All reviews are from verified buyers</span>
                                                     </div>
                                                 </div>
-
                                             </div>
-
-                                            {/* <div className='brand my-3'>
-                                                <p><span>By</span> <img src='./img/product_def/uppack.png' alt='' />  {Product.stockData?.recent_bought_name} ({Product.stockData?.order_count}K + sold)</p>
-                                            </div> */}
-
+                                            <div className='per-pro d-flex align-items-end gap-2'>
+                                                <h3>${Product?.productList?.individual_price}</h3>
+                                            </div>
                                             <div className='per-pro d-flex align-items-end gap-2 mt-2'>
-                                                <h3> ${Product?.productList?.individual_price}</h3>
-                                                {/* <del>${Product?.productList?.group_price}</del> */}
-                                                {/* <span>{Math.round(Product?.productList?.group_price * 100 / Product?.productList?.individual_price)}% Off</span> */}
+                                                {Product?.productList?.competitors_price !== 0 && Product?.productList?.competitors_price !== undefined && (
+                                                    <h3 className='competitors-text'>Competitors Price : <span className='competitors-price' style={{ fontSize: "unset" }}>${Product?.productList?.competitors_price}</span></h3>
+                                                )}
                                             </div>
 
-                                            {/* <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'> */}
+                                            <div className='shipping-def description mt-2'>
+                                                <h5 className='info-title mt-2'>Product Details</h5>
+                                                <textarea
+                                                    value={Product?.productList?.description.split(":").join(":")}
+                                                    readOnly
+                                                    rows={Product?.productList?.description.split(":").length}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        resize: 'none',
+                                                        border: 'none'
+                                                    }}
+                                                />
+                                            </div>
+                                            {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
+                                            <div className='d-flex align-items-center flex-wrap gap-2'>
+                                                <Button className="size-chart-button" onClick={handleSizeChartClick}>
+                                                    Show Size Chart
+                                                </Button>
+                                                
+                                                {showSizeChart && (
+                                                    <ProductChartModal
+                                                        sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
+                                                        sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
+                                                        onHide={handleSizeChartClose}
+                                                        toggleSizeChartUnit={toggleSizeChartUnit}
+                                                        isInInch={isInInch}
+                                                        rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
+                                                        columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
+                                                    />
+                                                )}
+                                            </div>
+                                            )
+                                            }
 
-                                                {/* <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
-                                                    groupPriceShare(Product?.productList?._id)
-
-                                                }}>Group Price: <br />
-                                                    ${Product?.productList?.group_price}</Button> */}
-                                                {/* <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={() => (setPerActive('Individual'), handleCart())}>Individual Price <br />
-                                                    ${Product?.productList?.individual_price}</Button> */}
-                                            {/* </div> */}
-
-
-                                            {/* <p className='interest mt-3'>4 interest-free installments of <span>$4.25</span> with
-                                                <img src='./img/after.png' alt='' />
-                                                or
-                                                <img src='./img/kla.png' alt='' />
-                                            </p> */}
-
-                                            {/* <div className='order-time d-flex align-items-center justify-content-between mt-4'>
-                                                <div className='d-flex align-items-center gap-3'>
-                                                    <img src='./img/product_def/right-green.png' alt='' />
-                                                    <h5>Free shipping on all orders</h5>
-                                                </div>
-                                                <div className='d-flex align-items-center gap-3 order-time-cos'>
-                                                    <div className='time d-flex align-items-center gap-2'>
-                                                        <span>08</span>
-                                                        <p>:</p>
-                                                        <span>34</span>
-                                                        <p>:</p>
-                                                        <span>52</span>
-                                                    </div>
-                                                    <span>Left today</span>
-                                                </div>
-                                            </div> */}
-
-                                            <div className='product-color mt-4'>
-                                                <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
-                                                <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
+                                            <div className='product-color mt-3'>
+                                                <div className='d-flex align-items-center flex-wrap gap-2'>
                                                     {
                                                         Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => {
                                                             return (
@@ -818,10 +921,24 @@ const ProductInfo = () => {
                                                         })
                                                     }
                                                 </div>
+                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 0 ? (
+                                                    <div className='size mt-3'>
+                                                        <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+                                                        <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+                                                            {Product?.productList?.product_qty?.map((e, i) => (
+                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActive(e)}>
+                                                                    {e}
+                                                                </Button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <></>
+                                                )}
 
-                                                <div className='size mt-4'>
+                                                <div className='size mt-3'>
                                                     {Product?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
-                                                    <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
+                                                    <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                         {
                                                             Product?.productList?.sku_attributes.size?.map((e, i) => {
                                                                 return (
@@ -832,29 +949,124 @@ const ProductInfo = () => {
                                                             })
                                                         }
                                                     </div>
-                                                    {/* <div className='qty mt-4 pt-2 d-flex align-items-center gap-3'>
-                                        <h5>Qty:</h5>
-                                        <div className='count-product'>
-                                            <Button onClick={(e) => setCount((e) => e - 1)}> <MdRemove /></Button>
-                                            <span>{count}</span>
-                                            <Button onClick={(e) => setCount((e) => e + 1)}><MdAdd /></Button>
-                                        </div>
-                                    </div> */}
                                                 </div>
 
                                             </div>
+                                            <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
+                                            <div className='mt-4'>
+                                                {/* <Swiper
+                                             
+                                                    slidesPerView={4}
+                                                    spaceBetween={10}
+                                                    hashNavigation={{ watchState: true }}
+                                                    loop={true}
+                                                    
+                                                    breakpoints={{
+                                                        0: {
+                                                            slidesPerView: 3,
+                                                            spaceBetween: 10
+                                                        },
 
-                                            <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%" , borderRadius: "30px"}} >Add to cart</Button>
+                                                        425: {
+                                                            slidesPerView: 4,
+                                                            spaceBetween: 10,
+                                                        },
 
-                                            <div className='d-flex align-items-start gap-4 justify-content-left overflow-hidden mt-4 ' 
-                                            style={{maxHeight: "300px"}}
+                                                        650: {
+                                                            slidesPerView: 4,
+                                                            spaceBetween: 10
+                                                        },
+
+                                                        991: {
+                                                            slidesPerView: 4,
+                                                            spaceBetween: 10
+                                                        },
+
+                                                        1300: {
+                                                            slidesPerView: 4,
+                                                            spaceBetween: 10
+                                                        }
+
+                                                    }}
+                                                    navigation={true}
+                                                    modules={[Pagination, Navigation]}
+                                                    className="mySwiper slider_pinfo"
+                                                >
+                                                    {Product?.productList?.product_files?.map((video, index) => (
+                                                        <SwiperSlide key={index}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <video
+                                                                    className='product-video'
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    onClick={handleFullScreen}
+                                                                >
+                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    Your browser does not support the video.
+                                                                </video>
+                                                               
+                                                            </div>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                            <p className='amazone-text'>{video.title}</p>
+                                                            </div>
+                                                        </SwiperSlide>
+                                                    ))}
+                                                </Swiper> */}
+                                                <div className='overflow-auto d-flex align-items-start gap-3 gap-xl-4'>
+                                                {Product?.productList?.product_files?.map((video, index) => (
+                                                        <div key={index}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <video
+                                                                    className='product-video'
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    onClick={handleFullScreen}
+                                                                >
+                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    Your browser does not support the video.
+                                                                </video>
+                                                               
+                                                            </div>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                            <p className='amazone-text'>{video.title}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            {/* <div className='d-flex gap-2 py-2 align-items-center' style={{ marginTop: '30px' }}>
+                                                {Product?.productList?.product_files?.map((r, i) => (
+                                                    <video className='product-video '
+                                                        key={i}
+                                                        autoPlay
+                                                        muted
+                                                        loop
+                                                        onClick={handleFullScreen}
+                                                        style={{
+
+                                                            height: 'auto',
+                                                            border: '1px solid #ccc', // Example border
+                                                            borderRadius: '8px', // Example border radius
+                                                        }}>
+                                                        <source src={url + r.file_name} type="video/mp4" />
+                                                        Your browser does not support the video.
+                                                    </video>
+                                                ))}
+                                            </div> */}
+
+
+
+                                            {/* <div className='d-flex align-items-start gap-4 justify-content-left overflow-hidden mt-4 '
+                                                style={{ maxHeight: "300px" }}
                                             >
                                                 <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
-                                            </div>
-
-
-                                            <div className='shipping-def mt-4'>
-                                                <h5 className='info-title mt-4 mb-2'>Shop with confidence</h5>
+                                            </div> */}
+                                            <div className='shipping-def'>
+                                                <h5 className='info-title mb-2'>Shop with confidence</h5>
                                                 <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
                                                 <ul>
                                                     <div>
@@ -868,16 +1080,14 @@ const ProductInfo = () => {
                                                 </ul>
                                             </div>
 
-                                            {/* <a id="dynamicLink" href="#" target="_blank" style={{ display: 'none' }}></a> */}
 
                                             <div className='shipping-def description mt-4'>
                                                 <h5 className='info-title mt-4 mb-2'>Description</h5>
 
-                                                {/* <div className='d-flex align-items-center copy-div gap-3'>
-                                                    <span>Item ID: {Product.productList?.attributes["Product ID"][0]} </span>
-                                                    <Button className='copy-btn'>Copy</Button>
-                                                </div> */}
-                                                {Object.entries(Product?.productList?.attributes || {})?.map(([key, value], index) => (
+
+                                                {Object.entries(typeof Product?.productList?.attributes === 'string' ? JSON.parse(Product?.productList?.attributes) : (Product?.productList?.attributes || {})).map(([key, value], index) => (
+
+
                                                     <div key={index}>
                                                         {key === "Product ID" ? (
                                                             <div className='d-flex align-items-center copy-div gap-3'>
@@ -890,17 +1100,80 @@ const ProductInfo = () => {
                                                     </div>
                                                 ))}
 
+
                                             </div>
-                                        </div>
+
+                                            {(Product?.productList?.content !== null && Product?.productList?.content !== undefined && Product.productList.content.length > 0) && (
+                                                <div className='show-content '>
+                                                    <h5 className='info-title mt-4 mb-2'>Content</h5>
+                                                    <div className='show-content-editor'>
+                                                        <div dangerouslySetInnerHTML={{ __html: Product.productList.content }} />
+                                                    </div>
+                                                </div>
+                                            )}
 
 
-                                        <div>
+
                                             <div>
-                                                <a onClick={handleCustEmailClick} style={{ cursor: 'pointer', color: "#223263" }} >
-                                                    <img src={reporticon} className='custemailicon'  style={{ width:"20px"}} /> &nbsp; Report an issue with this product
-                                                </a>
+                                                <Swiper
+                                                    slidesPerView={4}
+                                                    spaceBetween={10}
+                                                    hashNavigation={{ watchState: true }}
+                                                    loop={true}
+                                                    breakpoints={{
+                                                        0: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        425: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        650: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        991: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        1300: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        }
+                                                    }}
+                                                    navigation={true}
+                                                    modules={[Pagination, Navigation]}
+                                                    className="mySwiper"
+                                                >
+                                                    {Product?.productList?.description_video?.map((video, index) => (
+                                                        <SwiperSlide key={index}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <video
+                                                                    className='product-video bottom-product-video'
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    onClick={handleFullScreen}
+                                                                >
+                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    Your browser does not support the video.
+                                                                </video>
+                                                            </div>
+                                                        </SwiperSlide>
+                                                    ))}
+                                                </Swiper>
                                             </div>
-                                        </div>
+                                            <div>
+                                                <div>
+                                                    <a onClick={handleCustEmailClick} style={{ cursor: 'pointer', color: "#223263" }} >
+                                                        <img src={reporticon} className='custemailicon' /> &nbsp; Report an issue with this product</a></div></div>
+
+                                            {/* <Link className='custemailbutton' onClick={handleCustEmailClick}>
+                                                <div className='d-flex align-items-center flex-wrap mt-2 gap-2 '>
+                                                    <img src={reporticon} className='custemailicon' /> <p className='mb-0'>Report an issue with this product</p>
+                                                </div>
+                                                    </Link> */}
 
                                             {showcustemail && (
                                                 <CustEmailModal
@@ -910,6 +1183,7 @@ const ProductInfo = () => {
                                                 />
                                             )}
 
+                                        </div>
 
                                     </Col>
                                 </Row>
@@ -969,25 +1243,26 @@ const ProductInfo = () => {
                                                                     <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
-                                                                <div className='d-flex gap-2 py-2 align-items-center'>
-                                                                    {
-                                                                        e?.review_files?.map((r, i) => {
-                                                                            return (
-                                                                                <React.Fragment key={i}>
-                                                                                    {e?.review_type === 1 ? (
-                                                                                        <img style={{ width: "100px" }} src={r.file_name} alt='' />
-                                                                                    ) : (
-                                                                                        <video style={{ width: "200px" }} controls>
-                                                                                            <source src={r.file_name} type="video/mp4" />
-                                                                                            {/* Add more <source> elements for different video formats if necessary */}
-                                                                                            Your browser does not support the video .
-                                                                                        </video>
-                                                                                    )}
-                                                                                </React.Fragment>
-                                                                            )
-                                                                        })
-                                                                    }
+                                                                <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                    {e?.review_files?.map((r, i) => (
+                                                                        <React.Fragment key={i}>
+                                                                            { r.file_name && !r.file_name.includes("mp4") ? (
+                                                                                <img style={{ width: "100px" }} src={r.file_name} alt='' />
+                                                                            ) : (
+                                                                                <video
+                                                                                    style={{ width: "200px", cursor: "pointer" }}
+                                                                                    controls
+                                                                                    onClick={handleFullScreen}
+                                                                                >
+                                                                                    <source src={r.file_name} type="video/mp4" />
+                                                                                    {/* Add more <source> elements for different video formats if necessary */}
+                                                                                    Your browser does not support the video.
+                                                                                </video>
+                                                                            )}
+                                                                        </React.Fragment>
+                                                                    ))}
                                                                 </div>
+                                                               
                                                                 <span className='date_pro_info'>{e.content}</span>
                                                                 <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
                                                                 <div className='d-flex align-items-center gap-1'>
@@ -1196,3 +1471,4 @@ const ProductInfo = () => {
 }
 
 export default ProductInfo
+

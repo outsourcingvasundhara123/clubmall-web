@@ -6,7 +6,7 @@ import { getServerURL } from "../../../../helper/envConfig";
 import SucessSnackBar from "../../../../components/SnackBar";
 import ErrorSnackBar from "../../../../components/SnackBar";
 import { logoutAdmin } from "../../../../helper/authAdmin";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CartContext } from "../../../../context/CartContext";
 
 const Header = (props) => {
@@ -21,6 +21,25 @@ const Header = (props) => {
   const serverURL = getServerURL();
 
 
+  const location = useLocation(); // Access current URL
+
+  // Function to extract name from URL
+  const getPageName = () => {
+    const pathname = location.pathname;
+    const parts = pathname.split("/");
+    const lastPart = parts[parts.length - 2];
+    // Replace hyphens with spaces and capitalize first letter of each word
+    return lastPart.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
+  const getHeaderTitle = () => {
+    const pathname = location.pathname;
+    if (pathname.includes("admin/product")) {
+      return "Product";
+    } else {
+      return getPageName();
+    }
+  };
 
   const handleLogout = () => {
 
@@ -68,7 +87,7 @@ const Header = (props) => {
 
 
       <div className="d-flex align-items-center justify-content-between">
-        <h5>Product</h5>
+      <h5>{getHeaderTitle()}</h5> {/* Show dynamically extracted name or "Product" */}
         <div className="d-flex align-items-center gap-3">
           <Dropdown>
             <Dropdown.Toggle id="dropdown-basic">

@@ -49,10 +49,11 @@ const SaleCard = (props) => {
                     {/* <p className='group-price'>${props.img.group_price}(Group Price)</p> */}
                     {/* <p className='individual-price mt-1 mb-3 in-per'>${props.img.individual_price}(Individual Price)</p> */}
                     <p className='group-price mt-1 mb-3 in-per'>${props.img.individual_price}</p>
-                    <ProgressBar   now={props.img.total_order} className='mt-1 progress-bar-2' />
-                    {props.img.total_order !== 0 && 
-                    <p className='stock px-2 '>({ props.img.total_order}) Sold</p>
-                    }
+                    {props.img.total_order && props.img.total_order !== 0 ? (
+        <p className='group-price mt-1 mb-3 in-per'>{props.img.total_order}+ Sold</p>
+    ) : (
+        <div style={{height:"36px"}}><br /></div>
+    )}
                 </div>
             </div>
             <AddCartModal handleClose={handleClose} show={show} product_id={product_id} />

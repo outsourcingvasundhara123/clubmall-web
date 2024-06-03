@@ -75,12 +75,14 @@
 /* ------------ togale scroller issues Start --- */
 
 ::-webkit-scrollbar {
-    width: 12px; /* Adjust width as needed */
+    width: 12px;
+    /* Adjust width as needed */
 }
 
 body {
     font-family: 'Lato';
-    overflow-y: scroll; /* Always show vertical scrollbar */
+    overflow-y: scroll;
+    /* Always show vertical scrollbar */
 }
 
 /* ------------ togale scroller issue END --- */
@@ -2080,8 +2082,8 @@ del {
 }
 
 .product-info .per-pro h3 {
-    font-weight: 800;
-    font-size: 28px;
+    font-weight: 700;
+    font-size: 20px;
     color: #223263;
 }
 
@@ -4673,6 +4675,7 @@ input[type='radio'] {
     color: #E02E24;
     font-size: 15px;
 }
+
 .errorAdmin {
     color: #E02E24;
     font-size: 15px;
@@ -5516,6 +5519,7 @@ input[type='radio'] {
     }
 
     .in-per {
+        /* display: none; */
         /* display: none; */
     }
 
@@ -6388,38 +6392,41 @@ input[type='radio'] {
 
 .terms-use-header {
 
-    margin-top: 20px; /* Adjust as needed for spacing */
-    font-size: 50px ;
-    color: #000 ;
-    font-weight: 800 ;
+    margin-top: 20px;
+    /* Adjust as needed for spacing */
+    font-size: 50px;
+    color: #000;
+    font-weight: 800;
 
-}
-
-.progress-bar-2{
- margin-bottom: 30px;  
 }
 
 .progress-bar-2 {
     margin-bottom: 30px;
-  }
-  
-  @media screen and (max-width: 768px) {
+}
+
+.progress-bar-2 {
+    margin-bottom: 30px;
+}
+
+@media screen and (max-width: 768px) {
     .progress-bar-2 {
-      margin-bottom: 20px; /* Adjust as needed for smaller screens */
+        margin-bottom: 20px;
+        /* Adjust as needed for smaller screens */
     }
-  }
-  
-  @media screen and (max-width: 576px) {
+}
+
+@media screen and (max-width: 576px) {
     .progress-bar-2 {
-      margin-bottom: 10px; /* Adjust as needed for even smaller screens */
+        margin-bottom: 10px;
+        /* Adjust as needed for even smaller screens */
     }
-  }
-  
+}
 
 
-  /* -------------------- delete page start ------------------  */
 
-  .success-checkmark {
+/* -------------------- delete page start ------------------  */
+
+.success-checkmark {
     width: 80px;
     height: 115px;
     margin: 15px auto;
@@ -6583,22 +6590,23 @@ input[type='radio'] {
         top: 38px;
     }
 }
-.sesctionafter{
+
+.sesctionafter {
     width: 35%;
     margin: 0 auto;
 }
 
 @media (min-width: 320px) and (max-width: 1024px) {
-    
-    .sesctionafter{
+
+    .sesctionafter {
         width: 85%;
     }
 }
 
-  /* -------------------- delete page end ------------------  */
+/* -------------------- delete page end ------------------  */
 
-  .footer-bottom {
-    background-color:  #0D205A !important;
+.footer-bottom {
+    background-color: #0D205A !important;
     color: #fff;
     text-align: center;
     padding: 20px 20px;
@@ -6619,65 +6627,273 @@ input[type='radio'] {
 
 .video-player-container {
     position: relative;
-  }
-  
-  .custom-controls {
+}
+
+.custom-controls {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
-  }
-  
-  .voice-control {
+}
+
+.voice-control {
     /* Style your button as needed */
     padding: 10px;
     background-color: #ffffff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  .video-player-container {
+}
+
+.video-player-container {
     position: relative;
-  }
-  
-  .custom-controls {
+}
+
+.custom-controls {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
-  }
-  
-  .voice-control {
+}
+
+.voice-control {
     background: none;
     border: none;
     cursor: pointer;
-  }
+}
 
-  .foryou-voice img{
-    width:22px;
-  }
+.foryou-voice img {
+    width: 22px;
+}
 
 /* CSS to hide the volume control button on webkit browsers */
 video::-webkit-media-controls-volume-slider,
 video::-webkit-media-controls-mute-button {
-  display: none !important;
+    display: none !important;
+}
+
+.agree-checkbox {
+    margin-top: 10px;
+}
+
+.agree-label {
+    margin-left: 10px !important;
+}
+
+.terms-checkbox {
+    margin-top: 12px;
+    display: flex;
+}
+
+.termsCheckbox {
+    position: relative;
+    left: 10px;
+
 }
 
 .return-policy-checkbox {
     display: flex;
-    align-items: baseline;
 }
 
-.contact-us
-{
+.return-policy-label {
+    position: relative !important;
+    left: 6px !important;
+    font-size: 13px;
+}
+
+.product-heading-name {
+    font-size: 24px !important;
+    line-height: 32px !important;
+    font-family: "Amazon Ember", Arial, sans-serif;
+}
+
+.for-margin {
+    margin-top: 35px !important;
+}
+
+/* CSS */
+.size-chart-button {
+    background-color: red;
+    border: navajowhite;
+}
+
+.size-chart-button:hover {
+    background-color: #b3221a !important;
+}
+
+.size-chart-img {
+    width: 995px;
+    height: 700px;
+}
+
+.custemailbutton {
+    background: white;
+    color: black;
+}
+
+.custemailbutton:hover {
+    background: white;
+    color: black;
+}
+
+.custemailicon {
+    width: 20px;
+}
+
+.footer-bottom {
     background-color: white !important;
     height: 42px;
 }
-.contact-us p{
+
+.footer-bottom p {
     color: black !important;
 }
-.contact-us a{
+
+.footer-bottom a {
     color: rgb(238, 51, 51) !important;
+}
+
+.custemailtext {
+    position: relative;
+    bottom: 10px;
+}
+
+.custemaildiv a:hover {
+    color: #f5291e !important;
+}
+
+
+.product-video {
+    width: 86px !important;
+    height: 130px !important;
+}
+
+@media screen and (max-width: 768px) {
+    .return-policy-checkbox {
+        display: flex;
+    }
+
+    .return-policy-label {
+        position: relative !important;
+        left: 5px !important;
+        font-size: 12px;
+        margin-top: -5px;
+        /* Adjust as needed */
+        width: 100%;
+        /* Ensure label takes full width */
+        top: 6px;
+    }
+
+    .return-policy-checkbox input[type="checkbox"] {
+        margin-bottom: 5px;
+        /* Add space between checkbox and label */
+    }
+}
+
+.competitors-price {
+    text-decoration: line-through;
+    opacity: .8;
+}
+
+
+.product-video {
+    object-fit: inherit;
+}
+
+/* @media screen and (max-width: 768px) {
+    .product-video {
+        width: 160px !important;
+        height: 160px !important;
+    }
+} */
+
+/* @media screen and (min-width: 400px) {
+    .product-video {
+        width: 160px !important;
+        height: 250px !important;
+    }
+  } */
+.delete-preview-img {
+    background-color: #e02e24;
+    border: none;
+}
+
+.delete-preview-img:hover {
+    background-color: #e02e24;
+    border: none;
+}
+
+.video-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.video-item span {
+    flex-grow: 2;
+}
+
+.delete-preview-img {
+    margin-left: 10px;
+    background-color: #e02e24 !important;
+}
+
+.sizechart-heading {
+    background-color: #e02d2410 !important;
+    text-align: center;
+    font-size: 13.289px;
+    font-style: normal;
+    color: #2d393c;
+    font-weight: 800;
+    padding: 15px !important;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+.size-chart-modal tbody,
+.size-chart-modal tr {
+    border-color: inherit;
+    border-style: hidden;
+    border-width: 0;
+
+}
+
+.size-chart-modal {
+    border: 1px solid #2d393c;
+}
+
+.amazone-text {
+    font-weight: 600;
+    color: #223263;
+    font-family: "Amazon Ember", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    width: 86px !important;
+}
+
+.video-title {
+    height: 240px !important;
+}
+
+
+@media only screen and (max-width: 767px) and (min-width: 200px) {
+
+    .slider_pinfo .swiper-button-prev,
+    .slider_pinfo .swiper-button-next {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    table tbody td {
+        padding: 15px 10px !important;
+    }
+}
+
+.bottom-product-video{
+    width: 100% !important;
+    height: 100% !important;
 }

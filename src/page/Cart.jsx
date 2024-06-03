@@ -121,7 +121,7 @@ const WrappedCart = () => {
     const stopAnimation = () => {
         setLoading(false);
     };
-    
+
     //for checkbox 
     const handleCheckboxChange = (e) => {
         setReturnPolicyChecked(e.target.checked);
@@ -394,7 +394,7 @@ const WrappedCart = () => {
 
     const endDate = new Date();
     endDate.setDate(endDate.getDate() + 14);
-    
+
 
     const formatDate = (date) => {
         return date.toLocaleDateString('en-US', {
@@ -616,7 +616,7 @@ const WrappedCart = () => {
             // Create Order
             const order = await api.postWithToken(`${serverURL + "order-create"}`, data);
             if (order.data.success) {
-              
+
                 // Switch to Stripe Checkout for payment processing
                 const sessionResponse = await api.post(`${serverURL + "checkout-session"}`, {
                     amount: amountInCents,
@@ -900,6 +900,8 @@ const WrappedCart = () => {
                                
                                                         </div>
                                                     </div> */}
+
+
                                                 </div>
 
                                                 <div className="return-policy-checkbox">
@@ -909,7 +911,7 @@ const WrappedCart = () => {
                                                         checked={returnPolicyChecked}
                                                         onChange={handleCheckboxChange}
                                                     />
-                                                    <label htmlFor="return_policy_checkbox" className='return-policy-label ms-2'>
+                                                    <label htmlFor="return_policy_checkbox" className='return-policy-label'>
                                                         If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
                                                     </label>
                                                 </div>
@@ -918,7 +920,7 @@ const WrappedCart = () => {
                                                     <ElementsConsumer>
                                                         {({ elements, stripe }) => (
                                                             <div>
-                                                                <Button className='checkout mt-3' disabled={isButtonDisabled} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Make payment"} </Button>
+                                                            <Button className='checkout mt-3' disabled={isButtonDisabled} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Make payment"} </Button>
                                                             </div>
                                                         )}
                                                     </ElementsConsumer>
