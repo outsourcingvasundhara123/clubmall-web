@@ -701,7 +701,14 @@ const ProductInfo = () => {
             });
         }
     };
-  
+   const [showControls, setShowControls] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowControls(true);
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, []);
     return (
         <>
             <h1 className='d-none'></h1>
@@ -1107,7 +1114,7 @@ const ProductInfo = () => {
                                                                     muted
                                                                     loop
                                                                     playsInline
-                                                                    controls
+                                                                    controls={showControls}
                                                                     onClick={handleFullScreen}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
@@ -1241,7 +1248,7 @@ const ProductInfo = () => {
                                                                     muted
                                                                     loop
                                                                     playsInline
-                                                                    controls
+                                                                    controls={showControls}
                                                                     onClick={handleFullScreen}
                                                                     style={{height:'422px !important',}}
 

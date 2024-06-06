@@ -975,11 +975,19 @@ const AddProduct = () => {
                 <div className="d-flex align-items-center gap-5 flex-wrap mt-4 width-video">
                   {Array(4).fill(null).map((_, index) => (
                     <div className="select-img-output" key={index}>
-                      <video
-                        src={values.product_files[index]?.preview || "../../admin-img/user.jpg"}
-                        className="output-file"
-                        controls
-                      />
+                    {values.product_files[index]?.preview ? (
+                        <video
+                          src={values.product_files[index]?.preview}
+                          className="output-file"
+                          controls
+                        />
+                      ) : (
+                        <img
+                          src="../../admin-img/user.jpg"
+                          alt=""
+                          className="output-file"
+                        />
+                      )}
                       <input
                         type="file"
                         id={`preview-video-${index}`}

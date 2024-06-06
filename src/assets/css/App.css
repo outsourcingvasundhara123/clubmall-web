@@ -6952,6 +6952,7 @@ margin-bottom: -10px;
 .policy-lab
 {
     font-size: 15px !important;
+    cursor: pointer !important;
 }
 .modal-header
 {
@@ -7017,6 +7018,7 @@ figure img {
     font-size: 16px;
     color: #007185;
     font-family: "Amazon Ember", Arial, sans-serif;
+    cursor: pointer;
 }
 .description-img-height
 {
