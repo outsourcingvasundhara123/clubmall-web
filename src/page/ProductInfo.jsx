@@ -9,7 +9,7 @@ import {
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper";
+import { Pagination, Navigation, Autoplay } from "swiper";
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import ProCard from '../components/ProCard';
@@ -19,12 +19,12 @@ import { getServerURL } from '../helper/envConfig';
 import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { errorResponse, afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { CartContext } from '../context/CartContext'
-import { Rating } from '@mui/material'
+import { Rating, Typography } from '@mui/material'
 import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
 import { useParams } from 'react-router-dom';
@@ -42,46 +42,49 @@ const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows,
 
     return (
         <Modal show={true} onHide={onHide} size="lg" centered>
-            <Modal.Header closeButton>
-                <Modal.Title className='amazone-text'>{sizeChartTitle}</Modal.Title>
-                
-            </Modal.Header>
-            <Modal.Body>
-                {sizeChartDescription ? (
-                    <>
-                        <p className='amazone-text'>{sizeChartDescription}</p>
-                        <Button onClick={toggleSizeChartUnit} className="size-chart-button" style={{position:'relative',bottom:'25px',left:'626px'}}>
-                            {isInInch ? 'Size Chart in Cm' : 'Size Chart in Inch'}
-                        </Button>
-                        <br></br>
-                        <Table striped bordered hover className='size-chart-modal amazone-text'>
-                            <tbody className="d-flex amazone-text">
-                                {rows.map((item, i) => {
-                                    const rowData = columns.filter(col => col.row_name === item.name);
-                                    return (
-                                        <div key={i} className='w-100'>
-                                            <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
-                                                <td className="border-0 amazone-text">{item.name}</td>
-                                            </tr>
-                                            <tr className="d-flex flex-column">
-                                                {rowData.map((sub, j) => (
-                                                    <td key={j}>{sub.name}</td>
-                                                ))}
-                                                {[...Array(maxRows - rowData.length)].map((_, j) => (
-                                                    <td key={j} className='amazone-text'>-</td>
-                                                ))}
-                                            </tr>
-                                        </div>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
-                    </>
-                ) : (
-                    <p style={{ color: 'red', fontSize: '500' }}>Size chart not available</p>
-                )}
-            </Modal.Body>
-        </Modal>
+    <Modal.Header closeButton>
+        <Modal.Title>{sizeChartTitle}</Modal.Title>
+    </Modal.Header>
+    <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+        {sizeChartDescription ? (
+            <>
+            <div className='d-md-flex justify-content-between align-items-center pb-4'>
+                <p className='mb-3 mb-md-0'>{sizeChartDescription}</p>
+                <Button onClick={toggleSizeChartUnit} className="size-chart-button">
+                    {isInInch ? 'Size Chart in Cm' : 'Size Chart in Inch'}
+                </Button>
+            </div>
+            <div className='overflow-auto w-100 scrollbar-custom'>
+                <Table striped bordered hover className='size-chart-modal'>
+                    <tbody className="d-flex">
+                        {rows.map((item, i) => {
+                            const rowData = columns.filter(col => col.row_name === item.name);
+                            return (
+                                <div key={i} className='w-100'>
+                                    <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
+                                        <td className="border-0">{item.name}</td>
+                                    </tr>
+                                    <tr className="d-flex flex-column">
+                                        {rowData.map((sub, j) => (
+                                            <td key={j}>{sub.name}</td>
+                                        ))}
+                                        {[...Array(maxRows - rowData.length)].map((_, j) => (
+                                            <td key={j} className='amazone-text'>-</td>
+                                        ))}
+                                    </tr>
+                                </div>
+                            );
+                        })}
+                    </tbody>
+                </Table>
+            </div>
+            </>
+        ) : (
+            <p style={{ color: 'red', fontSize: '500' }}>Size chart not available</p>
+        )}
+    </Modal.Body>
+</Modal>
+
     );
 };
 
@@ -112,6 +115,24 @@ const CustEmailModal = ({ onHide }) => {
                     }
                 }
             `}</style>
+        </Modal>
+    );
+};
+const ReturnPolicy = ({ onHide }) => {
+    return (
+        <Modal show={true} onHide={onHide} size="lg" centered >
+            <Modal.Header closeButton>
+            Return Policy  
+            </Modal.Header>
+            <Modal.Body>
+            <div className="return-policy-checkbox mb-2">
+                                                   
+                                                   <label htmlFor="return_policy_checkbox" className='return-policy-label'>
+                                                       If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
+                                                   </label>
+                                               </div>
+            </Modal.Body>
+    
         </Modal>
     );
 };
@@ -191,6 +212,9 @@ const ProductInfo = () => {
     const [showSizeChart, setShowSizeChart] = useState(false);
     const [isInInch, setIsInInch] = useState(true);
     const [showcustemail, setShowCustEmail] = useState(false);
+    const [showreturnpolicy, setShowRetunPolicy] = useState(false);
+
+
 
     const handleSizeChartClick = () => {
         setShowSizeChart(true);
@@ -198,11 +222,17 @@ const ProductInfo = () => {
     const handleCustEmailClick = () => {
         setShowCustEmail(true);
     };
+    const handleReturnPolicyClick = () => {
+        setShowRetunPolicy(true);
+    };
     const handleSizeChartClose = () => {
         setShowSizeChart(false);
     };
     const handleCustEmailClose = () => {
         setShowCustEmail(false);
+    };
+    const handleReturnPolicyClose = () => {
+        setShowRetunPolicy(false);
     };
     const toggleSizeChartUnit = () => setIsInInch(!isInInch);
 
@@ -651,7 +681,27 @@ const ProductInfo = () => {
 
         setIsFullScreen(!isFullScreen);
     };
+  const individualPrice = Product?.productList?.individual_price;
+  const competitorsPrice = Product?.productList?.competitors_price;
+    const calculateDiscountPercentage = (individualPrice, competitorsPrice) => {
+        if (competitorsPrice > individualPrice) {
+          return Math.round(((competitorsPrice - individualPrice) / competitorsPrice) * 100);
+        }
+        return 0;
+      };
+      const discountPercentage = calculateDiscountPercentage(individualPrice, competitorsPrice);
 
+      const reviewRef = useRef(null);
+
+      const scrollToReview = () => {
+        if (reviewRef.current) {
+            window.scrollTo({
+                behavior: 'smooth',
+                top: reviewRef.current.offsetTop - 100 // Adjust the offset as needed
+            });
+        }
+    };
+  
     return (
         <>
             <h1 className='d-none'></h1>
@@ -707,15 +757,17 @@ const ProductInfo = () => {
                                     <NavLink className='active wrap-line-cos'>  {Product?.productList?.name} </NavLink>
                                 </div>
 
-                                <Row className='mt-4'>
+                                <Row className='mt-0 mt-md-4'>
                                     <Col lg={6} md={12}>
-                                        <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together'>
-                                            <div className='d-flex align-items-center flex-wrap gap-3'>
+                                        <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together'   onClick={scrollToReview} style={{cursor:'pointer'}}>
+                                            <div className='d-flex align-items-center flex-wrap gap-2 gap-md-4'>
                                                 <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
                                                 <div className='rate d-flex align-items-center gap-2'>
                                                     <span className='cos-title'>{Product?.productList?.rating}</span>
                                                     <div className='d-flex align-items-center gap-1'>
-                                                        <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} defaultValue={0} readOnly />
+                                                    {Product?.productList?.rating!== undefined && Product?.productList?.rating!== null && (
+                                                                <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                            )}
                                                     </div>
                                                 </div>
                                                 <div className='d-flex align-items-center gap-2 verified'>
@@ -760,7 +812,7 @@ const ProductInfo = () => {
                                         </div>
 
                                         {Product?.productList?.rating_count == 0 &&
-                                            <div className='no-review py-4 d-flex gap-3'>
+                                            <div className='no-review pt-4 py-lg-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
                                                 <Button onClick={handlereviewShow} className='write-review'>
                                                     Write a review
@@ -768,8 +820,8 @@ const ProductInfo = () => {
                                                 {/* <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p> */}
                                             </div>
                                         }
-                                        <div className='together web-together mt-4'>
-                                            <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
+                                        <div className='together web-together'>
+                                            <div className='no-review frequently pb-3 d-flex align-items-center justify-content-between pt-4'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
                                                 {/* <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button> */}
                                             </div>
@@ -846,48 +898,76 @@ const ProductInfo = () => {
 
                                     </Col>
 
-                                    <Col lg={6} md={12} className='mt-4 mt-lg-0'>
+                                    <Col lg={6} md={12} >
                                         <div className='pro-def'>
                                             <h6 className='product-heading-name'> {Product?.productList?.name}</h6>
 
-                                            <div className='review shipping-def pb-2 d-flex align-items-center justify-content-between web-together'>
+                                            <div
+                                                className='review shipping-def pb-2 d-flex align-items-center justify-content-between web-together'
+                                                onClick={scrollToReview}
+                                                style={{ cursor: 'pointer' }}
+                                            >
                                                 <div className='d-flex align-items-center flex-wrap gap-2 gap-xl-3'>
-                                                    <h5 className='info-title border-right-cos cos-title'>{Product?.productList?.rating_count} shop reviews</h5>
+                                                    <h5 className='info-title border-right-cos cos-title' >{Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
-                                                        <span className='cos-title'>{Product?.productList?.rating}</span>
-                                                        <div className='d-flex align-items-center gap-1'>
-                                                            <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} />
+                                                        <span className='cos-title' >{Product?.productList?.rating}</span>
+                                                          <div className='d-flex align-items-center gap-1'>
+                                                            {Product?.productList?.rating!== undefined && Product?.productList?.rating!== null && (
+                                                                <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                            )}
                                                         </div>
+
                                                     </div>
                                                     <div className='d-flex align-items-center gap-2 verified'>
                                                         <img src='../img/product_def/verified.png' alt='' />
-                                                        <span>All reviews are from verified buyers</span>
+                                                        <span >All reviews are from verified buyers</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='per-pro d-flex align-items-end gap-2'>
-                                                <h3>${Product?.productList?.individual_price}</h3>
+                                            <div className='d-flex align-items-center justify-content-start gap-2 mt-3 mt-lg-0 boughtitem-parent'>
+                                            <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
+                                                    <h3 className='boughtitem'>100+ bought in the past month </h3>
+                                                </div>
                                             </div>
-                                            <div className='per-pro d-flex align-items-end gap-2 mt-2'>
-                                                {Product?.productList?.competitors_price !== 0 && Product?.productList?.competitors_price !== undefined && (
-                                                    <h3 className='competitors-text'>Competitors Price : <span className='competitors-price' style={{ fontSize: "unset" }}>${Product?.productList?.competitors_price}</span></h3>
+                                            <div className='per-pro-container d-flex align-items-center justify-content-start gap-2 mt-3 mt-lg-0'>
+                                                <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
+                                                    <h3>Our Price : ${individualPrice}</h3> |
+                                                </div>
+                                                
+
+                                                {competitorsPrice !== 0 && competitorsPrice !== undefined && (
+                                                    <div className='per-pro d-flex align-items-end gap-1 gap-md-2'>
+                                                        <div className='d-flex align-items-end gap-1'>
+                                                            <h3 className='competitors-text'>
+                                                                 Competitors Price : <span className='competitors-price'>${competitorsPrice}</span>
+                                                            </h3>
+                                                            {competitorsPrice > individualPrice && (
+                                                                <h3 className='discount-text d-flex align-items-center gap-1 gap-md-2'>
+                                                                <p className='mb-0 discount-percentage'>|</p>
+                                                                    <span className='discount-percentage'>{discountPercentage}% off</span>
+                                                                </h3>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 )}
                                             </div>
 
-                                            <div className='shipping-def description mt-2'>
-                                                <h5 className='info-title mt-2'>Product Details</h5>
-                                                <textarea
-                                                    value={Product?.productList?.description.split(":").join(":")}
-                                                    readOnly
-                                                    rows={Product?.productList?.description.split(":").length}
-                                                    style={{
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        resize: 'none',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </div>
+                                            <p onClick={handleReturnPolicyClick} className='policy-lab'>Return Policy </p>
+                                                {showreturnpolicy && (
+                                                    <ReturnPolicy
+                                                        onHide={handleReturnPolicyClose}
+                                                    />
+                                                )}
+                                                <div className='shipping-def description mt-2'>
+                                                    <h5 className='info-title mt-2'>Product Details</h5>
+                                                    <div className='productdetail'
+                                                    >
+                                                        {Product?.productList?.description.split(":").map((item, index) => (
+                                                            <p key={index} className='product-description'>{item}</p>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
                                             {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
                                             <div className='d-flex align-items-center flex-wrap gap-2'>
                                                 <Button className="size-chart-button" onClick={handleSizeChartClick}>
@@ -930,11 +1010,13 @@ const ProductInfo = () => {
                                                                     {e}
                                                                 </Button>
                                                             ))}
+
                                                         </div>
                                                     </div>
                                                 ) : (
                                                     <></>
                                                 )}
+
 
                                                 <div className='size mt-3'>
                                                     {Product?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
@@ -952,6 +1034,8 @@ const ProductInfo = () => {
                                                 </div>
 
                                             </div>
+                                          
+
                                             <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
                                             <div className='mt-4'>
                                                 {/* <Swiper
@@ -1014,7 +1098,7 @@ const ProductInfo = () => {
                                                     ))}
                                                 </Swiper> */}
                                                 <div className='overflow-auto d-flex align-items-start gap-3 gap-xl-4'>
-                                                {Product?.productList?.product_files?.map((video, index) => (
+                                                    {Product?.productList?.product_files?.map((video, index) => (
                                                         <div key={index}>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <video
@@ -1022,19 +1106,21 @@ const ProductInfo = () => {
                                                                     autoPlay
                                                                     muted
                                                                     loop
+                                                                    playsInline
+                                                                    controls
                                                                     onClick={handleFullScreen}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
                                                                 </video>
-                                                               
                                                             </div>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                            <p className='amazone-text'>{video.title}</p>
+                                                                <p className='amazone-text'>{video.title}</p>
                                                             </div>
                                                         </div>
                                                     ))}
                                                 </div>
+
                                             </div>
                                             
                                             
@@ -1066,7 +1152,7 @@ const ProductInfo = () => {
                                                 <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
                                             </div> */}
                                             <div className='shipping-def'>
-                                                <h5 className='info-title mb-2'>Shop with confidence</h5>
+                                                <h5 className='info-title mb-2' >Shop with confidence</h5>
                                                 <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
                                                 <ul>
                                                     <div>
@@ -1150,15 +1236,69 @@ const ProductInfo = () => {
                                                         <SwiperSlide key={index}>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <video
-                                                                    className='product-video bottom-product-video'
+                                                                    className='product-video bottom-product-video video-design'
                                                                     autoPlay
                                                                     muted
                                                                     loop
+                                                                    playsInline
+                                                                    controls
                                                                     onClick={handleFullScreen}
+                                                                    style={{height:'422px !important',}}
+
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
                                                                 </video>
+                                                            </div>
+                                                        </SwiperSlide>
+                                                    ))}
+                                                </Swiper>
+                                            </div>
+                                            <div style={{height:'270px'}}>
+                                                <Swiper
+                                                spaceBetween={0}
+                                                centeredSlides={true}
+                                                autoplay={{
+                                                delay: 1000,
+                                                disableOnInteraction: false,
+                                                }}
+                                                // pagination={{
+                                                // clickable: false,
+                                                // }}
+                                                
+                                                    breakpoints={{
+                                                        0: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        425: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        650: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        991: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        1300: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        }
+                                                    }}
+                                                    navigation={true}
+                                                    modules={[ Navigation, Autoplay]}
+                                                    className="mySwiper"
+                                                >
+                                                    {Product?.productList?.description_images?.map((image, index) => (
+                                                            <SwiperSlide key={index}>
+                                                                <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <img className='w-100 slider_images description-img-height'
+                                                                        src={`${Product?.productImagePath}${Product.productList._id}/${image.file_name}`}
+                                                                        alt={`Product Image ${index + 1}`}
+                                                                />
                                                             </div>
                                                         </SwiperSlide>
                                                     ))}
@@ -1188,7 +1328,7 @@ const ProductInfo = () => {
                                     </Col>
                                 </Row>
 
-                                <div className='review mt-5 mar-top-20'>
+                                <div ref={reviewRef} id='review-section' className='review mt-5 mar-top-20'>
                                     {Product?.productReviewList?.length === 0 ? " " :
                                         <div className='d-flex align-items-center justify-content-between review-responsive'>
                                             <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
@@ -1247,7 +1387,7 @@ const ProductInfo = () => {
                                                                     {e?.review_files?.map((r, i) => (
                                                                         <React.Fragment key={i}>
                                                                             { r.file_name && !r.file_name.includes("mp4") ? (
-                                                                                <img style={{ width: "100px" }} src={r.file_name} alt='' />
+                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={handleFullScreen     } alt='' />
                                                                             ) : (
                                                                                 <video
                                                                                     style={{ width: "200px", cursor: "pointer" }}
@@ -1269,20 +1409,9 @@ const ProductInfo = () => {
                                                                     <Rating name="simple-controlled" value={e?.rating} readOnly />
                                                                 </div>
 
-                                                                {/* <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
-                                                                    <p><b>Overall Fit:</b> True to Size</p>
-                                                                    <p><b>Color:</b> Olive Green</p>
-                                                                    <p><b>Size:</b> M</p>
-                                                                </div> */}
+                                                              
                                                             </div>
-                                                            {/* <div className='d-flex align-items-center gap-3 review-like'>
-                                                    <Button>
-                                                        <img src='./img/for_you/like.png' alt='' />
-                                                    </Button>
-                                                    <Button>
-                                                        <BsThreeDots />
-                                                    </Button>
-                                                </div> */}
+                                                           
                                                         </div>
                                                     </div>
                                                 )
@@ -1300,7 +1429,7 @@ const ProductInfo = () => {
                                 </div>
 
                                 <div className='together mobile-together'>
-                                    <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
+                                    <div className='no-review frequently py-2 pt-4 pt-sm-4  d-flex align-items-center justify-content-between'>
                                         <h5 className='info-title cos-title'>Frequently bought together</h5>
                                         {/* <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button> */}
                                     </div>

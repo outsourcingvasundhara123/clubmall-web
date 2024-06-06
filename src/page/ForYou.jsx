@@ -21,6 +21,8 @@ import axios from 'axios';
 import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RWebShare } from 'react-web-share';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShare } from '@fortawesome/free-solid-svg-icons';
 // import SucessSnackBar from "../components/SnackBar";
 // import ErrorSnackBar from "../components/SnackBar";
 const SucessSnackBar = React.lazy(() => import('../components/SnackBar'));
@@ -604,8 +606,7 @@ const ForYou = () => {
                         onClick={() => console.log("shared successfully!")}
                       >
                         <Button>
-                          <img style={{ width: "22px" }} alt=''
-                            src='./img/for_you/share.png' />
+                        <FontAwesomeIcon icon={faShare} style={{height:'18px'}} />
                         </Button>
                       </RWebShare>
 

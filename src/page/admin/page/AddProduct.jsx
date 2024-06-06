@@ -26,6 +26,7 @@ const AddProduct = () => {
     individual_price: "",
     group_price: "",
     product_images: Array(10).fill(undefined),
+    description_images: Array(5).fill(undefined),
     size_chartInInch: { title: "", description: "", row_name: [], columns: [] },
     size_chartIncm: { title: "", description: "", row_name: [], columns: [] },
     product_category_keys: {},
@@ -357,6 +358,24 @@ const AddProduct = () => {
     }
 
   };
+  const handleDescriptionPhoto = (e) => {
+    const index = parseInt(e.target.name.split('_')[2]); // Adjust based on your naming convention
+    const file = e.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(upload) {
+            const updatedDescriptions = [...values.description_images];
+            updatedDescriptions[index] = {
+                file,
+                preview: upload.target.result
+            };
+            setValues({...values, description_images: updatedDescriptions });
+        };
+        reader.readAsDataURL(file);
+    }
+
+};
 
   // const handleVideo = (e) => {
   //   const index = parseInt(e.target.name.split('_')[2], 10); // Extracts index from name like 'product_files_0'
@@ -447,6 +466,11 @@ const AddProduct = () => {
     updatedImages[index] = undefined; // Clear the image at the given index
     setValues({ ...values, product_images: updatedImages });
   };
+  const handleDesDeleteImage = (index) => {
+    const updatedImages = [...values.description_images];
+    updatedImages[index] = undefined; // Clear the image at the given index
+    setValues({ ...values, description_images: updatedImages });
+  };
   const handleDeleteVideo = (index) => {
     const updatedVideos = [...values.product_files];
     updatedVideos[index] = { file: undefined, preview: "" }; // Reset the video data at the given index
@@ -523,6 +547,11 @@ const AddProduct = () => {
           formData.append(`product_images[${index}]`, img.file);
         }
       });
+      values.description_images.forEach((img, index) => {
+        if (img && img.file) {
+            formData.append(`description_images[${index}]`, img.file);
+        }
+    });
 
       // Append colors to form data
       colors.forEach((color, index) => {
@@ -939,6 +968,7 @@ const AddProduct = () => {
                 <div className='errorAdmin' >{errors?.product_images}</div>
               </div>
             </Col>
+        
             <Col lg={12} md={12} sm={12} className='video-title'>
               <div className="select-img-input mt-3">
                 <label>Upload Video</label>
@@ -1160,6 +1190,44 @@ const AddProduct = () => {
                   </ul>
                 </div>
               )}
+            </Col>
+            <Col lg={12} md={12} sm={12}>
+              <div className="select-img-input  mt-3">
+                <label>Description Image</label>
+                <div className="d-flex align-items-center gap-5 flex-wrap mt-4">
+                {Array(5).fill(null).map((_, index) => ( // Adjust the number based on your requirement
+            <div key={index} className="select-img-output">
+                <img
+                    src={values.description_images[index]?.preview || "../../admin-img/user.jpg"} // Provide a default image path
+                    alt=""
+                    className="output-file"
+                />
+                <input
+                    type="file"
+                    id={`preview-desc-img-${index}`}
+                    name={`description_image_${index}`} // Naming convention
+                    onChange={handleDescriptionPhoto}
+                    className="d-none"
+                    accept="image/*"
+                />
+                <label className="choose-file-btn" htmlFor={`preview-desc-img-${index}`}>
+                <img src="../admin-img/add.svg" alt="" />
+                </label>
+                <Button className="delete-preview-img"
+                        onClick={() => handleDesDeleteImage(index)}
+                      >
+                        <img
+                          src="../admin-img/profile/delete.svg"
+                          alt=""
+                          width="15px"
+                        />
+                      </Button>
+              
+            </div>
+        ))}
+                </div>
+                <div className='errorAdmin' >{errors?.product_images}</div>
+              </div>
             </Col>
           </Row>
         </div>
