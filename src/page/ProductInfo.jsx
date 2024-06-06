@@ -701,14 +701,20 @@ const ProductInfo = () => {
             });
         }
     };
-   const [showControls, setShowControls] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowControls(true);
-        }, 5000);
-        return () => clearTimeout(timer);
-    }, []);
+    const videoRef = useRef(null);
+    const handlePlay = (event) => {
+        const video = event.target;
+        if (video) {
+            video.play();
+            enterFullscreen(video);
+        }
+    };
+    
+    const enterFullscreen = (video) => {
+        if (video && video.webkitEnterFullscreen) {
+            video.webkitEnterFullscreen();
+        }
+    };
     return (
         <>
             <h1 className='d-none'></h1>
@@ -1108,14 +1114,14 @@ const ProductInfo = () => {
                                                     {Product?.productList?.product_files?.map((video, index) => (
                                                         <div key={index}>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                                <video
+                                                                <video  ref={videoRef}
                                                                     className='product-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
-                                                                    controls={showControls}
-                                                                    onClick={handleFullScreen}
+                                                                  
+                                                                    onClick={(event) => handlePlay(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
@@ -1243,13 +1249,13 @@ const ProductInfo = () => {
                                                         <SwiperSlide key={index}>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <video
-                                                                    className='product-video bottom-product-video video-design'
+                                                                    className='product-video bottom-product-video video-design'  ref={videoRef}
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
-                                                                    controls={showControls}
-                                                                    onClick={handleFullScreen}
+                                                                 
+                                                                    onClick={(event) => handlePlay(event)}
                                                                     style={{height:'422px !important',}}
 
                                                                 >
