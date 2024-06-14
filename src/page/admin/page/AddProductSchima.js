@@ -55,13 +55,13 @@ export const validate = (values) => {
     } else {
         const invalidImage = values.product_images.find(img => {
             if (img && img.file) {
-                return !['image/jpeg', 'image/png'].includes(img.file.type);
+                return !['image/jpeg', 'image/png','video/mp4'].includes(img.file.type);
             }
             return false;
         });
 
         if (invalidImage) {
-            errors.product_images = "Only jpeg or png images are allowed";
+            errors.product_images = "Only jpeg ,mp4 or png videos/images are allowed";
         }
     }
  

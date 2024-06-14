@@ -114,7 +114,7 @@ const ListUserReview = () => {
                                                     {review.review_type === 1 ? (
                                                         <img style={{ width: "100px" }} src={file.file_name} alt='' />
                                                     ) : (
-                                                        <video style={{ width: "200px" }} controls>
+                                                        <video style={{ width: "100px" }} controls>
                                                             <source src={file.file_name} type="video/mp4" />
                                                             Your browser does not support the video.
                                                         </video>

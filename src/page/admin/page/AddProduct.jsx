@@ -356,8 +356,8 @@ const AddProduct = () => {
         delete errors[e.target.name];
       }
     }
+};
 
-  };
   const handleDescriptionPhoto = (e) => {
     const index = parseInt(e.target.name.split('_')[2]); // Adjust based on your naming convention
     const file = e.target.files[0];
@@ -931,43 +931,58 @@ const AddProduct = () => {
         <br></br>
         <div className="px-3 px-sm-4 pb-5 border-green-bottom">
           <Row className="align-items-end">
-            <Col lg={12} md={12} sm={12}>
-              <div className="select-img-input  mt-3">
-                <label>Product Image*</label>
-                <div className="d-flex align-items-center gap-5 flex-wrap mt-4">
-                  {Array(10).fill(null).map((_, index) => (
-                    <div className="select-img-output" key={index}>
+          <Col lg={12} md={12} sm={12}>
+            <div className="select-img-input mt-3">
+              <label>Product Image*</label>
+              <div className="d-flex align-items-center gap-5 flex-wrap mt-4">
+                {Array(10).fill(null).map((_, index) => (
+                  <div className="select-img-output" key={index}>
+                    {values.product_images[index]?.preview && (
+                      <>
+                        {values.product_images[index].file.type.startsWith('image') ? (
+                          <img
+                            src={values.product_images[index].preview}
+                            alt=""
+                            className="output-file"
+                          />
+                        ) : (
+                          <video controls className="output-file">
+                            <source src={values.product_images[index].preview} type={values.product_images[index].file.type} />
+                          </video>
+                        )}
+                      </>
+                    )}
+                    {!values.product_images[index]?.preview && (
                       <img
-                        src={values.product_images[index]?.preview || "../../admin-img/user.jpg"}
+                        src="../../admin-img/user.jpg"
                         alt=""
                         className="output-file"
                       />
-                      <input
-                        type="file"
-                        id={`preview-img-${index}`}
-                        name={`product_image_${index}`}
-                        onChange={handlePhoto}
-                        className="d-none"
-                        accept="image/*"
+                    )}
+                    <input
+                      type="file"
+                      id={`preview-img-${index}`}
+                      name={`product_image_${index}`}
+                      onChange={handlePhoto}
+                      className="d-none"
+                     accept="image/*, video/*"
+                    />
+                    <label className="choose-file-btn" htmlFor={`preview-img-${index}`}>
+                      <img src="../admin-img/add.svg" alt="" />
+                    </label>
+                    <Button className="delete-preview-img" onClick={() => handleDeleteImage(index)}>
+                      <img
+                        src="../admin-img/profile/delete.svg"
+                        alt=""
+                        width="15px"
                       />
-                      <label className="choose-file-btn" htmlFor={`preview-img-${index}`}>
-                        <img src="../admin-img/add.svg" alt="" />
-                      </label>
-                      <Button className="delete-preview-img"
-                        onClick={() => handleDeleteImage(index)}
-                      >
-                        <img
-                          src="../admin-img/profile/delete.svg"
-                          alt=""
-                          width="15px"
-                        />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-                <div className='errorAdmin' >{errors?.product_images}</div>
+                    </Button>
+                  </div>
+                ))}
               </div>
-            </Col>
+    <div className='errorAdmin'>{errors?.product_images}</div>
+  </div>
+</Col>
         
             <Col lg={12} md={12} sm={12} className='video-title'>
               <div className="select-img-input mt-3">

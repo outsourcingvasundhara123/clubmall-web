@@ -34,59 +34,161 @@ import { isMobile } from 'react-device-detect';
 import { createJsonLdSchema } from './productjson';
 import ProductGif from '../components/ProductGif'
 import reporticon from '../assets/img/fluent-mdl2_message-1.png';
+import arrow_icon from '../assets/img/arrowhead-down-svgrepo-com.svg';
+import arrow_up from '../assets/img/up-arrow.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShare } from '@fortawesome/free-solid-svg-icons';
 
 
+const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch }) => {
+    const [showModal, setShowModal] = useState(true); // State to control modal visibility
 
-const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, toggleSizeChartUnit, isInInch }) => {
     const maxRows = Math.max(...rows.map(item => columns.filter(col => col.row_name === item.name).length));
 
-    return (
-        <Modal show={true} onHide={onHide} size="lg" centered>
-    <Modal.Header closeButton>
-        <Modal.Title>{sizeChartTitle}</Modal.Title>
-    </Modal.Header>
-    <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
-        {sizeChartDescription ? (
-            <>
-            <div className='d-md-flex justify-content-between align-items-center pb-4'>
-                <p className='mb-3 mb-md-0'>{sizeChartDescription}</p>
-                <Button onClick={toggleSizeChartUnit} className="size-chart-button">
-                    {isInInch ? 'Size Chart in Cm' : 'Size Chart in Inch'}
-                </Button>
-            </div>
-            <div className='overflow-auto w-100 scrollbar-custom'>
-                <Table striped bordered hover className='size-chart-modal'>
-                    <tbody className="d-flex">
-                        {rows.map((item, i) => {
-                            const rowData = columns.filter(col => col.row_name === item.name);
-                            return (
-                                <div key={i} className='w-100'>
-                                    <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
-                                        <td className="border-0">{item.name}</td>
-                                    </tr>
-                                    <tr className="d-flex flex-column">
-                                        {rowData.map((sub, j) => (
-                                            <td key={j}>{sub.name}</td>
-                                        ))}
-                                        {[...Array(maxRows - rowData.length)].map((_, j) => (
-                                            <td key={j} className='amazone-text'>-</td>
-                                        ))}
-                                    </tr>
-                                </div>
-                            );
-                        })}
-                    </tbody>
-                </Table>
-            </div>
-            </>
-        ) : (
-            <p style={{ color: 'red', fontSize: '500' }}>Size chart not available</p>
-        )}
-    </Modal.Body>
-</Modal>
+    // Function to hide modal
+    const handleClose = () => {
+        setShowModal(false);
+        onHide();
+    };
 
+    return (
+        <Modal show={showModal} onHide={handleClose} size="lg" centered>
+            <Modal.Header closeButton>
+                <Modal.Title>{sizeChartTitle}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                {sizeChartDescription ? (
+                    <>
+                        <div className='d-md-flex justify-content-between align-items-center pb-4'>
+                            <p className='mb-3 mb-md-0'>{sizeChartDescription}</p>
+                            <div className="btn-group">
+                                <Button
+                                    onClick={() => setInInch(false)}
+                                    className={`size-chart-button ${isInInch ? '' : 'active'}`}
+                                >
+                                    Cm
+                                </Button>
+                                <Button
+                                    onClick={() => setInInch(true)}
+                                    className={`size-chart-button ${isInInch ? 'active' : ''}`}
+                                >
+                                    In
+                                </Button>
+
+                            </div>
+                        </div>
+                        <div className='overflow-auto w-100 scrollbar-custom'>
+                            <Table striped bordered hover className='size-chart-modal'>
+                                <tbody className="d-flex">
+                                    {rows.map((item, i) => {
+                                        const rowData = columns.filter(col => col.row_name === item.name);
+                                        return (
+                                            <div key={i} className='w-100'>
+                                                <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
+                                                    <td className="border-0">{item.name}</td>
+                                                </tr>
+                                                <tr className="d-flex flex-column">
+                                                    {rowData.map((sub, j) => (
+                                                        <td key={j}>{sub.name}</td>
+                                                    ))}
+                                                    {[...Array(maxRows - rowData.length)].map((_, j) => (
+                                                        <td key={j} className='amazone-text'>-</td>
+                                                    ))}
+                                                </tr>
+                                            </div>
+                                        );
+                                    })}
+                                </tbody>
+                            </Table>
+                        </div>
+                    </>
+                ) : (
+                    <p style={{ color: 'red', fontSize: '500' }}>Size chart not available</p>
+                )}
+            </Modal.Body>
+        </Modal>
     );
 };
+const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch }) => {
+    const [showModal, setShowModal] = useState(true); // State to control modal visibility
+
+    const maxRows = Math.max(...rows.map(item => columns.filter(col => col.row_name === item.name).length));
+    useEffect(() => {
+        setShowModal(true);
+    }, []);
+
+    return (
+        <div className="size-chart-modal-wrapper">
+            {sizeChartDescription ? (
+                <>
+                    <div className='d-md-flex justify-content-between align-items-center pb-4' style={{ display: 'flex' }}>
+                        <p className='mb-3 mb-md-0'>{sizeChartDescription}</p>
+                        <div className="btn-group cm-in-buttons">
+                            <Button
+                                onClick={() => setInInch(false)}
+                                className={`size-chart-button ${isInInch ? '' : 'active'}`}
+                            >
+                                Cm
+                            </Button>
+                            <Button
+                                onClick={() => setInInch(true)}
+                                className={`size-chart-button ${isInInch ? 'active' : ''}`}
+                            >
+                                In
+                            </Button>
+                        </div>
+                    </div>
+                    <div className='overflow-auto w-100 scrollbar-custom'>
+                        <Table striped bordered hover className='size-chart-modal'>
+                                <tbody className="d-flex">
+                                    {rows.map((item, i) => {
+                                        const rowData = columns.filter(col => col.row_name === item.name);
+                                        return (
+                                            <div key={i} className='w-100'>
+                                                <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
+                                                    <td className="border-0">{item.name}</td>
+                                                </tr>
+                                                <tr className="d-flex flex-column">
+                                                    {rowData.map((sub, j) => (
+                                                        <td key={j}>{sub.name}</td>
+                                                    ))}
+                                                    {[...Array(maxRows - rowData.length)].map((_, j) => (
+                                                        <td key={j} className='amazone-text'>-</td>
+                                                    ))}
+                                                </tr>
+                                            </div>
+                                        );
+                                    })}
+                                </tbody>
+                            </Table>
+                        {/* <Table striped bordered hover className='size-chart-table size-chart-table-sm'>
+                            <tbody style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+                                {rows.map((item, i) => {
+                                    const rowData = columns.filter(col => col.row_name === item.name);
+                                    return (
+                                        <tr key={i}>
+                                            <td className='position-sticky start-0 z-99'>{item.name}</td>
+                                            {rowData.map((sub, j) => (
+                                                <td key={j}>{sub.name}</td>
+                                            ))}
+                                            {[...Array(maxRows - rowData.length)].map((_, j) => (
+                                                <td key={j + rowData.length} className='placeholder-text'>-</td>
+                                            ))}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </Table> */}
+                        
+                    </div>
+                </>
+            ) : (
+                <p className="size-chart-error">Size chart not available</p>
+            )}
+        </div>
+    );
+};
+
 
 const CustEmailModal = ({ onHide }) => {
     return (
@@ -120,20 +222,11 @@ const CustEmailModal = ({ onHide }) => {
 };
 const ReturnPolicy = ({ onHide }) => {
     return (
-        <Modal show={true} onHide={onHide} size="lg" centered >
-            <Modal.Header closeButton>
-            Return Policy  
-            </Modal.Header>
-            <Modal.Body>
-            <div className="return-policy-checkbox mb-2">
-                                                   
-                                                   <label htmlFor="return_policy_checkbox" className='return-policy-label'>
-                                                       If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
-                                                   </label>
-                                               </div>
-            </Modal.Body>
-    
-        </Modal>
+        <div className="return-policy-checkbox mb-2">
+            <label htmlFor="return_policy_checkbox" className='return-policy-label mb-2'>
+                If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
+            </label>
+        </div>
     );
 };
 const ProductInfo = () => {
@@ -210,6 +303,8 @@ const ProductInfo = () => {
     const [filters, setFilters] = useState(initialValues_2);
 
     const [showSizeChart, setShowSizeChart] = useState(false);
+    const [showSizeChartRes, setShowSizeChartRes] = useState(false);
+
     const [isInInch, setIsInInch] = useState(true);
     const [showcustemail, setShowCustEmail] = useState(false);
     const [showreturnpolicy, setShowRetunPolicy] = useState(false);
@@ -219,11 +314,15 @@ const ProductInfo = () => {
     const handleSizeChartClick = () => {
         setShowSizeChart(true);
     };
+    const handleSizeChartResClick = () => {
+        setShowSizeChartRes(prevState => !prevState);
+    };
+
     const handleCustEmailClick = () => {
         setShowCustEmail(true);
     };
     const handleReturnPolicyClick = () => {
-        setShowRetunPolicy(true);
+        setShowRetunPolicy(!showreturnpolicy);
     };
     const handleSizeChartClose = () => {
         setShowSizeChart(false);
@@ -234,7 +333,9 @@ const ProductInfo = () => {
     const handleReturnPolicyClose = () => {
         setShowRetunPolicy(false);
     };
-    const toggleSizeChartUnit = () => setIsInInch(!isInInch);
+    const toggleSizeChartUnit = (value) => {
+        setIsInInch(value);
+    };
 
     const handelreviewFilter = (e) => {
         setPage(1)
@@ -292,7 +393,7 @@ const ProductInfo = () => {
             player.current.play();
         }
     };
-    
+
     const stopAnimation = () => {
         setLoading(false);
     };
@@ -681,19 +782,19 @@ const ProductInfo = () => {
 
         setIsFullScreen(!isFullScreen);
     };
-  const individualPrice = Product?.productList?.individual_price;
-  const competitorsPrice = Product?.productList?.competitors_price;
+    const individualPrice = Product?.productList?.individual_price;
+    const competitorsPrice = Product?.productList?.competitors_price;
     const calculateDiscountPercentage = (individualPrice, competitorsPrice) => {
         if (competitorsPrice > individualPrice) {
-          return Math.round(((competitorsPrice - individualPrice) / competitorsPrice) * 100);
+            return Math.round(((competitorsPrice - individualPrice) / competitorsPrice) * 100);
         }
         return 0;
-      };
-      const discountPercentage = calculateDiscountPercentage(individualPrice, competitorsPrice);
+    };
+    const discountPercentage = calculateDiscountPercentage(individualPrice, competitorsPrice);
 
-      const reviewRef = useRef(null);
+    const reviewRef = useRef(null);
 
-      const scrollToReview = () => {
+    const scrollToReview = () => {
         if (reviewRef.current) {
             window.scrollTo({
                 behavior: 'smooth',
@@ -709,7 +810,7 @@ const ProductInfo = () => {
             enterFullscreen(video);
         }
     };
-    
+
     const enterFullscreen = (video) => {
         if (video && video.webkitEnterFullscreen) {
             video.webkitEnterFullscreen();
@@ -772,15 +873,15 @@ const ProductInfo = () => {
 
                                 <Row className='mt-0 mt-md-4'>
                                     <Col lg={6} md={12}>
-                                        <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together'   onClick={scrollToReview} style={{cursor:'pointer'}}>
+                                        <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
                                             <div className='d-flex align-items-center flex-wrap gap-2 gap-md-4'>
                                                 <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
                                                 <div className='rate d-flex align-items-center gap-2'>
                                                     <span className='cos-title'>{Product?.productList?.rating}</span>
                                                     <div className='d-flex align-items-center gap-1'>
-                                                    {Product?.productList?.rating!== undefined && Product?.productList?.rating!== null && (
-                                                                <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
-                                                            )}
+                                                        {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
+                                                            <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                        )}
                                                     </div>
                                                 </div>
                                                 <div className='d-flex align-items-center gap-2 verified'>
@@ -924,8 +1025,8 @@ const ProductInfo = () => {
                                                     <h5 className='info-title border-right-cos cos-title' >{Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
                                                         <span className='cos-title' >{Product?.productList?.rating}</span>
-                                                          <div className='d-flex align-items-center gap-1'>
-                                                            {Product?.productList?.rating!== undefined && Product?.productList?.rating!== null && (
+                                                        <div className='d-flex align-items-center gap-1'>
+                                                            {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
                                                                 <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
                                                             )}
                                                         </div>
@@ -938,25 +1039,31 @@ const ProductInfo = () => {
                                                 </div>
                                             </div>
                                             <div className='d-flex align-items-center justify-content-start gap-2 mt-3 mt-lg-0 boughtitem-parent'>
-                                            <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
+                                                <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
                                                     <h3 className='boughtitem'>100+ bought in the past month </h3>
                                                 </div>
                                             </div>
-                                            <div className='per-pro-container d-flex align-items-center justify-content-start gap-2 mt-3 mt-lg-0'>
+                                            <div className='badge bg-redlight mt-4 mt-md-3'>
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <span className='price'>$100.0</span> <span>|</span> <span>Free returns on some sizes and color</span>
+                                                </div>
+                                                <FontAwesomeIcon icon={faShare} style={{ height: '18px' }} />
+                                            </div>
+                                            <div className='per-pro-container d-flex align-items-center justify-content-start gap-2 mt-2 mt-lg-0'>
                                                 <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
                                                     <h3>Our Price : ${individualPrice}</h3> |
                                                 </div>
-                                                
+
 
                                                 {competitorsPrice !== 0 && competitorsPrice !== undefined && (
-                                                    <div className='per-pro d-flex align-items-end gap-1 gap-md-2'>
-                                                        <div className='d-flex align-items-end gap-1'>
+                                                    <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
+                                                        <div className='d-flex align-items-center gap-1'>
                                                             <h3 className='competitors-text'>
-                                                                 Competitors Price : <span className='competitors-price'>${competitorsPrice}</span>
+                                                                Competitors Price : <span className='competitors-price'>${competitorsPrice}</span>
                                                             </h3>
                                                             {competitorsPrice > individualPrice && (
-                                                                <h3 className='discount-text d-flex align-items-center gap-1 gap-md-2'>
-                                                                <p className='mb-0 discount-percentage'>|</p>
+                                                                <h3 className='discount-text d-flex align-items-center gap-1'>
+                                                                    <p className='mb-0 discount-percentage'>|</p>
                                                                     <span className='discount-percentage'>{discountPercentage}% off</span>
                                                                 </h3>
                                                             )}
@@ -964,49 +1071,85 @@ const ProductInfo = () => {
                                                     </div>
                                                 )}
                                             </div>
-
-                                            <p onClick={handleReturnPolicyClick} className='policy-lab'>Return Policy </p>
-                                                {showreturnpolicy && (
-                                                    <ReturnPolicy
-                                                        onHide={handleReturnPolicyClose}
-                                                    />
-                                                )}
-                                                <div className='shipping-def description mt-2'>
-                                                    <h5 className='info-title mt-2'>Product Details</h5>
-                                                    <div className='productdetail'
-                                                    >
-                                                        {Product?.productList?.description.split(":").map((item, index) => (
-                                                            <p key={index} className='product-description'>{item}</p>
-                                                        ))}
-                                                    </div>
+                                            <div className='d-md-none mt-2 mb-3'>
+                                                <p onClick={handleReturnPolicyClick} className='policy-lab'>
+                                                    Return Policy {showreturnpolicy ? <img src={arrow_up} style={{ width: '20px' }} /> : <img src={arrow_icon} style={{ width: '20px' }} />}
+                                                </p>
+                                                {showreturnpolicy && <ReturnPolicy />}
+                                            </div>
+                                            <div className='mt-2 d-md-none'>
+                                                <div className='overflow-auto d-flex align-items-start pb-0'>
+                                                    {Product?.productList?.product_files?.map((video, index) => (
+                                                        <div key={index} className='pe-2'>
+                                                            <div className='d-flex gap-2 align-items-center'>
+                                                                <video ref={videoRef}
+                                                                    className='product-video'
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    playsInline
+                                                                    onClick={(event) => handlePlay(event)}
+                                                                >
+                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    Your browser does not support the video.
+                                                                </video>
+                                                            </div>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <p className='amazone-text'>{video.title}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
+                                            </div>
 
                                             {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
-                                            <div className='d-flex align-items-center flex-wrap gap-2'>
-                                                <Button className="size-chart-button" onClick={handleSizeChartClick}>
-                                                    Show Size Chart
-                                                </Button>
-                                                
-                                                {showSizeChart && (
-                                                    <ProductChartModal
-                                                        sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
-                                                        sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
-                                                        onHide={handleSizeChartClose}
-                                                        toggleSizeChartUnit={toggleSizeChartUnit}
-                                                        isInInch={isInInch}
-                                                        rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
-                                                        columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
-                                                    />
-                                                )}
-                                            </div>
+                                                <div className='d-flex align-items-center flex-wrap gap-2 mt-2'>
+                                                    <Link className='size-chart-link d-none d-md-block' onClick={handleSizeChartClick}>
+                                                        Size Chart <img src={arrow_icon} style={{ width: '20px' }} />
+                                                    </Link>
+
+                                                    {showSizeChart && (
+                                                        <>
+                                                            <ProductChartModal
+                                                                sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
+                                                                sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
+                                                                onHide={handleSizeChartClose}
+                                                                setInInch={toggleSizeChartUnit}
+                                                                isInInch={isInInch}
+                                                                rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
+                                                                columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
+                                                            />
+                                                        </>
+
+                                                    )}
+                                                </div>
                                             )
                                             }
 
-                                            <div className='product-color mt-3'>
-                                                <div className='d-flex align-items-center flex-wrap gap-2'>
+                                            <div className='shipping-def description mt-2'>
+                                                <h5 className='info-title mt-2'>Product Details</h5>
+                                                <div className='productdetail'
+                                                >
+                                                    {Product?.productList?.description.split(":").map((item, index) => (
+                                                        <p key={index} className='product-description'>{item}</p>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className='d-none d-md-block'>
+                                                <p onClick={handleReturnPolicyClick} className='policy-lab'>
+                                                    Return Policy {showreturnpolicy ? <img src={arrow_up} style={{ width: '20px' }} /> : <img src={arrow_icon} style={{ width: '20px' }} />}
+                                                </p>
+                                                {showreturnpolicy && <ReturnPolicy />}
+                                            </div>
+
+                                            <div className='product-color mt-2'>
+
+                                                <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
+                                                <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
                                                     {
                                                         Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => {
                                                             return (
+
                                                                 <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(url + Product.productList?._id + "/" + e.file_name))}>
                                                                     <img className='colors' src={url + Product.productList?._id + "/" + e.file_name} alt='' />
                                                                 </Button>
@@ -1014,6 +1157,7 @@ const ProductInfo = () => {
                                                         })
                                                     }
                                                 </div>
+
                                                 {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 0 ? (
                                                     <div className='size mt-3'>
                                                         <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
@@ -1029,98 +1173,62 @@ const ProductInfo = () => {
                                                 ) : (
                                                     <></>
                                                 )}
-
-
-                                                <div className='size mt-3'>
-                                                    {Product?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
-                                                    <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-                                                        {
-                                                            Product?.productList?.sku_attributes.size?.map((e, i) => {
-                                                                return (
-                                                                    <Button className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
-                                                                        {e.name}
-                                                                    </Button>
-                                                                )
-                                                            })
-                                                        }
-                                                    </div>
+                                                <div className='d-md-none mt-3'>
+                                                    {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
+                                                        <div className='d-flex align-items-center flex-wrap gap-2'>
+                                                            <Link className='size-chart-link-res' onClick={handleSizeChartResClick}>
+                                                                Size guide <img src={arrow_icon} style={{ width: '20px' }} />
+                                                            </Link>
+                                                            {showSizeChartRes && (
+                                                                <ProductChartModalRes
+                                                                    sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
+                                                                    sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
+                                                                    onHide={handleSizeChartClose}
+                                                                    setInInch={toggleSizeChartUnit}
+                                                                    isInInch={isInInch}
+                                                                    rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
+                                                                    columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
 
+
+                                                <div className='size-chart-container mt-3'>
+                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                        {Product?.productList?.sku_attributes.size !== undefined && (
+                                                            <div className='size'>
+                                                                <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                                                                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+                                                                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
+                                                                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
+                                                                            {e.name}
+                                                                        </Button>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                          
+
 
                                             <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
-                                            <div className='mt-4'>
-                                                {/* <Swiper
-                                             
-                                                    slidesPerView={4}
-                                                    spaceBetween={10}
-                                                    hashNavigation={{ watchState: true }}
-                                                    loop={true}
-                                                    
-                                                    breakpoints={{
-                                                        0: {
-                                                            slidesPerView: 3,
-                                                            spaceBetween: 10
-                                                        },
 
-                                                        425: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10,
-                                                        },
+                                            <div className='mt-4 d-none d-md-block'>
 
-                                                        650: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10
-                                                        },
-
-                                                        991: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10
-                                                        },
-
-                                                        1300: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10
-                                                        }
-
-                                                    }}
-                                                    navigation={true}
-                                                    modules={[Pagination, Navigation]}
-                                                    className="mySwiper slider_pinfo"
-                                                >
-                                                    {Product?.productList?.product_files?.map((video, index) => (
-                                                        <SwiperSlide key={index}>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                                <video
-                                                                    className='product-video'
-                                                                    autoPlay
-                                                                    muted
-                                                                    loop
-                                                                    onClick={handleFullScreen}
-                                                                >
-                                                                    <source src={url + video.file_name} type="video/mp4" />
-                                                                    Your browser does not support the video.
-                                                                </video>
-                                                               
-                                                            </div>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                            <p className='amazone-text'>{video.title}</p>
-                                                            </div>
-                                                        </SwiperSlide>
-                                                    ))}
-                                                </Swiper> */}
                                                 <div className='overflow-auto d-flex align-items-start gap-3 gap-xl-4'>
                                                     {Product?.productList?.product_files?.map((video, index) => (
                                                         <div key={index}>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                                <video  ref={videoRef}
+                                                                <video ref={videoRef}
                                                                     className='product-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
-                                                                  
+
                                                                     onClick={(event) => handlePlay(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
@@ -1135,36 +1243,8 @@ const ProductInfo = () => {
                                                 </div>
 
                                             </div>
-                                            
-                                            
-                                            {/* <div className='d-flex gap-2 py-2 align-items-center' style={{ marginTop: '30px' }}>
-                                                {Product?.productList?.product_files?.map((r, i) => (
-                                                    <video className='product-video '
-                                                        key={i}
-                                                        autoPlay
-                                                        muted
-                                                        loop
-                                                        onClick={handleFullScreen}
-                                                        style={{
 
-                                                            height: 'auto',
-                                                            border: '1px solid #ccc', // Example border
-                                                            borderRadius: '8px', // Example border radius
-                                                        }}>
-                                                        <source src={url + r.file_name} type="video/mp4" />
-                                                        Your browser does not support the video.
-                                                    </video>
-                                                ))}
-                                            </div> */}
-
-
-
-                                            {/* <div className='d-flex align-items-start gap-4 justify-content-left overflow-hidden mt-4 '
-                                                style={{ maxHeight: "300px" }}
-                                            >
-                                                <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
-                                            </div> */}
-                                            <div className='shipping-def'>
+                                            <div className='shipping-def mt-3'>
                                                 <h5 className='info-title mb-2' >Shop with confidence</h5>
                                                 <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
                                                 <ul>
@@ -1247,16 +1327,16 @@ const ProductInfo = () => {
                                                 >
                                                     {Product?.productList?.description_video?.map((video, index) => (
                                                         <SwiperSlide key={index}>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                            <div className='d-flex gap-2 pb-0 align-items-center'>
                                                                 <video
-                                                                    className='product-video bottom-product-video video-design'  ref={videoRef}
+                                                                    className='product-video bottom-product-video video-design' ref={videoRef}
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
-                                                                 
+
                                                                     onClick={(event) => handlePlay(event)}
-                                                                    style={{height:'422px !important',}}
+                                                                    style={{ height: '422px !important', }}
 
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
@@ -1267,18 +1347,18 @@ const ProductInfo = () => {
                                                     ))}
                                                 </Swiper>
                                             </div>
-                                            <div style={{height:'270px'}}>
+                                            <div>
                                                 <Swiper
-                                                spaceBetween={0}
-                                                centeredSlides={true}
-                                                autoplay={{
-                                                delay: 1000,
-                                                disableOnInteraction: false,
-                                                }}
-                                                // pagination={{
-                                                // clickable: false,
-                                                // }}
-                                                
+                                                    spaceBetween={0}
+                                                    centeredSlides={true}
+                                                    autoplay={{
+                                                        delay: 1000,
+                                                        disableOnInteraction: false,
+                                                    }}
+                                                    // pagination={{
+                                                    // clickable: false,
+                                                    // }}
+
                                                     breakpoints={{
                                                         0: {
                                                             slidesPerView: 1,
@@ -1302,15 +1382,15 @@ const ProductInfo = () => {
                                                         }
                                                     }}
                                                     navigation={true}
-                                                    modules={[ Navigation, Autoplay]}
+                                                    modules={[Navigation]}
                                                     className="mySwiper"
                                                 >
                                                     {Product?.productList?.description_images?.map((image, index) => (
-                                                            <SwiperSlide key={index}>
-                                                                <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                        <SwiperSlide key={index}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <img className='w-100 slider_images description-img-height'
-                                                                        src={`${Product?.productImagePath}${Product.productList._id}/${image.file_name}`}
-                                                                        alt={`Product Image ${index + 1}`}
+                                                                    src={`${Product?.productImagePath}${Product.productList._id}/${image.file_name}`}
+                                                                    alt={`Product Image ${index + 1}`}
                                                                 />
                                                             </div>
                                                         </SwiperSlide>
@@ -1321,13 +1401,6 @@ const ProductInfo = () => {
                                                 <div>
                                                     <a onClick={handleCustEmailClick} style={{ cursor: 'pointer', color: "#223263" }} >
                                                         <img src={reporticon} className='custemailicon' /> &nbsp; Report an issue with this product</a></div></div>
-
-                                            {/* <Link className='custemailbutton' onClick={handleCustEmailClick}>
-                                                <div className='d-flex align-items-center flex-wrap mt-2 gap-2 '>
-                                                    <img src={reporticon} className='custemailicon' /> <p className='mb-0'>Report an issue with this product</p>
-                                                </div>
-                                                    </Link> */}
-
                                             {showcustemail && (
                                                 <CustEmailModal
 
@@ -1392,39 +1465,43 @@ const ProductInfo = () => {
                                                         {/* <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' /> */}
                                                         <div className='review-items-def w-100 d-flex align-items-start justify-content-between pb-4'>
                                                             <div className='review-text'>
-                                                                <div className='d-flex align-items-center gap-2'>
+                                                                <div className='d-flex align-items-center gap-2 mb-3'>
                                                                     <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
                                                                 <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                     {e?.review_files?.map((r, i) => (
                                                                         <React.Fragment key={i}>
-                                                                            { r.file_name && !r.file_name.includes("mp4") ? (
-                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={handleFullScreen     } alt='' />
+                                                                            {r.file_name && !r.file_name.includes("mp4") ? (
+                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={handleFullScreen} alt='' />
                                                                             ) : (
-                                                                                <video
-                                                                                    style={{ width: "200px", cursor: "pointer" }}
-                                                                                    controls
-                                                                                    onClick={handleFullScreen}
+                                                                                <video ref={videoRef}
+                                                                                    className='product-video'
+                                                                                    autoPlay
+                                                                                    muted
+                                                                                    loop
+                                                                                    playsInline
+                                                                                    onClick={(event) => handlePlay(event)}
                                                                                 >
                                                                                     <source src={r.file_name} type="video/mp4" />
                                                                                     {/* Add more <source> elements for different video formats if necessary */}
                                                                                     Your browser does not support the video.
                                                                                 </video>
+
                                                                             )}
                                                                         </React.Fragment>
                                                                     ))}
                                                                 </div>
-                                                               
+
                                                                 <span className='date_pro_info'>{e.content}</span>
                                                                 <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
                                                                 <div className='d-flex align-items-center gap-1'>
                                                                     <Rating name="simple-controlled" value={e?.rating} readOnly />
                                                                 </div>
 
-                                                              
+
                                                             </div>
-                                                           
+
                                                         </div>
                                                     </div>
                                                 )
