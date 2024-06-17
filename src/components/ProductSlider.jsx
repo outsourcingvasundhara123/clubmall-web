@@ -6,7 +6,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
 
   const images = productList?.map((product) => {
     const isVideo = product.file_name.endsWith('.mp4'); // check if the file is a video
-    const original = productImagePath  + product?.file_name;
+    const original = productImagePath + id + "/" + product?.file_name;
     const thumbnail = product.thumbnail ? (productImagePath + id + "/" + product.thumbnail) : original;
 
     return {

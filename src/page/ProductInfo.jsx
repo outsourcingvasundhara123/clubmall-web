@@ -57,54 +57,47 @@ const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows,
                 <Modal.Title>{sizeChartTitle}</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
-                {sizeChartDescription ? (
-                    <>
-                        <div className='d-md-flex justify-content-between align-items-center pb-4'>
-                            <p className='mb-3 mb-md-0'>{sizeChartDescription}</p>
-                            <div className="btn-group">
-                                <Button
-                                    onClick={() => setInInch(false)}
-                                    className={`size-chart-button ${isInInch ? '' : 'active'}`}
-                                >
-                                    Cm
-                                </Button>
-                                <Button
-                                    onClick={() => setInInch(true)}
-                                    className={`size-chart-button ${isInInch ? 'active' : ''}`}
-                                >
-                                    In
-                                </Button>
+                <div className='d-md-flex justify-content-between align-items-center pb-4'>
+                    <div className="btn-group cm-in-buttons">
+                        <Button
+                            onClick={() => setInInch(true)}
+                            className={`size-chart-button ${isInInch ? 'active' : ''}`}
+                        >
+                            in
+                        </Button>
+                        <Button
+                            onClick={() => setInInch(false)}
+                            className={`size-chart-button ${isInInch ? '' : 'active'}`}
+                        >
+                            cm
+                        </Button>
 
-                            </div>
-                        </div>
-                        <div className='overflow-auto w-100 scrollbar-custom'>
-                            <Table striped bordered hover className='size-chart-modal'>
-                                <tbody className="d-flex">
-                                    {rows.map((item, i) => {
-                                        const rowData = columns.filter(col => col.row_name === item.name);
-                                        return (
-                                            <div key={i} className='w-100'>
-                                                <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
-                                                    <td className="border-0">{item.name}</td>
-                                                </tr>
-                                                <tr className="d-flex flex-column">
-                                                    {rowData.map((sub, j) => (
-                                                        <td key={j}>{sub.name}</td>
-                                                    ))}
-                                                    {[...Array(maxRows - rowData.length)].map((_, j) => (
-                                                        <td key={j} className='amazone-text'>-</td>
-                                                    ))}
-                                                </tr>
-                                            </div>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
-                        </div>
-                    </>
-                ) : (
-                    <p style={{ color: 'red', fontSize: '500' }}>Size chart not available</p>
-                )}
+                    </div>
+                </div>
+                <div className='overflow-auto w-100 scrollbar-custom'>
+                    <Table striped bordered hover className='size-chart-modal'>
+                        <tbody className="d-flex">
+                            {rows.map((item, i) => {
+                                const rowData = columns.filter(col => col.row_name === item.name);
+                                return (
+                                    <div key={i} className='w-100'>
+                                        <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
+                                            <td className="border-0">{item.name}</td>
+                                        </tr>
+                                        <tr className="d-flex flex-column">
+                                            {rowData.map((sub, j) => (
+                                                <td key={j}>{sub.name}</td>
+                                            ))}
+                                            {[...Array(maxRows - rowData.length)].map((_, j) => (
+                                                <td key={j} className='amazone-text'>-</td>
+                                            ))}
+                                        </tr>
+                                    </div>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </div>
             </Modal.Body>
         </Modal>
     );
@@ -121,65 +114,44 @@ const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, ro
         <div className="size-chart-modal-wrapper">
             {sizeChartDescription ? (
                 <>
-                    <div className='d-md-flex justify-content-between align-items-center pb-4' style={{ display: 'flex' }}>
-                        <p className='mb-3 mb-md-0'>{sizeChartDescription}</p>
+                    <div className='d-md-flex justify-content-end align-items-center pb-4' style={{ display: 'flex' }}>
                         <div className="btn-group cm-in-buttons">
-                            <Button
-                                onClick={() => setInInch(false)}
-                                className={`size-chart-button ${isInInch ? '' : 'active'}`}
-                            >
-                                Cm
-                            </Button>
                             <Button
                                 onClick={() => setInInch(true)}
                                 className={`size-chart-button ${isInInch ? 'active' : ''}`}
                             >
-                                In
+                                in
+                            </Button>
+                            <Button
+                                onClick={() => setInInch(false)}
+                                className={`size-chart-button ${isInInch ? '' : 'active'}`}
+                            >
+                                cm
                             </Button>
                         </div>
                     </div>
                     <div className='overflow-auto w-100 scrollbar-custom'>
                         <Table striped bordered hover className='size-chart-modal'>
-                                <tbody className="d-flex">
-                                    {rows.map((item, i) => {
-                                        const rowData = columns.filter(col => col.row_name === item.name);
-                                        return (
-                                            <div key={i} className='w-100'>
-                                                <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
-                                                    <td className="border-0">{item.name}</td>
-                                                </tr>
-                                                <tr className="d-flex flex-column">
-                                                    {rowData.map((sub, j) => (
-                                                        <td key={j}>{sub.name}</td>
-                                                    ))}
-                                                    {[...Array(maxRows - rowData.length)].map((_, j) => (
-                                                        <td key={j} className='amazone-text'>-</td>
-                                                    ))}
-                                                </tr>
-                                            </div>
-                                        );
-                                    })}
-                                </tbody>
-                            </Table>
-                        {/* <Table striped bordered hover className='size-chart-table size-chart-table-sm'>
-                            <tbody style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
-                                {rows.map((item, i) => {
-                                    const rowData = columns.filter(col => col.row_name === item.name);
-                                    return (
-                                        <tr key={i}>
-                                            <td className='position-sticky start-0 z-99'>{item.name}</td>
-                                            {rowData.map((sub, j) => (
-                                                <td key={j}>{sub.name}</td>
-                                            ))}
-                                            {[...Array(maxRows - rowData.length)].map((_, j) => (
-                                                <td key={j + rowData.length} className='placeholder-text'>-</td>
-                                            ))}
-                                        </tr>
-                                    );
-                                })}
+                            <tbody className='size-chart-tbody' style={{ overflowY: 'auto' }}>
+                                <tr>
+                                    {rows.map((item, i) => (
+                                        <th key={i}>{item.name}</th>
+                                    ))}
+                                </tr>
+                                {[...Array(maxRows)].map((_, rowIndex) => (
+                                    <tr key={rowIndex}>
+                                        {rows.map((item, colIndex) => {
+                                            const rowData = columns.filter(col => col.row_name === item.name);
+                                            return (
+                                                <td key={colIndex}>
+                                                    {rowData[rowIndex] ? rowData[rowIndex].name : '-'}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
                             </tbody>
-                        </Table> */}
-                        
+                        </Table>
                     </div>
                 </>
             ) : (
@@ -589,18 +561,6 @@ const ProductInfo = () => {
         }
     };
 
-
-
-    // const ciphertext = localStorage.getItem('cartPostData');
-    // if (ciphertext) {
-    //     const bytes  = CryptoJS.AES.decrypt(ciphertext, 'your_secret_key');
-    //     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    //     console.log(decryptedData,"decryptedData");
-    // } else {
-    //     // Handle the case where the cart data does not exist
-    //     console.log("No cart data found");
-    // }
-
     const textRef = useRef(null);
 
     const handleCopy = () => {
@@ -854,6 +814,21 @@ const ProductInfo = () => {
 
                         <div className='product-info pb-5'>
                             <div className='container-cos'>
+                                <div className='d-md-none'>
+                                    <div className='shipping-def d-flex align-items-center justify-content-end mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
+                                            <div className='d-flex justify-content-end align-items-center flex-wrap gap-2 gap-md-4'>
+                                                <div className='rate d-flex align-items-center gap-2'>
+                                                    <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                    <div className='d-flex align-items-center gap-2'>
+                                                        {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
+                                                            <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                        )}
+                                                        <p className='mb-0' style={{color:'#007185',}}>{Product?.productList?.rating_count}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
 
                                 <div className='page-path d-flex align-items-center gap-1'>
                                     <div className='d-flex align-items-center gap-1'>
@@ -872,21 +847,23 @@ const ProductInfo = () => {
                                 </div>
 
                                 <Row className='mt-0 mt-md-4'>
-                                    <Col lg={6} md={12}>
+                                    <Col lg={6} md={12} className='px-0'>
                                         <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
-                                            <div className='d-flex align-items-center flex-wrap gap-2 gap-md-4'>
-                                                <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
-                                                <div className='rate d-flex align-items-center gap-2'>
-                                                    <span className='cos-title'>{Product?.productList?.rating}</span>
-                                                    <div className='d-flex align-items-center gap-1'>
-                                                        {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
-                                                            <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
-                                                        )}
+                                            <div className='d-none d-md-block'>
+                                                <div className='d-flex align-items-center flex-wrap gap-2 gap-md-4'>
+                                                    <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
+                                                    <div className='rate d-flex align-items-center gap-2'>
+                                                        <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                        <div className='d-flex align-items-center gap-1'>
+                                                            {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
+                                                                <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className='d-flex align-items-center gap-2 verified'>
-                                                    <img src='../img/product_def/verified.png' alt='' />
-                                                    <span>All reviews are from verified buyers</span>
+                                                    {/* <div className='d-flex align-items-center gap-2 verified'>
+                                                        <img src='../img/product_def/verified.png' alt='' />
+                                                        <span>All reviews are from verified buyers</span>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -946,6 +923,9 @@ const ProductInfo = () => {
                                                     hashNavigation={{
                                                         watchState: true,
                                                     }}
+                                                    pagination={{
+                                                        dynamicBullets: true,
+                                                      }}
                                                     loop={true}
                                                     breakpoints={{
                                                         0: {
@@ -1072,7 +1052,7 @@ const ProductInfo = () => {
                                                 )}
                                             </div>
                                             <div className='d-md-none mt-2 mb-3'>
-                                                <p onClick={handleReturnPolicyClick} className='policy-lab'>
+                                                <p onClick={handleReturnPolicyClick} className='policy-lab d-flex justify-content-between align-items-center'>
                                                     Return Policy {showreturnpolicy ? <img src={arrow_up} style={{ width: '20px' }} /> : <img src={arrow_icon} style={{ width: '20px' }} />}
                                                 </p>
                                                 {showreturnpolicy && <ReturnPolicy />}
@@ -1102,7 +1082,7 @@ const ProductInfo = () => {
                                                 </div>
                                             </div>
 
-                                            {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
+                                            {/* {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
                                                 <div className='d-flex align-items-center flex-wrap gap-2 mt-2'>
                                                     <Link className='size-chart-link d-none d-md-block' onClick={handleSizeChartClick}>
                                                         Size Chart <img src={arrow_icon} style={{ width: '20px' }} />
@@ -1124,20 +1104,11 @@ const ProductInfo = () => {
                                                     )}
                                                 </div>
                                             )
-                                            }
+                                            } */}
 
-                                            <div className='shipping-def description mt-2'>
-                                                <h5 className='info-title mt-2'>Product Details</h5>
-                                                <div className='productdetail'
-                                                >
-                                                    {Product?.productList?.description.split(":").map((item, index) => (
-                                                        <p key={index} className='product-description'>{item}</p>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <div className='d-none d-md-block'>
+                                            <div className='d-none d-md-block mt-2'>
                                                 <p onClick={handleReturnPolicyClick} className='policy-lab'>
-                                                    Return Policy {showreturnpolicy ? <img src={arrow_up} style={{ width: '20px' }} /> : <img src={arrow_icon} style={{ width: '20px' }} />}
+                                                    Return policy {showreturnpolicy ? <img src={arrow_up} style={{ width: '20px' }} /> : <img src={arrow_icon} style={{ width: '20px' }} />}
                                                 </p>
                                                 {showreturnpolicy && <ReturnPolicy />}
                                             </div>
@@ -1158,6 +1129,26 @@ const ProductInfo = () => {
                                                     }
                                                 </div>
 
+                                                <div className='size-chart-container mt-3'>
+                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                        {Product?.productList?.sku_attributes.size !== undefined && (
+                                                            <div className='size w-100'>
+                                                                <div className='d-flex align-items-center justify-content-between'>
+                                                                    <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                                                                    <p className=' size-guide' onClick={handleSizeChartResClick}>Size guide </p>
+                                                                </div>
+                                                                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+                                                                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
+                                                                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
+                                                                            {e.name}
+                                                                        </Button>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+
                                                 {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 0 ? (
                                                     <div className='size mt-3'>
                                                         <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
@@ -1173,48 +1164,57 @@ const ProductInfo = () => {
                                                 ) : (
                                                     <></>
                                                 )}
-                                                <div className='d-md-none mt-3'>
-                                                    {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
-                                                        <div className='d-flex align-items-center flex-wrap gap-2'>
-                                                            <Link className='size-chart-link-res' onClick={handleSizeChartResClick}>
-                                                                Size guide <img src={arrow_icon} style={{ width: '20px' }} />
-                                                            </Link>
-                                                            {showSizeChartRes && (
-                                                                <ProductChartModalRes
-                                                                    sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
-                                                                    sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
-                                                                    onHide={handleSizeChartClose}
-                                                                    setInInch={toggleSizeChartUnit}
-                                                                    isInInch={isInInch}
-                                                                    rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
-                                                                    columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
-                                                                />
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-
-
-                                                <div className='size-chart-container mt-3'>
-                                                    <div className='d-flex align-items-center justify-content-between'>
-                                                        {Product?.productList?.sku_attributes.size !== undefined && (
-                                                            <div className='size'>
-                                                                <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
-                                                                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-                                                                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
-                                                                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
-                                                                            {e.name}
-                                                                        </Button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
+                                                
+                                            </div>
+                                            
+                                            <div className='mt-3'>
+                                                {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
+                                                    <div className='d-flex align-items-center flex-wrap gap-2'>
+                                                        <Link className='size-chart-link-res size-chart-link' onClick={handleSizeChartResClick}>
+                                                            Size Chart <img src={arrow_icon} style={{ width: '20px' }} />
+                                                        </Link>
+                                                        {showSizeChartRes && (
+                                                            <ProductChartModalRes
+                                                                sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
+                                                                sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
+                                                                onHide={handleSizeChartClose}
+                                                                setInInch={toggleSizeChartUnit}
+                                                                isInInch={isInInch}
+                                                                rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
+                                                                columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
+                                                            />
                                                         )}
                                                     </div>
-                                                </div>
+                                                )}
                                             </div>
 
-
-                                            <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
+                                            <div className='shipping-def mt-3'>
+                                                <h5 className='info-title mb-2' >Shop with confidence</h5>
+                                                <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
+                                                <ul>
+                                                    <div>
+                                                        <li>Safe payment</li>
+                                                        <li>Secure privacy</li>
+                                                    </div>
+                                                    <div>
+                                                        <li>Secure logistics</li>
+                                                        <li>Purchase protection</li>
+                                                    </div>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div className='shipping-def description mt-2'>
+                                                <h5 className='info-title mt-2'>Description</h5>
+                                                <div className='productdetail'
+                                                >
+                                                    {Product?.productList?.description.split(":").map((item, index) => (
+                                                        <p key={index} className='product-description mt-2'>{item}</p>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className='cart-button-sm'>
+                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
+                                            </div>
 
                                             <div className='mt-4 d-none d-md-block'>
 
@@ -1244,34 +1244,18 @@ const ProductInfo = () => {
 
                                             </div>
 
-                                            <div className='shipping-def mt-3'>
-                                                <h5 className='info-title mb-2' >Shop with confidence</h5>
-                                                <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
-                                                <ul>
-                                                    <div>
-                                                        <li>Safe payment</li>
-                                                        <li>Secure privacy</li>
-                                                    </div>
-                                                    <div>
-                                                        <li>Secure logistics</li>
-                                                        <li>Purchase protection</li>
-                                                    </div>
-                                                </ul>
-                                            </div>
+                                           
 
-
-                                            <div className='shipping-def description mt-4'>
-                                                <h5 className='info-title mt-4 mb-2'>Description</h5>
-
+                                            <div className='shipping-def description'>
+                                                <h5 className='info-title mt-3 mb-2'>Product Details</h5>
 
                                                 {Object.entries(typeof Product?.productList?.attributes === 'string' ? JSON.parse(Product?.productList?.attributes) : (Product?.productList?.attributes || {})).map(([key, value], index) => (
 
-
-                                                    <div key={index}>
+                                                    <div className='mb-2' key={index}>
                                                         {key === "Product ID" ? (
                                                             <div className='d-flex align-items-center copy-div gap-3'>
                                                                 <span className='d-flex align-items-center'>Item ID: <p ref={textRef} className='ms-1'>{value[0]}</p></span>
-                                                                <Button className='copy-btn' onClick={handleCopy}>Copy</Button>
+                                                                {/* <Button className='copy-btn' onClick={handleCopy}>Copy</Button> */}
                                                             </div>
                                                         ) : (
                                                             <span>{key}: {Array.isArray(value) ? value.join(", ") : value}</span>
@@ -1284,7 +1268,7 @@ const ProductInfo = () => {
 
                                             {(Product?.productList?.content !== null && Product?.productList?.content !== undefined && Product.productList.content.length > 0) && (
                                                 <div className='show-content '>
-                                                    <h5 className='info-title mt-4 mb-2'>Content</h5>
+                                                    <h5 className='info-title mt-3 mb-2'>Content</h5>
                                                     <div className='show-content-editor'>
                                                         <div dangerouslySetInnerHTML={{ __html: Product.productList.content }} />
                                                     </div>

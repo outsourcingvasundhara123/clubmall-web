@@ -188,10 +188,14 @@ const ClientPanel = () => {
   return (
     <div>
       {window.location.pathname !== '/' && window.location.pathname !== '/delete-account'   && (
-        <div className="cart-top-main">
+        <>
+        <div className="cart-top-main back-button">
           <Button onClick={handleDrawerShow} className="btn-scroll-top cart-scroll">
             <BsFillCartCheckFill />
           </Button>
+        </div>
+        
+        <div className="cart-top-main">
           <Button
             className="btn-scroll-top mt-3"
             onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
@@ -199,6 +203,7 @@ const ClientPanel = () => {
             <MdOutlineKeyboardArrowUp />
           </Button>
         </div>
+        </>
       )}
       {mainloder && (
         <div className="loader-main">

@@ -2172,8 +2172,9 @@ del {
 .product-info .size button {
     border: 1px solid lightgray;
     color: #000 !important;
-    border-radius: 50px;
-    padding: 6px 25px;
+    border-radius: 5px;
+    padding: 6px 15px;
+    font-weight: 600;
 }
 
 .product-info .size button.active {
@@ -6728,14 +6729,19 @@ video::-webkit-media-controls-mute-button {
 }
 
 /* CSS */
+.cm-in-buttons{
+    border: 1px solid #000;
+}
 .size-chart-button {
-    background-color: red;
+    background-color: #fff;
     border: navajowhite;
+    color: #000 !important;
 }
 
 .size-chart-button.active,
 .size-chart-button:hover {
-    background-color: #b3221a !important;
+    background-color: red !important;
+    color: #fff !important;
 }
 
 .size-chart-img {
@@ -6793,7 +6799,7 @@ video::-webkit-media-controls-mute-button {
     .return-policy-label {
         position: relative !important;
         left: 5px !important;
-        font-size: 12px;
+        font-size: 15px;
         margin-top: -5px;
         /* Adjust as needed */
         width: 100%;
@@ -6878,9 +6884,10 @@ video::-webkit-media-controls-mute-button {
 
 }
 
-.size-chart-modal {
+/* .size-chart-modal {
     border: 1px solid #2d393c;
-}
+} */
+
 
 .amazone-text {
     font-weight: 600;
@@ -7026,9 +7033,9 @@ figure {
 }
 
 .policy-lab {
-    font-size: 18px;
+    font-size: 16px;
     color: #223263;
-    font-family: "Amazon Ember", Arial, sans-serif;
+    /* font-family: "Amazon Ember", Arial, sans-serif; */
     cursor: pointer;
     font-weight: 700;
 }
@@ -7077,7 +7084,7 @@ figure {
 }
 
 .size-chart-link {
-    font-size: 18px !important;
+    font-size: 16px !important;
     line-height: 18px !important;
     text-decoration: none;
     color: #223263 !important;
@@ -7093,10 +7100,14 @@ figure {
     object-fit: fill !important;
 }
 
+.back-button {
+    bottom: 85px;
+}
+
 @media only screen and (max-width: 767px) and (min-width: 200px) {
     .image-gallery-content .image-gallery-slide .image-gallery-image {
-        height: 400px !important;
-        object-fit: contain !important;
+        height: 500px !important;
+        /* object-fit: cover !important; */
     }
 
     .slider-video {
@@ -7112,7 +7123,45 @@ figure {
     .product-info .per-pro span,
     .product-info .per-pro del {
         font-size: 14px !important;
+    }
 
+    .container-cos {
+        max-width: 95%;
+    }
+
+    .image-gallery-thumbnails-wrapper {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .cart-button-sm {
+        position: fixed;
+        bottom: 10px;
+        right: 0px;
+        left: 0px;
+        margin: 0px 10px;
+        z-index: 9999;
+    }
+
+    .cart-button-sm button {
+        border-radius: 5px !important;
+        background-color: #ffd814 !important;
+        color: #000;
+        text-transform: uppercase;
+        font-weight: 600;
+        padding: 10px 20px;
+    }
+
+    .back-button {
+        left: 20px;
+    }
+
+    .cart-top-main {
+        bottom: 55px;
+    }
+
+    .size-chart-modal td {
+        padding: 10px 23px !important;
     }
 }
 
@@ -7178,12 +7227,13 @@ figure {
     }
 
     .description-img-height {
-        height: 267px !important;
+        height: 200px !important;
         object-fit: cover;
     }
 
     figure img {
-        height: 267px !important;
+        height: 200px !important;
+        object-fit: fill;
     }
 
     .size-chart-link-res {
@@ -7192,6 +7242,10 @@ figure {
         font-weight: 700;
         font-size: 16px;
         color: #223263;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
     }
 
 }
@@ -7213,10 +7267,10 @@ figure {
 }
 
 .size-chart-modal-wrapper {
-    padding: 20px;
+    /* padding: 20px; */
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
     width: 100%;
 }
 
@@ -7284,6 +7338,7 @@ td {
     border-collapse: separate;
     /* border-spacing: 0; */
 }
+
 .product-info .product-color .cm-in-buttons button {
     background-color: red !important;
     /* border-radius: 8px; */
@@ -7295,9 +7350,38 @@ td {
     border: 0px !important;
     /* border-radius: 0px; */
 }
-.sticky-column {
+
+/* .sticky-column {
     position: sticky;
     left: 0;
     background-color: #f0f2f2;
-    z-index: 1; /* Ensure it appears above other cells */
+    z-index: 1;
+} */
+
+.size-guide {
+    color: #007185;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+th,
+td {
+    border-right: 1px solid #EBEBEB !important;
+    border-bottom: 1px solid #EBEBEB !important;
+}
+
+table tr th:first-of-type {
+    position: sticky;
+    left: 0px;
+}
+table tr td:first-of-type {
+    position: sticky;
+    left: 0px;
+}
+
+.size-chart-tbody th{
+    font-size: 14px;
+    font-weight: 400;
+    padding: 10px 20px;
+    text-wrap: nowrap;
 }
