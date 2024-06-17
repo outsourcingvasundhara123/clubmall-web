@@ -1203,25 +1203,31 @@ const ProductInfo = () => {
                                             </div>
                                             
                                             <div className='mt-3'>
-                                                {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
-                                                    <div className='d-flex align-items-center flex-wrap gap-2'>
-                                                        <Link className='size-chart-link-res size-chart-link' onClick={handleSizeChartResClick}>
-                                                            Size Chart {showSizeChartRes ? <FontAwesomeIcon icon={faCircleChevronUp} style={{width:'20px'}}/> : <FontAwesomeIcon icon={faCircleChevronDown} style={{width:'20px'}}/>}
-                                                        </Link>
-                                                        {showSizeChartRes && (
-                                                            <ProductChartModalRes
-                                                                sizechartRef={sizechartRef}
-                                                                sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
-                                                                sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
-                                                                onHide={handleSizeChartClose}
-                                                                setInInch={toggleSizeChartUnit}
-                                                                isInInch={isInInch}
-                                                                rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
-                                                                columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
-                                                            />
-                                                        )}
-                                                    </div>
-                                                )}
+                                                {(Product?.productList?.size_chartInInch.title !== "" ||
+                                                    Product?.productList?.size_chartIncm.title !== "") &&
+                                                    (Product?.productList?.size_chartInInch.description !== "" ||
+                                                        Product?.productList?.size_chartIncm.description !== "") &&
+                                                    (isInInch ? Product?.productList?.size_chartInInch.columns.length > 0 && Product?.productList?.size_chartInInch.row_name.length > 0 :
+                                                        Product?.productList?.size_chartIncm.columns.length > 0 && Product?.productList?.size_chartIncm.row_name.length > 0) &&
+                                                    Product?.productList?.size_chartInInch.title !== undefined && (
+                                                        <div className='d-flex align-items-center flex-wrap gap-2'>
+                                                            <Link className='size-chart-link-res size-chart-link' onClick={handleSizeChartResClick}>
+                                                                Size Chart {showSizeChartRes ? <FontAwesomeIcon icon={faCircleChevronUp} style={{ width: '20px' }} /> : <FontAwesomeIcon icon={faCircleChevronDown} style={{ width: '20px' }} />}
+                                                            </Link>
+                                                            {showSizeChartRes && (
+                                                                <ProductChartModalRes
+                                                                    sizechartRef={sizechartRef}
+                                                                    sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
+                                                                    sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
+                                                                    onHide={handleSizeChartClose}
+                                                                    setInInch={toggleSizeChartUnit}
+                                                                    isInInch={isInInch}
+                                                                    rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
+                                                                    columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    )}
                                             </div>
 
                                             <div className='shipping-def mt-3'>
