@@ -37,7 +37,7 @@ import reporticon from '../assets/img/fluent-mdl2_message-1.png';
 import arrow_icon from '../assets/img/arrowhead-down-svgrepo-com.svg';
 import arrow_up from '../assets/img/up-arrow.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare } from '@fortawesome/free-solid-svg-icons';
+import { faShare,faCircleChevronUp,faCircleChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 
 const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch }) => {
@@ -102,7 +102,7 @@ const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows,
         </Modal>
     );
 };
-const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch }) => {
+const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch,sizechartRef }) => {
     const [showModal, setShowModal] = useState(true); // State to control modal visibility
 
     const maxRows = Math.max(...rows.map(item => columns.filter(col => col.row_name === item.name).length));
@@ -111,7 +111,7 @@ const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, ro
     }, []);
 
     return (
-        <div className="size-chart-modal-wrapper">
+        <div ref={sizechartRef} className="size-chart-modal-wrapper">
             {sizeChartDescription ? (
                 <>
                     <div className='d-md-flex justify-content-end align-items-center pb-4' style={{ display: 'flex' }}>
@@ -287,8 +287,22 @@ const ProductInfo = () => {
         setShowSizeChart(true);
     };
     const handleSizeChartResClick = () => {
+        if (sizechartRef.current) {
+            window.scrollTo({
+                behavior: 'smooth',
+                top: sizechartRef.current.offsetTop - 100 
+            });
+        }
         setShowSizeChartRes(prevState => !prevState);
     };
+    useEffect(() => {
+        if (showSizeChartRes && sizechartRef.current) {
+            window.scrollTo({
+                behavior: 'smooth',
+                top: sizechartRef.current.offsetTop - 100 
+            });
+        }
+    }, [showSizeChartRes]);
 
     const handleCustEmailClick = () => {
         setShowCustEmail(true);
@@ -715,33 +729,32 @@ const ProductInfo = () => {
 
     const [isFullScreen, setIsFullScreen] = useState(false);
 
-    const handleFullScreen = (event) => {
-        const video = event.target;
+      const handleFullScreen = (event) => {
+        const element = event.target;
 
         if (!isFullScreen) {
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
-            } else if (video.mozRequestFullScreen) { /* Firefox */
-                video.mozRequestFullScreen();
-            } else if (video.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                video.webkitRequestFullscreen();
-            } else if (video.msRequestFullscreen) { /* IE/Edge */
-                video.msRequestFullscreen();
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) {
+                // Safari and older versions of iOS
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                // Internet Explorer/Edge
+                element.msRequestFullscreen();
             }
         } else {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) { /* Firefox */
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+            } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { /* IE/Edge */
+            } else if (document.msExitFullscreen) {
                 document.msExitFullscreen();
             }
         }
 
         setIsFullScreen(!isFullScreen);
     };
+    
     const individualPrice = Product?.productList?.individual_price;
     const competitorsPrice = Product?.productList?.competitors_price;
     const calculateDiscountPercentage = (individualPrice, competitorsPrice) => {
@@ -775,6 +788,18 @@ const ProductInfo = () => {
         if (video && video.webkitEnterFullscreen) {
             video.webkitEnterFullscreen();
         }
+    };
+    const sliderRef = useRef(null);
+    const sizechartRef = useRef(null);
+ 
+    const [fullscreenImage, setFullscreenImage] = useState(null);
+
+    const handleImageClick = (imageSrc) => {
+        setFullscreenImage(imageSrc);
+    };
+
+    const handleCloseFullscreen = () => {
+        setFullscreenImage(null);
     };
     return (
         <>
@@ -898,7 +923,7 @@ const ProductInfo = () => {
                                             >
                                                 <Button className='wishlist-btn'><FiUpload /></Button>
                                             </RWebShare>
-                                            <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
+                                            <ProductSlider sliderRef={sliderRef} activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
 
                                         </div>
 
@@ -1053,7 +1078,7 @@ const ProductInfo = () => {
                                             </div>
                                             <div className='d-md-none mt-2 mb-3'>
                                                 <p onClick={handleReturnPolicyClick} className='policy-lab d-flex justify-content-between align-items-center'>
-                                                    Return Policy {showreturnpolicy ? <img src={arrow_up} style={{ width: '20px' }} /> : <img src={arrow_icon} style={{ width: '20px' }} />}
+                                                    Return Policy {showreturnpolicy ?  <FontAwesomeIcon icon={faCircleChevronUp} style={{width:'20px'}}/> :  <FontAwesomeIcon icon={faCircleChevronDown} style={{width:'20px'}} />}
                                                 </p>
                                                 {showreturnpolicy && <ReturnPolicy />}
                                             </div>
@@ -1108,7 +1133,7 @@ const ProductInfo = () => {
 
                                             <div className='d-none d-md-block mt-2'>
                                                 <p onClick={handleReturnPolicyClick} className='policy-lab'>
-                                                    Return policy {showreturnpolicy ? <img src={arrow_up} style={{ width: '20px' }} /> : <img src={arrow_icon} style={{ width: '20px' }} />}
+                                                    Return policy {showreturnpolicy ? <FontAwesomeIcon icon={faCircleChevronUp} style={{width:'20px'}}/> : <FontAwesomeIcon icon={faCircleChevronDown} style={{width:'20px'}}/>}
                                                 </p>
                                                 {showreturnpolicy && <ReturnPolicy />}
                                             </div>
@@ -1120,8 +1145,18 @@ const ProductInfo = () => {
                                                     {
                                                         Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => {
                                                             return (
-
-                                                                <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(url + Product.productList?._id + "/" + e.file_name))}>
+                                                                <Button
+                                                                    key={i}
+                                                                    className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`}
+                                                                    onClick={() => {
+                                                                    setProductColorActive(e.attrs[0]?.color);
+                                                                    setActiveImage(url + Product.productList?._id + "/" + e.file_name);
+                                                                   
+                                                                    if (sliderRef.current) {
+                                                                        sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                                    }
+                                                                    }}
+                                                                >
                                                                     <img className='colors' src={url + Product.productList?._id + "/" + e.file_name} alt='' />
                                                                 </Button>
                                                             )
@@ -1171,10 +1206,11 @@ const ProductInfo = () => {
                                                 {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
                                                     <div className='d-flex align-items-center flex-wrap gap-2'>
                                                         <Link className='size-chart-link-res size-chart-link' onClick={handleSizeChartResClick}>
-                                                            Size Chart <img src={arrow_icon} style={{ width: '20px' }} />
+                                                            Size Chart {showSizeChartRes ? <FontAwesomeIcon icon={faCircleChevronUp} style={{width:'20px'}}/> : <FontAwesomeIcon icon={faCircleChevronDown} style={{width:'20px'}}/>}
                                                         </Link>
                                                         {showSizeChartRes && (
                                                             <ProductChartModalRes
+                                                                sizechartRef={sizechartRef}
                                                                 sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
                                                                 sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
                                                                 onHide={handleSizeChartClose}
@@ -1450,14 +1486,24 @@ const ProductInfo = () => {
                                                         <div className='review-items-def w-100 d-flex align-items-start justify-content-between pb-4'>
                                                             <div className='review-text'>
                                                                 <div className='d-flex align-items-center gap-2 mb-3'>
-                                                                    <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
+                                                                <div className="fullscreen-container">
+                                    <img
+                                        alt='profile'
+                                        className='myprofile'
+                                        width="34px"
+                                        height="34px"
+                                        style={{ borderRadius: "50%", objectFit: "cover", cursor: "pointer" }}
+                                        src={defaultProfile}
+                                         // Handle click for fullscreen
+                                    />
+                                </div>
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
                                                                 <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                     {e?.review_files?.map((r, i) => (
                                                                         <React.Fragment key={i}>
                                                                             {r.file_name && !r.file_name.includes("mp4") ? (
-                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={handleFullScreen} alt='' />
+                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)}  alt='' />
                                                                             ) : (
                                                                                 <video ref={videoRef}
                                                                                     className='product-video'
@@ -1491,6 +1537,17 @@ const ProductInfo = () => {
                                                 )
                                             })
                                         }
+                                        {fullscreenImage && (
+                                            <div className="fullscreen-modal" onClick={handleCloseFullscreen}>
+                                                <div className="fullscreen-content d-flex align-items-start gap-1">
+                                                    <img src={fullscreenImage} alt="fullscreen" className="fullscreen-image" />
+                                                    <button className="close-button bg-transparent border-0 position-absolute top-0 end-0" onClick={handleCloseFullscreen}>
+                                                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+
 
                                         {
                                             reviweList.length >= 10 &&

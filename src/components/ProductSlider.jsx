@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import ImageGallery from 'react-image-gallery';
 
-const ProductSlider = ({ productImagePath, productList, id, colorProduct, activeImage }) => {
+const ProductSlider = ({ productImagePath, productList, id, colorProduct, activeImage ,sliderRef }) => {
   const imageGalleryRef = useRef(); // create a ref
 
   const images = productList?.map((product) => {
@@ -42,7 +42,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
     const imageUrl = item.original;
     const thumUrl=item.thumbnail
     return item.type === 'video' ? (
-      <video autoPlay muted loop playsInline width="100%" className='slider-video'>
+      <video ref={videoRef} autoPlay muted loop playsInline width="100%" className='slider-video'  onClick={(event) => handlePlay(event)}>
         <source src={item.original} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
@@ -57,7 +57,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
     );
   };
   return (
-    <div className='product-img-slider-cos'>
+    <div ref={sliderRef}   className='product-img-slider-cos'>
       <div className="wrapper">
         {images && (
           <ImageGallery
