@@ -426,6 +426,11 @@ const ProductInfo = () => {
         }
     };
 
+    const setProduct_QtyActives = (qty) => {
+        setProduct_QtyActive(qty);
+        setProductColorActive("Multi Color");
+    };
+
     const getProductReview = async () => {
         startAnimation()
         const apiTyp = isLoggedIn ? api.postWithToken : api.post;
@@ -1141,28 +1146,27 @@ const ProductInfo = () => {
                                             <div className='product-color mt-2'>
 
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
-                                                <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
-                                                    {
-                                                        Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => {
-                                                            return (
+                                                {Product?.productList?.product_qty && Product?.productList?.product_qty.length > 0 && (
+                                                    <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
+                                                        {product_qtyActive === Product?.productList?.product_qty[0] && (
+                                                            Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => (
                                                                 <Button
                                                                     key={i}
                                                                     className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`}
                                                                     onClick={() => {
-                                                                    setProductColorActive(e.attrs[0]?.color);
-                                                                    setActiveImage(url + Product.productList?._id + "/" + e.file_name);
-                                                                   
-                                                                    if (sliderRef.current) {
-                                                                        sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                                                    }
+                                                                        setProductColorActive(e.attrs[0]?.color);
+                                                                        setActiveImage(url + Product.productList?._id + "/" + e.file_name);
+                                                                        if (sliderRef.current) {
+                                                                            sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                                        }
                                                                     }}
                                                                 >
                                                                     <img className='colors' src={url + Product.productList?._id + "/" + e.file_name} alt='' />
                                                                 </Button>
-                                                            )
-                                                        })
-                                                    }
-                                                </div>
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                )}
 
                                                 <div className='size-chart-container mt-3'>
                                                     <div className='d-flex align-items-center justify-content-between'>
@@ -1184,12 +1188,12 @@ const ProductInfo = () => {
                                                     </div>
                                                 </div>
 
-                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 0 ? (
+                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 1 ? (
                                                     <div className='size mt-3'>
                                                         <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
                                                         <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                             {Product?.productList?.product_qty?.map((e, i) => (
-                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActive(e)}>
+                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActives(e)}>
                                                                     {e}
                                                                 </Button>
                                                             ))}

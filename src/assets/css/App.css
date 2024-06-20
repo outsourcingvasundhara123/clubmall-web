@@ -7434,3 +7434,15 @@ table tr td:first-of-type {
     object-fit: contain; /* Adjust as per your design */
 }
 
+.shipping-text{
+    font-weight: 700;
+    font-size: 14px;
+    color: #223263;
+}
+
+
+.shipping-box .order-time {
+    background: #e0ffff;
+    border-radius: 4px;
+    padding: 8px 15px;
+}
