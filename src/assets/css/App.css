@@ -7220,9 +7220,9 @@ figure {
         font-weight: 600;
     }
 
-    .video-design {
+    /* .video-design {
         height: 200px !important;
-    }
+    } */
 
     .description-img-height {
         height: 288px !important;
@@ -7259,9 +7259,9 @@ figure {
         object-fit: contain;
     }
 
-    .video-design {
+    /* .video-design {
         width: 440px !important;
-    }
+    } */
 
     .description-img-height {
         width: 440px !important;

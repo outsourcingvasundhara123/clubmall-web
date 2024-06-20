@@ -42,7 +42,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
     const imageUrl = item.original;
     const thumUrl=item.thumbnail
     return item.type === 'video' ? (
-      <video ref={videoRef} autoPlay muted loop playsInline width="100%" className='slider-video'  onClick={(event) => handlePlay(event)}>
+      <video ref={videoRef} autoPlay loop playsInline width="100%" className='slider-video'  onClick={(event) => handlePlay(event)}>
         <source src={item.original} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
