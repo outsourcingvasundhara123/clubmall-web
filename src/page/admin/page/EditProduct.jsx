@@ -38,8 +38,12 @@ const EditProduct = () => {
     subcategory: "",
     description: "",
     content: "",
-    size_chartInInch: { title: "", description: "" },
-    size_chartIncm: { title: "", description: "" },
+    size_chartInInch: {},
+    size_chartIncm: {},
+    product_files: Array(4).fill({ file: undefined, preview: "", title: "" }),
+    description_video: "",
+    product_images: Array(10).fill({ file: undefined, preview: "", type: "image" }),
+    description_images: Array(5).fill({ file: undefined, preview: "" }),
 
   });
 
@@ -66,6 +70,8 @@ const EditProduct = () => {
   const [selectedInRow, setSelectedInRow] = useState('');
   const [IncolumnName, setInColumnName] = useState('');
   const [InnewRowName, setInNewRowName] = useState('');
+  const [showColumnInputs, setShowColumnInputs] = useState({});
+  const [showInColumnInputs, setShowInColumnInputs] = useState({})
   const addRow = () => {
     if (newRowName.trim() !== '') {
       setValues(prevState => ({
@@ -96,14 +102,12 @@ const EditProduct = () => {
       setInNewRowName('');
     }
   };
-  const addColumn = () => {
-
-    if (selectedRow !== '' && columnName.trim() !== '') {
+  const addColumn = (rowName) => {
+    if (columnName.trim() !== '') {
       const updatedRows = rows.map(row => {
-        if (row.name === selectedRow) {
+        if (row.name === rowName) {
           row.columns.push(columnName);
         }
-
         return row;
       });
 
@@ -111,19 +115,20 @@ const EditProduct = () => {
         ...prevState,
         size_chartInInch: {
           ...prevState.size_chartInInch,
-          columns: [...prevState.size_chartInInch.columns, { name: columnName, row_name: selectedRow }],
+          columns: [...prevState.size_chartInInch.columns, { name: columnName, row_name: rowName }],
         },
       }));
 
       setRows(updatedRows);
       setColumnName('');
+      setShowColumnInputs({ ...showColumnInputs, [rowName]: false });
     }
   };
-  const addInColumn = () => {
+  const addInColumn = (inrowName) => {
 
-    if (selectedInRow !== '' && IncolumnName.trim() !== '') {
+    if (IncolumnName.trim() !== '') {
       const updatedRows = inrows.map(row => {
-        if (row.name === selectedInRow) {
+        if (row.name === inrowName) { // Check for unique row ID
           row.columns.push(IncolumnName);
         }
 
@@ -134,13 +139,43 @@ const EditProduct = () => {
         ...prevState,
         size_chartIncm: {
           ...prevState.size_chartIncm,
-          columns: [...prevState.size_chartIncm.columns, { name: IncolumnName, row_name: selectedInRow }],
+          columns: [...prevState.size_chartIncm.columns, { name: IncolumnName, row_name: inrowName }],
         },
       }));
 
       setInRows(updatedRows);
       setInColumnName('');
+      setShowInColumnInputs({ ...showInColumnInputs, [inrowName]: false });
     }
+  };
+  const deleteColumn = (rowIndex, columnIndex) => {
+    // Make a copy of the rows state
+    const updatedRows = [...rows];
+
+    // Remove the specified column from the specified row
+    updatedRows[rowIndex] = {
+      ...updatedRows[rowIndex],
+      columns: updatedRows[rowIndex].columns.filter((col, index) => index !== columnIndex),
+    };
+
+    // Update the state with the modified rows
+    setRows(updatedRows);
+
+    // Update the values state to remove the column from size_chartInInch.columns
+    setValues(prevState => {
+      const updatedColumns = prevState.size_chartInInch.columns.filter((column, index) => {
+        // Find the column that matches both row_name and index, then filter it out
+        return !(column.row_name === updatedRows[rowIndex].name && index === columnIndex);
+      });
+
+      return {
+        ...prevState,
+        size_chartInInch: {
+          ...prevState.size_chartInInch,
+          columns: updatedColumns,
+        },
+      };
+    });
   };
   const deleteRow = (rowName) => {
     const updatedRows = rows.filter(row => row.name !== rowName);
@@ -153,6 +188,35 @@ const EditProduct = () => {
         size_chartInInch: {
           ...prevState.size_chartInInch,
           row_name: updatedRowNames,
+          columns: updatedColumns,
+        },
+      };
+    });
+  };
+  const deleteInColumn = (InrowIndex, IncolumnIndex) => {
+    // Make a copy of the rows state
+    const updatedRows = [...inrows];
+
+    // Remove the specified column from the specified row
+    updatedRows[InrowIndex] = {
+      ...updatedRows[InrowIndex],
+      columns: updatedRows[InrowIndex].columns.filter((col, index) => index !== IncolumnIndex),
+    };
+
+    // Update the state with the modified rows
+    setInRows(updatedRows);
+
+
+    setValues(prevState => {
+      const updatedColumns = prevState.size_chartIncm.columns.filter((column, index) => {
+        // Find the column that matches both row_name and index, then filter it out
+        return !(column.row_name === updatedRows[InrowIndex].name && index === IncolumnIndex);
+      });
+
+      return {
+        ...prevState,
+        size_chartIncm: {
+          ...prevState.size_chartIncm,
           columns: updatedColumns,
         },
       };
@@ -203,7 +267,11 @@ const EditProduct = () => {
           name: row.name,
           columns: sizeChartInCM.columns.filter(col => col.row_name === row.name).map(col => col.name),
         }));
-
+        const updatedProductImages = productData.product_images.map(file => ({
+          file: file.file_name,
+          preview: `${Url}${product_id}/${file.file_name}`,
+          type: file.file_name.endsWith('.mp4') ? 'video' : 'image'
+        }));
         setValues(prevValues => ({
           ...prevValues,
           name: productData.name,
@@ -212,6 +280,12 @@ const EditProduct = () => {
           group_price: productData.group_price,
           competitors_price: productData.competitors_price,
           description: productData.description,
+          product_files: productData.product_files.map(file => ({
+            file: file.file_name,
+            preview: `${Url}${file.file_name}`, // Assuming thumbnail URL can be used as preview
+            title: file.title || "",
+          })),
+          description_video: productData.description_video,
           content: productData.content == null
             ? `<!DOCTYPE html>
         <html lang="en">
@@ -227,9 +301,13 @@ const EditProduct = () => {
         </body>
         </html>`
             : productData.content,
-            size_chartInInch: sizeChart,
-            size_chartIncm: sizeChartInCM,
-
+          size_chartInInch: sizeChart,
+          size_chartIncm: sizeChartInCM,
+          description_images: productData.description_images.map(img => ({
+            file: img.file_name,
+            preview: `${Url}${product_id}/${img.file_name}`,
+          })),
+          product_images: updatedProductImages,
         }));
 
         // Set rows state
@@ -255,6 +333,7 @@ const EditProduct = () => {
           }
         }));
         setStates({ content: productData.content });
+        console.log("description_video>>", productData.description_video);
         stopAnimation();
       } else {
         navigate("/");
@@ -340,9 +419,50 @@ const EditProduct = () => {
       }
     }
   };
+  const [sucessSnackBarOpen, setSucessSnackBarOpen] = useState(false);
+  const [Mymessage, setMyMessage] = useState("");
+  const [warningSnackBarOpen, setWarningSnackBarOpen] = useState(false);
 
+
+  const getImage = async (data) => {
+
+    try {
+      const formData = new FormData();
+      values.product_images.forEach((img, index) => {
+        if (img && img.file) {
+          formData.append(`product_images[${index}]`, img.file);
+        }
+      });
+      values.description_images.forEach((img, index) => {
+        if (img && img.file) {
+          formData.append(`description_images[${index}]`, img.file);
+        }
+      });
+      const [productResponse] = await Promise.all([
+        api.postWithToken(`${serverURL}product-media-update/${product_id}`, formData),
+      ]);
+
+      if (productResponse.data.success) {
+        setMyMessage(productResponse.data.message);
+        setSucessSnackBarOpen(!sucessSnackBarOpen);
+        setMainLoder(false)
+        setTimeout(() => {
+          navigate("/admin/product")
+        }, 1000);
+
+      } else if (productResponse.data.success === false) {
+        setMainLoder(false)
+        setMyMessage(productResponse.data.message);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
+    } catch (error) {
+      console.log(error);
+    };
+
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const updatedProductData = {
       product_category_keys: values.product_category_keys,
       description: values.description,
@@ -355,31 +475,88 @@ const EditProduct = () => {
       product_id: values.product_id,
       content: states.content,
       size_chartInInch: values.size_chartInInch,
-      size_chartIncm: values.size_chartIncm
-
+      size_chartIncm: values.size_chartIncm,
     };
     const validationErrors = validate(updatedProductData);
     setErrors(validationErrors);
+
     if (
-      Object.keys(validationErrors).length === 0 && values.product_category_keys.product_category_one._id && values.product_category_keys.product_category_two._id
+      Object.keys(validationErrors).length === 0 &&
+      values.product_category_keys.product_category_one._id &&
+      values.product_category_keys.product_category_two._id
     ) {
       try {
         setMainLoder(true);
-        await api.postWithToken(`${serverURL}/product-update/${product_id}`, updatedProductData);
+
+        const formData = new FormData();
+        let isVideo = false;
+        const titles = [];
+
+        for (let i = 0; i < values.product_files.length; i++) {
+          const video = values.product_files[i];
+          if (video && video.title) {
+            titles[i] = video.title;
+          }
+        }
+
+        for (let i = 0, j = 0; i < values.product_files.length; i++) {
+          const video = values.product_files[i];
+          if (video && video.file) {
+            formData.append("product_files", video.file);
+
+            if (titles[i] !== undefined) {
+              formData.append(`product_files_titles_${j}`, titles[i]);
+              j++;
+            }
+
+            if (video.file.type.startsWith("video/")) {
+              isVideo = true;
+            }
+          }
+        }
+
+        for (let i = 0; i < values.description_video.length; i++) {
+          formData.append("description_video", values.description_video[i]);
+          if (values.description_video[i].type.startsWith("video/")) {
+            isVideo = true;
+          }
+        }
+
+        formData.append("product_category_keys", JSON.stringify(values.product_category_keys));
+        formData.append("description", values.description);
+        formData.append("total_order", values.total_order);
+        formData.append("group_price", values.group_price);
+        formData.append("individual_price", values.individual_price);
+        formData.append("competitors_price", values.competitors_price);
+        formData.append("name", values.name);
+        formData.append("product_id", values.product_id);
+        formData.append("tax", values.tax);
+        formData.append("content", states.content);
+        formData.append("size_chartInInch", JSON.stringify(values.size_chartInInch));
+        formData.append("size_chartIncm", JSON.stringify(values.size_chartIncm));
+
+        const response = await api.postWithToken(`${serverURL}/product-update/${product_id}`, formData);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        if (response.data.success === true) {
+
+          await getImage(response.data);
+
+          setSnackbarMessage('Product updated successfully!');
+          setSnackbarOpen(true);
+          setTimeout(() => {
+            navigate("/admin/product");
+          }, 1000);
+        }
+
         setMainLoder(false);
-        setSnackbarMessage('Product updated successfully!');
-        setSnackbarOpen(true);
-
-        setTimeout(() => {
-          navigate("/admin/product");
-        }, 1000);
-
       } catch (error) {
         console.error(error);
         setMainLoder(false);
       }
-    };
-  }
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -402,8 +579,6 @@ const EditProduct = () => {
       }));
     }
   };
-
-
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
     setStates({ ...states, content: data });
@@ -439,6 +614,106 @@ const EditProduct = () => {
       return new CustomUploadAdapter(loader);
     };
   }
+
+
+  const handleTitleChange = (e, index) => {
+    const title = e.target.value;
+    const updatedVideos = [...values.product_files];
+    updatedVideos[index] = {
+      ...updatedVideos[index],
+      title
+    };
+    setValues(prevValues => ({ ...prevValues, product_files: updatedVideos }));
+  };
+
+  const handledescriptionVideo = (e) => {
+    const files = Array.from(e.target.files);
+    setValues((prevValues) => ({
+      ...prevValues,
+      description_video: files
+    }));
+  };
+
+
+
+
+
+  const handleDescriptionPhoto = (e) => {
+    const index = parseInt(e.target.name.split('_')[2]);
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (upload) {
+        const updatedDescriptions = [...values.description_images];
+        updatedDescriptions[index] = {
+          file,
+          preview: upload.target.result
+        };
+        setValues(prevValues => ({ ...prevValues, description_images: updatedDescriptions }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handlePhoto = (e) => {
+    const index = parseInt(e.target.name.split('_')[2]);
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (upload) {
+        const updatedImages = [...values.product_images];
+        updatedImages[index] = {
+          file,
+          preview: upload.target.result,
+          type: file.type.startsWith('video') ? 'video' : 'image'
+        };
+        setValues(prevValues => ({ ...prevValues, product_images: updatedImages }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleDeleteImage = (index) => {
+    const updatedImages = [...values.product_images];
+    updatedImages[index] = { file: undefined, preview: "", type: "image" };
+    setValues((prevValues) => ({ ...prevValues, product_images: updatedImages }));
+  };
+  const handleVideo = (e) => {
+    const index = parseInt(e.target.name.split('_')[2], 10);
+    const file = e.target.files[0];
+    const title = e.target.parentNode.querySelector('.video-title-input').value;
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (upload) {
+        const updatedVideos = [...values.product_files];
+        updatedVideos[index] = {
+          file,
+          preview: upload.target.result,
+          title: title
+        };
+        setValues(prevValues => ({ ...prevValues, product_files: updatedVideos }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDesDeleteImage = (index) => {
+    const updatedImages = [...values.description_images];
+    updatedImages[index] = { file: undefined, preview: "" };
+    setValues((prevValues) => ({ ...prevValues, description_images: updatedImages }));
+  };
+  const handleDeleteVideo = (index) => {
+    const updatedVideos = [...values.product_files];
+    updatedVideos[index] = { file: undefined, preview: "" };
+    setValues((prevValues) => ({ ...prevValues, product_files: updatedVideos }));
+  };
+
+  const handleDeleteDesVideo = (index) => {
+    const updatedVideos = [...values.description_video];
+    updatedVideos.splice(index, 1);
+    setValues((prevValues) => ({ ...prevValues, description_video: updatedVideos }));
+  };
   return (
     <Layout>
       <div className="border-green">
@@ -566,6 +841,114 @@ const EditProduct = () => {
             </Col>
           </Row>
         </div>
+        <br></br>
+        <div className="px-3 px-sm-4 pb-5 border-green-bottom">
+          <Row className="align-items-end">
+            <Col lg={12} md={12} sm={12}>
+              <div className="select-img-input mt-3">
+                <label>Product Image*</label>
+                <div className="d-flex align-items-center gap-5 flex-wrap mt-4">
+                  {Array(10).fill(null).map((_, index) => (
+                    <div className="select-img-output" key={index}>
+                      {values.product_images[index]?.preview && (
+                        <>
+                          {values.product_images[index].type === 'image' ? (
+                            <img
+                              src={values.product_images[index].preview}
+                              alt=""
+                              className="output-file"
+                            />
+                          ) : (
+                            <video controls className="output-file">
+                              <source src={values.product_images[index].preview} type={values.product_images[index].file?.type || 'video/mp4'} />
+                            </video>
+                          )}
+                        </>
+                      )}
+                      {!values.product_images[index]?.preview && (
+                        <img
+                          src="../../admin-img/user.jpg"
+                          alt=""
+                          className="output-file"
+                        />
+                      )}
+                      <input
+                        type="file"
+                        id={`preview-img-${index}`}
+                        name={`product_image_${index}`}
+                        onChange={handlePhoto}
+                        className="d-none"
+                        accept="image/*, video/*"
+                      />
+                      <label className="choose-file-btn" htmlFor={`preview-img-${index}`}>
+                        <img src="../../admin-img/add.svg" alt="" />
+                      </label>
+                      <Button className="delete-preview-img" onClick={() => handleDeleteImage(index)}>
+                        <img
+                          src="../../admin-img/profile/delete.svg"
+                          alt=""
+                          width="15px"
+                        />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+                <div className='errorAdmin'>{errors?.product_images}</div>
+              </div>
+            </Col>
+
+            <Col lg={12} md={12} sm={12} className='video-title'>
+              <div className="select-img-input mt-3">
+                <label>Upload Video</label>
+                <div className="d-flex align-items-center gap-5 flex-wrap mt-4 width-video">
+                  {Array(4).fill(null).map((_, index) => (
+                    <div className="select-img-output" key={index}>
+                      {values.product_files[index]?.preview ? (
+                        <video
+                          src={values.product_files[index]?.preview}
+                          className="output-file"
+                          controls
+                        />
+                      ) : (
+                        <img
+                          src="../../admin-img/user.jpg"
+                          alt=""
+                          className="output-file"
+                        />
+                      )}
+                      <input
+                        type="file"
+                        id={`preview-video-${index}`}
+                        name={`product_files_${index}`}
+                        onChange={handleVideo}
+                        className="d-none"
+                        accept="video/*"
+                      />
+                      <div className="fees-input mt-3 width-title" >
+                        <input
+                          type='text'
+                          onChange={(e) => handleTitleChange(e, index)}
+                          name={`product_file_title_${index}`}
+                          placeholder="Enter Title"
+                          className="video-title-input"
+                          value={values.product_files[index]?.title || ""}
+                        />
+                      </div>
+                      <label className="choose-file-btn" htmlFor={`preview-video-${index}`}>
+                        <img src="../../admin-img/add.svg" alt="Upload Video" />
+                      </label>
+                      <Button className="delete-preview-img" onClick={() => handleDeleteVideo(index)}>
+                        <img src="../../admin-img/profile/delete.svg" alt="Delete Video" width="15px" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </Col>
+
+          </Row>
+        </div>
         <div className="px-3 px-sm-4 pb-5 pb-sm-4 mt-3 mt-sm-4 border-green-bottom">
           <Row className='mb-5'>
             <label className=''>Description</label>
@@ -575,239 +958,265 @@ const EditProduct = () => {
               onChange={handleEditorChange}
               config={editorConfiguration}
             />
+            <Col lg={12} md={12} sm={12}>
+              <div className="fees-input mt-3 mb-4">
+                <label>Description Videos</label>
+                <Row>
+                  <input
+                    type="file"
+                    style={{ width: "24%", position: 'relative', right: "-12px" }}
+                    name="description_video"
+                    accept="video/*"
+                    onChange={handledescriptionVideo}
+                    multiple
+                  />
+                </Row>
+              </div>
+              {values.description_video.length > 0 && (
+                <div>
+                  Selected Videos:
+                  <ul style={{display:'flex',gap:'48px'}}>
+                    {values.description_video.map((file, index) => (
+                      <li key={index} className="video-item" style={{marginLeft:'-30px',marginTop:'20px'}}>
+                        <video controls className="video-preview" style={{width:'100px',height:'100px',borderRadius:'10px'}}>
+                          <source src={Url+file.file_name} type="video/mp4" />
+                      </video>
+                        <Button
+                          className="sel-delete-preview-img"
+                          onClick={() => handleDeleteDesVideo(index)}
+                        >
+                          <img src="../../admin-img/profile/delete.svg" alt="" width="15px" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+            </Col>
+
+            <Col lg={12} md={12} sm={12}>
+              <div className="select-img-input mt-3">
+                <label>Description Image</label>
+                <div className="d-flex align-items-center gap-5 flex-wrap mt-4">
+                  {Array(5).fill(null).map((_, index) => (
+                    <div key={index} className="select-img-output">
+                      <img
+                        src={values.description_images[index]?.preview || "../../admin-img/user.jpg"} // Provide a default image path
+                        alt=""
+                        className="output-file"
+                      />
+                      <input
+                        type="file"
+                        id={`preview-desc-img-${index}`}
+                        name={`description_image_${index}`} // Naming convention
+                        onChange={handleDescriptionPhoto}
+                        className="d-none"
+                        accept="image/*"
+                      />
+                      <label className="choose-file-btn" htmlFor={`preview-desc-img-${index}`}>
+                        <img src="../../admin-img/add.svg" alt="" />
+                      </label>
+                      <Button
+                        className="delete-preview-img"
+                        onClick={() => handleDesDeleteImage(index)}
+                      >
+                        <img
+                          src="../../admin-img/profile/delete.svg"
+                          alt=""
+                          width="15px"
+                        />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Col>
+
           </Row>
-          </div>
-          <div className="px-3 px-sm-4 pb-3 pb-sm-4 mt-3 mt-sm-4 border-green-bottom">
-          {/* <div className=""> */}
-            <div className="size-chart" style={{ position: 'relative', top: '10px', border: 'none !important' }}>
-              <br />
-              <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Inch</label>
-              <Row className="align-items-end">
-                <Col lg={4} md={12} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Title</label>
-                    <input
-                      type="text"
-                      name="size_chartInInch.title"
-                      onChange={handleChange}
-                      placeholder="Enter Title"
-                      value={values.size_chartInInch.title}
-                    />
-                    <div className="errorAdmin">{errors?.size_chartInInch?.title}</div>
-                  </div>
-                </Col>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Description</label>
-                    <input
-                      type="text"
-                      name="size_chartInInch.description"
-                      value={values.size_chartInInch.description}
-                      onChange={handleChange}
-                      placeholder="Enter Description"
-                    />
-                    <div className="errorAdmin">{errors?.size_chartInInch?.description}</div>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Row Name</label>
+
+        </div>
+        <div className="px-3 px-sm-4 pb-5 border-green-bottom">
+          <div className="size-chart" style={{ position: 'relative', top: '32px', border: 'none !important' }}>
+            <br />
+            <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Inch</label>
+
+            <Row>
+              <Col lg={4} md={6} sm={12}>
+                <div className="fees-input mt-3">
+                  <label>Title</label>
+                  <div className='d-flex align-items-center gap-2'>
                     <input
                       type="text"
                       name="newRowName"
                       value={newRowName}
                       onChange={(e) => setNewRowName(e.target.value)}
-                      placeholder="Enter Row Name"
+                      placeholder="Enter Title Name"
                     />
-                    <button
+                    <Button
                       className="add-items"
-                      style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
+                      // style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
                       onClick={addRow}
                     >
                       <img src="../../admin-img/add.svg" alt="Add Row" />
-                    </button>
+                    </Button>
                   </div>
+                </div>
+              </Col>
+            </Row>
+
+            {rows.map((row, index) => (
+              <Row key={index} className='mt-3'>
+                <Col className="d-flex align-items-center list-data" lg={4} md={6} sm={12}>
+                  <p>{row.name}</p>
+                  <Button onClick={() => deleteRow(row.name)} className="delete-preview-img">
+                    <img src="../../admin-img/remove.svg" style={{ width: '18px' }} />
+                  </Button>
+                  <Button
+                    onClick={() => setShowColumnInputs({ ...showColumnInputs, [row.name]: !showColumnInputs[row.name] })}
+                    className="add-items"
+                    style={{ marginLeft: '10px' }}
+                  >
+                    {showColumnInputs[row.name] ? <img src="../../admin-img/remove.svg" style={{ width: '18px' }} /> : <img src="../../admin-img/add.svg" />}
+                  </Button>
                 </Col>
-              </Row>
-              <Row style={{ position: 'relative', bottom: '24px' }}>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>RowList</label>
-                    <select
-                      name="rowlist"
-                      className="add-product-selector"
-                      onChange={(e) => setSelectedRow(e.target.value)}
-                    >
-                      <option value=''>Select Row</option>
-                      {rows.map(row => (
-                        <option key={row.name} value={row.name}>{row.name}</option>
-                      ))}
-                    </select>
-                    <div className="errorAdmin">{errors?.rowlist}</div>
-                  </div>
-                </Col>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Column Name</label>
-                    <input
-                      type="text"
-                      name="columnName"
-                      placeholder="Type Column Name"
-                      value={columnName}
-                      onChange={(e) => setColumnName(e.target.value)}
-                    />
-                    <button
-                      className="add-items"
-                      onClick={addColumn}
-                      style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
-                    >
-                      <img src="../../admin-img/add.svg" alt="Add Column" />
-                    </button>
-                  </div>
-                </Col>
-              </Row>
-              <table>
-                <tbody className="d-flex">
-                  {rows.map((item, i) => (
-                    <div key={i}>
-                      <tr>
-                        <td className="sizechart-heading">
-                          {item.name}
-                          <Button onClick={() => deleteRow(item.name)} className="delete-preview-img">
-                            <img src={delete_product} className="user-review-icon" alt="" />
+
+                {showColumnInputs[row.name] && (
+                  <Row className='mt-2'>
+                    <Col lg={4} md={6} sm={12} className='pe-1'>
+                      <div className="fees-input">
+                        <label>Value</label>
+                        <div className='d-flex align-items-center gap-2'>
+                          <input
+                            type="text"
+                            name="columnName"
+                            placeholder="Type Value Name"
+                            value={columnName}
+                            onChange={(e) => setColumnName(e.target.value)}
+                          />
+                          <Button
+                            className="add-items"
+                            onClick={() => addColumn(row.name)}
+                          >
+                            <img src="../../admin-img/add.svg" alt="Add Column" />
                           </Button>
-                        </td>
-                      </tr>
-                      <tr className="d-flex flex-column">
-                        {item.columns.map((sub, j) => (
-                          <td key={j}>{sub}</td>
-                        ))}
-                      </tr>
-                    </div>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <br />
-          </div>
-          <div className="px-3 px-sm-4 pb-3 pb-sm-4 mt-3 mt-sm-4 border-green-bottom">
-          {/* <div className=""> */}
-            <div className="size-chart" style={{ position: 'relative', top: '10px', border: 'none !important' }}>
-              <br />
-              <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Cm</label>
-              <Row className="align-items-end">
-                <Col lg={4} md={12} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Title</label>
-                    <input
-                      type="text"
-                      name="size_chartIncm.title"
-                      onChange={handleChange}
-                      placeholder="Enter Title"
-                      value={values.size_chartIncm.title}
-                    />
-                    <div className="errorAdmin">{errors?.size_chartIncm?.title}</div>
-                  </div>
-                </Col>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Description</label>
-                    <input
-                      type="text"
-                      name="size_chartIncm.description"
-                      value={values.size_chartIncm.description}
-                      onChange={handleChange}
-                      placeholder="Enter Description"
-                    />
-                    <div className="errorAdmin">{errors?.size_chartIncm?.description}</div>
-                  </div>
-                </Col>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                )}
+                {row.columns.map((col, colIndex) => (
+                  <Row>
+                    <Col lg={4} md={6} sm={12} className='pe-1'>
+                      <div className="fees-input list-data mt-3" key={index}>
+                        <div className="d-flex align-items-center gap-3">
+                          <p key={colIndex}>{col}</p>
+                          <Button className="add-items" onClick={() => deleteColumn(index, colIndex)}>
+                            <img src="../../admin-img/remove.svg" style={{ width: '18px' }} />
+                          </Button>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                ))}
               </Row>
-              <Row>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Row Name</label>
+            ))}
+          </div>
+          <br />
+        </div>
+        <div className="px-3 px-sm-4 pb-5 border-green-bottom">
+          <div className="size-chart" style={{ position: 'relative', top: '32px', border: 'none !important' }}>
+            <br />
+            <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Cm</label>
+
+            <Row>
+              <Col lg={4} md={6} sm={12}>
+                <div className="fees-input mt-3">
+                  <label>Title</label>
+                  <div className='d-flex align-items-center gap-2'>
                     <input
                       type="text"
                       name="InnewRowName"
                       value={InnewRowName}
                       onChange={(e) => setInNewRowName(e.target.value)}
-                      placeholder="Enter Row Name"
+                      placeholder="Enter Title Name"
                     />
-                    <button
+                    <Button
                       className="add-items"
-                      style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
+                      // style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
                       onClick={addInRow}
                     >
                       <img src="../../admin-img/add.svg" alt="Add Row" />
-                    </button>
+                    </Button>
                   </div>
-                </Col>
-              </Row>
-              <Row style={{ position: 'relative', bottom: '24px' }}>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>RowList</label>
-                    <select
-                      name="rowlist"
-                      className="add-product-selector"
-                      onChange={(e) => setSelectedInRow(e.target.value)}
-                    >
-                      <option value=''>Select Row</option>
-                      {inrows.map(row => (
-                        <option key={row.name} value={row.name}>{row.name}</option>
-                      ))}
-                    </select>
-                    <div className="errorAdmin">{errors?.rowlist}</div>
-                  </div>
-                </Col>
-                <Col lg={4} md={6} sm={12}>
-                  <div className="fees-input mt-3">
-                    <label>Column Name</label>
-                    <input
-                      type="text"
-                      name="IncolumnName"
-                      placeholder="Type Column Name"
-                      value={IncolumnName}
-                      onChange={(e) => setInColumnName(e.target.value)}
-                    />
-                    <button
+                </div>
+              </Col>
+            </Row>
+
+            {inrows.map((row, index) => (
+              <div key={index}>
+                <Row key={index} className='mt-3'>
+                  <Col className="d-flex align-items-center list-data" lg={4} md={6} sm={12}>
+                    <p>{row.name}</p>
+                    <Button onClick={() => deleteInRow(row.name)} className="delete-preview-img">
+                      <img src="../../admin-img/remove.svg" style={{ width: '18px' }} />
+                    </Button>
+                    <Button
+                      onClick={() => setShowInColumnInputs({ ...showInColumnInputs, [row.name]: !showInColumnInputs[row.name] })}
                       className="add-items"
-                      onClick={addInColumn}
-                      style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
+                      style={{ marginLeft: '10px' }}
                     >
-                      <img src="../../admin-img/add.svg" alt="Add Column" />
-                    </button>
-                  </div>
-                </Col>
-              </Row>
-              <table>
-                <tbody className="d-flex">
-                  {inrows.map((item, i) => (
-                    <div key={i}>
-                      <tr>
-                        <td className="sizechart-heading">
-                          {item.name}
-                          <Button onClick={() => deleteInRow(item.name)} className="delete-preview-img">
-                            <img src={delete_product} className="user-review-icon" alt="" />
+                      {showInColumnInputs[row.name] ? <img src="../../admin-img/remove.svg" style={{ width: '18px' }} /> : <img src="../../admin-img/add.svg" />}
+                    </Button>
+                  </Col>
+                </Row>
+
+
+                {showInColumnInputs[row.name] && (
+                  <Row>
+                    <Col lg={4} md={6} sm={12}>
+                      <div className="fees-input mt-2">
+                        <label>Value</label>
+                        <div className='d-flex align-items-center gap-2'>
+                          <input
+                            type="text"
+                            name="IncolumnName"
+                            placeholder="Type Value Name"
+                            value={IncolumnName}
+                            onChange={(e) => setInColumnName(e.target.value)}
+                          />
+                          <Button
+                            className="add-items"
+                            onClick={() => addInColumn(row.name)}
+                          // style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
+                          >
+                            <img src="../../admin-img/add.svg" alt="Add Column" />
                           </Button>
-                        </td>
-                      </tr>
-                      <tr className="d-flex flex-column">
-                        {item.columns.map((sub, j) => (
-                          <td key={j}>{sub}</td>
-                        ))}
-                      </tr>
-                    </div>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <br />
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                )}
+                {row.columns.map((col, colIndex) => (
+                  <Row>
+                    <Col lg={4} md={6} sm={12}>
+                      <div className="fees-input list-data mt-3" key={index}>
+                        <div className="d-flex align-items-center gap-2">
+                          <p key={colIndex}>{col}</p>
+                          <Button className="add-items" onClick={() => deleteInColumn(index, colIndex)}>
+                            <img src="../../admin-img/remove.svg" style={{ width: '18px' }} />
+                          </Button>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                ))}
+              </div>
+            ))}
           </div>
-          <div className="px-3 px-sm-4 pb-3 pb-sm-4 mt-3 mt-sm-4">
+          <br />
+        </div>
+        <div className="px-3 px-sm-4 pb-3 pb-sm-4 mt-3 mt-sm-4">
           <div className="d-flex align-items-center justify-content-end flex-wrap mt-3 gap-3 mt-5">
             <Button className="fixed-fee" type="button" onClick={(e) => (setSubmitCount(1), handleSubmit(e))} >Edit</Button>
           </div>

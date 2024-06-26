@@ -7444,3 +7444,20 @@ table tr td:first-of-type {
     border-radius: 4px;
     padding: 8px 15px;
 }
+.sel-delete-preview-img
+{
+         position: relative;
+        top: -48px;
+        right: 14px;
+        background-color: #979797 !important;
+        border-radius: 50px;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    
+}
