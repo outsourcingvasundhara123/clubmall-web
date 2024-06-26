@@ -7095,7 +7095,6 @@ figure {
 
 .slider-video {
     height: 760px;
-    object-fit: fill !important;
 }
 
 .back-button {
@@ -7187,7 +7186,6 @@ figure {
 
     .slider-video {
         height: 450px !important;
-        object-fit: fill !important;
     }
 
 }

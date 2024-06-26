@@ -52,18 +52,19 @@ export const validate = (values) => {
     // Validate product_images field
     if (!values.product_images || values.product_images.filter(Boolean).length === 0) {
         errors.product_images = "You need to add at least  one image 1st";
-    } else {
-        const invalidImage = values.product_images.find(img => {
-            if (img && img.file) {
-                return !['image/jpeg', 'image/png','video/mp4'].includes(img.file.type);
-            }
-            return false;
-        });
-
-        if (invalidImage) {
-            errors.product_images = "Only jpeg ,mp4 or png videos/images are allowed";
-        }
     }
+    // } else {
+    //     const invalidImage = values.product_images.find(img => {
+    //         if (img && img.file) {
+    //             return !['image/jpeg', 'image/png','video/mp4'].includes(img.file.type);
+    //         }
+    //         return false;
+    //     });
+
+    //     if (invalidImage) {
+    //         errors.product_images = "Only jpeg ,mp4 or png videos/images are allowed";
+    //     }
+    // }
  
     // Validate product_category_keys field
     if (!values.group_price) {

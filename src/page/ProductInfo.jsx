@@ -428,7 +428,8 @@ const ProductInfo = () => {
 
     const setProduct_QtyActives = (qty) => {
         setProduct_QtyActive(qty);
-        setProductColorActive("Multi Color");
+        let tempColor = uniqueColors(Product?.productList?.sku_details)
+        setProductColorActive(tempColor[0].attrs[0]?.color);
     };
 
     const getProductReview = async () => {
@@ -1360,13 +1361,13 @@ const ProductInfo = () => {
                                                             <div className='d-flex gap-2 pb-0 align-items-center'>
                                                                 <video
                                                                     className='product-video bottom-product-video video-design' ref={videoRef}
-                                                                    autoPlay
-                                                                    muted
+                                                                    controls
                                                                     loop
                                                                     playsInline
-
-                                                                    onClick={(event) => handlePlay(event)}
+                                                                    volume={0.5}
+                                                                                                                                   
                                                                     style={{ height: '422px !important', }}
+                                                                    poster={url + video.thumbnail}
 
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
@@ -1517,10 +1518,11 @@ const ProductInfo = () => {
                                                                             ) : (
                                                                                 <video ref={videoRef}
                                                                                     className='product-video'
-                                                                                    autoPlay
-                                                                                    muted
+                                                                                    controls
                                                                                     loop
                                                                                     playsInline
+                                                                                    volume={0.5}
+                                                                                    poster={url + r.thumbnail}
                                                                                     onClick={(event) => handlePlay(event)}
                                                                                 >
                                                                                     <source src={r.file_name} type="video/mp4" />

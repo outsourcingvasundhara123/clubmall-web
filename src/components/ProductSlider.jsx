@@ -42,13 +42,22 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
     const imageUrl = item.original;
     const thumUrl=item.thumbnail
     return item.type === 'video' ? (
-      <video ref={videoRef} autoPlay loop playsInline width="100%" className='slider-video'  onClick={(event) => handlePlay(event)}>
+      <video ref={videoRef} controls loop playsInline poster={thumUrl} volume={0.5} width="100%" className='slider-video'>
         <source src={item.original} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     ) : (
       <img src={thumUrl} className='image-gallery-image' alt="" />
     );
+  };
+
+  const handleSlide = (currentIndex) => {
+    if (videoRef.current && data[currentIndex-1]?.type === 'video') {
+      videoRef.current.pause();
+    }
+    else if (videoRef.current && data[currentIndex+1]?.type === 'video') {
+      videoRef.current.pause();
+    }
   };
   
   const renderThumbInner = (item) => {
@@ -68,6 +77,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
             thumbnailPosition={window.innerWidth < 668 ? "bottom" : "left"}
             showFullscreenButton={false}
             showPlayButton={false}
+            onSlide={handleSlide}
           />
         )}
       </div>
