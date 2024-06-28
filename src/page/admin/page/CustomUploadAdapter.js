@@ -10,7 +10,7 @@ class CustomUploadAdapter {
             // Allowed image types
            // Extend allowed types to include videos
            const allowedTypes = [
-            'image/jpeg', 'image/jpg', 'image/png', // Images
+            'image/jpeg', 'image/jpg', 'image/png','image/webp', // Images
             'video/mp4', 'video/quicktime', 'video/webm' // Videos
         ];
             // Check if the file type is allowed

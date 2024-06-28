@@ -1337,3 +1337,10 @@ table tbody td {
 {
 border: 1px solid;
 }
+
+
+@media only screen and (max-width: 1024px) and (min-width: 768px) {
+  .gap-md-4 {
+      gap: 2rem !important;
+  }
+}

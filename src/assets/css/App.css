@@ -6729,9 +6729,10 @@ video::-webkit-media-controls-mute-button {
 }
 
 /* CSS */
-.cm-in-buttons{
+.cm-in-buttons {
     border: 1px solid #000;
 }
+
 .size-chart-button {
     background-color: #fff;
     border: navajowhite;
@@ -7266,7 +7267,7 @@ figure {
         height: 300px !important;
     }
 
-    .swiper-initialized.swiper-horizontal.mySwiper{
+    .swiper-initialized.swiper-horizontal.mySwiper {
         width: 440px;
         margin-left: 0px;
     }
@@ -7396,17 +7397,19 @@ table tr th:first-of-type {
     position: sticky;
     left: 0px;
 }
+
 table tr td:first-of-type {
     position: sticky;
     left: 0px;
 }
 
-.size-chart-tbody th{
+.size-chart-tbody th {
     font-size: 14px;
     font-weight: 400;
     padding: 10px 20px;
     text-wrap: nowrap;
 }
+
 .fullscreen-modal {
     position: fixed;
     top: 0;
@@ -7417,8 +7420,10 @@ table tr td:first-of-type {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Adjust as necessary */
-    cursor: pointer; /* To indicate it's clickable */
+    z-index: 1000;
+    /* Adjust as necessary */
+    cursor: pointer;
+    /* To indicate it's clickable */
 }
 
 .fullscreen-content {
@@ -7429,10 +7434,11 @@ table tr td:first-of-type {
 .fullscreen-image {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Adjust as per your design */
+    object-fit: contain;
+    /* Adjust as per your design */
 }
 
-.shipping-text{
+.shipping-text {
     font-weight: 700;
     font-size: 14px;
     color: #223263;
@@ -7444,20 +7450,20 @@ table tr td:first-of-type {
     border-radius: 4px;
     padding: 8px 15px;
 }
-.sel-delete-preview-img
-{
-         position: relative;
-        top: -48px;
-        right: 14px;
-        background-color: #979797 !important;
-        border-radius: 50px;
-        width: 30px;
-        height: 30px;
-        padding: 0;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    
+
+.sel-delete-preview-img {
+    position: relative;
+    top: -48px;
+    right: 14px;
+    background-color: #979797 !important;
+    border-radius: 50px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
 }
