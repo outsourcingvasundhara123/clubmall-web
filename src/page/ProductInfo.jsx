@@ -781,7 +781,35 @@ const ProductInfo = () => {
             });
         }
     };
+    
     const videoRef = useRef(null);
+
+    useEffect(() => {
+        // Function to handle video playback after a delay
+        const handleVideoPlayback = () => {
+            setTimeout(() => {
+                const videos = document.querySelectorAll('video.small-video');
+                videos.forEach(video => {
+                    video.play();
+                });
+            }, 3000); // Delay of 3 seconds
+        };
+
+        // Ensure the DOM is fully loaded
+        const handleLoad = () => {
+            handleVideoPlayback();
+        };
+
+        // Add event listener for load event
+        window.addEventListener('load', handleLoad);
+
+        // Cleanup event listener on component unmount
+        return () => {
+            window.removeEventListener('load', handleLoad);
+        };
+    }, []);
+
+
     const handlePlay = (event) => {
         const video = event.target;
         if (video) {
@@ -789,6 +817,45 @@ const ProductInfo = () => {
             enterFullscreen(video);
         }
     };
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement) {
+                const videos = document.querySelectorAll('video.small-video');
+                videos.forEach(video => {
+                    video.muted = true;
+                });
+            }
+        };
+    
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+    
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+    
+    const handlePlaySmall = (event) => {
+        const videoElement = event.currentTarget;
+
+        // Request full screen
+        if (videoElement.requestFullscreen) {
+            videoElement.requestFullscreen();
+        } else if (videoElement.mozRequestFullScreen) { // Firefox
+            videoElement.mozRequestFullScreen();
+        } else if (videoElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            videoElement.webkitRequestFullscreen();
+        } else if (videoElement.msRequestFullscreen) { // IE/Edge
+            videoElement.msRequestFullscreen();
+        }
+
+        // Set volume and unmute
+        videoElement.volume = 0.5;
+        videoElement.muted = false;
+        videoElement.controls = true;
+        videoElement.play();
+    };
+
 
     const enterFullscreen = (video) => {
         if (video && video.webkitEnterFullscreen) {
@@ -1094,12 +1161,13 @@ const ProductInfo = () => {
                                                         <div key={index} className='pe-2'>
                                                             <div className='d-flex gap-2 align-items-center'>
                                                                 <video ref={videoRef}
-                                                                    className='product-video'
+                                                                    className='product-video small-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
-                                                                    onClick={(event) => handlePlay(event)}
+                                                                    poster={url + video.thumbnail}
+                                                                    onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
@@ -1270,13 +1338,13 @@ const ProductInfo = () => {
                                                         <div key={index}>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <video ref={videoRef}
-                                                                    className='product-video'
+                                                                    className='product-video small-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
-
-                                                                    onClick={(event) => handlePlay(event)}
+                                                                    poster={url + video.thumbnail}
+                                                                    onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
