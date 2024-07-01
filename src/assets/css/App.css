@@ -4761,7 +4761,7 @@ input[type='radio'] {
 
 /* review start */
 .review .review-box h5 {
-    font-weight: 600;
+    font-weight: 500;
     font-size: 18px;
     color: #223263;
     overflow: hidden;
@@ -7466,4 +7466,12 @@ table tr td:first-of-type {
     justify-content: center;
     cursor: pointer;
 
+}
+
+.a-text-bold {
+    font-weight: 700 !important;
+}
+
+.text-black {
+    color: #000000;
 }

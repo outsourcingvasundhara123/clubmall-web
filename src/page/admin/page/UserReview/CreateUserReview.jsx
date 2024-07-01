@@ -29,6 +29,7 @@ function CreateUserReview() {
     content: "",
     rating: "",
     title: "",
+    heading:"",
     vendor_id: "",
     review_type: "",
     review_files: ""
@@ -105,6 +106,7 @@ function CreateUserReview() {
           formData.append('content', values.content);
           formData.append('rating', values.rating);
           formData.append('title', values.title);
+          formData.append('heading', values.heading);
 
           let isImage = false;
           let isVideo = false;
@@ -214,6 +216,20 @@ function CreateUserReview() {
                     type="text"
                     name="title"
                     value={values.title}
+                    onChange={handleChange}
+                    placeholder="Enter user name"
+                  />
+                </div>
+              </Col>
+            </Row>
+            <Row className="align-items-end">
+              <Col lg={3} md={6} sm={12}>
+                <div className="fees-input mt-3">
+                  <label>Title*</label>
+                  <input
+                    type="text"
+                    name="heading"
+                    value={values.heading}
                     onChange={handleChange}
                     placeholder="Enter user name"
                   />

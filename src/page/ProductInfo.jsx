@@ -37,7 +37,7 @@ import reporticon from '../assets/img/fluent-mdl2_message-1.png';
 import arrow_icon from '../assets/img/arrowhead-down-svgrepo-com.svg';
 import arrow_up from '../assets/img/up-arrow.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare,faCircleChevronUp,faCircleChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faShare, faCircleChevronUp, faCircleChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 
 const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch }) => {
@@ -102,7 +102,7 @@ const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows,
         </Modal>
     );
 };
-const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch,sizechartRef }) => {
+const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch, sizechartRef }) => {
     const [showModal, setShowModal] = useState(true); // State to control modal visibility
 
     const maxRows = Math.max(...rows.map(item => columns.filter(col => col.row_name === item.name).length));
@@ -212,6 +212,7 @@ const ProductInfo = () => {
         content: "",
         rating: "",
         title: name,
+        heading: "",
         vendor_id: "",
         review_type: "",
         review_files: ""
@@ -290,7 +291,7 @@ const ProductInfo = () => {
         if (sizechartRef.current) {
             window.scrollTo({
                 behavior: 'smooth',
-                top: sizechartRef.current.offsetTop - 100 
+                top: sizechartRef.current.offsetTop - 100
             });
         }
         setShowSizeChartRes(prevState => !prevState);
@@ -299,7 +300,7 @@ const ProductInfo = () => {
         if (showSizeChartRes && sizechartRef.current) {
             window.scrollTo({
                 behavior: 'smooth',
-                top: sizechartRef.current.offsetTop - 100 
+                top: sizechartRef.current.offsetTop - 100
             });
         }
     }, [showSizeChartRes]);
@@ -651,6 +652,8 @@ const ProductInfo = () => {
                     formData.append('content', values.content);
                     formData.append('rating', values.rating);
                     formData.append('title', values.title);
+                    formData.append('heading', values.heading);
+
 
                     let isImage = false;
                     let isVideo = false;
@@ -735,7 +738,7 @@ const ProductInfo = () => {
 
     const [isFullScreen, setIsFullScreen] = useState(false);
 
-      const handleFullScreen = (event) => {
+    const handleFullScreen = (event) => {
         const element = event.target;
 
         if (!isFullScreen) {
@@ -760,7 +763,7 @@ const ProductInfo = () => {
 
         setIsFullScreen(!isFullScreen);
     };
-    
+
     const individualPrice = Product?.productList?.individual_price;
     const competitorsPrice = Product?.productList?.competitors_price;
     const calculateDiscountPercentage = (individualPrice, competitorsPrice) => {
@@ -781,7 +784,7 @@ const ProductInfo = () => {
             });
         }
     };
-    
+
     const videoRef = useRef(null);
 
     useEffect(() => {
@@ -827,14 +830,14 @@ const ProductInfo = () => {
                 });
             }
         };
-    
+
         document.addEventListener('fullscreenchange', handleFullscreenChange);
-    
+
         return () => {
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
         };
     }, []);
-    
+
     const handlePlaySmall = (event) => {
         const videoElement = event.currentTarget;
 
@@ -864,7 +867,7 @@ const ProductInfo = () => {
     };
     const sliderRef = useRef(null);
     const sizechartRef = useRef(null);
- 
+
     const [fullscreenImage, setFullscreenImage] = useState(null);
 
     const handleImageClick = (imageSrc) => {
@@ -914,17 +917,17 @@ const ProductInfo = () => {
                             <div className='container-cos'>
                                 <div className='d-md-none'>
                                     <div className='shipping-def d-flex align-items-center justify-content-end mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
-                                            <div className='d-flex justify-content-end align-items-center flex-wrap gap-2 gap-md-4'>
-                                                <div className='rate d-flex align-items-center gap-2'>
-                                                    <span className='cos-title'>{Product?.productList?.rating}</span>
-                                                    <div className='d-flex align-items-center gap-2'>
-                                                        {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
-                                                            <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
-                                                        )}
-                                                        <p className='mb-0' style={{color:'#007185',}}>{Product?.productList?.rating_count}</p>
-                                                    </div>
+                                        <div className='d-flex justify-content-end align-items-center flex-wrap gap-2 gap-md-4'>
+                                            <div className='rate d-flex align-items-center gap-2'>
+                                                <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
+                                                        <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                    )}
+                                                    <p className='mb-0' style={{ color: '#007185', }}>{Product?.productList?.rating_count}</p>
                                                 </div>
                                             </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1023,7 +1026,7 @@ const ProductInfo = () => {
                                                     }}
                                                     pagination={{
                                                         dynamicBullets: true,
-                                                      }}
+                                                    }}
                                                     loop={true}
                                                     breakpoints={{
                                                         0: {
@@ -1151,7 +1154,7 @@ const ProductInfo = () => {
                                             </div>
                                             <div className='d-md-none mt-2 mb-3'>
                                                 <p onClick={handleReturnPolicyClick} className='policy-lab d-flex justify-content-between align-items-center'>
-                                                    Return Policy {showreturnpolicy ?  <FontAwesomeIcon icon={faCircleChevronUp} style={{width:'20px'}}/> :  <FontAwesomeIcon icon={faCircleChevronDown} style={{width:'20px'}} />}
+                                                    Return Policy {showreturnpolicy ? <FontAwesomeIcon icon={faCircleChevronUp} style={{ width: '20px' }} /> : <FontAwesomeIcon icon={faCircleChevronDown} style={{ width: '20px' }} />}
                                                 </p>
                                                 {showreturnpolicy && <ReturnPolicy />}
                                             </div>
@@ -1207,7 +1210,7 @@ const ProductInfo = () => {
 
                                             <div className='d-none d-md-block mt-2'>
                                                 <p onClick={handleReturnPolicyClick} className='policy-lab'>
-                                                    Return policy {showreturnpolicy ? <FontAwesomeIcon icon={faCircleChevronUp} style={{width:'20px'}}/> : <FontAwesomeIcon icon={faCircleChevronDown} style={{width:'20px'}}/>}
+                                                    Return policy {showreturnpolicy ? <FontAwesomeIcon icon={faCircleChevronUp} style={{ width: '20px' }} /> : <FontAwesomeIcon icon={faCircleChevronDown} style={{ width: '20px' }} />}
                                                 </p>
                                                 {showreturnpolicy && <ReturnPolicy />}
                                             </div>
@@ -1272,9 +1275,9 @@ const ProductInfo = () => {
                                                 ) : (
                                                     <></>
                                                 )}
-                                                
+
                                             </div>
-                                            
+
                                             <div className='mt-3'>
                                                 {(Product?.productList?.size_chartInInch.title !== "" ||
                                                     Product?.productList?.size_chartIncm.title !== "") &&
@@ -1317,7 +1320,7 @@ const ProductInfo = () => {
                                                     </div>
                                                 </ul>
                                             </div>
-                                            
+
                                             <div className='shipping-def description mt-2'>
                                                 <h5 className='info-title mt-2'>Description</h5>
                                                 <div className='productdetail'
@@ -1359,7 +1362,7 @@ const ProductInfo = () => {
 
                                             </div>
 
-                                           
+
 
                                             <div className='shipping-def description'>
                                                 <h5 className='info-title mt-3 mb-2'>Product Details</h5>
@@ -1433,7 +1436,7 @@ const ProductInfo = () => {
                                                                     loop
                                                                     playsInline
                                                                     volume={0.5}
-                                                                                                                                   
+
                                                                     style={{ height: '422px !important', }}
                                                                     poster={url + video.thumbnail}
 
@@ -1565,33 +1568,43 @@ const ProductInfo = () => {
                                                         <div className='review-items-def w-100 d-flex align-items-start justify-content-between pb-4'>
                                                             <div className='review-text'>
                                                                 <div className='d-flex align-items-center gap-2 mb-3'>
-                                                                <div className="fullscreen-container">
-                                    <img
-                                        alt='profile'
-                                        className='myprofile'
-                                        width="34px"
-                                        height="34px"
-                                        style={{ borderRadius: "50%", objectFit: "cover", cursor: "pointer" }}
-                                        src={defaultProfile}
-                                         // Handle click for fullscreen
-                                    />
-                                </div>
+                                                                    <div className="fullscreen-container">
+                                                                        <img
+                                                                            alt='profile'
+                                                                            className='myprofile'
+                                                                            width="34px"
+                                                                            height="34px"
+                                                                            style={{ borderRadius: "50%", objectFit: "cover", cursor: "pointer" }}
+                                                                            src={defaultProfile}
+                                                                        // Handle click for fullscreen
+                                                                        />
+                                                                    </div>
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
+                                                                <div className='d-flex align-items-center gap-2'>
+                                                                    <div className='d-flex align-items-center gap-1'>
+                                                                        <Rating name="simple-controlled" value={e?.rating} readOnly />
+                                                                    </div>
+                                                                    <div>
+                                                                        <span className='date_pro_info my-0 a-text-bold text-black'>{e.heading}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <span className='date_pro_info my-0'>{`Reviewed  on  ${e.created_at.slice(0, 10)}`}</span>
+                                                                <span className='date_pro_info mt-0 d-block'>{e.content}</span>
                                                                 <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                     {e?.review_files?.map((r, i) => (
                                                                         <React.Fragment key={i}>
                                                                             {r.file_name && !r.file_name.includes("mp4") ? (
-                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)}  alt='' />
+                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
                                                                             ) : (
                                                                                 <video ref={videoRef}
                                                                                     className='product-video'
-                                                                                    controls
+                                                                                    autoPlay
                                                                                     loop
                                                                                     playsInline
                                                                                     volume={0.5}
                                                                                     poster={url + r.thumbnail}
-                                                                                    onClick={(event) => handlePlay(event)}
+                                                                                    onClick={(event) => handlePlaySmall(event)}
                                                                                 >
                                                                                     <source src={r.file_name} type="video/mp4" />
                                                                                     {/* Add more <source> elements for different video formats if necessary */}
@@ -1602,16 +1615,8 @@ const ProductInfo = () => {
                                                                         </React.Fragment>
                                                                     ))}
                                                                 </div>
-
-                                                                <span className='date_pro_info'>{e.content}</span>
-                                                                <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
-                                                                <div className='d-flex align-items-center gap-1'>
-                                                                    <Rating name="simple-controlled" value={e?.rating} readOnly />
-                                                                </div>
-
-
+                                                              
                                                             </div>
-
                                                         </div>
                                                     </div>
                                                 )
@@ -1622,7 +1627,10 @@ const ProductInfo = () => {
                                                 <div className="fullscreen-content d-flex align-items-start gap-1">
                                                     <img src={fullscreenImage} alt="fullscreen" className="fullscreen-image" />
                                                     <button className="close-button bg-transparent border-0 position-absolute top-0 end-0" onClick={handleCloseFullscreen}>
-                                                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
+                                                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                                        <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1788,6 +1796,10 @@ const ProductInfo = () => {
                                             <div className='login-input text-start'>
                                                 <label>You Name*</label>
                                                 <input type='text' name='title' value={values.title} onChange={handleChange} />
+                                            </div>
+                                            <div className='login-input text-start mt-3'>
+                                                <label>Title*</label>
+                                                <input type='text' name='heading' value={values.heading} onChange={handleChange} />
                                             </div>
                                             <div className='login-input text-start mt-3'>
                                                 <label>Comments*</label>
