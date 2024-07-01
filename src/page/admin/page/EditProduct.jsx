@@ -666,10 +666,9 @@ const EditProduct = () => {
     setValues((prevValues) => ({ ...prevValues, product_images: updatedImages, deleted_images: deletedImages }));
 };
 
-  const handleVideo = (e) => {
-    const index = parseInt(e.target.name.split('_')[2], 10);
+  const handleVideo = (e, index) => {
     const file = e.target.files[0];
-    const title = e.target.parentNode.querySelector('.video-title-input').value;
+    const title = values.product_files[index]?.title || "";
 
     if (file) {
       const reader = new FileReader();
@@ -693,7 +692,7 @@ const EditProduct = () => {
   };
   const handleDeleteVideo = (index) => {
     const updatedVideos = [...values.product_files];
-    updatedVideos[index] = { file: undefined, preview: "" };
+    updatedVideos[index] = { file: undefined, preview: "", title: "" };
     setValues((prevValues) => ({ ...prevValues, product_files: updatedVideos }));
   };
 
@@ -890,8 +889,8 @@ const EditProduct = () => {
                 <label>Upload Video</label>
                 <div className="row align-items-center mt-4 mb-4 g-4">
                   {Array(4).fill(null).map((_, index) => (
-                    <div className='col-12 col-md-6 col-lg-4 col-xl-3'>
-                      <div className="select-img-output" key={index}>
+                    <div className="col-12 col-md-6 col-lg-4 col-xl-3" key={index}>
+                      <div className="select-img-output">
                         {values.product_files[index]?.preview ? (
                           <video
                             src={values.product_files[index]?.preview}
@@ -909,7 +908,7 @@ const EditProduct = () => {
                           type="file"
                           id={`preview-video-${index}`}
                           name={`product_files_${index}`}
-                          onChange={handleVideo}
+                          onChange={(e) => handleVideo(e, index)}
                           className="d-none"
                           accept="video/*"
                         />
