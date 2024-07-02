@@ -114,7 +114,9 @@ const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, ro
         <div ref={sizechartRef} className="size-chart-modal-wrapper">
             {sizeChartDescription ? (
                 <>
-                    <div className='d-md-flex justify-content-end align-items-center pb-4' style={{ display: 'flex' }}>
+                <div className='d-md-flex justify-content-between align-items-center gap-3 pb-4'>
+                    <p className='d-md-flex justify-content-end align-items-center'>{sizeChartDescription}</p>
+                    <div className='d-md-flex justify-content-end align-items-center' style={{ display: 'flex' }}>
                         <div className="btn-group cm-in-buttons">
                             <Button
                                 onClick={() => setInInch(true)}
@@ -130,6 +132,7 @@ const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, ro
                             </Button>
                         </div>
                     </div>
+                </div>
                     <div className='overflow-auto w-100 scrollbar-custom'>
                         <Table striped bordered hover className='size-chart-modal'>
                             <tbody className='size-chart-tbody' style={{ overflowY: 'auto' }}>
@@ -827,6 +830,16 @@ const ProductInfo = () => {
                 const videos = document.querySelectorAll('video.small-video');
                 videos.forEach(video => {
                     video.muted = true;
+                    video.controls = false;
+                });
+            }
+            
+            if (!document.fullscreenElement) {
+                const videos = document.querySelectorAll('video.review-video');
+                videos.forEach(video => {
+                    video.muted = true;
+                    video.controls = false;
+                    video.pause();
                 });
             }
         };
@@ -861,9 +874,17 @@ const ProductInfo = () => {
 
 
     const enterFullscreen = (video) => {
-        if (video && video.webkitEnterFullscreen) {
-            video.webkitEnterFullscreen();
+        // Request full screen
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.mozRequestFullScreen) { // Firefox
+            video.mozRequestFullScreen();
+        } else if (video.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { // IE/Edge
+            video.msRequestFullscreen();
         }
+        
     };
     const sliderRef = useRef(null);
     const sizechartRef = useRef(null);
@@ -1598,9 +1619,7 @@ const ProductInfo = () => {
                                                                                 <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
                                                                             ) : (
                                                                                 <video ref={videoRef}
-                                                                                    className='product-video'
-                                                                                    autoPlay
-                                                                                    loop
+                                                                                    className='product-video review-video'
                                                                                     playsInline
                                                                                     volume={0.5}
                                                                                     poster={url + r.thumbnail}
