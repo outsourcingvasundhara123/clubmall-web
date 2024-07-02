@@ -7,10 +7,16 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
   const images = productList?.map((product) => {
     const isVideo = product.file_name.endsWith('.mp4'); // check if the file is a video
     const original = productImagePath + id + "/" + product?.file_name;
-    const thumbnail = product.thumbnail ? (productImagePath + id + "/" + product.thumbnail) : original;
+    const originalvideo = productImagePath +  product?.file_name;
+
+    const thumbnail = isVideo
+    ? (product.thumbnail ? (productImagePath + product.thumbnail) : original)
+    : (product.thumbnail ? (productImagePath + id + "/" + product.thumbnail) : original);
+
 
     return {
       original: original,
+      originalvideo: originalvideo,
       thumbnail: thumbnail,
       type: isVideo ? 'video' : 'image', // add type property
     };
@@ -39,11 +45,11 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
     }
   }, [activeImage, data]);
   const renderItem = (item) => {
-    const imageUrl = item.original;
+    const imageUrl = item.originalvideo;
     const thumUrl=item.thumbnail
     return item.type === 'video' ? (
-      <video ref={videoRef} controls loop playsInline poster={thumUrl} volume={0.5} width="100%" className='slider-video'>
-        <source src={item.original} type="video/mp4" />
+      <video ref={videoRef} controls loop playsInline poster={item.videothumbnail} volume={0.5} width="100%" className='slider-video'>
+        <source src={imageUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     ) : (

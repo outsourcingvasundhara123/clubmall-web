@@ -27,8 +27,8 @@ const AddProduct = () => {
     group_price: "",
     product_images: Array(10).fill(undefined),
     description_images: Array(5).fill(undefined),
-    size_chartInInch: { row_name: [], columns: [] },
-    size_chartIncm: { row_name: [], columns: [] },
+    size_chartInInch: { description: "", row_name: [], columns: [] },
+    size_chartIncm: { description: "", row_name: [], columns: [] },
     product_category_keys: {},
     product_id: "",
     tax: 0,
@@ -38,7 +38,7 @@ const AddProduct = () => {
     description: "",
     product_type: "",
     product_files: Array(4).fill({ file: undefined, preview: "", title: "" }),
-    description_video: "",
+    description_video: Array(4).fill({ file: undefined, preview: "" }),
     product_qty: []
   };
 
@@ -367,10 +367,14 @@ const AddProduct = () => {
       setValues((prevValues) => ({
         ...prevValues,
         size_chartInInch: {
-          ...prevValues.size_chartInInch,
-          [keys[1]]: value,
+            ...prevValues.size_chartInInch,
+            [keys[1]]: value,
         },
-      }));
+        size_chartIncm: {
+            ...prevValues.size_chartIncm,
+            [keys[1]]: value,
+        },
+    }));
     }
     else if (keys.length === 2 && keys[0] === 'size_chartIncm') {
       // Handle size_chart top-level fields
@@ -432,6 +436,24 @@ const AddProduct = () => {
     }
 
   };
+  const handledescriptionVideo = (e) => {
+    const index = parseInt(e.target.name.split('_')[2]); // Adjust based on your naming convention
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (upload) {
+        const updatedDescriptions = [...values.description_video];
+        updatedDescriptions[index] = {
+          file,
+          preview: upload.target.result
+        };
+        setValues({ ...values, description_video: updatedDescriptions });
+      };
+      reader.readAsDataURL(file);
+    }
+
+  };
 
   // const handleVideo = (e) => {
   //   const index = parseInt(e.target.name.split('_')[2], 10); // Extracts index from name like 'product_files_0'
@@ -471,7 +493,7 @@ const AddProduct = () => {
     if (titleInput) {
       title = titleInput.value;
     }
-  
+
     if (file) {
       const reader = new FileReader();
       reader.onload = function (upload) {
@@ -488,7 +510,7 @@ const AddProduct = () => {
     if (submitCount > 0) {
       const validationErrors = validate({ ...values, [e.target.name]: e.target.files[0] });
       setErrors(validationErrors);
-  
+
       if (Object.keys(validationErrors).length === 0) {
         delete errors[e.target.name];
       }
@@ -517,11 +539,7 @@ const AddProduct = () => {
   
 
 
-  const handledescriptionVideo = (e) => {
-    const files = e.target.files;
-    const fileNames = Array.from(files).map(file => file.name); // Extracting file names
-    setValues({ ...values, description_video: files, fileNames: fileNames }); // Setting file names in state
-  };
+
   const handleDeleteImage = (index) => {
     const updatedImages = [...values.product_images];
     updatedImages[index] = undefined; // Clear the image at the given index
@@ -531,6 +549,11 @@ const AddProduct = () => {
     const updatedImages = [...values.description_images];
     updatedImages[index] = undefined; // Clear the image at the given index
     setValues({ ...values, description_images: updatedImages });
+  };
+  const handleDeleteDescriptionVideo = (index) => {
+    const updatedImages = [...values.description_video];
+    updatedImages[index] = undefined; // Clear the image at the given index
+    setValues({ ...values, description_video: updatedImages });
   };
   const handleDeleteVideo = (index) => {
     const updatedVideos = [...values.product_files];
@@ -606,6 +629,11 @@ const AddProduct = () => {
       values.product_images.forEach((img, index) => {
         if (img && img.file) {
           formData.append(`product_images[${index}]`, img.file);
+        }
+      });
+      values.description_video.forEach((img, index) => {
+        if (img && img.file) {
+          formData.append(`description_video[${index}]`, img.file);
         }
       });
       values.description_images.forEach((img, index) => {
@@ -704,14 +732,6 @@ const AddProduct = () => {
           }
         }
       }
-
-      for (let i = 0; i < updatedValues.description_video.length; i++) {
-        formData.append("description_video", updatedValues.description_video[i]);
-        if (updatedValues.description_video[i].type.startsWith("video/")) {
-          isVideo = true;
-        }
-      }
-
       formData.append("product_category_keys", JSON.stringify(updatedValues.product_category_keys));
       formData.append("description", updatedValues.description);
       formData.append("total_order", updatedValues.total_order);
@@ -1047,57 +1067,57 @@ const AddProduct = () => {
 
             {/* <Col lg={12} md={12} sm={12} className='video-title'> */}
             <Col lg={12} md={12} sm={12}>
-  <div className="select-img-input mt-3">
-    <label>Upload Video</label>
-    <div className="row align-items-center mt-4 mb-4 g-4">
-      {Array(4).fill(null).map((_, index) => (
-        <div className='col-12 col-md-6 col-lg-4 col-xl-3' key={index}>
-          <div className="select-img-output">
-            {values.product_files[index]?.preview ? (
-              <video
-                src={values.product_files[index]?.preview}
-                className="output-file"
-                controls
-              />
-            ) : (
-              <img
-                src="../../admin-img/user.jpg"
-                alt=""
-                className="output-file"
-              />
-            )}
-            <input
-              type="file"
-              id={`preview-video-${index}`}
-              name={`product_files_${index}`}
-              onChange={(e) => handleVideo(e, index)}
-              className="d-none"
-              accept="video/*"
-            />
-            <label className="choose-file-btn" htmlFor={`preview-video-${index}`}>
-              <img src="../admin-img/add.svg" alt="Upload Video" />
-            </label>
-            <Button className="delete-preview-img" onClick={() => handleDeleteVideo(index)}>
-              <img src="../admin-img/profile/delete.svg" alt="Delete Video" width="15px" />
-            </Button>
-          </div>
-           
-          <div className="fees-input mt-3">
-            <input
-              type='text'
-              onChange={(e) => handleTitleChange(e, index)}
-              name={`product_file_title_${index}`}
-              placeholder="Enter Title"
-              className="video-title-input"
-              value={values.product_files[index]?.title || ""}
-            />
-          </div>
-        </div>
-      ))}
-    </div>
-    <div className='errorAdmin'>{errors?.product_files}</div>
-  </div>
-</Col>
+              <div className="select-img-input mt-3">
+                <label>Upload Video</label>
+                <div className="row align-items-center mt-4 mb-4 g-4">
+                  {Array(4).fill(null).map((_, index) => (
+                    <div className='col-12 col-md-6 col-lg-4 col-xl-3' key={index}>
+                      <div className="select-img-output">
+                        {values.product_files[index]?.preview ? (
+                          <video
+                            src={values.product_files[index]?.preview}
+                            className="output-file"
+                            controls
+                          />
+                        ) : (
+                          <img
+                            src="../../admin-img/user.jpg"
+                            alt=""
+                            className="output-file"
+                          />
+                        )}
+                        <input
+                          type="file"
+                          id={`preview-video-${index}`}
+                          name={`product_files_${index}`}
+                          onChange={(e) => handleVideo(e, index)}
+                          className="d-none"
+                          accept="video/*"
+                        />
+                        <label className="choose-file-btn" htmlFor={`preview-video-${index}`}>
+                          <img src="../admin-img/add.svg" alt="Upload Video" />
+                        </label>
+                        <Button className="delete-preview-img" onClick={() => handleDeleteVideo(index)}>
+                          <img src="../admin-img/profile/delete.svg" alt="Delete Video" width="15px" />
+                        </Button>
+                      </div>
+
+                      <div className="fees-input mt-3">
+                        <input
+                          type='text'
+                          onChange={(e) => handleTitleChange(e, index)}
+                          name={`product_file_title_${index}`}
+                          placeholder="Enter Title"
+                          className="video-title-input"
+                          value={values.product_files[index]?.title || ""}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className='errorAdmin'>{errors?.product_files}</div>
+              </div>
+            </Col>
 
 
 
@@ -1248,39 +1268,49 @@ const AddProduct = () => {
               </div>
             </Col>
             <Col lg={12} md={12} sm={12}>
-              <div className="fees-input mt-3 mb-4">
-                <label>Description Videos</label>
-                <Row>
-                <Col xs={11} md={7} lg={6} xl={4}>
-                  <input
-                    type="file"
-                    style={{ position: 'relative'}}
-                    name="description_video"
-                    accept="video/*"
-                    onChange={handledescriptionVideo}
-                    multiple
-                  />
-                </Col>
-                </Row>
-              </div>
-              {videoNames.length > 0 && (
-                <div>
-                  Selected Videos:
-                  <ul>
-                    {videoNames.map((fileName, index) => (
-                      <li key={index} className="video-item">
-                        <span>{fileName}</span>
-                        <Button
-                          className="delete-preview-img"
-                          onClick={() => handleDeleteVideo(index)}
-                        >
-                          <img src="../admin-img/profile/delete.svg" alt="" width="15px" />
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="select-img-input  mt-3">
+                <label>Description Video</label>
+                <div className="d-flex align-items-center gap-5 gap-md-4 flex-wrap mt-4">
+                  {Array(5).fill(null).map((_, index) => ( // Adjust the number based on your requirement
+                    <div key={index} className="select-img-output">
+                      {values.description_video[index]?.preview ? (
+                        <video
+                          src={values.description_video[index]?.preview}
+                          className="output-file"
+                          controls
+                        />
+                      ) : (
+                        <img
+                          src="../../admin-img/user.jpg"
+                          alt=""
+                          className="output-file"
+                        />
+                      )}
+                      <input
+                        type="file"
+                        id={`preview-desc-video-${index}`}
+                        name={`description_video_${index}`} // Naming convention
+                        onChange={handledescriptionVideo}
+                        className="d-none"
+                        accept="video/*"
+                      />
+                      <label className="choose-file-btn" htmlFor={`preview-desc-video-${index}`}>
+                        <img src="../admin-img/add.svg" alt="" />
+                      </label>
+                      <Button className="delete-preview-img"
+                        onClick={() => handleDeleteDescriptionVideo(index)}
+                      >
+                        <img
+                          src="../admin-img/profile/delete.svg"
+                          alt=""
+                          width="15px"
+                        />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              )}
+
+              </div>
             </Col>
             <Col lg={12} md={12} sm={12}>
               <div className="select-img-input  mt-3">
@@ -1322,7 +1352,22 @@ const AddProduct = () => {
           </Row>
         </div>
         <div className="px-3 px-sm-4 pb-5 border-green-bottom">
+        <Row>
+        <Col lg={4} md={6} sm={12}>
+                <div className="fees-input mt-3">
+                  <label>Size Chart Title</label>
+                  <input
+                    type="text"
+                    name="size_chartInInch.description"
+                    value={values.size_chartInInch.description}
+                    onChange={handleChange}
+                    placeholder="Enter Size Chart Title"
+                  />
+                </div>
+              </Col>
+            </Row>
           <div className="size-chart" style={{ position: 'relative', top: '32px', border: 'none !important' }}>
+         
             <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Inch</label>
 
             <Row>

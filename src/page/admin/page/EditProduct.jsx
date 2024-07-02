@@ -37,10 +37,10 @@ const EditProduct = () => {
     subcategory: "",
     description: "",
     content: "",
-    size_chartInInch: {},
-    size_chartIncm: {},
+    size_chartInInch: {description: ""},
+    size_chartIncm: {description: ""},
     product_files: Array(4).fill({ file: undefined, preview: "", title: "" }),
-    description_video: "",
+    description_video: Array(4).fill({ file: undefined, preview: "" }),
     product_images: Array(10).fill({ file: undefined, preview: "", type: "image" }),
     description_images: Array(5).fill({ file: undefined, preview: "" }),
 
@@ -54,6 +54,7 @@ const EditProduct = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [Url, setUrl] = useState("");
+  const [ImageUrl, setImageUrl] = useState("");
   const [states, setStates] = useState({});
   const player = useRef();
   const { id } = useParams();
@@ -239,6 +240,7 @@ const EditProduct = () => {
         const productData = productDetail.data.data.productList;
         const sizeChart = productData.size_chartInInch;
         const sizeChartInCM = productData.size_chartIncm;
+        setImageUrl(productDetail.data.data.productImagePath);
 
         const newRows = sizeChart.row_name.map(row => ({
           name: row.name,
@@ -250,9 +252,13 @@ const EditProduct = () => {
         }));
         const updatedProductImages = productData.product_images.map(file => ({
           file: file.file_name,
-          preview: `${Url}${product_id}/${file.file_name}`,
+          preview: file.file_name.endsWith('.mp4') 
+          ? `${productDetail.data.data.productImagePath}${file.file_name}`
+          : `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`,
           type: file.file_name.endsWith('.mp4') ? 'video' : 'image'
         }));
+       
+        
         setValues(prevValues => ({
           ...prevValues,
           name: productData.name,
@@ -263,10 +269,13 @@ const EditProduct = () => {
           description: productData.description,
           product_files: productData.product_files.map(file => ({
             file: file.file_name,
-            preview: `${Url}${file.file_name}`,
+            preview: `${productDetail.data.data.productImagePath}${file.file_name}`,
             title: file.title || "",
           })),
-          description_video: productData.description_video,
+          description_video: productData.description_video.map(file => ({
+            file: file.file_name,
+            preview: `${productDetail.data.data.productImagePath}${file.file_name}`,
+          })),
           content: productData.content == null
             ? `<!DOCTYPE html>
         <html lang="en">
@@ -286,7 +295,7 @@ const EditProduct = () => {
           size_chartIncm: sizeChartInCM,
           description_images: productData.description_images.map(img => ({
             file: img.file_name,
-            preview: `${Url}${product_id}/${img.file_name}`,
+            preview: `${productDetail.data.data.productImagePath}${product_id}/${img.file_name}`,
           })),
           product_images: updatedProductImages,
         }));
@@ -413,6 +422,11 @@ const EditProduct = () => {
                 formData.append(`product_images[${index}]`, img.file);
             }
         });
+        values.description_video.forEach((img, index) => {
+          if (img && img.file) {
+            formData.append(`description_video[${index}]`, img.file);
+          }
+        });
         values.description_images.forEach((img, index) => {
             if (img && img.file) {
                 formData.append(`description_images[${index}]`, img.file);
@@ -459,6 +473,7 @@ const EditProduct = () => {
       content: states.content,
       size_chartInInch: values.size_chartInInch,
       size_chartIncm: values.size_chartIncm,
+
     };
     const validationErrors = validate(updatedProductData);
     setErrors(validationErrors);
@@ -497,14 +512,6 @@ const EditProduct = () => {
             }
           }
         }
-
-        for (let i = 0; i < values.description_video.length; i++) {
-          formData.append("description_video", values.description_video[i]);
-          if (values.description_video[i].type.startsWith("video/")) {
-            isVideo = true;
-          }
-        }
-
         formData.append("product_category_keys", JSON.stringify(values.product_category_keys));
         formData.append("description", values.description);
         formData.append("total_order", values.total_order);
@@ -513,7 +520,7 @@ const EditProduct = () => {
         formData.append("competitors_price", values.competitors_price);
         formData.append("name", values.name);
         formData.append("product_id", values.product_id);
-        formData.append("tax", values.tax);
+        formData.append("tax", values.tax);   
         formData.append("content", states.content);
         formData.append("size_chartInInch", JSON.stringify(values.size_chartInInch));
         formData.append("size_chartIncm", JSON.stringify(values.size_chartIncm));
@@ -609,18 +616,6 @@ const EditProduct = () => {
     setValues(prevValues => ({ ...prevValues, product_files: updatedVideos }));
   };
 
-  const handledescriptionVideo = (e) => {
-    const files = Array.from(e.target.files);
-    setValues((prevValues) => ({
-      ...prevValues,
-      description_video: files
-    }));
-  };
-
-
-
-
-
   const handleDescriptionPhoto = (e) => {
     const index = parseInt(e.target.name.split('_')[2]);
     const file = e.target.files[0];
@@ -684,6 +679,22 @@ const EditProduct = () => {
       reader.readAsDataURL(file);
     }
   };
+  const handledescriptionVideo = (e) => {
+    const file = e.target.files[0];
+    const index = parseInt(e.target.name.split('_')[2]);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (upload) {
+        const updatedVideos = [...values.description_video];
+        updatedVideos[index] = {
+          file,
+          preview: upload.target.result,
+        };
+        setValues(prevValues => ({ ...prevValues, description_video: updatedVideos }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleDesDeleteImage = (index) => {
     const updatedImages = [...values.description_images];
@@ -695,12 +706,12 @@ const EditProduct = () => {
     updatedVideos[index] = { file: undefined, preview: "", title: "" };
     setValues((prevValues) => ({ ...prevValues, product_files: updatedVideos }));
   };
-
-  const handleDeleteDesVideo = (index) => {
-    const updatedVideos = [...values.description_video];
-    updatedVideos.splice(index, 1);
-    setValues((prevValues) => ({ ...prevValues, description_video: updatedVideos }));
+  const handleDeleteDescriptionVideo = (index) => {
+    const updatedImages = [...values.description_video];
+    updatedImages[index] = { file: undefined, preview: ""};// Clear the image at the given index
+    setValues((prevValues) => ({ ...prevValues, description_video: updatedImages }));
   };
+
   return (
     <Layout>
       <div className="border-green">
@@ -948,44 +959,50 @@ const EditProduct = () => {
               config={editorConfiguration}
             />
             <Col lg={12} md={12} sm={12}>
-              <div className="fees-input mt-3 mb-4">
-                <label>Description Videos</label>
-                <Row>
-                  <Col xs={11} md={7} lg={6} xl={4}>
-                    <input
-                      type="file"
-                      style={{ position: 'relative', }}
-                      name="description_video"
-                      accept="video/*"
-                      onChange={handledescriptionVideo}
-                      multiple
-                    />
-                  </Col>
-                </Row>
-              </div>
-              {values.description_video.length > 0 && (
-                <div>
-                  Selected Videos:
-                  <ul style={{display:'flex',gap:'48px'}}>
-                    {values.description_video.map((file, index) => (
-                      <li key={index} className="video-item" style={{marginLeft:'-30px',marginTop:'20px'}}>
-                        <video controls className="video-preview" style={{width:'100px',height:'100px',borderRadius:'10px'}}>
-                          <source src={Url+file.file_name} type="video/mp4" />
-                      </video>
-                        <Button
-                          className="sel-delete-preview-img"
-                          onClick={() => handleDeleteDesVideo(index)}
-                        >
-                          <img src="../../admin-img/profile/delete.svg" alt="" width="15px" />
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
+              <div className="select-img-input  mt-3">
+                <label>Description Video</label>
+                <div className="d-flex align-items-center gap-5 gap-md-4 flex-wrap mt-4">
+                  {Array(5).fill(null).map((_, index) => ( // Adjust the number based on your requirement
+                    <div key={index} className="select-img-output">
+                      {values.description_video[index]?.preview ? (
+                        <video
+                          src={values.description_video[index]?.preview}
+                          className="output-file"
+                          controls
+                        />
+                      ) : (
+                        <img
+                          src="../../admin-img/user.jpg"
+                          alt=""
+                          className="output-file"
+                        />
+                      )}
+                      <input
+                        type="file"
+                        id={`preview-desc-video-${index}`}
+                        name={`description_video_${index}`} // Naming convention
+                        onChange={handledescriptionVideo}
+                        className="d-none"
+                        accept="video/*"
+                      />
+                      <label className="choose-file-btn" htmlFor={`preview-desc-video-${index}`}>
+                        <img src="../../admin-img/add.svg" alt="" />
+                      </label>
+                      <Button className="delete-preview-img"
+                        onClick={() => handleDeleteDescriptionVideo(index)}
+                      >
+                        <img
+                          src="../../admin-img/profile/delete.svg"
+                          alt=""
+                          width="15px"
+                        />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              )}
 
+              </div>
             </Col>
-
             <Col lg={12} md={12} sm={12}>
               <div className="select-img-input mt-3">
                 <label>Description Image</label>
@@ -1028,7 +1045,24 @@ const EditProduct = () => {
 
         </div>
         <div className="px-3 px-sm-4 pb-5 border-green-bottom">
-          <div className="size-chart" style={{ position: 'relative', top: '32px', border: 'none !important' }}>
+        <Row>
+              <Col xl={5} lg={6} md={8} sm={12}>
+                <div className="fees-input mt-3">
+                  <label>Size Chart Title</label>
+                  <div className='d-flex align-items-center gap-2'>
+                    <input
+                      type="text"
+                      name="size_chartInInch.description"
+                      value={values.size_chartInInch.description}
+                      onChange={handleChange}
+                      placeholder="Enter SizeChart Title Name"
+                    />
+                  </div>
+                </div>
+              </Col>
+            </Row>
+
+          <div className="size-chart" style={{ position: 'relative', border: 'none !important' }}>
             <br />
             <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Inch</label>
 
