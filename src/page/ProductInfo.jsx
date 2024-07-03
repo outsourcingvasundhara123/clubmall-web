@@ -826,7 +826,7 @@ const ProductInfo = () => {
 
     useEffect(() => {
         const handleFullscreenChange = () => {
-            if (!document.fullscreenElement) {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 const videos = document.querySelectorAll('video.small-video');
                 videos.forEach(video => {
                     video.muted = true;
@@ -834,7 +834,7 @@ const ProductInfo = () => {
                 });
             }
             
-            if (!document.fullscreenElement) {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 const videos = document.querySelectorAll('video.review-video');
                 videos.forEach(video => {
                     video.muted = true;
@@ -845,9 +845,11 @@ const ProductInfo = () => {
         };
 
         document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
         return () => {
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
         };
     }, []);
 
@@ -1464,7 +1466,7 @@ const ProductInfo = () => {
                                                                     volume={0.5}
 
                                                                     style={{ height: '422px !important', }}
-                                                                    poster={url + product_id + "/" + video.thumbnail}
+                                                                    poster={url + video.thumbnail}
 
                                                                 >
                                                                     <source src={url + product_id + "/" + video.file_name} type="video/mp4" />
