@@ -7019,7 +7019,7 @@ video::-webkit-media-controls-mute-button {
 figure img {
     width: 100%;
     height: 100%;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
 }
 
 figure {
@@ -7224,13 +7224,14 @@ figure {
     } */
 
     .description-img-height {
-        height: 288px !important;
+        height: 100% !important;
         object-fit: cover;
     }
 
     figure img {
-        height: 288px !important;
-        object-fit: fill;
+        /* height: 288px !important; */
+        /* object-fit: fill; */
+        aspect-ratio: auto !important;
     }
 
     .size-chart-link-res {
@@ -7249,9 +7250,13 @@ figure {
 
 @media only screen and (max-width: 2560px) and (min-width: 768px) {
     figure img {
-        width: 440px !important;
-        height: 288px !important;
-        object-fit: fill;
+        /* width: 440px !important;
+        height: 288px !important; */
+        object-fit: contain;
+        aspect-ratio: 500 / 0 !important;
+    }
+    figure.image {
+        width: 500px;
     }
 
     .product-video {
@@ -7263,8 +7268,8 @@ figure {
     } */
 
     .description-img-height {
-        width: 440px !important;
-        height: 300px !important;
+        /* width: 440px !important; */
+        height: 100% !important;
     }
 
     .swiper-initialized.swiper-horizontal.mySwiper {

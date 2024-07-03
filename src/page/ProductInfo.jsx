@@ -1446,7 +1446,7 @@ const ProductInfo = () => {
                                                     }}
                                                     navigation={true}
                                                     modules={[Pagination, Navigation]}
-                                                    className="mySwiper"
+                                                    className="mySwiper mb-2"
                                                 >
                                                     {Product?.productList?.description_video?.map((video, index) => (
                                                         <SwiperSlide key={index}>
