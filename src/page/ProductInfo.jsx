@@ -853,7 +853,8 @@ const ProductInfo = () => {
 
     const handlePlaySmall = (event) => {
         const videoElement = event.currentTarget;
-
+        
+        
         // Request full screen
         if (videoElement.requestFullscreen) {
             videoElement.requestFullscreen();
@@ -863,6 +864,10 @@ const ProductInfo = () => {
             videoElement.webkitRequestFullscreen();
         } else if (videoElement.msRequestFullscreen) { // IE/Edge
             videoElement.msRequestFullscreen();
+        } else if (videoElement.webkitEnterFullscreen) {
+            videoElement.webkitEnterFullscreen();
+        } else if (videoElement.webkitRequestFullscreen) {
+            videoElement.webkitRequestFullscreen(); // For newer iOS versions
         }
 
         // Set volume and unmute
@@ -1459,10 +1464,10 @@ const ProductInfo = () => {
                                                                     volume={0.5}
 
                                                                     style={{ height: '422px !important', }}
-                                                                    poster={url + video.thumbnail}
+                                                                    poster={url + product_id + "/" + video.thumbnail}
 
                                                                 >
-                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                             </div>

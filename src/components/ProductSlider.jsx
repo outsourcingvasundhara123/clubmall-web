@@ -11,10 +11,10 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
     const isVideo = videoExtensions.includes(fileExtension.toLowerCase());
   
     const original = productImagePath + id + "/" + product?.file_name;
-    const originalvideo = productImagePath + product?.file_name;
+    const originalvideo = productImagePath + id + "/" + product?.file_name;
   
     const thumbnail = isVideo
-      ? (product.thumbnail ? (productImagePath + product.thumbnail) : original)
+      ? (product.thumbnail ? (productImagePath + id + "/" + product.thumbnail) : original)
       : (product.thumbnail ? (productImagePath + id + "/" + product.thumbnail) : original);
   
     return {
