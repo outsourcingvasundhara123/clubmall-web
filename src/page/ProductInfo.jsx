@@ -9,7 +9,7 @@ import {
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper";
+import { Pagination, Navigation, Autoplay } from "swiper";
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import ProCard from '../components/ProCard';
@@ -19,12 +19,12 @@ import { getServerURL } from '../helper/envConfig';
 import { PRODUCTDETAIL, ADDTOCART, PRODUCTList } from "../helper/endpoints";
 import SucessSnackBar from "../components/SnackBar";
 import ErrorSnackBar from "../components/SnackBar";
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { errorResponse, afterLogin } from '../helper/constants'
 import Loader from '../components/Loader';
 import { Is_Login } from '../helper/IsLogin'
 import { CartContext } from '../context/CartContext'
-import { Rating } from '@mui/material'
+import { Rating, Typography } from '@mui/material'
 import { handelCategorydata } from '../helper/constants'
 import { handelProductDetail } from '../helper/constants'
 import { useParams } from 'react-router-dom';
@@ -34,56 +34,136 @@ import { isMobile } from 'react-device-detect';
 import { createJsonLdSchema } from './productjson';
 import ProductGif from '../components/ProductGif'
 import reporticon from '../assets/img/fluent-mdl2_message-1.png';
+import arrow_icon from '../assets/img/arrowhead-down-svgrepo-com.svg';
+import arrow_up from '../assets/img/up-arrow.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShare, faCircleChevronUp, faCircleChevronDown } from '@fortawesome/free-solid-svg-icons';
 
 
+const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch }) => {
+    const [showModal, setShowModal] = useState(true); // State to control modal visibility
 
-const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, toggleSizeChartUnit, isInInch }) => {
     const maxRows = Math.max(...rows.map(item => columns.filter(col => col.row_name === item.name).length));
 
+    // Function to hide modal
+    const handleClose = () => {
+        setShowModal(false);
+        onHide();
+    };
+
     return (
-        <Modal show={true} onHide={onHide} size="lg" centered>
+        <Modal show={showModal} onHide={handleClose} size="lg" centered>
             <Modal.Header closeButton>
-                <Modal.Title className='amazone-text'>{sizeChartTitle}</Modal.Title>
-                
+                <Modal.Title>{sizeChartTitle}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                {sizeChartDescription ? (
-                    <>
-                        <p className='amazone-text'>{sizeChartDescription}</p>
-                        <Button onClick={toggleSizeChartUnit} className="size-chart-button" style={{position:'relative',bottom:'25px',left:'626px'}}>
-                            {isInInch ? 'Size Chart in Cm' : 'Size Chart in Inch'}
+            <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                <div className='d-md-flex justify-content-between align-items-center pb-4'>
+                    <div className="btn-group cm-in-buttons">
+                        <Button
+                            onClick={() => setInInch(true)}
+                            className={`size-chart-button ${isInInch ? 'active' : ''}`}
+                        >
+                            in
                         </Button>
-                        <br></br>
-                        <Table striped bordered hover className='size-chart-modal amazone-text'>
-                            <tbody className="d-flex amazone-text">
-                                {rows.map((item, i) => {
-                                    const rowData = columns.filter(col => col.row_name === item.name);
-                                    return (
-                                        <div key={i} className='w-100'>
-                                            <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
-                                                <td className="border-0 amazone-text">{item.name}</td>
-                                            </tr>
-                                            <tr className="d-flex flex-column">
-                                                {rowData.map((sub, j) => (
-                                                    <td key={j}>{sub.name}</td>
-                                                ))}
-                                                {[...Array(maxRows - rowData.length)].map((_, j) => (
-                                                    <td key={j} className='amazone-text'>-</td>
-                                                ))}
-                                            </tr>
-                                        </div>
-                                    );
-                                })}
-                            </tbody>
-                        </Table>
-                    </>
-                ) : (
-                    <p style={{ color: 'red', fontSize: '500' }}>Size chart not available</p>
-                )}
+                        <Button
+                            onClick={() => setInInch(false)}
+                            className={`size-chart-button ${isInInch ? '' : 'active'}`}
+                        >
+                            cm
+                        </Button>
+
+                    </div>
+                </div>
+                <div className='overflow-auto w-100 scrollbar-custom'>
+                    <Table striped bordered hover className='size-chart-modal'>
+                        <tbody className="d-flex">
+                            {rows.map((item, i) => {
+                                const rowData = columns.filter(col => col.row_name === item.name);
+                                return (
+                                    <div key={i} className='w-100'>
+                                        <tr className='d-flex flex-row justify-content-center' style={{ backgroundColor: "#f0f2f2" }}>
+                                            <td className="border-0">{item.name}</td>
+                                        </tr>
+                                        <tr className="d-flex flex-column">
+                                            {rowData.map((sub, j) => (
+                                                <td key={j}>{sub.name}</td>
+                                            ))}
+                                            {[...Array(maxRows - rowData.length)].map((_, j) => (
+                                                <td key={j} className='amazone-text'>-</td>
+                                            ))}
+                                        </tr>
+                                    </div>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </div>
             </Modal.Body>
         </Modal>
     );
 };
+const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch, sizechartRef }) => {
+    const [showModal, setShowModal] = useState(true); // State to control modal visibility
+
+    const maxRows = Math.max(...rows.map(item => columns.filter(col => col.row_name === item.name).length));
+    useEffect(() => {
+        setShowModal(true);
+    }, []);
+
+    return (
+        <div ref={sizechartRef} className="size-chart-modal-wrapper">
+            {sizeChartDescription ? (
+                <>
+                <div className='d-md-flex justify-content-between align-items-center gap-3 pb-4'>
+                    <p className='d-md-flex justify-content-end align-items-center'>{sizeChartDescription}</p>
+                    <div className='d-md-flex justify-content-end align-items-center' style={{ display: 'flex' }}>
+                        <div className="btn-group cm-in-buttons">
+                            <Button
+                                onClick={() => setInInch(true)}
+                                className={`size-chart-button ${isInInch ? 'active' : ''}`}
+                            >
+                                in
+                            </Button>
+                            <Button
+                                onClick={() => setInInch(false)}
+                                className={`size-chart-button ${isInInch ? '' : 'active'}`}
+                            >
+                                cm
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+                    <div className='overflow-auto w-100 scrollbar-custom'>
+                        <Table striped bordered hover className='size-chart-modal'>
+                            <tbody className='size-chart-tbody' style={{ overflowY: 'auto' }}>
+                                <tr>
+                                    {rows.map((item, i) => (
+                                        <th key={i}>{item.name}</th>
+                                    ))}
+                                </tr>
+                                {[...Array(maxRows)].map((_, rowIndex) => (
+                                    <tr key={rowIndex}>
+                                        {rows.map((item, colIndex) => {
+                                            const rowData = columns.filter(col => col.row_name === item.name);
+                                            return (
+                                                <td key={colIndex}>
+                                                    {rowData[rowIndex] ? rowData[rowIndex].name : '-'}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
+                </>
+            ) : (
+                <p className="size-chart-error">Size chart not available</p>
+            )}
+        </div>
+    );
+};
+
 
 const CustEmailModal = ({ onHide }) => {
     return (
@@ -115,6 +195,15 @@ const CustEmailModal = ({ onHide }) => {
         </Modal>
     );
 };
+const ReturnPolicy = ({ onHide }) => {
+    return (
+        <div className="return-policy-checkbox mb-2">
+            <label htmlFor="return_policy_checkbox" className='return-policy-label mb-2'>
+                If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
+            </label>
+        </div>
+    );
+};
 const ProductInfo = () => {
 
 
@@ -126,6 +215,7 @@ const ProductInfo = () => {
         content: "",
         rating: "",
         title: name,
+        heading: "",
         vendor_id: "",
         review_type: "",
         review_files: ""
@@ -189,14 +279,40 @@ const ProductInfo = () => {
     const [filters, setFilters] = useState(initialValues_2);
 
     const [showSizeChart, setShowSizeChart] = useState(false);
+    const [showSizeChartRes, setShowSizeChartRes] = useState(false);
+
     const [isInInch, setIsInInch] = useState(true);
     const [showcustemail, setShowCustEmail] = useState(false);
+    const [showreturnpolicy, setShowRetunPolicy] = useState(false);
+
+
 
     const handleSizeChartClick = () => {
         setShowSizeChart(true);
     };
+    const handleSizeChartResClick = () => {
+        if (sizechartRef.current) {
+            window.scrollTo({
+                behavior: 'smooth',
+                top: sizechartRef.current.offsetTop - 100
+            });
+        }
+        setShowSizeChartRes(prevState => !prevState);
+    };
+    useEffect(() => {
+        if (showSizeChartRes && sizechartRef.current) {
+            window.scrollTo({
+                behavior: 'smooth',
+                top: sizechartRef.current.offsetTop - 100
+            });
+        }
+    }, [showSizeChartRes]);
+
     const handleCustEmailClick = () => {
         setShowCustEmail(true);
+    };
+    const handleReturnPolicyClick = () => {
+        setShowRetunPolicy(!showreturnpolicy);
     };
     const handleSizeChartClose = () => {
         setShowSizeChart(false);
@@ -204,7 +320,12 @@ const ProductInfo = () => {
     const handleCustEmailClose = () => {
         setShowCustEmail(false);
     };
-    const toggleSizeChartUnit = () => setIsInInch(!isInInch);
+    const handleReturnPolicyClose = () => {
+        setShowRetunPolicy(false);
+    };
+    const toggleSizeChartUnit = (value) => {
+        setIsInInch(value);
+    };
 
     const handelreviewFilter = (e) => {
         setPage(1)
@@ -262,7 +383,7 @@ const ProductInfo = () => {
             player.current.play();
         }
     };
-    
+
     const stopAnimation = () => {
         setLoading(false);
     };
@@ -307,6 +428,12 @@ const ProductInfo = () => {
             console.log(error, "error");
             navigate("/");
         }
+    };
+
+    const setProduct_QtyActives = (qty) => {
+        setProduct_QtyActive(qty);
+        let tempColor = uniqueColors(Product?.productList?.sku_details)
+        setProductColorActive(tempColor[0].attrs[0]?.color);
     };
 
     const getProductReview = async () => {
@@ -458,18 +585,6 @@ const ProductInfo = () => {
         }
     };
 
-
-
-    // const ciphertext = localStorage.getItem('cartPostData');
-    // if (ciphertext) {
-    //     const bytes  = CryptoJS.AES.decrypt(ciphertext, 'your_secret_key');
-    //     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    //     console.log(decryptedData,"decryptedData");
-    // } else {
-    //     // Handle the case where the cart data does not exist
-    //     console.log("No cart data found");
-    // }
-
     const textRef = useRef(null);
 
     const handleCopy = () => {
@@ -540,6 +655,8 @@ const ProductInfo = () => {
                     formData.append('content', values.content);
                     formData.append('rating', values.rating);
                     formData.append('title', values.title);
+                    formData.append('heading', values.heading);
+
 
                     let isImage = false;
                     let isVideo = false;
@@ -625,26 +742,24 @@ const ProductInfo = () => {
     const [isFullScreen, setIsFullScreen] = useState(false);
 
     const handleFullScreen = (event) => {
-        const video = event.target;
+        const element = event.target;
 
         if (!isFullScreen) {
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
-            } else if (video.mozRequestFullScreen) { /* Firefox */
-                video.mozRequestFullScreen();
-            } else if (video.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                video.webkitRequestFullscreen();
-            } else if (video.msRequestFullscreen) { /* IE/Edge */
-                video.msRequestFullscreen();
+            if (element.requestFullscreen) {
+                element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) {
+                // Safari and older versions of iOS
+                element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+                // Internet Explorer/Edge
+                element.msRequestFullscreen();
             }
         } else {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) { /* Firefox */
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+            } else if (document.webkitExitFullscreen) {
                 document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { /* IE/Edge */
+            } else if (document.msExitFullscreen) {
                 document.msExitFullscreen();
             }
         }
@@ -652,6 +767,137 @@ const ProductInfo = () => {
         setIsFullScreen(!isFullScreen);
     };
 
+    const individualPrice = Product?.productList?.individual_price;
+    const competitorsPrice = Product?.productList?.competitors_price;
+    const calculateDiscountPercentage = (individualPrice, competitorsPrice) => {
+        if (competitorsPrice > individualPrice) {
+            return Math.round(((competitorsPrice - individualPrice) / competitorsPrice) * 100);
+        }
+        return 0;
+    };
+    const discountPercentage = calculateDiscountPercentage(individualPrice, competitorsPrice);
+
+    const reviewRef = useRef(null);
+
+    const scrollToReview = () => {
+        if (reviewRef.current) {
+            window.scrollTo({
+                behavior: 'smooth',
+                top: reviewRef.current.offsetTop - 100 // Adjust the offset as needed
+            });
+        }
+    };
+
+    const videoRef = useRef(null);
+
+    useEffect(() => {
+        // Function to handle video playback after a delay
+        const handleVideoPlayback = () => {
+            setTimeout(() => {
+                const videos = document.querySelectorAll('video.small-video');
+                videos.forEach(video => {
+                    video.play();
+                });
+            }, 3000); // Delay of 3 seconds
+        };
+
+        // Ensure the DOM is fully loaded
+        const handleLoad = () => {
+            handleVideoPlayback();
+        };
+
+        // Add event listener for load event
+        window.addEventListener('load', handleLoad);
+
+        // Cleanup event listener on component unmount
+        return () => {
+            window.removeEventListener('load', handleLoad);
+        };
+    }, []);
+
+
+    const handlePlay = (event) => {
+        const video = event.target;
+        if (video) {
+            video.play();
+            enterFullscreen(video);
+        }
+    };
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement) {
+                const videos = document.querySelectorAll('video.small-video');
+                videos.forEach(video => {
+                    video.muted = true;
+                    video.controls = false;
+                });
+            }
+            
+            if (!document.fullscreenElement) {
+                const videos = document.querySelectorAll('video.review-video');
+                videos.forEach(video => {
+                    video.muted = true;
+                    video.controls = false;
+                    video.pause();
+                });
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
+    const handlePlaySmall = (event) => {
+        const videoElement = event.currentTarget;
+
+        // Request full screen
+        if (videoElement.requestFullscreen) {
+            videoElement.requestFullscreen();
+        } else if (videoElement.mozRequestFullScreen) { // Firefox
+            videoElement.mozRequestFullScreen();
+        } else if (videoElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            videoElement.webkitRequestFullscreen();
+        } else if (videoElement.msRequestFullscreen) { // IE/Edge
+            videoElement.msRequestFullscreen();
+        }
+
+        // Set volume and unmute
+        videoElement.volume = 0.5;
+        videoElement.muted = false;
+        videoElement.controls = true;
+        videoElement.play();
+    };
+
+
+    const enterFullscreen = (video) => {
+        // Request full screen
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.mozRequestFullScreen) { // Firefox
+            video.mozRequestFullScreen();
+        } else if (video.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { // IE/Edge
+            video.msRequestFullscreen();
+        }
+        
+    };
+    const sliderRef = useRef(null);
+    const sizechartRef = useRef(null);
+
+    const [fullscreenImage, setFullscreenImage] = useState(null);
+
+    const handleImageClick = (imageSrc) => {
+        setFullscreenImage(imageSrc);
+    };
+
+    const handleCloseFullscreen = () => {
+        setFullscreenImage(null);
+    };
     return (
         <>
             <h1 className='d-none'></h1>
@@ -690,6 +936,21 @@ const ProductInfo = () => {
 
                         <div className='product-info pb-5'>
                             <div className='container-cos'>
+                                <div className='d-md-none'>
+                                    <div className='shipping-def d-flex align-items-center justify-content-end mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
+                                        <div className='d-flex justify-content-end align-items-center flex-wrap gap-2 gap-md-4'>
+                                            <div className='rate d-flex align-items-center gap-2'>
+                                                <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
+                                                        <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                    )}
+                                                    <p className='mb-0' style={{ color: '#007185', }}>{Product?.productList?.rating_count}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div className='page-path d-flex align-items-center gap-1'>
                                     <div className='d-flex align-items-center gap-1'>
@@ -707,20 +968,24 @@ const ProductInfo = () => {
                                     <NavLink className='active wrap-line-cos'>  {Product?.productList?.name} </NavLink>
                                 </div>
 
-                                <Row className='mt-4'>
-                                    <Col lg={6} md={12}>
-                                        <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together'>
-                                            <div className='d-flex align-items-center flex-wrap gap-3'>
-                                                <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
-                                                <div className='rate d-flex align-items-center gap-2'>
-                                                    <span className='cos-title'>{Product?.productList?.rating}</span>
-                                                    <div className='d-flex align-items-center gap-1'>
-                                                        <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} defaultValue={0} readOnly />
+                                <Row className='mt-0 mt-md-4'>
+                                    <Col lg={6} md={12} className='px-0'>
+                                        <div className='review shipping-def pb-2 mb-2 d-flex align-items-center justify-content-between mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
+                                            <div className='d-none d-md-block'>
+                                                <div className='d-flex align-items-center flex-wrap gap-2 gap-md-4'>
+                                                    <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
+                                                    <div className='rate d-flex align-items-center gap-2'>
+                                                        <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                        <div className='d-flex align-items-center gap-1'>
+                                                            {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
+                                                                <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className='d-flex align-items-center gap-2 verified'>
-                                                    <img src='../img/product_def/verified.png' alt='' />
-                                                    <span>All reviews are from verified buyers</span>
+                                                    {/* <div className='d-flex align-items-center gap-2 verified'>
+                                                        <img src='../img/product_def/verified.png' alt='' />
+                                                        <span>All reviews are from verified buyers</span>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -755,12 +1020,12 @@ const ProductInfo = () => {
                                             >
                                                 <Button className='wishlist-btn'><FiUpload /></Button>
                                             </RWebShare>
-                                            <ProductSlider activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
+                                            <ProductSlider sliderRef={sliderRef} activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
 
                                         </div>
 
                                         {Product?.productList?.rating_count == 0 &&
-                                            <div className='no-review py-4 d-flex gap-3'>
+                                            <div className='no-review pt-4 py-lg-4 d-flex gap-3'>
                                                 <h5 className='info-title '>No item reviews yet</h5>
                                                 <Button onClick={handlereviewShow} className='write-review'>
                                                     Write a review
@@ -768,8 +1033,8 @@ const ProductInfo = () => {
                                                 {/* <p>But this shop has 225 reviews for other items. Check out shop reviews <MdOutlineKeyboardArrowDown /></p> */}
                                             </div>
                                         }
-                                        <div className='together web-together mt-4'>
-                                            <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
+                                        <div className='together web-together'>
+                                            <div className='no-review frequently pb-3 d-flex align-items-center justify-content-between pt-4'>
                                                 <h5 className='info-title cos-title'>Frequently bought together</h5>
                                                 {/* <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button> */}
                                             </div>
@@ -779,6 +1044,9 @@ const ProductInfo = () => {
                                                     spaceBetween={30}
                                                     hashNavigation={{
                                                         watchState: true,
+                                                    }}
+                                                    pagination={{
+                                                        dynamicBullets: true,
                                                     }}
                                                     loop={true}
                                                     breakpoints={{
@@ -846,227 +1114,221 @@ const ProductInfo = () => {
 
                                     </Col>
 
-                                    <Col lg={6} md={12} className='mt-4 mt-lg-0'>
+                                    <Col lg={6} md={12} >
                                         <div className='pro-def'>
                                             <h6 className='product-heading-name'> {Product?.productList?.name}</h6>
 
-                                            <div className='review shipping-def pb-2 d-flex align-items-center justify-content-between web-together'>
+                                            <div
+                                                className='review shipping-def pb-2 d-flex align-items-center justify-content-between web-together'
+                                                onClick={scrollToReview}
+                                                style={{ cursor: 'pointer' }}
+                                            >
                                                 <div className='d-flex align-items-center flex-wrap gap-2 gap-xl-3'>
-                                                    <h5 className='info-title border-right-cos cos-title'>{Product?.productList?.rating_count} shop reviews</h5>
+                                                    <h5 className='info-title border-right-cos cos-title' >{Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
-                                                        <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                        <span className='cos-title' >{Product?.productList?.rating}</span>
                                                         <div className='d-flex align-items-center gap-1'>
-                                                            <Rating name="half-rating-read" value={Product?.productList?.rating} precision={0.5} />
+                                                            {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
+                                                                <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
+                                                            )}
                                                         </div>
+
                                                     </div>
                                                     <div className='d-flex align-items-center gap-2 verified'>
                                                         <img src='../img/product_def/verified.png' alt='' />
-                                                        <span>All reviews are from verified buyers</span>
+                                                        <span >All reviews are from verified buyers</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='per-pro d-flex align-items-end gap-2'>
-                                                <h3>${Product?.productList?.individual_price}</h3>
+                                            <div className='d-flex align-items-center justify-content-start gap-2 mt-3 mt-lg-0 boughtitem-parent'>
+                                                <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
+                                                    <h3 className='boughtitem'>100+ bought in the past month </h3>
+                                                </div>
                                             </div>
-                                            <div className='per-pro d-flex align-items-end gap-2 mt-2'>
-                                                {Product?.productList?.competitors_price !== 0 && Product?.productList?.competitors_price !== undefined && (
-                                                    <h3 className='competitors-text'>Competitors Price : <span className='competitors-price' style={{ fontSize: "unset" }}>${Product?.productList?.competitors_price}</span></h3>
+                                            <div className='badge bg-redlight mt-4 mt-md-3'>
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <span className='price'>$100.0</span> <span>|</span> <span>Free returns on some sizes and color</span>
+                                                </div>
+                                                <FontAwesomeIcon icon={faShare} style={{ height: '18px' }} />
+                                            </div>
+                                            <div className='per-pro-container d-flex align-items-center justify-content-start gap-2 mt-2 mt-lg-0'>
+                                                <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
+                                                    <h3>Our Price : ${individualPrice}</h3> |
+                                                </div>
+
+
+                                                {competitorsPrice !== 0 && competitorsPrice !== undefined && (
+                                                    <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
+                                                        <div className='d-flex align-items-center gap-1'>
+                                                            <h3 className='competitors-text'>
+                                                                Competitors Price : <span className='competitors-price'>${competitorsPrice}</span>
+                                                            </h3>
+                                                            {competitorsPrice > individualPrice && (
+                                                                <h3 className='discount-text d-flex align-items-center gap-1'>
+                                                                    <p className='mb-0 discount-percentage'>|</p>
+                                                                    <span className='discount-percentage'>{discountPercentage}% off</span>
+                                                                </h3>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 )}
+                                            </div>
+                                            <div className='d-md-none mt-2 mb-3'>
+                                                <p onClick={handleReturnPolicyClick} className='policy-lab d-flex justify-content-between align-items-center'>
+                                                    Return Policy {showreturnpolicy ? <FontAwesomeIcon icon={faCircleChevronUp} style={{ width: '20px' }} /> : <FontAwesomeIcon icon={faCircleChevronDown} style={{ width: '20px' }} />}
+                                                </p>
+                                                {showreturnpolicy && <ReturnPolicy />}
+                                            </div>
+                                            <div className='mt-2 d-md-none'>
+                                                <div className='overflow-auto d-flex align-items-start pb-0'>
+                                                    {Product?.productList?.product_files?.map((video, index) => (
+                                                        <div key={index} className='pe-2'>
+                                                            <div className='d-flex gap-2 align-items-center'>
+                                                                <video ref={videoRef}
+                                                                    className='product-video small-video'
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    playsInline
+                                                                    poster={url + video.thumbnail}
+                                                                    onClick={(event) => handlePlaySmall(event)}
+                                                                >
+                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    Your browser does not support the video.
+                                                                </video>
+                                                            </div>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <p className='amazone-text'>{video.title}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
 
-                                            <div className='shipping-def description mt-2'>
-                                                <h5 className='info-title mt-2'>Product Details</h5>
-                                                <textarea
-                                                    value={Product?.productList?.description.split(":").join(":")}
-                                                    readOnly
-                                                    rows={Product?.productList?.description.split(":").length}
-                                                    style={{
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        resize: 'none',
-                                                        border: 'none'
-                                                    }}
-                                                />
-                                            </div>
-                                            {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
-                                            <div className='d-flex align-items-center flex-wrap gap-2'>
-                                                <Button className="size-chart-button" onClick={handleSizeChartClick}>
-                                                    Show Size Chart
-                                                </Button>
-                                                
-                                                {showSizeChart && (
-                                                    <ProductChartModal
-                                                        sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
-                                                        sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
-                                                        onHide={handleSizeChartClose}
-                                                        toggleSizeChartUnit={toggleSizeChartUnit}
-                                                        isInInch={isInInch}
-                                                        rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
-                                                        columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
-                                                    />
-                                                )}
-                                            </div>
+                                            {/* {(Product?.productList?.size_chartInInch.title !== "" || Product?.productList?.size_chartIncm.title !== "" && Product?.productList?.size_chartInInch.description !== "" && Product?.productList?.size_chartInInch.columns.length !== 0 && Product?.productList?.size_chartInInch.title !== undefined) && (
+                                                <div className='d-flex align-items-center flex-wrap gap-2 mt-2'>
+                                                    <Link className='size-chart-link d-none d-md-block' onClick={handleSizeChartClick}>
+                                                        Size Chart <img src={arrow_icon} style={{ width: '20px' }} />
+                                                    </Link>
+
+                                                    {showSizeChart && (
+                                                        <>
+                                                            <ProductChartModal
+                                                                sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
+                                                                sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
+                                                                onHide={handleSizeChartClose}
+                                                                setInInch={toggleSizeChartUnit}
+                                                                isInInch={isInInch}
+                                                                rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
+                                                                columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
+                                                            />
+                                                        </>
+
+                                                    )}
+                                                </div>
                                             )
-                                            }
+                                            } */}
 
-                                            <div className='product-color mt-3'>
-                                                <div className='d-flex align-items-center flex-wrap gap-2'>
-                                                    {
-                                                        Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => {
-                                                            return (
-                                                                <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(url + Product.productList?._id + "/" + e.file_name))}>
+                                            <div className='d-none d-md-block mt-2'>
+                                                <p onClick={handleReturnPolicyClick} className='policy-lab'>
+                                                    Return policy {showreturnpolicy ? <FontAwesomeIcon icon={faCircleChevronUp} style={{ width: '20px' }} /> : <FontAwesomeIcon icon={faCircleChevronDown} style={{ width: '20px' }} />}
+                                                </p>
+                                                {showreturnpolicy && <ReturnPolicy />}
+                                            </div>
+
+                                            <div className='product-color mt-2'>
+
+                                                <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
+                                                {Product?.productList?.product_qty && Product?.productList?.product_qty.length > 0 && (
+                                                    <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
+                                                        {product_qtyActive === Product?.productList?.product_qty[0] && (
+                                                            Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => (
+                                                                <Button
+                                                                    key={i}
+                                                                    className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`}
+                                                                    onClick={() => {
+                                                                        setProductColorActive(e.attrs[0]?.color);
+                                                                        setActiveImage(url + Product.productList?._id + "/" + e.file_name);
+                                                                        if (sliderRef.current) {
+                                                                            sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                                                        }
+                                                                    }}
+                                                                >
                                                                     <img className='colors' src={url + Product.productList?._id + "/" + e.file_name} alt='' />
                                                                 </Button>
-                                                            )
-                                                        })
-                                                    }
+                                                            ))
+                                                        )}
+                                                    </div>
+                                                )}
+
+                                                <div className='size-chart-container mt-3'>
+                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                        {Product?.productList?.sku_attributes.size !== undefined && (
+                                                            <div className='size w-100'>
+                                                                <div className='d-flex align-items-center justify-content-between'>
+                                                                    <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                                                                    <p className=' size-guide' onClick={handleSizeChartResClick}>Size guide </p>
+                                                                </div>
+                                                                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+                                                                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
+                                                                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
+                                                                            {e.name}
+                                                                        </Button>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 0 ? (
+
+                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 1 ? (
                                                     <div className='size mt-3'>
                                                         <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
                                                         <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                             {Product?.productList?.product_qty?.map((e, i) => (
-                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActive(e)}>
+                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActives(e)}>
                                                                     {e}
                                                                 </Button>
                                                             ))}
+
                                                         </div>
                                                     </div>
                                                 ) : (
                                                     <></>
                                                 )}
 
-                                                <div className='size mt-3'>
-                                                    {Product?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
-                                                    <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-                                                        {
-                                                            Product?.productList?.sku_attributes.size?.map((e, i) => {
-                                                                return (
-                                                                    <Button className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
-                                                                        {e.name}
-                                                                    </Button>
-                                                                )
-                                                            })
-                                                        }
-                                                    </div>
-                                                </div>
-
                                             </div>
-                                            <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
-                                            <div className='mt-4'>
-                                                {/* <Swiper
-                                             
-                                                    slidesPerView={4}
-                                                    spaceBetween={10}
-                                                    hashNavigation={{ watchState: true }}
-                                                    loop={true}
-                                                    
-                                                    breakpoints={{
-                                                        0: {
-                                                            slidesPerView: 3,
-                                                            spaceBetween: 10
-                                                        },
 
-                                                        425: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10,
-                                                        },
-
-                                                        650: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10
-                                                        },
-
-                                                        991: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10
-                                                        },
-
-                                                        1300: {
-                                                            slidesPerView: 4,
-                                                            spaceBetween: 10
-                                                        }
-
-                                                    }}
-                                                    navigation={true}
-                                                    modules={[Pagination, Navigation]}
-                                                    className="mySwiper slider_pinfo"
-                                                >
-                                                    {Product?.productList?.product_files?.map((video, index) => (
-                                                        <SwiperSlide key={index}>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                                <video
-                                                                    className='product-video'
-                                                                    autoPlay
-                                                                    muted
-                                                                    loop
-                                                                    onClick={handleFullScreen}
-                                                                >
-                                                                    <source src={url + video.file_name} type="video/mp4" />
-                                                                    Your browser does not support the video.
-                                                                </video>
-                                                               
-                                                            </div>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                            <p className='amazone-text'>{video.title}</p>
-                                                            </div>
-                                                        </SwiperSlide>
-                                                    ))}
-                                                </Swiper> */}
-                                                <div className='overflow-auto d-flex align-items-start gap-3 gap-xl-4'>
-                                                {Product?.productList?.product_files?.map((video, index) => (
-                                                        <div key={index}>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                                <video
-                                                                    className='product-video'
-                                                                    autoPlay
-                                                                    muted
-                                                                    loop
-                                                                    onClick={handleFullScreen}
-                                                                >
-                                                                    <source src={url + video.file_name} type="video/mp4" />
-                                                                    Your browser does not support the video.
-                                                                </video>
-                                                               
-                                                            </div>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                            <p className='amazone-text'>{video.title}</p>
-                                                            </div>
+                                            <div className='mt-3'>
+                                                {(Product?.productList?.size_chartInInch.title !== "" ||
+                                                    Product?.productList?.size_chartIncm.title !== "") &&
+                                                    (Product?.productList?.size_chartInInch.description !== "" ||
+                                                        Product?.productList?.size_chartIncm.description !== "") &&
+                                                    (isInInch ? Product?.productList?.size_chartInInch.columns.length > 0 && Product?.productList?.size_chartInInch.row_name.length > 0 :
+                                                        Product?.productList?.size_chartIncm.columns.length > 0 && Product?.productList?.size_chartIncm.row_name.length > 0) &&
+                                                    Product?.productList?.size_chartInInch.title !== undefined && (
+                                                        <div className='d-flex align-items-center flex-wrap gap-2'>
+                                                            <Link className='size-chart-link-res size-chart-link' onClick={handleSizeChartResClick}>
+                                                                Size Chart {showSizeChartRes ? <FontAwesomeIcon icon={faCircleChevronUp} style={{ width: '20px' }} /> : <FontAwesomeIcon icon={faCircleChevronDown} style={{ width: '20px' }} />}
+                                                            </Link>
+                                                            {showSizeChartRes && (
+                                                                <ProductChartModalRes
+                                                                    sizechartRef={sizechartRef}
+                                                                    sizeChartTitle={isInInch ? Product.productList.size_chartInInch.title : Product.productList.size_chartIncm.title}
+                                                                    sizeChartDescription={isInInch ? Product.productList.size_chartInInch.description : Product.productList.size_chartIncm.description}
+                                                                    onHide={handleSizeChartClose}
+                                                                    setInInch={toggleSizeChartUnit}
+                                                                    isInInch={isInInch}
+                                                                    rows={isInInch ? Product.productList.size_chartInInch.row_name : Product.productList.size_chartIncm.row_name}
+                                                                    columns={isInInch ? Product.productList.size_chartInInch.columns : Product.productList.size_chartIncm.columns}
+                                                                />
+                                                            )}
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                    )}
                                             </div>
-                                            
-                                            
-                                            {/* <div className='d-flex gap-2 py-2 align-items-center' style={{ marginTop: '30px' }}>
-                                                {Product?.productList?.product_files?.map((r, i) => (
-                                                    <video className='product-video '
-                                                        key={i}
-                                                        autoPlay
-                                                        muted
-                                                        loop
-                                                        onClick={handleFullScreen}
-                                                        style={{
 
-                                                            height: 'auto',
-                                                            border: '1px solid #ccc', // Example border
-                                                            borderRadius: '8px', // Example border radius
-                                                        }}>
-                                                        <source src={url + r.file_name} type="video/mp4" />
-                                                        Your browser does not support the video.
-                                                    </video>
-                                                ))}
-                                            </div> */}
-
-
-
-                                            {/* <div className='d-flex align-items-start gap-4 justify-content-left overflow-hidden mt-4 '
-                                                style={{ maxHeight: "300px" }}
-                                            >
-                                                <ProductGif activeImage={activeImage} colorProduct={colorProduct} productImagePath={Product?.productImagePath} productList={Product?.productList?.product_images} id={Product?.productList?._id && Product?.productList?._id} />
-                                            </div> */}
-                                            <div className='shipping-def'>
-                                                <h5 className='info-title mb-2'>Shop with confidence</h5>
+                                            <div className='shipping-def mt-3'>
+                                                <h5 className='info-title mb-2' >Shop with confidence</h5>
                                                 <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
                                                 <ul>
                                                     <div>
@@ -1080,19 +1342,59 @@ const ProductInfo = () => {
                                                 </ul>
                                             </div>
 
+                                            <div className='shipping-def description mt-2'>
+                                                <h5 className='info-title mt-2'>Description</h5>
+                                                <div className='productdetail'
+                                                >
+                                                    {Product?.productList?.description.split(":").map((item, index) => (
+                                                        <p key={index} className='product-description mt-2'>{item}</p>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className='cart-button-sm'>
+                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
+                                            </div>
 
-                                            <div className='shipping-def description mt-4'>
-                                                <h5 className='info-title mt-4 mb-2'>Description</h5>
+                                            <div className='mt-4 d-none d-md-block'>
 
+                                                <div className='overflow-auto d-flex align-items-start gap-3 gap-xl-4'>
+                                                    {Product?.productList?.product_files?.map((video, index) => (
+                                                        <div key={index}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <video ref={videoRef}
+                                                                    className='product-video small-video'
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    playsInline
+                                                                    poster={url + video.thumbnail}
+                                                                    onClick={(event) => handlePlaySmall(event)}
+                                                                >
+                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    Your browser does not support the video.
+                                                                </video>
+                                                            </div>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <p className='amazone-text'>{video.title}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <div className='shipping-def description'>
+                                                <h5 className='info-title mt-3 mb-2'>Product Details</h5>
 
                                                 {Object.entries(typeof Product?.productList?.attributes === 'string' ? JSON.parse(Product?.productList?.attributes) : (Product?.productList?.attributes || {})).map(([key, value], index) => (
 
-
-                                                    <div key={index}>
+                                                    <div className='mb-2' key={index}>
                                                         {key === "Product ID" ? (
                                                             <div className='d-flex align-items-center copy-div gap-3'>
                                                                 <span className='d-flex align-items-center'>Item ID: <p ref={textRef} className='ms-1'>{value[0]}</p></span>
-                                                                <Button className='copy-btn' onClick={handleCopy}>Copy</Button>
+                                                                {/* <Button className='copy-btn' onClick={handleCopy}>Copy</Button> */}
                                                             </div>
                                                         ) : (
                                                             <span>{key}: {Array.isArray(value) ? value.join(", ") : value}</span>
@@ -1105,7 +1407,7 @@ const ProductInfo = () => {
 
                                             {(Product?.productList?.content !== null && Product?.productList?.content !== undefined && Product.productList.content.length > 0) && (
                                                 <div className='show-content '>
-                                                    <h5 className='info-title mt-4 mb-2'>Content</h5>
+                                                    <h5 className='info-title mt-3 mb-2'>Content</h5>
                                                     <div className='show-content-editor'>
                                                         <div dangerouslySetInnerHTML={{ __html: Product.productList.content }} />
                                                     </div>
@@ -1144,17 +1446,21 @@ const ProductInfo = () => {
                                                     }}
                                                     navigation={true}
                                                     modules={[Pagination, Navigation]}
-                                                    className="mySwiper"
+                                                    className="mySwiper mb-2"
                                                 >
                                                     {Product?.productList?.description_video?.map((video, index) => (
                                                         <SwiperSlide key={index}>
-                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                            <div className='d-flex gap-2 pb-0 align-items-center'>
                                                                 <video
-                                                                    className='product-video bottom-product-video'
-                                                                    autoPlay
-                                                                    muted
+                                                                    className='product-video bottom-product-video video-design' ref={videoRef}
+                                                                    controls
                                                                     loop
-                                                                    onClick={handleFullScreen}
+                                                                    playsInline
+                                                                    volume={0.5}
+
+                                                                    style={{ height: '422px !important', }}
+                                                                    poster={url + video.thumbnail}
+
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
@@ -1165,16 +1471,59 @@ const ProductInfo = () => {
                                                 </Swiper>
                                             </div>
                                             <div>
+                                                <Swiper
+                                                    spaceBetween={0}
+                                                    centeredSlides={true}
+                                                    autoplay={{
+                                                        delay: 1000,
+                                                        disableOnInteraction: false,
+                                                    }}
+                                                    // pagination={{
+                                                    // clickable: false,
+                                                    // }}
+
+                                                    breakpoints={{
+                                                        0: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        425: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        650: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        991: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        },
+                                                        1300: {
+                                                            slidesPerView: 1,
+                                                            spaceBetween: 10
+                                                        }
+                                                    }}
+                                                    navigation={true}
+                                                    modules={[Navigation]}
+                                                    className="mySwiper"
+                                                >
+                                                    {Product?.productList?.description_images?.map((image, index) => (
+                                                        <SwiperSlide key={index}>
+                                                            <div className='d-flex gap-2 pb-2 align-items-center'>
+                                                                <img className='w-100 slider_images description-img-height'
+                                                                    src={`${Product?.productImagePath}${Product.productList._id}/${image.file_name}`}
+                                                                    alt={`Product Image ${index + 1}`}
+                                                                />
+                                                            </div>
+                                                        </SwiperSlide>
+                                                    ))}
+                                                </Swiper>
+                                            </div>
+                                            <div>
                                                 <div>
                                                     <a onClick={handleCustEmailClick} style={{ cursor: 'pointer', color: "#223263" }} >
                                                         <img src={reporticon} className='custemailicon' /> &nbsp; Report an issue with this product</a></div></div>
-
-                                            {/* <Link className='custemailbutton' onClick={handleCustEmailClick}>
-                                                <div className='d-flex align-items-center flex-wrap mt-2 gap-2 '>
-                                                    <img src={reporticon} className='custemailicon' /> <p className='mb-0'>Report an issue with this product</p>
-                                                </div>
-                                                    </Link> */}
-
                                             {showcustemail && (
                                                 <CustEmailModal
 
@@ -1188,7 +1537,7 @@ const ProductInfo = () => {
                                     </Col>
                                 </Row>
 
-                                <div className='review mt-5 mar-top-20'>
+                                <div ref={reviewRef} id='review-section' className='review mt-5 mar-top-20'>
                                     {Product?.productReviewList?.length === 0 ? " " :
                                         <div className='d-flex align-items-center justify-content-between review-responsive'>
                                             <h4 className='info-title'>All Reviews ({Product?.productReviewList?.length})</h4>
@@ -1239,55 +1588,73 @@ const ProductInfo = () => {
                                                         {/* <img src='./img/cart/cart1.png' alt='' width="150px" className='review-img' /> */}
                                                         <div className='review-items-def w-100 d-flex align-items-start justify-content-between pb-4'>
                                                             <div className='review-text'>
-                                                                <div className='d-flex align-items-center gap-2'>
-                                                                    <img alt='profile' className='myprofile' width="34px" height="34px" style={{ borderRadius: "50%", objectFit: "cover" }} src={defaultProfile} />
+                                                                <div className='d-flex align-items-center gap-2 mb-3'>
+                                                                    <div className="fullscreen-container">
+                                                                        <img
+                                                                            alt='profile'
+                                                                            className='myprofile'
+                                                                            width="34px"
+                                                                            height="34px"
+                                                                            style={{ borderRadius: "50%", objectFit: "cover", cursor: "pointer" }}
+                                                                            src={defaultProfile}
+                                                                        // Handle click for fullscreen
+                                                                        />
+                                                                    </div>
                                                                     <h5>  {e.title ? e.title : "A Clubmall user"}</h5>
                                                                 </div>
+                                                                <div className='d-flex align-items-center gap-2'>
+                                                                    <div className='d-flex align-items-center gap-1'>
+                                                                        <Rating name="simple-controlled" value={e?.rating} readOnly />
+                                                                    </div>
+                                                                    <div>
+                                                                        <span className='date_pro_info my-0 a-text-bold text-black'>{e.heading}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <span className='date_pro_info my-0'>{`Reviewed  on  ${e.created_at.slice(0, 10)}`}</span>
+                                                                <span className='date_pro_info mt-0 d-block'>{e.content}</span>
                                                                 <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                     {e?.review_files?.map((r, i) => (
                                                                         <React.Fragment key={i}>
-                                                                            { r.file_name && !r.file_name.includes("mp4") ? (
-                                                                                <img style={{ width: "100px" }} src={r.file_name} alt='' />
+                                                                            {r.file_name && !r.file_name.includes("mp4") ? (
+                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
                                                                             ) : (
-                                                                                <video
-                                                                                    style={{ width: "200px", cursor: "pointer" }}
-                                                                                    controls
-                                                                                    onClick={handleFullScreen}
+                                                                                <video ref={videoRef}
+                                                                                    className='product-video review-video'
+                                                                                    playsInline
+                                                                                    volume={0.5}
+                                                                                    poster={url + r.thumbnail}
+                                                                                    onClick={(event) => handlePlaySmall(event)}
                                                                                 >
                                                                                     <source src={r.file_name} type="video/mp4" />
                                                                                     {/* Add more <source> elements for different video formats if necessary */}
                                                                                     Your browser does not support the video.
                                                                                 </video>
+
                                                                             )}
                                                                         </React.Fragment>
                                                                     ))}
                                                                 </div>
-                                                               
-                                                                <span className='date_pro_info'>{e.content}</span>
-                                                                <span className='date_pro_info'>{e.created_at.slice(0, 10)}</span>
-                                                                <div className='d-flex align-items-center gap-1'>
-                                                                    <Rating name="simple-controlled" value={e?.rating} readOnly />
-                                                                </div>
-
-                                                                {/* <div className='flex-wrap color-def d-flex align-items-center mb-3 mt-2'>
-                                                                    <p><b>Overall Fit:</b> True to Size</p>
-                                                                    <p><b>Color:</b> Olive Green</p>
-                                                                    <p><b>Size:</b> M</p>
-                                                                </div> */}
+                                                              
                                                             </div>
-                                                            {/* <div className='d-flex align-items-center gap-3 review-like'>
-                                                    <Button>
-                                                        <img src='./img/for_you/like.png' alt='' />
-                                                    </Button>
-                                                    <Button>
-                                                        <BsThreeDots />
-                                                    </Button>
-                                                </div> */}
                                                         </div>
                                                     </div>
                                                 )
                                             })
                                         }
+                                        {fullscreenImage && (
+                                            <div className="fullscreen-modal" onClick={handleCloseFullscreen}>
+                                                <div className="fullscreen-content d-flex align-items-start gap-1">
+                                                    <img src={fullscreenImage} alt="fullscreen" className="fullscreen-image" />
+                                                    <button className="close-button bg-transparent border-0 position-absolute top-0 end-0" onClick={handleCloseFullscreen}>
+                                                        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                                        <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+
 
                                         {
                                             reviweList.length >= 10 &&
@@ -1300,7 +1667,7 @@ const ProductInfo = () => {
                                 </div>
 
                                 <div className='together mobile-together'>
-                                    <div className='no-review frequently py-2 pt-0 pt-sm-4   d-flex align-items-center justify-content-between'>
+                                    <div className='no-review frequently py-2 pt-4 pt-sm-4  d-flex align-items-center justify-content-between'>
                                         <h5 className='info-title cos-title'>Frequently bought together</h5>
                                         {/* <Button > <Link to="/trending" >See all <MdOutlineKeyboardArrowRight /> </Link>  </Button> */}
                                     </div>
@@ -1448,6 +1815,10 @@ const ProductInfo = () => {
                                             <div className='login-input text-start'>
                                                 <label>You Name*</label>
                                                 <input type='text' name='title' value={values.title} onChange={handleChange} />
+                                            </div>
+                                            <div className='login-input text-start mt-3'>
+                                                <label>Title*</label>
+                                                <input type='text' name='heading' value={values.heading} onChange={handleChange} />
                                             </div>
                                             <div className='login-input text-start mt-3'>
                                                 <label>Comments*</label>
