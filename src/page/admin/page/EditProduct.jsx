@@ -43,6 +43,9 @@ const EditProduct = () => {
     description_video: Array(4).fill({ file: undefined, preview: "" }),
     product_images: Array(10).fill({ file: undefined, preview: "", type: "image" }),
     description_images: Array(5).fill({ file: undefined, preview: "" }),
+    deleted_images: [],
+    pdt_img_deleted_images: [],
+    deleted_videos :[]
 
   });
 
@@ -252,10 +255,10 @@ const EditProduct = () => {
         }));
         const updatedProductImages = productData.product_images.map(file => ({
           file: file.file_name,
-          preview: file.file_name.endsWith('.mp4') 
-          ? `${productDetail.data.data.productImagePath}${file.file_name}`
+          preview: file.file_name.match(/\.(mp4|mov|mkv|webm|jpg|png)$/i)
+          ? `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`
           : `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`,
-          type: file.file_name.endsWith('.mp4') ? 'video' : 'image'
+          type: file.file_name.match(/\.(mp4|mov|mkv|webm)$/i) ? 'video' : 'image'
         }));
        
         
@@ -432,9 +435,15 @@ const EditProduct = () => {
                 formData.append(`description_images[${index}]`, img.file);
             }
         });
+        if (values.deleted_videos && values.deleted_videos.length > 0) {
+          formData.append('deleted_videos', JSON.stringify(values.deleted_videos));
+        }
         if (values.deleted_images && values.deleted_images.length > 0) {
             formData.append('deleted_images', JSON.stringify(values.deleted_images));
         }
+        if (values.pdt_img_deleted_images && values.pdt_img_deleted_images.length > 0) {
+          formData.append('pdt_img_deleted_images', JSON.stringify(values.pdt_img_deleted_images));
+      }
 
         const [productResponse] = await Promise.all([
             api.postWithToken(`${serverURL}product-media-update/${product_id}`, formData),
@@ -650,13 +659,41 @@ const EditProduct = () => {
   };
   const handleDeleteImage = (index) => {
     const updatedImages = [...values.product_images];
-    const deletedImages = [...values.deleted_images || []];
-    if (updatedImages[index].file) {
-        deletedImages.push(updatedImages[index].file.name);
+    updatedImages[index] = { file: undefined, preview: "" };
+    if (!Array.isArray(values.pdt_img_deleted_images)) {
+      setValues((prevValues) => ({
+        ...prevValues,
+        pdt_img_deleted_images: [],
+      }));
     }
-    updatedImages[index] = { file: undefined, preview: "", type: "image" };
-    setValues((prevValues) => ({ ...prevValues, product_images: updatedImages, deleted_images: deletedImages }));
-};
+    const updatedDeletedImages = [...values.pdt_img_deleted_images];
+    updatedDeletedImages.push(index);
+    
+    setValues((prevValues) => ({
+      ...prevValues,
+      product_images: updatedImages,
+      pdt_img_deleted_images: updatedDeletedImages,
+    }));
+  };
+  const handleDesDeleteImage = (index) => {
+    const updatedImages = [...values.description_images];
+    updatedImages[index] = { file: undefined, preview: "" };
+    if (!Array.isArray(values.deleted_images)) {
+      setValues((prevValues) => ({
+        ...prevValues,
+        deleted_images: [],
+      }));
+    }
+    const updatedDeletedImages = [...values.deleted_images];
+    updatedDeletedImages.push(index); // Store the index or any identifier of the image to delete
+    
+    setValues((prevValues) => ({
+      ...prevValues,
+      description_images: updatedImages,
+      deleted_images: updatedDeletedImages,
+    }));
+  };
+  
 
   const handleVideo = (e, index) => {
     const file = e.target.files[0];
@@ -679,6 +716,7 @@ const EditProduct = () => {
   const handledescriptionVideo = (e) => {
     const file = e.target.files[0];
     const index = parseInt(e.target.name.split('_')[2]);
+  
     if (file) {
       const reader = new FileReader();
       reader.onload = function (upload) {
@@ -687,27 +725,39 @@ const EditProduct = () => {
           file,
           preview: upload.target.result,
         };
-        setValues(prevValues => ({ ...prevValues, description_video: updatedVideos }));
+        setValues((prevValues) => ({
+          ...prevValues,
+          description_video: updatedVideos,
+        }));
       };
       reader.readAsDataURL(file);
     }
   };
+  
 
-  const handleDesDeleteImage = (index) => {
-    const updatedImages = [...values.description_images];
-    updatedImages[index] = { file: undefined, preview: "" };
-    setValues((prevValues) => ({ ...prevValues, description_images: updatedImages }));
-  };
+
+  
+  
   const handleDeleteVideo = (index) => {
     const updatedVideos = [...values.product_files];
     updatedVideos[index] = { file: undefined, preview: "", title: "" };
     setValues((prevValues) => ({ ...prevValues, product_files: updatedVideos }));
   };
   const handleDeleteDescriptionVideo = (index) => {
-    const updatedImages = [...values.description_video];
-    updatedImages[index] = { file: undefined, preview: ""};// Clear the image at the given index
-    setValues((prevValues) => ({ ...prevValues, description_video: updatedImages }));
+    const updatedVideos = [...values.description_video];
+    updatedVideos[index] = { file: undefined, preview: "" }; // Clear the video at the given index
+  
+    // Mark the deleted video in a separate array
+    const updatedDeletedVideos = [...values.deleted_videos];
+    updatedDeletedVideos.push(index); // Store the index or any identifier of the video to delete
+  
+    setValues((prevValues) => ({
+      ...prevValues,
+      description_video: updatedVideos,
+      deleted_videos: updatedDeletedVideos,
+    }));
   };
+  
 
   return (
     <Layout>
@@ -855,7 +905,7 @@ const EditProduct = () => {
                             />
                           ) : (
                             <video controls className="output-file">
-                              <source src={values.product_images[index].preview} type={values.product_images[index].file?.type || 'video/mp4'} />
+                              <source src={values.product_images[index].preview} type={values.product_images[index].file?.type} />
                             </video>
                           )}
                         </>

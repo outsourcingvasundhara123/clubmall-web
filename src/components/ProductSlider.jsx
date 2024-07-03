@@ -5,15 +5,18 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
   const imageGalleryRef = useRef(); // create a ref
 
   const images = productList?.map((product) => {
-    const isVideo = product.file_name.endsWith('.mp4'); // check if the file is a video
+    const videoExtensions = ['.mp4', '.mov', '.mkv', '.webm'];
+    const fileExtension = product.file_name.substring(product.file_name.lastIndexOf('.'));
+  
+    const isVideo = videoExtensions.includes(fileExtension.toLowerCase());
+  
     const original = productImagePath + id + "/" + product?.file_name;
-    const originalvideo = productImagePath +  product?.file_name;
-
+    const originalvideo = productImagePath + product?.file_name;
+  
     const thumbnail = isVideo
-    ? (product.thumbnail ? (productImagePath + product.thumbnail) : original)
-    : (product.thumbnail ? (productImagePath + id + "/" + product.thumbnail) : original);
-
-
+      ? (product.thumbnail ? (productImagePath + product.thumbnail) : original)
+      : (product.thumbnail ? (productImagePath + id + "/" + product.thumbnail) : original);
+  
     return {
       original: original,
       originalvideo: originalvideo,
@@ -21,6 +24,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
       type: isVideo ? 'video' : 'image', // add type property
     };
   }) ?? [];
+  
   
 
   const data = [...images, ...(colorProduct || [])].filter(item => item.original);
@@ -48,7 +52,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
     const imageUrl = item.originalvideo;
     const thumUrl=item.thumbnail
     return item.type === 'video' ? (
-      <video ref={videoRef} controls loop playsInline poster={item.videothumbnail} volume={0.5} width="100%" className='slider-video'>
+      <video ref={videoRef} controls loop playsInline poster={thumUrl} volume={0.5} width="100%" className='slider-video'>
         <source src={imageUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
