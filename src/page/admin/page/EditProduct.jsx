@@ -490,28 +490,25 @@ const EditProduct = () => {
         let isVideo = false;
         const titles = [];
 
-        for (let i = 0; i < values.product_files.length; i++) {
-          const video = values.product_files[i];
-          if (video && video.title) {
-            titles[i] = video.title;
+        values.product_files.forEach((video, index) => {
+          if (video?.title) {
+            titles[index] = video.title;
           }
-        }
+        });
 
-        for (let i = 0, j = 0; i < values.product_files.length; i++) {
-          const video = values.product_files[i];
-          if (video && video.file) {
+        values.product_files.forEach((video, index) => {
+          if (video?.file) {
             formData.append("product_files", video.file);
-
-            if (titles[i] !== undefined) {
-              formData.append(`product_files_titles_${j}`, titles[i]);
-              j++;
+  
+            if (titles[index] !== undefined) {
+              formData.append(`product_files_titles_${index}`, titles[index]);
             }
-
-            if (video.file.type.startsWith("video/")) {
+  
+            if (video.file.type?.startsWith("video/")) {
               isVideo = true;
             }
           }
-        }
+        });
         formData.append("product_category_keys", JSON.stringify(values.product_category_keys));
         formData.append("description", values.description);
         formData.append("total_order", values.total_order);
@@ -1006,7 +1003,7 @@ const EditProduct = () => {
             <Col lg={12} md={12} sm={12}>
               <div className="select-img-input mt-3">
                 <label>Description Image</label>
-                <div className="d-flex align-items-center gap-5 flex-wrap mt-4">
+                <div className="d-flex align-items-center gap-4 flex-wrap mt-4">
                   {Array(5).fill(null).map((_, index) => (
                     <div key={index} className="select-img-output">
                       <img
