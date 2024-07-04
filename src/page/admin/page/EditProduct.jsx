@@ -45,8 +45,7 @@ const EditProduct = () => {
     description_images: Array(5).fill({ file: undefined, preview: "" }),
     deleted_images: [],
     pdt_img_deleted_images: [],
-    deleted_videos :[]
-
+    deleted_videos :[],
   });
 
   const [category, setCategory] = useState([]);
@@ -234,6 +233,27 @@ const EditProduct = () => {
   const stopAnimation = () => {
     setLoading(false);
   };
+  function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
+  const [product_qty, setProduct_Qty] = useState([]);
+  const [inputQuantity, setInputQuantity] = useState('');
+  
+ 
+  const addQuantity = () => {
+    if (inputQuantity) {
+      setProduct_Qty(prevProductQuantity => [...prevProductQuantity, parseInt(inputQuantity)]);
+      setInputQuantity('');
+    }
+  };
+  const handleQuantityChange = (e) => {
+    setInputQuantity(e.target.value);
+  };
+  const deleteQuantity = (indexToRemove) => {
+    const newQuantity = product_qty.filter((_, index) => index !== indexToRemove);
+    setProduct_Qty(newQuantity);
+  };
+
   const getProductDetail = async () => {
     startAnimation();
     try {
@@ -244,7 +264,7 @@ const EditProduct = () => {
         const sizeChart = productData.size_chartInInch;
         const sizeChartInCM = productData.size_chartIncm;
         setImageUrl(productDetail.data.data.productImagePath);
-
+        setProduct_Qty(productData.product_qty || []);
         const newRows = sizeChart.row_name.map(row => ({
           name: row.name,
           columns: sizeChart.columns.filter(col => col.row_name === row.name).map(col => col.name),
@@ -301,6 +321,7 @@ const EditProduct = () => {
             preview: `${productDetail.data.data.productImagePath}${product_id}/${img.file_name}`,
           })),
           product_images: updatedProductImages,
+        
         }));
 
         // Set rows state
@@ -482,6 +503,7 @@ const EditProduct = () => {
       content: states.content,
       size_chartInInch: values.size_chartInInch,
       size_chartIncm: values.size_chartIncm,
+      product_qty: product_qty,
 
     };
     const validationErrors = validate(updatedProductData);
@@ -530,7 +552,7 @@ const EditProduct = () => {
         formData.append("content", states.content);
         formData.append("size_chartInInch", JSON.stringify(values.size_chartInInch));
         formData.append("size_chartIncm", JSON.stringify(values.size_chartIncm));
-
+        formData.append("product_qty", JSON.stringify(product_qty));
         const response = await api.postWithToken(`${serverURL}/product-update/${product_id}`, formData);
         await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -945,7 +967,7 @@ const EditProduct = () => {
             <Col lg={12} md={12} sm={12}>
               <div className="select-img-input mt-3">
                 <label>Upload Video</label>
-                <div className="row align-items-center mt-4 mb-4 g-4">
+                <div className="row align-items-center mt-1 mb-4 g-4">
                   {Array(4).fill(null).map((_, index) => (
                     <div className="col-12 col-md-6 col-lg-4 col-xl-3" key={index}>
                       <div className="select-img-output">
@@ -998,13 +1020,42 @@ const EditProduct = () => {
         </div>
         <div className="px-3 px-sm-4 pb-5 pb-sm-4 mt-3 mt-sm-4 border-green-bottom">
           <Row className='mb-5'>
-            <label className=''>Description</label>
+          <Col lg={6} md={6} sm={12}>
+              <div className="fees-input mt-3">
+                <label>Quantity* </label>
+                <div className="d-flex align-items-center gap-3">
+                  <input type="number" placeholder="Enter product Quantity" value={inputQuantity} onChange={handleQuantityChange} />
+                  <Button className="add-items" onClick={addQuantity}>
+                    <img src="../../admin-img/add.svg" alt="" />
+                  </Button>
+                </div>
+
+              </div>
+
+              {product_qty.map((e, index) => (
+                <div className="fees-input list-data mt-3" key={index}>
+                  <div className="d-flex align-items-center gap-3">
+                    <p>{e}</p>
+                    <Button className="add-items" onClick={() => deleteQuantity(index)}>
+                      <img src="../../admin-img/profile/delete.svg" alt="" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              <div className='errorAdmin' >{isEmpty(product_qty) && submitCount > 0 && "Quantity is required "}</div>
+            </Col>
+            <Col lg={12} md={12} sm={12}>
+              <div className="fees-input mt-3">
+              <label className=''>Description</label>
             <CKEditor
               editor={ClassicEditor}
               data={values.content}
               onChange={handleEditorChange}
               config={editorConfiguration}
             />
+              </div>
+            </Col>
+          
             <Col lg={12} md={12} sm={12}>
               <div className="select-img-input  mt-3">
                 <label>Description Video</label>

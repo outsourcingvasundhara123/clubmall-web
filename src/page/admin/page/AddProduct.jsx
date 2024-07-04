@@ -1069,7 +1069,7 @@ const AddProduct = () => {
             <Col lg={12} md={12} sm={12}>
               <div className="select-img-input mt-3">
                 <label>Upload Video</label>
-                <div className="row align-items-center mt-4 mb-4 g-4">
+                <div className="row align-items-center mt-1 mb-4 g-4">
                   {Array(4).fill(null).map((_, index) => (
                     <div className='col-12 col-md-6 col-lg-4 col-xl-3' key={index}>
                       <div className="select-img-output">
