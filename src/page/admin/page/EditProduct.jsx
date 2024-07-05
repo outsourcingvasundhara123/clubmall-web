@@ -46,6 +46,8 @@ const EditProduct = () => {
     deleted_images: [],
     pdt_img_deleted_images: [],
     deleted_videos :[],
+    colors: Array(10).fill({ name: "", image: { file: undefined, preview: "" } }),
+    sizes: Array(10).fill(""),
   });
 
   const [category, setCategory] = useState([]);
@@ -236,16 +238,56 @@ const EditProduct = () => {
   function isEmpty(obj) {
     return Object.keys(obj).length === 0;
   }
+  const [sizes, setSizes] = useState([]);
   const [product_qty, setProduct_Qty] = useState([]);
   const [inputQuantity, setInputQuantity] = useState('');
-  
- 
+  const [colors, setColors] = useState([]);
+  const [inputSize, setInputSize] = useState('');
+  const [inputColor, setInputColor] = useState('');
+  const [colorImage, setColorImage] = useState(null);
   const addQuantity = () => {
     if (inputQuantity) {
       setProduct_Qty(prevProductQuantity => [...prevProductQuantity, parseInt(inputQuantity)]);
       setInputQuantity('');
     }
   };
+  const handleSizeChange = (e) => {
+    setInputSize(e.target.value);
+  };
+  const handleColorChange = (e) => {
+    setInputColor(e.target.value);
+  };
+  const addSize = () => {
+    if (inputSize) {
+      setSizes(prevSizes => [...prevSizes, inputSize]);
+      setInputSize('');
+    }
+  };
+  const addColor = () => {
+    if (inputColor && colorImage) {
+      setColors(prevColors => [...prevColors, { name: inputColor, image: colorImage }]);
+      setInputColor('');
+      setColorImage(null);
+    }
+  };
+const handleColorImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (upload) => {
+      setColorImage({ file: file, preview: upload.target.result });
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+
+ const deleteSize = (indexToRemove) => {
+  setSizes(sizes.filter((_, index) => index !== indexToRemove));
+};
+ const deleteColor = (indexToRemove) => {
+  setColors(colors.filter((_, index) => index !== indexToRemove));
+};
   const handleQuantityChange = (e) => {
     setInputQuantity(e.target.value);
   };
@@ -265,6 +307,16 @@ const EditProduct = () => {
         const sizeChartInCM = productData.size_chartIncm;
         setImageUrl(productDetail.data.data.productImagePath);
         setProduct_Qty(productData.product_qty || []);
+        const newSizes = productData.sku_attributes.size.map(size => size.name);
+        setSizes(newSizes);
+        const newColors = productData.sku_attributes.color.map(color => ({
+          name: color.name,
+           image: {
+          file: null,
+          preview: color.imgUrl ? `${productDetail.data.data.productImagePath}${product_id}/${color.imgUrl}` : null
+        }
+        }));
+        setColors(newColors);
         const newRows = sizeChart.row_name.map(row => ({
           name: row.name,
           columns: sizeChart.columns.filter(col => col.row_name === row.name).map(col => col.name),
@@ -456,6 +508,15 @@ const EditProduct = () => {
                 formData.append(`description_images[${index}]`, img.file);
             }
         });
+        colors.forEach((color, index) => {
+          formData.append(`colors[${index}][name]`, color.name);
+          if (color.image && color.image.file) {
+            formData.append(`colors[${index}][image]`, color.image.file);
+          }
+        });
+        sizes.forEach((size, index) => {
+          formData.append(`product_sizes[${index}]`, size);
+        });
         if (values.deleted_videos && values.deleted_videos.length > 0) {
           formData.append('deleted_videos', JSON.stringify(values.deleted_videos));
         }
@@ -486,6 +547,7 @@ const EditProduct = () => {
         console.log(error);
     }
 };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1019,6 +1081,62 @@ const EditProduct = () => {
           </Row>
         </div>
         <div className="px-3 px-sm-4 pb-5 pb-sm-4 mt-3 mt-sm-4 border-green-bottom">
+        <Row className='align-items-start'>
+  <Col lg={6} md={6} sm={12}>
+    <div className="fees-input mt-3">
+      <label>Size</label>
+      <div className="d-flex align-items-center gap-3">
+        <input type="text" placeholder="Enter product size" value={inputSize} onChange={handleSizeChange} />
+        <Button className="add-items" onClick={addSize}>
+          <img src="../../admin-img/add.svg" alt="" />
+        </Button>
+      </div>
+    </div>
+    {sizes.map((size, index) => (
+      <div className="fees-input list-data mt-3" key={index}>
+        <div className="d-flex align-items-center gap-3">
+          <p>{size}</p>
+          <Button className="add-items" onClick={() => deleteSize(index)}>
+            <img src="../../admin-img/profile/delete.svg" alt="" />
+          </Button>
+        </div>
+      </div>
+    ))}
+  </Col>
+
+  <Col lg={6} md={6} sm={12}>
+    <div className="fees-input mt-3">
+      <label>Color*</label>
+      <div className="d-flex align-items-center gap-3">
+        <div className="choose-color">
+          <input type="file" id="selectColor" accept='image/*' onChange={handleColorImageChange} />
+          <label htmlFor="selectColor">
+            <img src={colorImage?.preview || "../../admin-img/upload.png"} alt="" width="17px" />
+          </label>
+        </div>
+        <input type="text" placeholder="Enter product color" value={inputColor} onChange={handleColorChange} />
+        <Button className="add-items" onClick={addColor}>
+          <img src="../../admin-img/add.svg" alt="" />
+        </Button>
+      </div>
+    </div>
+    {colors.map((color, index) => (
+      <div className="fees-input list-data mt-3" key={index}>
+        <div className="d-flex align-items-center gap-3">
+          <div className="select-img-output resize">
+            <img src={color.image.preview} alt="" className="output-file" />
+          </div>
+          <p>{color.name}</p>
+          <Button className="add-items" onClick={() => deleteColor(index)}>
+            <img src="../../admin-img/profile/delete.svg" alt="" />
+          </Button>
+        </div>
+      </div>
+    ))}
+    <div className='errorAdmin'>{colors.length === 0 && submitCount > 0 && "color is required"}</div>
+  </Col>
+</Row>
+
           <Row className='mb-5'>
           <Col lg={6} md={6} sm={12}>
               <div className="fees-input mt-3">
