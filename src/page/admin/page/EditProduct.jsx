@@ -1469,7 +1469,7 @@ const deleteColor = (indexToRemove) => {
         </div>
         <div className="px-3 px-sm-4 pb-3 pb-sm-4 mt-3 mt-sm-4">
           <div className="d-flex align-items-center justify-content-end flex-wrap mt-3 gap-3 mt-5">
-            <Button className="fixed-fee" type="button" onClick={(e) => (setSubmitCount(1), handleSubmit(e))} >Edit</Button>
+            <Button className="fixed-fee" type="button" onClick={(e) => (setSubmitCount(1), handleSubmit(e))} >Save</Button>
           </div>
         </div>
       </div>

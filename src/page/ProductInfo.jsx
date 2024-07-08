@@ -553,7 +553,8 @@ const ProductInfo = () => {
 
                         setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
                         setMyMessageProductDtl(res.data.message);
-                       
+                        setProductColorActive(" ")
+                        setSizeActive(" ")
                         setMainLoder(false)
                         handleDrawerShow()
                     } else if (res.data.success === false) {
@@ -577,7 +578,8 @@ const ProductInfo = () => {
             }
         } catch (error) {
             setMainLoder(false)
-       
+            setProductColorActive(" ")
+            setSizeActive(" ")
             errorResponse(error, setMyMessageProductDtl)
             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }
@@ -817,69 +819,58 @@ const ProductInfo = () => {
     const handlePlay = (event) => {
         const video = event.target;
         if (video) {
-            video.play().catch((error) => {
-                console.error('Failed to play video:', error);
-            });
+            video.play();
             enterFullscreen(video);
-
-            // Handle visibility change to resume playback
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible' && video.paused) {
-                    video.play().catch((error) => {
-                        console.error('Failed to resume video:', error);
-                    });
-                }
-            });
-
-            // Handle pause event to resume playback
-            video.addEventListener('pause', () => {
-                if (document.visibilityState === 'visible' && !video.ended) {
-                    video.play().catch((error) => {
-                        console.error('Failed to resume video:', error);
-                    });
-                }
-            });
         }
     };
 
     useEffect(() => {
         const handleFullscreenChange = () => {
-            if (!document.fullscreenElement) {
-                const videos = document.querySelectorAll('video.small-video');
-                videos.forEach(video => {
+            const isFullscreen = 
+                document.fullscreenElement || 
+                document.webkitFullscreenElement || 
+                document.mozFullScreenElement || 
+                document.msFullscreenElement ||
+                document.requestFullscreen ||
+                document.webkitRequestFullscreen ||
+                document.msRequestFullscreen;
+                
+            if (!isFullscreen) {
+                const smallVideos = document.querySelectorAll('video.small-video');
+                smallVideos.forEach(video => {
                     video.muted = true;
                     video.controls = false;
                 });
-            }
-
-            if (!document.fullscreenElement) {
-                const videos = document.querySelectorAll('video.review-video');
-                videos.forEach(video => {
+    
+                const reviewVideos = document.querySelectorAll('video.review-video');
+                reviewVideos.forEach(video => {
                     video.muted = true;
                     video.controls = false;
                     video.pause();
                 });
             }
         };
-
+    
+        // Add event listeners for all vendor-prefixed versions
         document.addEventListener('fullscreenchange', handleFullscreenChange);
-
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+    
+        // Cleanup event listeners on component unmount
         return () => {
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
         };
     }, []);
+    
 
     const handlePlaySmall = (event) => {
         const videoElement = event.currentTarget;
-        videoElement.volume = 0.5;
-        videoElement.muted = false;
-        videoElement.controls = true;
-        enterFullscreen(videoElement);
-        if (videoElement.webkitEnterFullscreen) {
-            videoElement.webkitEnterFullscreen();
-        } else if (videoElement.webkitRequestFullscreen) {
-            videoElement.webkitRequestFullscreen(); // For newer iOS versions
-        }
+        
+        // Request full screen
         if (videoElement.requestFullscreen) {
             videoElement.requestFullscreen();
         } else if (videoElement.mozRequestFullScreen) { // Firefox
@@ -888,31 +879,46 @@ const ProductInfo = () => {
             videoElement.webkitRequestFullscreen();
         } else if (videoElement.msRequestFullscreen) { // IE/Edge
             videoElement.msRequestFullscreen();
+        } else if (videoElement.webkitEnterFullscreen) { // Older iOS
+            videoElement.webkitEnterFullscreen();
+        } else {
+            console.log("Fullscreen API not supported.");
         }
-        videoElement.play();
-    };
+        
+        // Set volume and unmute
+        videoElement.volume = 0.5;
+        videoElement.muted = false;
+        videoElement.controls = true;
 
+        setTimeout(() => {
+            const playPromise = videoElement.play();
+        
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log("Video playback started.");
+                }).catch((error) => {
+                    console.error("Error starting video playback:", error);
+                });
+            } else {
+                console.log("Video play promise is undefined.");
+            }
+        }, 100);
+    };
 
 
     const enterFullscreen = (video) => {
-        if (video) {
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
-            } else if (video.webkitEnterFullscreen) { // for Safari on iOS
-                video.webkitEnterFullscreen();
-                // Ensure the video plays inline and then try to enter fullscreen
-                video.setAttribute('playsinline', '');
-                video.play().then(() => {
-                    video.webkitEnterFullscreen(); // Attempt to enter fullscreen again
-                }).catch((error) => {
-                    console.error('Failed to play video inline:', error);
-                });
-            } else {
-                console.warn('Fullscreen API is not supported on this browser.');
-            }
+        // Request full screen
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.mozRequestFullScreen) { // Firefox
+            video.mozRequestFullScreen();
+        } else if (video.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { // IE/Edge
+            video.msRequestFullscreen();
         }
+        
     };
-
     const sliderRef = useRef(null);
     const sizechartRef = useRef(null);
 
@@ -1211,14 +1217,14 @@ const ProductInfo = () => {
                                                     {Product?.productList?.product_files?.map((video, index) => (
                                                         <div key={index} className='pe-2'>
                                                             <div className='d-flex gap-2 align-items-center'>
-                                                                <video
-                                                                    className='product-video'
+                                                                <video ref={videoRef}
+                                                                    className='product-video small-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
                                                                     poster={url + video.thumbnail}
-                                                                    onClick={(event) => handlePlay(event)}
+                                                                    onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
@@ -1389,13 +1395,13 @@ const ProductInfo = () => {
                                                         <div key={index}>
                                                             <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                 <video ref={videoRef}
-                                                                    className='product-video '
+                                                                    className='product-video small-video'
                                                                     autoPlay
                                                                     muted
                                                                     loop
                                                                     playsInline
                                                                     poster={url + video.thumbnail}
-                                                                    onClick={(event) => handlePlay(event)}
+                                                                    onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
                                                                     Your browser does not support the video.
@@ -1661,7 +1667,7 @@ const ProductInfo = () => {
                                                                         </React.Fragment>
                                                                     ))}
                                                                 </div>
-
+                                                              
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1674,9 +1680,9 @@ const ProductInfo = () => {
                                                     <img src={fullscreenImage} alt="fullscreen" className="fullscreen-image" />
                                                     <button className="close-button bg-transparent border-0 position-absolute top-0 end-0" onClick={handleCloseFullscreen}>
                                                         <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                                            <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
+                                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                                        <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
                                                     </button>
                                                 </div>
                                             </div>
