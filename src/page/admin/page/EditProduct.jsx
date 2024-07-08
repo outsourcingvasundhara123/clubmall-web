@@ -245,6 +245,8 @@ const EditProduct = () => {
   const [inputSize, setInputSize] = useState('');
   const [inputColor, setInputColor] = useState('');
   const [colorImage, setColorImage] = useState(null);
+  const [deletedSizes, setDeletedSizes] = useState([]);
+  const [deletedColors, setDeletedColors] = useState([]);
   const addQuantity = () => {
     if (inputQuantity) {
       setProduct_Qty(prevProductQuantity => [...prevProductQuantity, parseInt(inputQuantity)]);
@@ -282,10 +284,12 @@ const handleColorImageChange = (e) => {
 };
 
 
- const deleteSize = (indexToRemove) => {
+const deleteSize = (indexToRemove) => {
+  setDeletedSizes(prevDeletedSizes => [...prevDeletedSizes, sizes[indexToRemove]]);
   setSizes(sizes.filter((_, index) => index !== indexToRemove));
 };
- const deleteColor = (indexToRemove) => {
+const deleteColor = (indexToRemove) => {
+  setDeletedColors(prevDeletedColors => [...prevDeletedColors, colors[indexToRemove].name]);
   setColors(colors.filter((_, index) => index !== indexToRemove));
 };
   const handleQuantityChange = (e) => {
@@ -525,6 +529,12 @@ const handleColorImageChange = (e) => {
         }
         if (values.pdt_img_deleted_images && values.pdt_img_deleted_images.length > 0) {
           formData.append('pdt_img_deleted_images', JSON.stringify(values.pdt_img_deleted_images));
+      }
+      if (deletedSizes.length > 0) {
+        formData.append('deleted_sizes', JSON.stringify(deletedSizes));
+      }
+      if (deletedColors.length > 0) {
+        formData.append('deleted_colors', JSON.stringify(deletedColors));
       }
 
         const [productResponse] = await Promise.all([
