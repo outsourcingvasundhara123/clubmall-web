@@ -545,16 +545,18 @@ const ProductInfo = () => {
                             _id: res.data.data._id,
                             qty: product_qtyActive
                         }
-
-                        const updateData = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
+                        if (product_qtyActive > 1) {
+                            data.qty = product_qtyActive + res.data.data.qty - 1
+                            const updateData = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
+                        }
 
                         getCartData()
                         getcartcount()
 
                         setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
                         setMyMessageProductDtl(res.data.message);
-                        setProductColorActive(" ")
-                        setSizeActive(" ")
+                        //setProductColorActive(" ")
+                        //setSizeActive(" ")
                         setMainLoder(false)
                         handleDrawerShow()
                     } else if (res.data.success === false) {
