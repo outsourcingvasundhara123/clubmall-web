@@ -464,7 +464,7 @@ const ProductInfo = () => {
 
     useEffect(() => {
         getProductDetail();
-        getProductReview()
+        getProductReview();
     }, [product_id, isLoggedIn, isWishlist, add_wished_Called, filters, page]);
 
 
@@ -1648,28 +1648,34 @@ const ProductInfo = () => {
                                                                 <span className='date_pro_info my-0'>{`Reviewed  on  ${e.created_at.slice(0, 10)}`}</span>
                                                                 <span className='date_pro_info mt-0 d-block'>{e.content}</span>
                                                                 <div className='d-flex gap-2 pb-2 align-items-center'>
-                                                                    {e?.review_files?.map((r, i) => (
-                                                                        <React.Fragment key={i}>
-                                                                            {r.file_name && !r.file_name.includes("mp4") ? (
-                                                                                <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
-                                                                            ) : (
-                                                                                <video ref={videoRef}
-                                                                                    className='product-video review-video'
-                                                                                    playsInline
-                                                                                    volume={0.5}
-                                                                                    poster={url + r.thumbnail}
-                                                                                    onClick={(event) => handlePlaySmall(event)}
-                                                                                >
-                                                                                    <source src={r.file_name} type="video/mp4" />
-                                                                                    {/* Add more <source> elements for different video formats if necessary */}
-                                                                                    Your browser does not support the video.
-                                                                                </video>
+    {e?.review_files?.map((r, i) => (
+        <React.Fragment key={i}>
+            {r.file_name && r.media_type === "image" ? (
+                <img style={{ width: "100px" }} src={url + r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
+            ) : (
+                <video
+    ref={videoRef}
+    className='product-video review-video'
+    playsInline
+    volume={0.5}
+    poster={url + r.thumbnail}
+    onClick={(event) => handlePlaySmall(event)}
+>
+    <source src={`${r.file_name}`} type='video/mp4' />
+    <source src={`${r.file_name}`} type='video/webm' />
+    <source src={`${r.file_name}`} type='video/mov' />
+    <source src={`${r.file_name}`} type='video/mkv' />
 
-                                                                            )}
-                                                                        </React.Fragment>
-                                                                    ))}
-                                                                </div>
-                                                              
+    {/* Add more <source> elements for additional formats if necessary */}
+    Your browser does not support the video.
+</video>
+
+            )}
+        </React.Fragment>
+    ))}
+</div>
+
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1860,7 +1866,8 @@ const ProductInfo = () => {
                                                 <textarea placeholder='Type your review here' value={values.content} name='content' onChange={handleChange} rows={5} />
                                             </div>
                                             <div className='mt-3 review-file'>
-                                                <input type='file' name='review_files' accept='image/*,video/*' onChange={handlePhoto} multiple />
+                                            <input type='file' name='review_files' accept='video/mp4,video/mov,video/mkv,video/webm' onChange={handlePhoto} multiple />
+
                                             </div>
                                             <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} > {submitLoderRv ? "Loding..." : "Publish Review"} </Button>
                                         </Form>

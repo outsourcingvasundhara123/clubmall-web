@@ -46,6 +46,7 @@ const EditProduct = () => {
     deleted_images: [],
     pdt_img_deleted_images: [],
     deleted_videos :[],
+    deleted_files:[],
     colors: Array(10).fill({ name: "", image: { file: undefined, preview: "" } }),
     sizes: Array(10).fill(""),
   });
@@ -353,7 +354,7 @@ const deleteColor = (indexToRemove) => {
           })),
           description_video: productData.description_video.map(file => ({
             file: file.file_name,
-            preview: `${productDetail.data.data.productImagePath}${file.file_name}`,
+            preview: `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`,
           })),
           content: productData.content == null
             ? `<!DOCTYPE html>
@@ -559,93 +560,90 @@ const deleteColor = (indexToRemove) => {
 };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const updatedProductData = {
-      product_category_keys: values.product_category_keys,
-      description: values.description,
-      total_order: values.total_order,
-      group_price: values.group_price,
-      individual_price: values.individual_price,
-      competitors_price: values.competitors_price,
-      name: values.name,
-      tax: values.tax,
-      product_id: values.product_id,
-      content: states.content,
-      size_chartInInch: values.size_chartInInch,
-      size_chartIncm: values.size_chartIncm,
-      product_qty: product_qty,
-
-    };
-    const validationErrors = validate(updatedProductData);
-    setErrors(validationErrors);
-
-    if (
-      Object.keys(validationErrors).length === 0 &&
-      values.product_category_keys.product_category_one._id &&
-      values.product_category_keys.product_category_two._id
-    ) {
-      try {
-        setMainLoder(true);
-
-        const formData = new FormData();
-        let isVideo = false;
-        const titles = [];
-
-        values.product_files.forEach((video, index) => {
-          if (video?.title) {
-            titles[index] = video.title;
-          }
-        });
-
-        values.product_files.forEach((video, index) => {
-          if (video?.file) {
-            formData.append("product_files", video.file);
-  
-            if (titles[index] !== undefined) {
-              formData.append(`product_files_titles_${index}`, titles[index]);
-            }
-  
-            if (video.file.type?.startsWith("video/")) {
-              isVideo = true;
-            }
-          }
-        });
-        formData.append("product_category_keys", JSON.stringify(values.product_category_keys));
-        formData.append("description", values.description);
-        formData.append("total_order", values.total_order);
-        formData.append("group_price", values.group_price);
-        formData.append("individual_price", values.individual_price);
-        formData.append("competitors_price", values.competitors_price);
-        formData.append("name", values.name);
-        formData.append("product_id", values.product_id);
-        formData.append("tax", values.tax);   
-        formData.append("content", states.content);
-        formData.append("size_chartInInch", JSON.stringify(values.size_chartInInch));
-        formData.append("size_chartIncm", JSON.stringify(values.size_chartIncm));
-        formData.append("product_qty", JSON.stringify(product_qty));
-        const response = await api.postWithToken(`${serverURL}/product-update/${product_id}`, formData);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        if (response.data.success === true) {
-
-          await getImage(response.data);
-
-          setSnackbarMessage('Product updated successfully!');
-          setSnackbarOpen(true);
-          setTimeout(() => {
-            navigate("/admin/product");
-          }, 1000);
-        }
-
-        setMainLoder(false);
-      } catch (error) {
-        console.error(error);
-        setMainLoder(false);
-      }
-    }
+  const updatedProductData = {
+    product_category_keys: values.product_category_keys,
+    description: values.description,
+    total_order: values.total_order,
+    group_price: values.group_price,
+    individual_price: values.individual_price,
+    competitors_price: values.competitors_price,
+    name: values.name,
+    tax: values.tax,
+    product_id: values.product_id,
+    content: states.content,
+    size_chartInInch: values.size_chartInInch,
+    size_chartIncm: values.size_chartIncm,
+    product_qty: product_qty,
   };
+
+  const validationErrors = validate(updatedProductData);
+  setErrors(validationErrors);
+
+  if (
+    Object.keys(validationErrors).length === 0 &&
+    values.product_category_keys.product_category_one._id &&
+    values.product_category_keys.product_category_two._id
+  ) {
+    try {
+      setMainLoder(true);
+
+      const formData = new FormData();
+      let isVideo = false;      
+      values.product_files.forEach((video, index) => {
+        if (video?.file) {
+          formData.append("product_files", video.file);
+
+          if (video?.title) {
+            formData.append(`product_files_titles_${index}`, video.title);
+          }
+
+          if (video.file.type?.startsWith("video/")) {
+            isVideo = true;
+          }
+        }
+      });
+
+      formData.append("product_category_keys", JSON.stringify(values.product_category_keys));
+      formData.append("description", values.description);
+      formData.append("total_order", values.total_order);
+      formData.append("group_price", values.group_price);
+      formData.append("individual_price", values.individual_price);
+      formData.append("competitors_price", values.competitors_price);
+      formData.append("name", values.name);
+      formData.append("product_id", values.product_id);
+      formData.append("tax", values.tax);   
+      formData.append("content", states.content);
+      formData.append("size_chartInInch", JSON.stringify(values.size_chartInInch));
+      formData.append("size_chartIncm", JSON.stringify(values.size_chartIncm));
+      formData.append("product_qty", JSON.stringify(product_qty));
+   
+      if (values.deleted_files && values.deleted_files.length > 0) {
+        formData.append('deleted_files', JSON.stringify(values.deleted_files));
+      }
+      
+
+      const response = await api.postWithToken(`${serverURL}/product-update/${product_id}`, formData);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      if (response.data.success === true) {
+        await getImage(response.data);
+        setSnackbarMessage('Product updated successfully!');
+        setSnackbarOpen(true);
+        setTimeout(() => {
+          navigate("/admin/product");
+        }, 1000);
+      }
+
+      setMainLoder(false);
+    } catch (error) {
+      console.error(error);
+      setMainLoder(false);
+    }
+  }
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -704,7 +702,6 @@ const deleteColor = (indexToRemove) => {
       return new CustomUploadAdapter(loader);
     };
   }
-
 
   const handleTitleChange = (e, index) => {
     const title = e.target.value;
@@ -807,6 +804,7 @@ const deleteColor = (indexToRemove) => {
       reader.readAsDataURL(file);
     }
   };
+  
   const handledescriptionVideo = (e) => {
     const file = e.target.files[0];
     const index = parseInt(e.target.name.split('_')[2]);
@@ -832,10 +830,24 @@ const deleteColor = (indexToRemove) => {
 
   
   
+
   const handleDeleteVideo = (index) => {
     const updatedVideos = [...values.product_files];
-    updatedVideos[index] = { file: undefined, preview: "", title: "" };
-    setValues((prevValues) => ({ ...prevValues, product_files: updatedVideos }));
+    updatedVideos[index] = {
+      ...updatedVideos[index],
+      file: undefined,
+      preview: "",
+      title: "" // Clear the title or keep it as needed
+    };
+  
+    const updatedDeletedVideos = [...values.deleted_files];
+    updatedDeletedVideos.push(index); // Store the index or any identifier of the video to delete
+  
+    setValues(prevValues => ({
+      ...prevValues,
+      product_files: updatedVideos,
+      deleted_files: updatedDeletedVideos
+    }));
   };
   const handleDeleteDescriptionVideo = (index) => {
     const updatedVideos = [...values.description_video];
