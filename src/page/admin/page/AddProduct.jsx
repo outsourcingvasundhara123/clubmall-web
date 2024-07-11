@@ -931,7 +931,7 @@ const AddProduct = () => {
             </Col>
             <Col lg={4} md={6} sm={12}>
               <div className="fees-input mt-3">
-                <label>Group Price*</label>
+                <label>Group Price</label>
                 <input type="number"
                   onChange={handleChange}
                   name="group_price"

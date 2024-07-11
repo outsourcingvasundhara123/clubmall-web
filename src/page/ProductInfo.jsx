@@ -1641,10 +1641,11 @@ const ProductInfo = () => {
                                                                     <div className='d-flex align-items-center gap-1'>
                                                                         <Rating name="simple-controlled" value={e?.rating} readOnly />
                                                                     </div>
-                                                                    <div>
+                                                                  
+                                                                </div>
+                                                                <div>
                                                                         <span className='date_pro_info my-0 a-text-bold text-black'>{e.heading}</span>
                                                                     </div>
-                                                                </div>
                                                                 <span className='date_pro_info my-0'>{`Reviewed  on  ${e.created_at.slice(0, 10)}`}</span>
                                                                 <span className='date_pro_info mt-0 d-block'>{e.content}</span>
                                                                 <div className='d-flex gap-2 pb-2 align-items-center'>

@@ -817,23 +817,17 @@ const handleSubmit = async (e) => {
       reader.readAsDataURL(file);
     }
   };
-  
-
-
-  
-  
-
   const handleDeleteVideo = (index) => {
     const updatedVideos = [...values.product_files];
     updatedVideos[index] = {
       ...updatedVideos[index],
       file: undefined,
       preview: "",
-      title: "" // Clear the title or keep it as needed
+      title: ""
     };
   
     const updatedDeletedVideos = [...values.deleted_files];
-    updatedDeletedVideos.push(index); // Store the index or any identifier of the video to delete
+    updatedDeletedVideos.push(index);
   
     setValues(prevValues => ({
       ...prevValues,
@@ -841,6 +835,7 @@ const handleSubmit = async (e) => {
       deleted_files: updatedDeletedVideos
     }));
   };
+  
   const handleDeleteDescriptionVideo = (index) => {
     const updatedVideos = [...values.description_video];
     updatedVideos[index] = { file: undefined, preview: "" }; // Clear the video at the given index
@@ -903,7 +898,7 @@ const handleSubmit = async (e) => {
             </Col>
             <Col lg={4} md={6} sm={12}>
               <div className="fees-input mt-3">
-                <label>Group Price*</label>
+                <label>Group Price</label>
                 <input
                   type="number"
                   onChange={handleChange}
