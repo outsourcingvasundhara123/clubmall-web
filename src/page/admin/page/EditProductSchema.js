@@ -42,9 +42,9 @@ export const validate = (values) => {
     
 
     // Validate group_price field
-    if (!values.group_price) {
-        errors.group_price = "group price is required";
-    }
+    // if (!values.group_price) {
+    //     errors.group_price = "group price is required";
+    // }
     // Validate description field
     // if (!values.attributes) {
     //     errors.attributes = "description is required";
@@ -67,9 +67,9 @@ export const validate = (values) => {
     // }
  
     // Validate product_category_keys field
-    if (!values.group_price) {
-        errors.group_price = "group price is required";
-    }
+    // if (!values.group_price) {
+    //     errors.group_price = "group price is required";
+    // }
 
     // Validate category field
     // if (!values.category) {

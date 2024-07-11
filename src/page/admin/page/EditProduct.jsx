@@ -591,18 +591,10 @@ const handleSubmit = async (e) => {
       setMainLoder(true);
 
       const formData = new FormData();
-      let isVideo = false;      
       values.product_files.forEach((video, index) => {
         if (video?.file) {
           formData.append("product_files", video.file);
-
-          if (video?.title) {
-            formData.append(`product_files_titles_${index}`, video.title);
-          }
-
-          if (video.file.type?.startsWith("video/")) {
-            isVideo = true;
-          }
+          formData.append(`product_files_titles_${index}`, video.title);
         }
       });
 
