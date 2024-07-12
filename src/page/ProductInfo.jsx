@@ -1652,7 +1652,7 @@ const ProductInfo = () => {
     {e?.review_files?.map((r, i) => (
         <React.Fragment key={i}>
             {r.file_name && r.media_type === "image" ? (
-                <img style={{ width: "100px" }} src={url + r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
+                <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
             ) : (
                 <video
     ref={videoRef}
@@ -1867,7 +1867,7 @@ const ProductInfo = () => {
                                                 <textarea placeholder='Type your review here' value={values.content} name='content' onChange={handleChange} rows={5} />
                                             </div>
                                             <div className='mt-3 review-file'>
-                                            <input type='file' name='review_files' accept='video/mp4,video/mov,video/mkv,video/webm' onChange={handlePhoto} multiple />
+                                            <input type='file' name='review_files' accept='image/*,video/*' onChange={handlePhoto} multiple />
 
                                             </div>
                                             <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} > {submitLoderRv ? "Loding..." : "Publish Review"} </Button>
