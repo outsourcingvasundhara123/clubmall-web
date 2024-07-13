@@ -166,20 +166,27 @@ export const CartProvider = ({ children }) => {
     } else {
       currentCartData = [];
     }
-    const productExists = currentCartData.find(item => item.product_id === data.product_id);
-    if (!productExists) {
-      currentCartData.push(data);
-
-      // Convert object to string and encrypt
+    const productIndex = currentCartData.findIndex(item => 
+      item.product_id === data.product_id &&
+      item.color === data.color &&
+      item.size === data.size
+    );
+  
+    if (productIndex !== -1) {
+      currentCartData[productIndex].qty += data.qty;
       const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
-
       localStorage.setItem('cartPostData', ciphertext);
-      handleDrawerShow()
-      setMyMessage("Product added to cart successfully");
+      handleDrawerShow();
+      setMyMessage("Product quantity updated successfully");
       setSucessSnackBarOpen(!sucessSnackBarOpen);
     } else {
-      setMyMessage("This product is already in your cart");
-      setWarningSnackBarOpen(!warningSnackBarOpen);
+      currentCartData.push(data);
+      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+      localStorage.setItem('cartPostData', ciphertext);
+  
+      handleDrawerShow();
+      setMyMessage("Product added to cart successfully");
+      setSucessSnackBarOpen(!sucessSnackBarOpen);
     }
   }
 
@@ -194,13 +201,27 @@ export const CartProvider = ({ children }) => {
         subtotal: 0
       };
     }
+  
+    const productIndex = currentProductDetails.items.findIndex(item => 
+      item.product_id === data.product_id &&
+      item.color === productColorActive &&
+      item.size === sizeActive
+    );
+  
+    if (productIndex !== -1) {
+      currentProductDetails.items[productIndex].qty += product_qtyActive;
+      currentProductDetails.items[productIndex].total_price += (Product.productList.individual_price * product_qtyActive);
 
-    const productExists = currentProductDetails.items.find(item => item.product_id === data.product_id);
-    if (!productExists) {
-      // Find matching SKU details
+      currentProductDetails.subtotal += (Product.productList.individual_price * product_qtyActive);
+
+      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+      localStorage.setItem('productDetails', ciphertext);
+  
+      setMyMessage("Product quantity updated successfully");
+      setSucessSnackBarOpen(!sucessSnackBarOpen);
+      getLocalCartData();
+    } else {
       const skuDetail = Product.productList.sku_details.find(sku => sku.attrs[0].color === productColorActive);
-
-      // Check if SKU detail was found
       if (!skuDetail) {
         console.error('SKU details not found');
         return;
@@ -229,11 +250,7 @@ export const CartProvider = ({ children }) => {
       localStorage.setItem('productDetails', ciphertext);
       setMyMessage("Product details added successfully");
       setSucessSnackBarOpen(!sucessSnackBarOpen);
-      getLocalCartData()
-
-    } else {
-      setMyMessage("This product details is already stored");
-      setWarningSnackBarOpen(!warningSnackBarOpen);
+      getLocalCartData();
     }
   }
 

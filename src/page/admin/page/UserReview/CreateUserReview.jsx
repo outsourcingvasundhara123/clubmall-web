@@ -183,7 +183,7 @@ function CreateUserReview() {
     setSnackbarMessage('Review created successfully.');
     setSuccessSnackbarOpen(true);
     setTimeout(() => {
-      window.location.replace("/admin/product");
+      window.location.replace(`/admin/create-user-review/${product_id}`);
     }, 1000);
   };
 
