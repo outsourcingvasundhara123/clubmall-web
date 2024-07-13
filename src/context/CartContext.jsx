@@ -166,28 +166,23 @@ export const CartProvider = ({ children }) => {
     } else {
       currentCartData = [];
     }
-    const productIndex = currentCartData.findIndex(item => 
-      item.product_id === data.product_id &&
-      item.color === data.color &&
-      item.size === data.size
-    );
-  
-    if (productIndex !== -1) {
-      currentCartData[productIndex].qty += data.qty;
-      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
-      localStorage.setItem('cartPostData', ciphertext);
-      handleDrawerShow();
-      setMyMessage("Product quantity updated successfully");
-      setSucessSnackBarOpen(!sucessSnackBarOpen);
-    } else {
+    const productExists = currentCartData.find(item => item.skuid === data.skuid);
+    if (!productExists) {
+      data.qty = 1;
       currentCartData.push(data);
-      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
-      localStorage.setItem('cartPostData', ciphertext);
-  
-      handleDrawerShow();
-      setMyMessage("Product added to cart successfully");
-      setSucessSnackBarOpen(!sucessSnackBarOpen);
+    } else {
+      data.qty = productExists.qty + 1;
+      const productIndex = currentCartData.findIndex(item => item.skuid === data.skuid);
+      currentCartData[productIndex] = data;
     }
+
+    // Convert object to string and encrypt
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+    localStorage.setItem('cartPostData', ciphertext);
+    handleDrawerShow()
+    setMyMessage("Product added to cart successfully");
+    setSucessSnackBarOpen(!sucessSnackBarOpen);
   }
 
   const addProductDetailsToLocal = async (data, Product, sizeActive, productColorActive,product_qtyActive) => {
@@ -201,31 +196,19 @@ export const CartProvider = ({ children }) => {
         subtotal: 0
       };
     }
-  
-    const productIndex = currentProductDetails.items.findIndex(item => 
-      item.product_id === data.product_id &&
-      item.color === productColorActive &&
-      item.size === sizeActive
-    );
-  
-    if (productIndex !== -1) {
-      currentProductDetails.items[productIndex].qty += product_qtyActive;
-      currentProductDetails.items[productIndex].total_price += (Product.productList.individual_price * product_qtyActive);
 
-      currentProductDetails.subtotal += (Product.productList.individual_price * product_qtyActive);
+    const productExists = currentProductDetails.items.find(item => item.skuid === data.skuid);
 
-      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
-      localStorage.setItem('productDetails', ciphertext);
-  
-      setMyMessage("Product quantity updated successfully");
-      setSucessSnackBarOpen(!sucessSnackBarOpen);
-      getLocalCartData();
-    } else {
-      const skuDetail = Product.productList.sku_details.find(sku => sku.attrs[0].color === productColorActive);
-      if (!skuDetail) {
-        console.error('SKU details not found');
-        return;
-      }
+    // Find matching SKU details
+    const skuDetail = Product.productList.sku_details.find(sku => sku.attrs[0].color === productColorActive);
+
+    // Check if SKU detail was found
+    if (!skuDetail) {
+      console.error('SKU details not found');
+      return;
+    }
+
+    if (!productExists) {
 
       // construct the details
       let productDetail = {
@@ -236,7 +219,8 @@ export const CartProvider = ({ children }) => {
         total_price: Product.productList.individual_price * product_qtyActive,
         individual_price: Product.productList.individual_price,
         size: sizeActive,
-        color: productColorActive
+        color: productColorActive,
+        skuid: data.skuid
       }
 
       currentProductDetails.items.push(productDetail);
@@ -244,17 +228,27 @@ export const CartProvider = ({ children }) => {
       // Update subtotal
       currentProductDetails.subtotal += productDetail.total_price;
 
-      // Convert object to string and encrypt
-      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+    } else {
 
-      localStorage.setItem('productDetails', ciphertext);
-      setMyMessage("Product details added successfully");
-      setSucessSnackBarOpen(!sucessSnackBarOpen);
-      getLocalCartData();
+      // Update the product quantity
+      productExists.qty += product_qtyActive;
+      productExists.total_price = productExists.qty * productExists.individual_price;
+
+      // Update subtotal
+      currentProductDetails.subtotal += productExists.individual_price * product_qtyActive;
+  
     }
+
+    // Convert object to string and encrypt
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+
+    localStorage.setItem('productDetails', ciphertext);
+    setMyMessage("Product details added successfully");
+    setSucessSnackBarOpen(!sucessSnackBarOpen);
+    getLocalCartData()
   }
 
-  const deleteProductFromLocalCart = async (productId) => {
+  const deleteProductFromLocalCart = async (skuId) => {
     let currentCartData = localStorage.getItem('cartPostData');
     if (!currentCartData) {
       setMyMessage("Cart is empty");
@@ -265,7 +259,7 @@ export const CartProvider = ({ children }) => {
     currentCartData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
     // Find the product in the cart
-    const productIndex = currentCartData.findIndex(item => item.product_id === productId);
+    const productIndex = currentCartData.findIndex(item => item.skuid === skuId);
     if (productIndex === -1) {
       setMyMessage("Product not found in the cart");
       setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -285,7 +279,7 @@ export const CartProvider = ({ children }) => {
     setSucessSnackBarOpen(!sucessSnackBarOpen);
   }
 
-  const deleteProductDetailsFromLocal = async (productId) => {
+  const deleteProductDetailsFromLocal = async (skuId) => {
     let currentProductDetails = localStorage.getItem('productDetails');
     if (!currentProductDetails) {
       setMyMessage("No product details stored");
@@ -296,7 +290,7 @@ export const CartProvider = ({ children }) => {
     currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
     // Find the product in the stored details
-    const productIndex = currentProductDetails.items.findIndex(item => item.product_id === productId);
+    const productIndex = currentProductDetails.items.findIndex(item => item.skuid === skuId);
     if (productIndex === -1) {
       setMyMessage("Product details not found");
       setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -319,7 +313,7 @@ export const CartProvider = ({ children }) => {
     setSucessSnackBarOpen(!sucessSnackBarOpen);
   }
 
-  const increaseProductQuantity = async (productId, increaseBy = 1) => {
+  const increaseProductQuantity = async (skuId, increaseBy = 1) => {
     let currentProductDetails = localStorage.getItem('productDetails');
     if (!currentProductDetails) {
       setMyMessage("No product details stored");
@@ -329,7 +323,7 @@ export const CartProvider = ({ children }) => {
     const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
     currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   
-    const productIndex = currentProductDetails.items.findIndex(item => item.product_id === productId);
+    const productIndex = currentProductDetails.items.findIndex(item => item.skuid === skuId);
     if (productIndex === -1) {
       setMyMessage("Product details not found");
       setWarningSnackBarOpen(!warningSnackBarOpen);
@@ -348,7 +342,7 @@ export const CartProvider = ({ children }) => {
   }
   
 
-  const decreaseProductQuantity = async (productId) => {
+  const decreaseProductQuantity = async (skuId) => {
     let currentProductDetails = localStorage.getItem('productDetails');
     if (!currentProductDetails) {
       setMyMessage("No product details stored");
@@ -359,7 +353,7 @@ export const CartProvider = ({ children }) => {
     currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
     // Find the product in the stored details
-    const productIndex = currentProductDetails.items.findIndex(item => item.product_id === productId);
+    const productIndex = currentProductDetails.items.findIndex(item => item.skuid === skuId);
     if (productIndex === -1) {
       setMyMessage("Product details not found");
       setWarningSnackBarOpen(!warningSnackBarOpen);

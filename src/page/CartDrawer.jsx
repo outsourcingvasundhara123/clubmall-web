@@ -346,12 +346,12 @@ const CartDrawer = () => {
                                                     <div className='qty d-flex align-items-center gap-3'>
                                                         <h5>Qty:</h5>
                                                         <div className='count-product'>
-                                                            <Button onClick={(d) => decreaseProductQuantity(e.product_id)} > <MdRemove /></Button>
+                                                            <Button onClick={(d) => decreaseProductQuantity(e.skuid)} > <MdRemove /></Button>
                                                             <span>{e.qty}</span>
-                                                            <Button onClick={(d) => increaseProductQuantity(e.product_id)}><MdAdd /></Button>
+                                                            <Button onClick={(d) => increaseProductQuantity(e.skuid)}><MdAdd /></Button>
                                                         </div>
                                                     </div>
-                                                    <Button onClick={() => (deleteProductDetailsFromLocal(e.product_id), deleteProductFromLocalCart(e.product_id))} className='submit-btn delete-comment delete-product'>
+                                                    <Button onClick={() => (deleteProductDetailsFromLocal(e.skuid), deleteProductFromLocalCart(e.skuid))} className='submit-btn delete-comment delete-product'>
                                                         <MdDelete />
                                                     </Button>
                                                 </div>

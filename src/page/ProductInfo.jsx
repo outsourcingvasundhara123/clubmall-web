@@ -892,6 +892,7 @@ const ProductInfo = () => {
         videoElement.muted = false;
         videoElement.controls = true;
 
+        videoElement.play();
         setTimeout(() => {
             const playPromise = videoElement.play();
         
@@ -975,7 +976,7 @@ const ProductInfo = () => {
                                     <div className='shipping-def d-flex align-items-center justify-content-end mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
                                         <div className='d-flex justify-content-end align-items-center flex-wrap gap-2 gap-md-4'>
                                             <div className='rate d-flex align-items-center gap-2'>
-                                                <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                <span className='cos-title'>{Product?.productList?.rating ? Product.productList.rating.toFixed(2) : '0'}</span>
                                                 <div className='d-flex align-items-center gap-2'>
                                                     {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
                                                         <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
@@ -1010,7 +1011,7 @@ const ProductInfo = () => {
                                                 <div className='d-flex align-items-center flex-wrap gap-2 gap-md-4'>
                                                     <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
-                                                        <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                        <span className='cos-title'>{Product?.productList?.rating ? Product.productList.rating.toFixed(2) : '0'}</span>
                                                         <div className='d-flex align-items-center gap-1'>
                                                             {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
                                                                 <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
@@ -1161,7 +1162,7 @@ const ProductInfo = () => {
                                                 <div className='d-flex align-items-center flex-wrap gap-2 gap-xl-3'>
                                                     <h5 className='info-title border-right-cos cos-title' >{Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
-                                                        <span className='cos-title' >{Product?.productList?.rating}</span>
+                                                        <span className='cos-title' >{Product?.productList?.rating ? Product.productList.rating.toFixed(2) : '0'}</span>
                                                         <div className='d-flex align-items-center gap-1'>
                                                             {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
                                                                 <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
@@ -1229,6 +1230,9 @@ const ProductInfo = () => {
                                                                     onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
+                                                                    <source src={url + video.file_name} type="video/webm" />
+                                                                    <source src={url + video.file_name} type="video/mov" />
+                                                                    <source src={url + video.file_name} type="video/mkv" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                             </div>
@@ -1406,6 +1410,9 @@ const ProductInfo = () => {
                                                                     onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
+                                                                    <source src={url + video.file_name} type="video/webm" />
+                                                                    <source src={url + video.file_name} type="video/mov" />
+                                                                    <source src={url + video.file_name} type="video/mkv" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                             </div>
@@ -1498,6 +1505,9 @@ const ProductInfo = () => {
 
                                                                 >
                                                                     <source src={url + product_id + "/" + video.file_name} type="video/mp4" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/webm" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/mov" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/mkv" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                             </div>
@@ -1654,14 +1664,15 @@ const ProductInfo = () => {
             {r.file_name && r.media_type === "image" ? (
                 <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
             ) : (
-                <video
-    ref={videoRef}
-    className='product-video review-video'
-    playsInline
-    volume={0.5}
-    poster={url + r.thumbnail}
-    onClick={(event) => handlePlaySmall(event)}
->
+            <video
+                ref={videoRef}
+                className='product-video review-video'
+                loop
+                playsInline
+                muted
+                poster={url + r.thumbnail}
+                onClick={(event) => handlePlaySmall(event)}
+            >
     <source src={`${r.file_name}`} type='video/mp4' />
     <source src={`${r.file_name}`} type='video/webm' />
     <source src={`${r.file_name}`} type='video/mov' />

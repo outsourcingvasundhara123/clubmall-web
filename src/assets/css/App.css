@@ -7480,3 +7480,7 @@ table tr td:first-of-type {
 .text-black {
     color: #000000;
 }
+.review-video{
+    width: 140px !important;
+    height: 210px !important;
+}
