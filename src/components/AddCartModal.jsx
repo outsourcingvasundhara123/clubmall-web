@@ -179,7 +179,7 @@ const AddCartModal = (props) => {
                                 window.location.reload();
                             } else {
                                 props.handleClose()
-                                handleDrawerShow()
+                                //handleDrawerShow()
                             }
                             setMainLoder(false)
                         }, 1000);

@@ -2591,6 +2591,7 @@ del {
 
 .cart-canvas {
     width: 490px !important;
+    z-index: 99999;
 }
 
 .cart-side-close {
@@ -4887,11 +4888,15 @@ input[type='radio'] {
 
 .submit-btn:hover,
 .shop-btn:hover,
-.add-cart-items:hover,
+/* .add-cart-items:hover, */
 .btn-scroll-top:hover,
 .shop-care-bears-btn:hover,
 .checkout:hover {
     background-color: #b3221a !important;
+}
+
+.add-cart-items:hover,.add-cart-items:first-child:active{
+    color:#000;
 }
 
 .header .account .login-btn:hover {

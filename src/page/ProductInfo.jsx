@@ -558,9 +558,9 @@ const ProductInfo = () => {
                         //setProductColorActive(" ")
                         //setSizeActive(" ")
                         setMainLoder(false)
-                        handleDrawerShow()
+                        //handleDrawerShow()
                     } else if (res.data.success === false) {
-                        handleDrawerShow()
+                        //handleDrawerShow()
                         setMainLoder(false)
                         setMyMessageProductDtl(res.data.message);
                         setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
@@ -922,6 +922,27 @@ const ProductInfo = () => {
         }
         
     };
+
+    const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
+    const videoRefs = useRef([]);
+
+    const handleSlideChange = (swiper) => {
+        const currentIndex = swiper.activeIndex;
+
+        // Pause the previous video
+        if (currentIndex > 0 && videoRefs.current[currentIndex - 1]) {
+        videoRefs.current[currentIndex - 1].pause();
+        }
+
+        // Pause the next video
+        if (currentIndex < Product?.productList?.description_video.length - 1 && videoRefs.current[currentIndex + 1]) {
+        videoRefs.current[currentIndex + 1].pause();
+        }
+
+        setCurrentVideoIndex(currentIndex);
+    };
+
+
     const sliderRef = useRef(null);
     const sizechartRef = useRef(null);
 
@@ -1460,6 +1481,7 @@ const ProductInfo = () => {
 
                                             <div>
                                                 <Swiper
+                                                    onSlideChange={handleSlideChange}
                                                     slidesPerView={4}
                                                     spaceBetween={10}
                                                     hashNavigation={{ watchState: true }}
@@ -1494,7 +1516,8 @@ const ProductInfo = () => {
                                                         <SwiperSlide key={index}>
                                                             <div className='d-flex gap-2 pb-0 align-items-center'>
                                                                 <video
-                                                                    className='product-video bottom-product-video video-design' ref={videoRef}
+                                                                    className='product-video bottom-product-video video-design' 
+                                                                    ref={(el) => (videoRefs.current[index] = el)}
                                                                     controls
                                                                     loop
                                                                     playsInline

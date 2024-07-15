@@ -180,7 +180,7 @@ export const CartProvider = ({ children }) => {
     const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentCartData), process.env.REACT_APP_JWT_SECRET_KEY).toString();
 
     localStorage.setItem('cartPostData', ciphertext);
-    handleDrawerShow()
+    //handleDrawerShow()
     setMyMessage("Product added to cart successfully");
     setSucessSnackBarOpen(!sucessSnackBarOpen);
   }
