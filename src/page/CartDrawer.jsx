@@ -426,7 +426,7 @@ const CartDrawer = () => {
                                         <h5 className=''>Subtotal:</h5>
                                         <span>${subtotal}</span>
                                     </div>
-                                    <Button className='go-cart mt-2' onClick={() => (navigate("/login"), handleDrawerClose(), localStorage.setItem('lastVisitedPath', "/cart"))}  >Go to cart</Button>
+                                    <Button className='go-cart mt-2' onClick={() => (navigate("/login"), handleDrawerClose(), localStorage.setItem('lastVisitedPath', "/cart"))}  >Checkout</Button>
                                 </>
                             }
 
@@ -436,7 +436,7 @@ const CartDrawer = () => {
                                         <h5 className=''>Subtotal:</h5>
                                         <span>${cartList.cartAmountDetails.total_amount}</span>
                                     </div>
-                                    <Button className='go-cart mt-2' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Go to cart</Button>
+                                    <Button className='go-cart mt-2' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Checkout</Button>
                                 </>
                             }
 

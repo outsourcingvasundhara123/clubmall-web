@@ -868,44 +868,46 @@ const ProductInfo = () => {
         };
     }, []);
     
-
-    const handlePlaySmall = (event) => {
+    const handlePlaySmall =async (event) => {
         const videoElement = event.currentTarget;
-        
-        // Request full screen
-        if (videoElement.requestFullscreen) {
-            videoElement.requestFullscreen();
-        } else if (videoElement.mozRequestFullScreen) { // Firefox
-            videoElement.mozRequestFullScreen();
-        } else if (videoElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
-            videoElement.webkitRequestFullscreen();
-        } else if (videoElement.msRequestFullscreen) { // IE/Edge
-            videoElement.msRequestFullscreen();
-        } else if (videoElement.webkitEnterFullscreen) { // Older iOS
-            videoElement.webkitEnterFullscreen();
-        } else {
-            console.log("Fullscreen API not supported.");
-        }
-        
         // Set volume and unmute
         videoElement.volume = 0.5;
         videoElement.muted = false;
         videoElement.controls = true;
 
-        videoElement.play();
-        setTimeout(() => {
-            const playPromise = videoElement.play();
-        
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log("Video playback started.");
-                }).catch((error) => {
-                    console.error("Error starting video playback:", error);
-                });
-            } else {
-                console.log("Video play promise is undefined.");
-            }
-        }, 100);
+        try {
+            // Start playback first
+            await videoElement.play();
+            console.log("Video playback started.");
+
+            // Wait for a short moment before requesting fullscreen
+            setTimeout(async () => {
+                try {
+                    if (videoElement.requestFullscreen) {
+                        await videoElement.requestFullscreen();
+                    } else if (videoElement.mozRequestFullScreen) { // Firefox
+                        await videoElement.mozRequestFullScreen();
+                    } else if (videoElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                        await videoElement.webkitRequestFullscreen();
+                    } else if (videoElement.msRequestFullscreen) { // IE/Edge
+                        await videoElement.msRequestFullscreen();
+                    } else if (videoElement.webkitEnterFullscreen) { // Older iOS
+                        videoElement.webkitEnterFullscreen();
+                    } else {
+                        console.log("Fullscreen API not supported.");
+                    }
+
+                    // Ensure video continues playing after entering fullscreen
+                    await videoElement.play();
+                    console.log("Video playback continued in fullscreen.");
+                } catch (err) {
+                    console.error("Error requesting fullscreen or continuing playback:", err);
+                }
+            }, 100); // Short delay to allow video playback to start
+
+        } catch (error) {
+            console.error("Error starting video playback:", error);
+        }
     };
 
 
@@ -923,23 +925,13 @@ const ProductInfo = () => {
         
     };
 
-    const [currentVideoIndex, setCurrentVideoIndex] = useState(null);
     const videoRefs = useRef([]);
-
     const handleSlideChange = (swiper) => {
-        const currentIndex = swiper.activeIndex;
-
-        // Pause the previous video
-        if (currentIndex > 0 && videoRefs.current[currentIndex - 1]) {
-        videoRefs.current[currentIndex - 1].pause();
-        }
-
-        // Pause the next video
-        if (currentIndex < Product?.productList?.description_video.length - 1 && videoRefs.current[currentIndex + 1]) {
-        videoRefs.current[currentIndex + 1].pause();
-        }
-
-        setCurrentVideoIndex(currentIndex);
+        videoRefs.current.forEach(video => {
+            if (video) {
+                video.pause();
+            }
+        });
     };
 
 

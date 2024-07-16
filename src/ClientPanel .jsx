@@ -13,6 +13,7 @@ import CartDrawer from './page/CartDrawer';
 import { BsFillCartCheckFill } from 'react-icons/bs';
 import InstallApp from './components/InstallApp';
 import Footer from './layout/Footer';
+import { Is_Login } from './helper/IsLogin';
 // import DeleteAccount from './page/DeleteAccount';
 // import AdminPanel from './page/admin/page/AdminPanel';
 
@@ -26,6 +27,8 @@ const ScrollToTop = () => {
 }
 
 const ClientPanel = () => {
+  const isLoggedIn = Is_Login();
+  const {cartList, localCart } = useContext(CartContext);
 
   const [active, setActive] = useState(window.location.pathname);
   const { drawer, mainloder, handleDrawerShow, mainstopAnimation, mainstartAnimation, mainplayer } = useContext(CartContext);
@@ -184,14 +187,17 @@ const ClientPanel = () => {
     }
   }, [window.location.pathname]);
 
-
   return (
     <div>
       {window.location.pathname !== '/' && window.location.pathname !== '/delete-account'   && (
         <>
         <div className="cart-top-main back-button">
-          <Button onClick={handleDrawerShow} className="btn-scroll-top cart-scroll">
+          <Button onClick={handleDrawerShow} className="btn-scroll-top cart-scroll position-relative">
             <BsFillCartCheckFill />
+            {isLoggedIn ?
+              <div className="number">{cartList.list ? cartList.list?.length : 0}</div> :
+              <div className="number">{localCart.items ? localCart.items?.length : 0}</div> 
+            }
           </Button>
         </div>
         
