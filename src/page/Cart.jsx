@@ -24,7 +24,7 @@ import placeOrder from './gtagFunctions'
 import Select from 'react-select';
 
 // Your public Stripe key
-const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LIVE);
+const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
 
 
 const WrappedCart = () => {
@@ -80,7 +80,6 @@ const WrappedCart = () => {
     const [is_Wait, setIs_Wait] = useState(false);
     const [myAddress, setMyAddess] = useState([]);
     const [correntAddess, setCorrentAddess] = useState({});
-    const [returnPolicyChecked, setReturnPolicyChecked] = useState(false);
 
     // for steps manage 
     const nextStep = () => {
@@ -122,11 +121,6 @@ const WrappedCart = () => {
         setLoading(false);
     };
 
-    //for checkbox 
-    const handleCheckboxChange = (e) => {
-        setReturnPolicyChecked(e.target.checked);
-    };
-    const isButtonDisabled = !stripe || !returnPolicyChecked;
 
     // for address
     const getMyAddress = async () => {
@@ -158,85 +152,83 @@ const WrappedCart = () => {
     }
 
     const findAddress = (id) => {
-        setAdId(id)
-        let data = myAddress.find((e) => e?._id === id)
-
+        setAdId(id);
+        let data = myAddress.find((e) => e?._id === id);
+    
+        // Set individual fields from the combined fields
+        const [first_name, last_name] = data.fullname.split(' ');
+        const [main_address, optional_address] = data.address.split(','); // Adjust splitting if address is combined differently
+    
         setValues({
             country_id: data.country_id?._id,
             state_id: data.state_id?._id,
-            fullname: data.fullname,
+            first_name: first_name || '',
+            last_name: last_name || '',
             contact_no: data.contact_no,
-            address: data.address,
+            main_address: main_address || '',
+            optional_address: optional_address || '',
             city: data.city,
             zipcode: data.zipcode,
-        })
-
-        // console.log(values,"values");
-        // console.log(myAddress.find((e) => e._id === id),"myAddress");
-        // setIModelMood(mood)
-        // setShow(true);
-    }
+        });
+    
+        // Open the modal for editing
+        setShow(true);
+    };
+    
 
     const handleSubmit = (mood) => {
-        // e.preventDefault();
-
-        setSubmitCount(submitCount + 1)
-
-        const updatedValues = { ...values }; // Create a copy of the values object
-
+        setSubmitCount(submitCount + 1);
+    
+        const updatedValues = { ...values };
+        if (updatedValues.first_name && updatedValues.last_name) {
+            updatedValues.fullname = `${updatedValues.first_name} ${updatedValues.last_name}`;
+        } else {
+            updatedValues.fullname = "";
+        }
+    
+        if (updatedValues.main_address && updatedValues.optional_address) {
+            updatedValues.address = `${updatedValues.main_address}${updatedValues.optional_address ? `, ${updatedValues.optional_address}` : ''}`;
+        } else {
+            updatedValues.address = "";
+        }
+    
         const validationErrors = validate(updatedValues);
         setErrors(validationErrors);
-
-        // if (updatedValues.contact_no) {
-        //     updatedValues.contact_no = "+" + updatedValues.contact_no;
-        // }
-
-        if (updatedValues.first_name && updatedValues.last_name) {
-            updatedValues.name = updatedValues.first_name + " " + updatedValues.last_name;
-        }
-
+    
         if (Object.keys(validationErrors).length === 0) {
-
-
             try {
-
-                let type = mood == "add" ? "shipping-address-create" : "shipping-address-manage"
-                if (mood == "edit") {
-                    updatedValues.action = "shipping-address-update"
-                    updatedValues.shipping_address_id = adId
+                let type = mood === "add" ? "shipping-address-create" : "shipping-address-manage";
+                if (mood === "edit") {
+                    updatedValues.action = "shipping-address-update";
+                    updatedValues.shipping_address_id = adId;
                 }
-                setMainLoder(true)
+                setMainLoder(true);
                 api.postWithToken(`${serverURL}${type}`, updatedValues)
                     .then((res) => {
-
-                        let check = mood == "edit" ? res.data.success === true : res.data.status === 1
-
+                        let check = mood === "edit" ? res.data.success === true : res.data.status === 1;
+    
                         if (check) {
                             setMymessageProfileProfile(res.data.message);
                             setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
-                            getMyAddress()
+                            getMyAddress();
                             setTimeout(() => {
                                 setValues(initialValues);
-                                handleClose()
-                                setMainLoder(false)
+                                handleClose();
+                                setMainLoder(false);
                             }, 1000);
-                            // navigate("/login");
-                            // console.log(updatedValues.email,"updatedValues");
                         } else {
-                            setMainLoder(false)
+                            setMainLoder(false);
                             setMymessageProfileProfile(res.data.message);
                             setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                         }
                     });
             } catch (error) {
-                setMainLoder(false)
+                setMainLoder(false);
                 setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                 console.error(error);
             }
         }
     };
-
-
     const deleteAddress = (id) => {
         setMainLoder(true)
         try {
@@ -311,12 +303,6 @@ const WrappedCart = () => {
 
         const { name, value, checked, type } = e.target;
         let newValue = type === "checkbox" ? checked : value;
-
-        // if (name === "state_id") {
-        //     const selectedState = stateList.find((state) => state.name === newValue);
-        //     newValue = selectedState ? selectedState._id : "";
-        // }
-
         if (name === "country_id") {
 
             setValues((prevValues) => ({
@@ -328,8 +314,6 @@ const WrappedCart = () => {
         if (submitCount > 0) {
             const validationErrors = validate({ ...values, [name]: newValue });
             setErrors(validationErrors);
-
-            // Remove error message for the specific field if it is valid
             if (Object.keys(validationErrors).length === 0) {
                 delete errors[name];
             }
@@ -739,10 +723,11 @@ const WrappedCart = () => {
                                     </div> */}
 
 
-                                                <div className='location-main'>
+                                                <div className='location-main shipping-address'>
 
                                                     {myAddress?.length !== 0 &&
-                                                        <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
+                                                        <Button className='shipping-address-btn' onClick={() => handleShow("add")}>Enter
+                                                        Shipping Address</Button>
                                                     }
 
                                                     {myAddress && myAddress.map((e, i) => {
@@ -751,9 +736,9 @@ const WrappedCart = () => {
                                                                 <h5> {e.fullname}</h5>
                                                                 <p className='my-2'>{e.zipcode} , {e.address} <br />{e.state_id?.name},{e.country_id?.name},{e.contact_no} </p>
                                                                 <div className='d-flex align-items-center justify-content-between'>
-                                                                    <div className='d-flex align-items-center check-options' onClick={() => selectAddress(e?._id)}   >
+                                                                    <div className='d-flex align-items-center check-options outline-btn' onClick={() => selectAddress(e?._id)}   >
                                                                         <input type='checkbox' id='add-select' checked={e.is_default == 1} />
-                                                                        <label htmlFor='add-select'>Default</label>
+                                                                        <label htmlFor='add-select'>Use this Address</label>
                                                                     </div>
                                                                     <div className='copy-main'>
                                                                         {/* <Button>Copy</Button> */}
@@ -779,7 +764,7 @@ const WrappedCart = () => {
                                                     </div>
                                                 }
                                                 {myAddress?.length !== 0 &&
-                                                    <Button className='submit-btn w-100' onClick={nextStep}>Continue to shipping</Button>
+                                                    <Button className='w-100 yellow-btn' onClick={nextStep}>Deliver to This Address</Button>
                                                 }
 
                                             </div>
@@ -830,7 +815,7 @@ const WrappedCart = () => {
                                                 </div>
 
 
-                                                <Button className='submit-btn w-100' onClick={nextStep}>Continue to payment</Button>
+                                                <Button className='yellow-btn w-100' onClick={nextStep}>Continue to payment</Button>
                                             </div>
 
                                         }
@@ -904,23 +889,11 @@ const WrappedCart = () => {
 
                                                 </div>
 
-                                                <div className="return-policy-checkbox">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="return_policy_checkbox"
-                                                        checked={returnPolicyChecked}
-                                                        onChange={handleCheckboxChange}
-                                                    />
-                                                    <label htmlFor="return_policy_checkbox" className='return-policy-label'>
-                                                        If you are not satisfied with the product, you can return it within 7 days. The item must be returned in new and unused condition.
-                                                    </label>
-                                                </div>
-
                                                 {stripe ? (
                                                     <ElementsConsumer>
                                                         {({ elements, stripe }) => (
                                                             <div>
-                                                            <Button className='checkout mt-3' disabled={isButtonDisabled} onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Make payment"} </Button>
+                                                                <Button className='yellow-btn w-100 mt-3'  onClick={() => handleCheckout()}>  {is_Wait ? "Loading..." : "Place Order"} </Button>
                                                             </div>
                                                         )}
                                                     </ElementsConsumer>
@@ -1053,13 +1026,6 @@ checkbox1: event.target.checked,
 
                                         </div>
 
-                                        {/* <div className='login-input text-start mt-4'>
-                                <div className='d-flex align-items-center gap-2'>
-                                    <input className='mt-0' placeholder='Discount code' type='text' />
-                                    <Button className='checkout px-4' style={{ width: "auto", whiteSpace: "nowrap" }}>Apply</Button>
-                                </div>
-                            </div> */}
-
                                         {
                                             cartList.list?.length > 0 &&
                                             <>
@@ -1093,7 +1059,6 @@ checkbox1: event.target.checked,
 
                                                     <div className='d-flex align-items-center justify-content-between mt-2'>
                                                         <label>SHIPPING CHARGE </label>
-                                                        {/* {console.log(cartList.cartAmountDetails?.shipping_charge,"cartList.cartAmountDetails?.shipping_charge")} */}
                                                         {
                                                             cartList.cartAmountDetails?.shipping_charge
                                                                 ? <h5>$ {cartList.cartAmountDetails?.shipping_charge}</h5>
@@ -1124,30 +1089,8 @@ checkbox1: event.target.checked,
                                                     </div>
                                                     {/* <p>Taxes and delivery fees are calculated on the next page.</p> */}
                                                 </div>
-
-
                                             </>
-
-
                                         }
-
-
-                                        {/* <div className='total-list mt-4'>
-                                <div className='d-flex align-items-center justify-content-between'>
-                                    <label>Subtotal</label>
-                                    <h5>$299,43</h5>
-                                </div>
-                                <div className='d-flex align-items-center justify-content-between mt-3'>
-                                    <label>Shipping</label>
-                                    <h5>Free</h5>
-                                </div>
-                                <div className='d-flex align-items-center justify-content-between mt-3 all-total'>
-                                    <label>Total</label>
-                                    <h5>USD <span>$299,43</span></h5>
-                                </div>
-                            </div> */}
-
-
                                     </Col>
                                 </Row>
 
@@ -1166,26 +1109,7 @@ checkbox1: event.target.checked,
                         <h5>Shipping address</h5>
                         <Form>
                             <Row className='mt-2'>
-                                {/* <Col lg={6} md={6} sm={12} className='mt-3'>
-                                    <div className='login-input text-start'>
-                                        <label>Ship to Address</label>
-                                        <select name='country_id'
-                                            value={values.country_id}
-                                            onChange={handleChange}
-                                            className='select-arrow'>
-                                            <option value="" >Select country</option>
-                                            {(countryList.length <= 0) && <option
-                                            >loding....</option>}
-                                            {
-                                                countryList.map((e, i) =>
-                                                (
-                                                    <option key={i} value={e?._id}  >{e?.name}</option>
-                                                ))
-                                            }
-                                        </select>
-                                        <div className='error' >{errors?.country_id}</div>
-                                    </div>
-                                </Col> */}
+
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Ship to Address</label>
@@ -1209,15 +1133,28 @@ checkbox1: event.target.checked,
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
-                                        <label>Full Name</label>
-                                        <input placeholder='Full Name'
+                                        <label>First Name</label>
+                                        <input
+                                            placeholder='First Name'
                                             type='text'
-                                            name='fullname'
+                                            name='first_name'
                                             onChange={handleChange}
-                                            value={values.fullname}
+                                            value={values.first_name}
                                         />
-                                        <div className='error' >{errors?.fullname}</div>
-
+                                        <div className='error'>{errors?.first_name}</div>
+                                    </div>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Last Name</label>
+                                        <input
+                                            placeholder='Last Name'
+                                            type='text'
+                                            name='last_name'
+                                            onChange={handleChange}
+                                            value={values.last_name}
+                                        />
+                                        <div className='error'>{errors?.last_name}</div>
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
@@ -1244,30 +1181,6 @@ checkbox1: event.target.checked,
                                         <div className='error' >{errors?.city}</div>
                                     </div>
                                 </Col>
-                                {/* <Col lg={6} md={6} sm={12} className='mt-3'>
-                                    <div className='login-input text-start'>
-                                        <label>State</label>
-                                        <select
-                                            onClick={checkforcounty} onChange={handleChange}
-                                            value={values.state_id}
-                                            name='state_id' className='select-arrow'>
-                                            <option value="" >Select State</option>
-                                            {errors.country_id == undefined && (
-                                                <>
-                                                    {
-                                                        stateList.map((e, i) =>
-                                                        (
-                                                            <option key={i} value={e?._id}  >{e?.name}</option>
-                                                        ))
-                                                    }
-                                                    )
-                                                </>
-                                            )}
-
-                                        </select>
-                                        <div className='error' >{errors?.state_id}</div>
-                                    </div>
-                                </Col> */}
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>State</label>
@@ -1307,24 +1220,28 @@ checkbox1: event.target.checked,
                                     </div>
                                 </Col>
                                 <Col lg={12} md={12} sm={12} className='mt-3'>
-                                    <div className='login-input text-start'>
-                                        <label>Address</label>
-                                        <textarea className='w-100'
-                                            onChange={handleChange}
-                                            name='address'
-                                            value={values.address} placeholder='Enter Address'
-                                            rows={5}></textarea>
-                                        <div className='error' >{errors?.address}</div>
-                                    </div>
-                                </Col>
+                        <div className='login-input text-start'>
+                            <label>Address (street address or P.O box)</label>
+                            <input type='text' className='w-100'
+                                onChange={handleChange}
+                                name='main_address'
+                                value={values.main_address} placeholder='Enter Street Address Or P.O Box'
+                                rows={5}></input>
+                            <div className='error' >{errors?.main_address}</div>
+                        </div>
+                    </Col>
+                    <Col lg={12} md={12} sm={12} className='mt-3'>
+                        <div className='login-input text-start'>
+                            <label>Apt, Suite, Unit, Building (Optional)</label>
+                            <input type='text' className='w-100'
+                                onChange={handleChange}
+                                name='optional_address'
+                                value={values.optional_address} placeholder='Enter Apt, Suite, Unit, Building'
+                                rows={5}></input>
+                            <div className='error' >{errors?.optional_address}</div>
+                        </div>
+                    </Col>
                             </Row>
-                            {/* <div className='d-flex align-items-start check-terms gap-3 mt-3'>
-                                <Form.Check
-                                    type="checkbox"
-                                    id='check_terms'
-                                />
-                                <label htmlFor='check_terms' className='pointer'>Make this my default address</label>
-                            </div> */}
                             {modelMood == "edit" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("edit")} >Edit Address</button>}
                             {modelMood == "add" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("add")} >Add Address</button>}
                         </Form>

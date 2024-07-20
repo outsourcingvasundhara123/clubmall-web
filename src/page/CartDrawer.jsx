@@ -194,12 +194,12 @@ const CartDrawer = () => {
 
                         {isLoggedIn ?
                             <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                                <img src='../img/product_def/right-black.png' alt='' width="18px" />
+                                <img src='../img/product_def/cart-orange.png' alt='' width="18px" />
                                 <h5>Added ({cartList.list ? cartList.list?.length : 0}) items to cart</h5>
                             </div> :
 
                             <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                                <img src='../img/product_def/right-black.png' alt='' width="18px" />
+                                <img src='../img/product_def/cart-orange.png' alt='' width="18px" />
                                 <h5>Added ({localCart.items ? localCart.items?.length : 0}) items to cart</h5>
                             </div>
                         }
@@ -426,7 +426,7 @@ const CartDrawer = () => {
                                         <h5 className=''>Subtotal:</h5>
                                         <span>${subtotal}</span>
                                     </div>
-                                    <Button className='go-cart mt-2' onClick={() => (navigate("/login"), handleDrawerClose(), localStorage.setItem('lastVisitedPath', "/cart"))}  >Checkout</Button>
+                                    <Button className='go-cart mt-2' onClick={() => (navigate("/login"), handleDrawerClose(), localStorage.setItem('lastVisitedPath', "/cart"))}  >Proceed to checkout</Button>
                                 </>
                             }
 
@@ -436,7 +436,7 @@ const CartDrawer = () => {
                                         <h5 className=''>Subtotal:</h5>
                                         <span>${cartList.cartAmountDetails.total_amount}</span>
                                     </div>
-                                    <Button className='go-cart mt-2' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Checkout</Button>
+                                    <Button className='go-cart mt-2' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Proceed to checkout</Button>
                                 </>
                             }
 

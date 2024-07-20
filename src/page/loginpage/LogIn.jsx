@@ -571,7 +571,7 @@ const LogIn = () => {
                   <img onClick={googlelogin} src='./img/login/google.svg' alt='' />
                 </NavLink>
                 {/* <NavLink><img src='./img/login/facebook.png' alt='' /></NavLink> */}
-                <FacebookLogin
+                {/* <FacebookLogin
                   appId={process.env.REACT_APP_APP_ID}
                   style={{
                     backgroundColor: '#fff',
@@ -587,7 +587,7 @@ const LogIn = () => {
                   onProfileSuccess={(response) => {
                     console.log('Get Profile Success!', response);
                   }}
-                ><img src='./img/login/facebook.svg' alt='' /></FacebookLogin>
+                ><img src='./img/login/facebook.svg' alt='' /></FacebookLogin> */}
 
                 <AppleLogin
                   clientId="YOUR_CLIENT_ID"

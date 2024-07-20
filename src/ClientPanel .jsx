@@ -191,7 +191,7 @@ const ClientPanel = () => {
     <div>
       {window.location.pathname !== '/' && window.location.pathname !== '/delete-account'   && (
         <>
-        <div className="cart-top-main back-button">
+        {/* <div className="cart-top-main back-button">
           <Button onClick={handleDrawerShow} className="btn-scroll-top cart-scroll position-relative">
             <BsFillCartCheckFill />
             {isLoggedIn ?
@@ -199,7 +199,7 @@ const ClientPanel = () => {
               <div className="number">{localCart.items ? localCart.items?.length : 0}</div> 
             }
           </Button>
-        </div>
+        </div> */}
         
         <div className="cart-top-main">
           <Button
