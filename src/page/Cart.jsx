@@ -191,6 +191,9 @@ const WrappedCart = () => {
         } else {
             updatedValues.address = "";
         }
+
+        //remove dashes from phone number
+        updatedValues.contact_no = updatedValues.contact_no.replace(/-/g, '');
     
         const validationErrors = validate(updatedValues);
         setErrors(validationErrors);
@@ -565,6 +568,9 @@ const WrappedCart = () => {
 
     // payment with stripe checkout 
     const handleCheckout = async (event) => {
+        //loder start
+        setMainLoder(true)
+
         try {
             setIsOpen(!isOpen); // Assuming this toggles a UI element
 
@@ -628,6 +634,7 @@ const WrappedCart = () => {
                 setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
             }
         } catch (error) {
+            setMainLoder(false)
             console.log(error);
             setMyMessageCart("An error occurred during the checkout process.");
             setWarningSnackBarOpenCart(!warningSnackBarOpenCart);
@@ -1161,7 +1168,7 @@ checkbox1: event.target.checked,
                                     <div className='login-input text-start'>
                                         <label>Phone Number</label>
                                         <input placeholder='Phone Number'
-                                            type='number'
+                                            type='text'
                                             name="contact_no"
                                             value={values.contact_no}
                                             onChange={handleChange}
@@ -1242,8 +1249,8 @@ checkbox1: event.target.checked,
                         </div>
                     </Col>
                             </Row>
-                            {modelMood == "edit" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("edit")} >Edit Address</button>}
-                            {modelMood == "add" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("add")} >Add Address</button>}
+                            {modelMood == "edit" && <button className='submit-btn w-100 mt-3 yellow-btn' type='button' onClick={() => handleSubmit("edit")} >Edit Address</button>}
+                            {modelMood == "add" && <button className='submit-btn w-100 mt-3 yellow-btn' type='button' onClick={() => handleSubmit("add")} >Add Address</button>}
                         </Form>
                     </div>
                 </Modal.Body>

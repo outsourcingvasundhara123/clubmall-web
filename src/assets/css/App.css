@@ -2207,6 +2207,10 @@ del {
     width: 200px;
 }
 
+.add-cart-items:hover, .add-cart-items:focus , .add-cart-items:active {
+    color: #000000 !important;
+}
+
 @media (max-width: 512px) {
     .add-cart-items {
         width: 100% !important;
@@ -7536,6 +7540,12 @@ table tr td:first-of-type {
     border: none;
     box-shadow: none;
     margin-top: 30px;
+}
+.yellow-btn:hover, .yellow-btn:focus, .yellow-btn:active {
+    background-color: #FFD43E !important;
+    color: #000000 !important;
+    border: none;
+    box-shadow: none;
 }
 
 .shipping-address .shipping-address-btn {

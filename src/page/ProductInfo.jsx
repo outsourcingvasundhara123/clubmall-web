@@ -1379,6 +1379,10 @@ const ProductInfo = () => {
                                                     )}
                                             </div>
 
+                                            <div className='cart-button-sm'>
+                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
+                                            </div>
+
                                             <div className='shipping-def mt-3'>
                                                 <h5 className='info-title mb-2' >Shop with confidence</h5>
                                                 <p className='security-line'><img src='../img/product_def/security.png' alt='' /> Shopping security <MdOutlineKeyboardArrowRight /></p>
@@ -1403,9 +1407,7 @@ const ProductInfo = () => {
                                                     ))}
                                                 </div>
                                             </div>
-                                            <div className='cart-button-sm'>
-                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
-                                            </div>
+                                            
 
                                             <div className='mt-4 d-none d-md-block'>
 
