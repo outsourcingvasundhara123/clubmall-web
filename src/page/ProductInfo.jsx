@@ -248,9 +248,9 @@ const ProductInfo = () => {
     const [reviweList, setReviweList] = useState([]);
     const [favoriteProductList, setFavoriteProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
-    const [sizeActive, setSizeActive] = useState("")
-    const [product_qtyActive, setProduct_QtyActive] = useState(1);
-    const [productColorActive, setProductColorActive] = useState()
+    const [productColorActive, setProductColorActive] = useState('');
+    const [sizeActive, setSizeActive] = useState('');
+    const [product_qtyActive, setProduct_QtyActive] = useState('');    
     const [colorProduct, setColorProduct] = useState()
     // const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")  
     const [reviewShow, setreviewShow] = useState(false);
@@ -407,9 +407,6 @@ const ProductInfo = () => {
 
                 const productData = productDetail.data.data;
                 setProduct(productData);
-                setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
-                setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size);
-                setProduct_QtyActive(productData?.productList?.product_qty[0]);
                 stopAnimation();
                 setUrl(productData.productImagePath);
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
@@ -521,7 +518,7 @@ const ProductInfo = () => {
 
         try {
             var data
-            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
+            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size == undefined) && product_qtyActive) {
 
                 data = {
                     action: "add-to-cart-product",
@@ -574,8 +571,7 @@ const ProductInfo = () => {
                     addcartLocal(data, handleDrawerShow)
                 }
             } else {
-
-                setMyMessageProductDtl("select color and size  of the product");
+                setMyMessageProductDtl("Please select color and size for the product.");
                 setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
             }
         } catch (error) {
@@ -1293,7 +1289,7 @@ const ProductInfo = () => {
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
                                                 {Product?.productList?.product_qty && Product?.productList?.product_qty.length > 0 && (
                                                     <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
-                                                        {product_qtyActive === Product?.productList?.product_qty[0] && (
+                                                        {(product_qtyActive === Product?.productList?.product_qty[0] || !product_qtyActive) && (
                                                             Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => (
                                                                 <Button
                                                                     key={i}
@@ -1333,9 +1329,9 @@ const ProductInfo = () => {
                                                     </div>
                                                 </div>
 
-                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 1 ? (
+                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 0 ? (
                                                     <div className='size mt-3'>
-                                                        <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+                                                        <h5>Packs: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
                                                         <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                             {Product?.productList?.product_qty?.map((e, i) => (
                                                                 <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActives(e)}>
