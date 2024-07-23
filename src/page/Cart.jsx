@@ -155,18 +155,15 @@ const WrappedCart = () => {
         setAdId(id);
         let data = myAddress.find((e) => e?._id === id);
     
-        // Set individual fields from the combined fields
-        const [first_name, last_name] = data.fullname.split(' ');
-        const [main_address, optional_address] = data.address.split(','); // Adjust splitting if address is combined differently
     
         setValues({
             country_id: data.country_id?._id,
             state_id: data.state_id?._id,
-            first_name: first_name || '',
-            last_name: last_name || '',
+            first_name: data.first_name || '',
+            last_name: data.last_name || '',
             contact_no: data.contact_no,
-            main_address: main_address || '',
-            optional_address: optional_address || '',
+            address : data.address  || '',
+            address_optional: data.address_optional || '',
             city: data.city,
             zipcode: data.zipcode,
         });
@@ -181,15 +178,21 @@ const WrappedCart = () => {
     
         const updatedValues = { ...values };
         if (updatedValues.first_name && updatedValues.last_name) {
-            updatedValues.fullname = `${updatedValues.first_name} ${updatedValues.last_name}`;
+            updatedValues.first_name = `${updatedValues.first_name}`;
+            updatedValues.last_name = `${updatedValues.last_name}`;
+
         } else {
-            updatedValues.fullname = "";
+            updatedValues.first_name = "";
+            updatedValues.last_name = "";
         }
     
-        if (updatedValues.main_address && updatedValues.optional_address) {
-            updatedValues.address = `${updatedValues.main_address}${updatedValues.optional_address ? `, ${updatedValues.optional_address}` : ''}`;
+        if (updatedValues.address) {
+            updatedValues.address = `${updatedValues.address}`;
+            updatedValues.address_optional = `${updatedValues.address_optional}`;
+
         } else {
             updatedValues.address = "";
+            updatedValues.address_optional = "";
         }
 
         //remove dashes from phone number
@@ -1231,10 +1234,10 @@ checkbox1: event.target.checked,
                             <label>Address (street address or P.O box)</label>
                             <input type='text' className='w-100'
                                 onChange={handleChange}
-                                name='main_address'
-                                value={values.main_address} placeholder='Enter Street Address Or P.O Box'
+                                name='address'
+                                value={values.address} placeholder='Enter Street Address Or P.O Box'
                                 rows={5}></input>
-                            <div className='error' >{errors?.main_address}</div>
+                            <div className='error' >{errors?.address}</div>
                         </div>
                     </Col>
                     <Col lg={12} md={12} sm={12} className='mt-3'>
@@ -1242,10 +1245,10 @@ checkbox1: event.target.checked,
                             <label>Apt, Suite, Unit, Building (Optional)</label>
                             <input type='text' className='w-100'
                                 onChange={handleChange}
-                                name='optional_address'
-                                value={values.optional_address} placeholder='Enter Apt, Suite, Unit, Building'
+                                name='address_optional'
+                                value={values.address_optional} placeholder='Enter Apt, Suite, Unit, Building'
                                 rows={5}></input>
-                            <div className='error' >{errors?.optional_address}</div>
+                            <div className='error' >{errors?.address_optional}</div>
                         </div>
                     </Col>
                             </Row>

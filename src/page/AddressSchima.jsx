@@ -12,8 +12,11 @@ export const validate = (values) => {
     }
   
     // Validate fullname field
-    if (!values.fullname) {
-      errors.fullname = "Full name is required";
+    if (!values.first_name) {
+      errors.first_name = "First name is required";
+    }
+    if (!values.first_name) {
+      errors.last_name = "Last name is required";
     }
   
     // Validate contact_no field
