@@ -187,10 +187,10 @@ const WrappedCart = () => {
         }
     
         if (updatedValues.address) {
-            updatedValues.address = `${updatedValues.address}`;
-            updatedValues.address_optional = `${updatedValues.address_optional}`;
-
-        } else {
+            updatedValues.address = `${updatedValues.address}`;    
+        }
+ 
+        else {
             updatedValues.address = "";
             updatedValues.address_optional = "";
         }
