@@ -1350,6 +1350,10 @@ const ProductInfo = () => {
                                                 )}
 
                                             </div>
+                                            
+                                            <div className='cart-button-sm'>
+                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
+                                            </div>
 
                                             <div className='mt-3'>
                                                 {(Product?.productList?.size_chartInInch.title !== "" ||
@@ -1377,10 +1381,6 @@ const ProductInfo = () => {
                                                             )}
                                                         </div>
                                                     )}
-                                            </div>
-
-                                            <div className='cart-button-sm'>
-                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
                                             </div>
 
                                             <div className='shipping-def mt-3'>

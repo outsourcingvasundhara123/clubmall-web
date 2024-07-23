@@ -397,6 +397,7 @@ const Header = (props) => {
                                 </>
                                 :
                                 <>
+                                    <Link to="/login" className='login-btn'>Login</Link>
                                     <div className="back-button">
                                         <Button onClick={handleDrawerShow} className="btn-scroll-top cart-scroll position-relative">
                                             <BsFillCartCheckFill />
@@ -407,7 +408,6 @@ const Header = (props) => {
                                             }
                                         </Button>
                                     </div>
-                                    <Link to="/login" className='login-btn'>Login</Link>
                                 </>
                         }
                         <Button className='toggle px-0 order-4' onClick={handleShow}>
