@@ -2207,7 +2207,9 @@ del {
     width: 200px;
 }
 
-.add-cart-items:hover, .add-cart-items:focus , .add-cart-items:active {
+.add-cart-items:hover,
+.add-cart-items:focus,
+.add-cart-items:active {
     color: #000000 !important;
 }
 
@@ -7541,7 +7543,10 @@ table tr td:first-of-type {
     box-shadow: none;
     margin-top: 30px;
 }
-.yellow-btn:hover, .yellow-btn:focus, .yellow-btn:active {
+
+.yellow-btn:hover,
+.yellow-btn:focus,
+.yellow-btn:active {
     background-color: #FFD43E !important;
     color: #000000 !important;
     border: none;
@@ -7560,8 +7565,91 @@ table tr td:first-of-type {
     padding: 10px 20px;
 }
 
-.outline-btn label{
-  color: #000000 !important;
-  font-weight: 700;
-  font-size: 16px !important;
+.outline-btn label {
+    color: #000000 !important;
+    font-weight: 700;
+    font-size: 16px !important;
 }
+
+.location-main .shipping-address-btn {
+    background-color: #FFD43E !important;
+    color: #000000 !important;
+    border-radius: 5px;
+    height: 42px;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    box-shadow: none;
+    padding: 10px 20px;
+}
+
+.check-options label {
+    color: #000000 !important;
+    font-weight: 700;
+    font-size: 16px !important;
+}
+
+/* Table responsove css start */
+@media only screen and (max-width: 1664px) and (min-width: 200px) {
+    .order-table .table-hide {
+        display: none;
+    }
+
+    .order-table .table-card-show {
+        display: block !important;
+    }
+
+    .order-table .table-card-show h6 {
+        color: #223263;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600;
+        /* overflow: hidden; */
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        text-wrap: wrap;
+        line-height: 24px;
+    }
+
+    .order-table .table-card-show p,
+    .order-table .table-card-show span {
+        text-align: left;
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #223263;
+        opacity: 0.5;
+        text-wrap: wrap;
+        word-break: break-all;
+    }
+
+    .order-table .table-card-show .bg-danger, .order-table .table-card-show .bg-success, .order-table .table-card-show .bg-info {
+        padding: 6px 15px;
+        border-radius: 50px;
+        font-size: 15px;
+        font-weight: normal;
+        display: inline-block;
+        color: #fff !important;
+        opacity: 1 !important;
+    }
+
+    .order-table .table-card-show img {
+        border-radius: 10px;
+    }
+}
+
+@media only screen and (max-width: 1664px) and (min-width: 992px) {
+    .order-table .table-card-show img {
+        width: 200px;
+    }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 768px) {
+    .order-table .table-card-show img {
+        width: 100px;
+    }
+}
+
+/* Table responsove css end */

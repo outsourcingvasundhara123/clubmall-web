@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react'
-import { Badge, Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table,  } from 'react-bootstrap'
+import { Badge, Button, Col, Form, Modal, Nav, NavLink, Row, Tab, Table, } from 'react-bootstrap'
 import {
     MdOutlineKeyboardArrowRight,
     MdKeyboardDoubleArrowRight,
@@ -22,7 +22,7 @@ import Select from 'react-select';
 
 const Profile = () => {
 
-    const { setMainLoder, itemShow, setItemShow, profileOption, setProfileOption, myAddress, getMyAddress, trendingProductList} = useContext(CartContext);
+    const { setMainLoder, itemShow, setItemShow, profileOption, setProfileOption, myAddress, getMyAddress, trendingProductList } = useContext(CartContext);
 
     const initialValues = {
         country_id: "",
@@ -133,9 +133,11 @@ const Profile = () => {
         setValues({
             country_id: data.country_id?._id,
             state_id: data.state_id?._id,
-            fullname: data.fullname,
+            first_name: data.first_name || '',
+            last_name: data.last_name || '',
             contact_no: data.contact_no,
-            address: data.address,
+            address: data.address || '',
+            address_optional: data.address_optional || '',
             city: data.city,
             zipcode: data.zipcode,
         })
@@ -247,58 +249,62 @@ const Profile = () => {
     }
 
     const handleSubmit = (mood) => {
-        // e.preventDefault();
+        setSubmitCount(submitCount + 1);
 
-        setSubmitCount(submitCount + 1)
+        const updatedValues = { ...values };
+        if (updatedValues.first_name && updatedValues.last_name) {
+            updatedValues.first_name = `${updatedValues.first_name}`;
+            updatedValues.last_name = `${updatedValues.last_name}`;
 
-        const updatedValues = { ...values }; // Create a copy of the values object
+        } else {
+            updatedValues.first_name = "";
+            updatedValues.last_name = "";
+        }
+
+        if (updatedValues.address) {
+            updatedValues.address = `${updatedValues.address}`;
+        }
+
+        else {
+            updatedValues.address = "";
+            updatedValues.address_optional = "";
+        }
+
+        //remove dashes from phone number
+        updatedValues.contact_no = updatedValues.contact_no.replace(/-/g, '');
 
         const validationErrors = validate(updatedValues);
         setErrors(validationErrors);
 
-        // if (updatedValues.contact_no) {
-        //     updatedValues.contact_no = "+" + updatedValues.contact_no;
-        // }
-
-        if (updatedValues.first_name && updatedValues.last_name) {
-            updatedValues.name = updatedValues.first_name + " " + updatedValues.last_name;
-        }
-
         if (Object.keys(validationErrors).length === 0) {
-
-
             try {
-
-                let type = mood == "add" ? "shipping-address-create" : "shipping-address-manage"
-                if (mood == "edit") {
-                    updatedValues.action = "shipping-address-update"
-                    updatedValues.shipping_address_id = adId
+                let type = mood === "add" ? "shipping-address-create" : "shipping-address-manage";
+                if (mood === "edit") {
+                    updatedValues.action = "shipping-address-update";
+                    updatedValues.shipping_address_id = adId;
                 }
-                setMainLoder(true)
+                setMainLoder(true);
                 api.postWithToken(`${serverURL}${type}`, updatedValues)
                     .then((res) => {
-
-                        let check = mood == "edit" ? res.data.success === true : res.data.status === 1
+                        let check = mood === "edit" ? res.data.success === true : res.data.status === 1;
 
                         if (check) {
                             setMymessageProfileProfile(res.data.message);
                             setsucessSnackBarOpenProfile(!sucessSnackBarOpenProfile);
-                            getMyAddress()
+                            getMyAddress();
                             setTimeout(() => {
                                 setValues(initialValues);
-                                handleClose()
-                                setMainLoder(false)
+                                handleClose();
+                                setMainLoder(false);
                             }, 1000);
-                            // navigate("/login");
-                            // console.log(updatedValues.email,"updatedValues");
                         } else {
-                            setMainLoder(false)
+                            setMainLoder(false);
                             setMymessageProfileProfile(res.data.message);
                             setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                         }
                     });
             } catch (error) {
-                setMainLoder(false)
+                setMainLoder(false);
                 setwarningSnackBarOpenProfile(!warningSnackBarOpenProfile);
                 console.error(error);
             }
@@ -481,7 +487,7 @@ const Profile = () => {
                 text={ Mymessage && Mymessage}
                 type="error"
             /> */}
-            
+
             <div className='profile pb-5'>
 
                 <div className='container-cos'>
@@ -497,7 +503,7 @@ const Profile = () => {
                         <Tab.Container id="left-tabs-example" activeKey={profileOption || "user"} onSelect={key => setProfileOption(key)}>
 
                             <Row>
-                                <Col xl={3} lg={4} md={6}>
+                                <Col xl={3} lg={4} md={12} className='mb-4 mb-lg-0'>
                                     <Nav variant="pills" className="flex-column sticky-filter">
                                         <Nav.Item>
                                             <Nav.Link eventKey="list" onClick={() => setItemShow(true)}>
@@ -576,7 +582,7 @@ const Profile = () => {
                                 {
                                     loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                                         <>
-                                            <Col xl={9} lg={8} md={6} className='mt-5 mt-md-0'>
+                                            <Col xl={9} lg={8} md={12}>
                                                 <Tab.Content>
                                                     <Tab.Pane eventKey="list">
                                                         <div className='order-list position-relative'>
@@ -587,82 +593,137 @@ const Profile = () => {
                                                 </div> */}
 
                                                             <div className='order-table'>
-                                                                <Table bordered responsive>
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Products</th>
-                                                                            <th>Quantity</th>
-                                                                            <th>Amount</th>
-                                                                            <th>Shipping To</th>
-                                                                            <th>Status</th>
-                                                                            {/* <th>Action</th> */}
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
+                                                                <div className='table-hide'>
+                                                                    <Table bordered responsive>
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Products</th>
+                                                                                <th>Quantity</th>
+                                                                                <th>Amount</th>
+                                                                                <th>Shipping To</th>
+                                                                                <th>Status</th>
+                                                                                {/* <th>Action</th> */}
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
 
-                                                                        {displayedOrders && displayedOrders.map((e, i) => {
-                                                                            return (
+                                                                            {displayedOrders && displayedOrders.map((e, i) => {
+                                                                                return (
 
-                                                                                <>
-                                                                                    {e.product_id &&
-                                                                                        <tr className=' pointer' onClick={() => handelProductDetail(e.product_id?._id)}>
-                                                                                            <td width={400}>
-                                                                                                <div className='d-flex align-items-start gap-2'>
-                                                                                                    <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
-                                                                                                        width="80px" />
-                                                                                                    <div className='pro-text'>
-                                                                                                        <h6>{e.product_id?.name} </h6>
-                                                                                                        <span>ID: # {e.order_id.order_display_id}</span>
+                                                                                    <>
+                                                                                        {e.product_id &&
+                                                                                            <tr className=' pointer' onClick={() => handelProductDetail(e.product_id?._id)}>
+                                                                                                <td width={400}>
+                                                                                                    <div className='d-flex align-items-start gap-2'>
+                                                                                                        <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
+                                                                                                            width="80px" />
+                                                                                                        <div className='pro-text'>
+                                                                                                            <h6>{e.product_id?.name} </h6>
+                                                                                                            <span>ID: # {e.order_id.order_display_id}</span>
+                                                                                                        </div>
                                                                                                     </div>
-                                                                                                </div>
-                                                                                            </td>
-                                                                                            <td><p>{e.qty}</p></td>
-                                                                                            <td><p>${e.product_total_price}</p></td>
-                                                                                            <td>
-                                                                                                <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
-                                                                                                <p>{e.order_id.shipping_address_object.contact_no}</p>
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
-                                                                                                {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
-                                                                                                {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
-                                                                                                {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
-                                                                                                {/* {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>} */}
-                                                                                            </td>
-                                                                                            {/* <td>
+                                                                                                </td>
+                                                                                                <td><p>{e.qty}</p></td>
+                                                                                                <td><p>${e.product_total_price}</p></td>
+                                                                                                <td>
+                                                                                                    <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
+                                                                                                    <p>{e.order_id.shipping_address_object.contact_no}</p>
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
+                                                                                                    {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
+                                                                                                    {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
+                                                                                                    {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
+                                                                                                    {/* {(e.order_status == 4) && <Badge bg="danger"> Cancelled</Badge>} */}
+                                                                                                </td>
+                                                                                                {/* <td>
                                                                                                 <Button className='submit-btn mt-0 d-flex align-items-center mx-auto' style={{
                                                                                                     fontSize: "15px",
                                                                                                     padding: "10px"
                                                                                                 }}>cancel</Button>
                                                                                             </td> */}
-                                                                                        </tr >
-                                                                                    }
+                                                                                            </tr >
+                                                                                        }
+                                                                                    </>
+                                                                                )
+                                                                            })}
+
+                                                                            {displayedOrders?.length === 0 &&
+                                                                                <tr>
+                                                                                    <td colSpan="5">
+                                                                                        {/* <div className='d-flex align-items-center justify-content-center h-100 '> */}
+                                                                                        <div className='text-center found'>
+                                                                                            {/* <img src='../img/not-found.png' alt='' className='my-20 ' /> */}
+                                                                                            <p className='my-2' style={{ color: "#E02E24" }}>No orders available. Make your first order now</p>
+                                                                                            {/* <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button> */}
+                                                                                        </div>
+                                                                                        {/* </div> */}
+                                                                                    </td>
+                                                                                </tr>
+
+                                                                            }
+
+                                                                        </tbody>
+
+                                                                    </Table>
+                                                                </div>
+                                                                <div className='table-card-show d-none'>
+                                                                    <div className='row g-4'>
+                                                                        {displayedOrders && displayedOrders.map((e, i) => {
+                                                                            return (
+                                                                                <>
+                                                                                    <div className="col-12 col-md-12 col-lg-12">
+                                                                                        {e.product_id &&
+                                                                                            <div className='card pointer' onClick={() => handelProductDetail(e.product_id?._id)}>
+                                                                                                <div className="card-body">
+                                                                                                    <div className='d-flex align-items-start gap-3'>
+                                                                                                        <img src={orderList.productImagePath + e.product_id?._id + "/" + e.product_id?.product_images[0]?.file_name}
+                                                                                                            width="80px" />
+                                                                                                        <div className='pro-text'>
+                                                                                                            <h6>Name: {e.product_id?.name} </h6>
+                                                                                                            <div className='d-flex align-items-start gap-1'>
+                                                                                                                <h6 className='text-nowrap'>ID:</h6>
+                                                                                                                <span>#{e.order_id.order_display_id}</span>
+                                                                                                            </div>
+                                                                                                            <div className='d-flex align-items-start gap-1'>
+                                                                                                                <h6 className='text-nowrap'>Quantity: </h6>
+                                                                                                                <p>{e.qty}</p>
+                                                                                                            </div>
+                                                                                                            <div className='d-flex align-items-start gap-1'>
+                                                                                                                <h6 className='text-nowrap'>Amount:</h6>
+                                                                                                                <p> ${e.product_total_price}</p>
+                                                                                                            </div>
+                                                                                                            <div className='d-flex align-items-start gap-1'>
+                                                                                                                <h6 className='text-nowrap'>Address: </h6>
+                                                                                                                <p>{e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
+                                                                                                            </div>
+                                                                                                            <div className='d-flex align-items-start gap-1'>
+                                                                                                                <h6 className='text-nowrap'>Contact No:</h6>
+                                                                                                                <p>{e.order_id.shipping_address_object.contact_no}</p>
+                                                                                                            </div>
+                                                                                                            <div className='mt-2'>
+                                                                                                                {(e.order_status == 0) && <Badge bg="danger">Incomplete</Badge>}
+                                                                                                                {(e.order_status == 1) && <Badge bg="success"> Success</Badge>}
+                                                                                                                {(e.order_status == 2) && <Badge bg="info"> Shipping</Badge>}
+                                                                                                                {(e.order_status == 3) && <Badge bg="success"> Delivered</Badge>}
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+                                                                                    </div>
                                                                                 </>
                                                                             )
                                                                         })}
 
-                                                                        {displayedOrders?.length === 0 &&
-                                                                            <tr>
-                                                                                <td colSpan="5">
-                                                                                    {/* <div className='d-flex align-items-center justify-content-center h-100 '> */}
-                                                                                    <div className='text-center found'>
-                                                                                        {/* <img src='../img/not-found.png' alt='' className='my-20 ' /> */}
-                                                                                        <p className='my-2' style={{ color: "#E02E24" }}>No orders available. Make your first order now</p>
-                                                                                        {/* <Button className='mt-3 submit-btn' type='button' onClick={() => navigate("/trending")}  >Shop Now</Button> */}
-                                                                                    </div>
-                                                                                    {/* </div> */}
-                                                                                </td>
-                                                                            </tr>
-
-                                                                        }
-
-                                                                    </tbody>
-
-                                                                </Table>
+                                                                    </div>
+                                                                </div>
                                                                 {displayedOrders?.length > 0 && displayedOrders?.length !== is_lastItem &&
                                                                     <div className='w-100 d-flex justify-content-center'>
                                                                         <Button className='shop-btn btn-cos-mobile' onClick={() => (setPage(page + 1), setViewmoreLoder(true))} > View More <MdKeyboardDoubleArrowRight /></Button>
                                                                     </div>
+
                                                                 }
                                                             </div>
 
@@ -673,7 +734,7 @@ const Profile = () => {
                                                             <p className='mt-3'>You don’t have any orders</p>
                                                         </div>
                                                     </div>
-
+        
                                                     <div className='find-your-order'>
                                                         <Row className='align-items-end'>
                                                             <Col lg={6} md={6} sm={12}>
@@ -946,7 +1007,7 @@ const Profile = () => {
                                                 loading ? <Loader startAnimation={startAnimation} stopAnimation={stopAnimation} player={player} /> : (
                                                     <> */}
                                                         <div className='location-main'>
-                                                            <Button onClick={() => handleShow("add")}>+ Add a new address</Button>
+                                                            <Button className='shipping-address-btn' onClick={() => handleShow("add")}>+ Add a new address</Button>
 
 
                                                             {myAddress?.length === 0 &&
@@ -967,7 +1028,7 @@ const Profile = () => {
                                                                         <div className='d-flex align-items-center justify-content-between'>
                                                                             <div className='d-flex align-items-center check-options' onClick={() => selectAddress(e?._id)}   >
                                                                                 <input type='checkbox' id='add-select' checked={e.is_default == 1} />
-                                                                                <label htmlFor='add-select'>Default</label>
+                                                                                <label htmlFor='add-select'>Use this Address</label>
                                                                             </div>
                                                                             <div className='copy-main'>
                                                                                 {/* <Button>Copy</Button> */}
@@ -1171,27 +1232,15 @@ const Profile = () => {
                         <h5>Shipping address</h5>
                         <Form>
                             <Row className='mt-2'>
+
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Ship to Address</label>
-                                        {/* <select name='country_id'
-                                            value={values.country_id}
-                                            onChange={handleChange}
-                                            className='select-arrow'>
-                                            <option value="" >Select Country</option>
-                                            {(countryList.length <= 0) && <option
-                                            >loding....</option>}
-                                            {
-                                                countryList.map((e, i) =>
-                                                (
-                                                    <option key={i} value={e?._id}  >{e?.name}</option>
-                                                ))
-                                            }
-                                        </select> */}
                                         <Select
                                             name='country_id'
                                             className='rect-select-cos'
                                             value={defaultCountry && { value: defaultCountry._id, label: defaultCountry.name }}
+                                            // value={countryList.find(option => option.value === values.country_id)} // sets the selected value
                                             onChange={option => {
                                                 handleChange({
                                                     target: {
@@ -1199,30 +1248,43 @@ const Profile = () => {
                                                         value: option.value,
                                                     },
                                                 })
-                                            }} // set selected value
-                                            options={countryList?.map(country => ({ value: country._id, label: country.name }))}
+                                            }} //set selected value
+                                            options={countryList.map(country => ({ value: country._id, label: country.name }))}
                                         />
-                                        <div className='error' >{errors?.country_id}</div>
+                                        <div className='error'>{errors?.country_id}</div>
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
-                                        <label>Full Name</label>
-                                        <input placeholder='Full Name'
+                                        <label>First Name</label>
+                                        <input
+                                            placeholder='First Name'
                                             type='text'
-                                            name='fullname'
+                                            name='first_name'
                                             onChange={handleChange}
-                                            value={values.fullname}
+                                            value={values.first_name}
                                         />
-                                        <div className='error' >{errors?.fullname}</div>
-
+                                        <div className='error'>{errors?.first_name}</div>
+                                    </div>
+                                </Col>
+                                <Col lg={6} md={6} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Last Name</label>
+                                        <input
+                                            placeholder='Last Name'
+                                            type='text'
+                                            name='last_name'
+                                            onChange={handleChange}
+                                            value={values.last_name}
+                                        />
+                                        <div className='error'>{errors?.last_name}</div>
                                     </div>
                                 </Col>
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Phone Number</label>
                                         <input placeholder='Phone Number'
-                                            type='number'
+                                            type='text'
                                             name="contact_no"
                                             value={values.contact_no}
                                             onChange={handleChange}
@@ -1245,27 +1307,10 @@ const Profile = () => {
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>State</label>
-                                        {/* <select
-                                            onClick={checkforcounty} onChange={handleChange}
-                                            value={values.state_id}
-                                            name='state_id' className='select-arrow'>
-                                            <option value="" >Select State</option>
-                                            {errors.country_id == undefined && (
-                                                <>
-                                                    {
-                                                        stateList.map((e, i) =>
-                                                        (
-                                                            <option key={i} value={e?._id}  >{e?.name}</option>
-                                                        ))
-                                                    }
-                                                    )
-                                                </>
-                                            )}
-
-                                        </select> */}
                                         <Select
-                                            className='rect-select-cos'
                                             name='state_id'
+                                            className='rect-select-cos'
+                                            // value={ values.state_id ? stateList.find(option => option.value === values.state_id) : null}
                                             value={defaultState && { value: defaultState._id, label: defaultState.name }}
                                             onChange={option => {
                                                 handleChange({
@@ -1281,9 +1326,10 @@ const Profile = () => {
                                                     : [{ value: '', label: 'Please select a country first' }]
                                             }
                                         />
-                                        <div className='error' >{errors?.state_id}</div>
+                                        <div className='error'>{errors?.state_id}</div>
                                     </div>
                                 </Col>
+
                                 <Col lg={6} md={6} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
                                         <label>Zip Code</label>
@@ -1298,25 +1344,29 @@ const Profile = () => {
                                 </Col>
                                 <Col lg={12} md={12} sm={12} className='mt-3'>
                                     <div className='login-input text-start'>
-                                        <label>Address</label>
-                                        <textarea className='w-100'
+                                        <label>Address (street address or P.O box)</label>
+                                        <input type='text' className='w-100'
                                             onChange={handleChange}
                                             name='address'
-                                            value={values.address} placeholder='Enter Address'
-                                            rows={5}></textarea>
+                                            value={values.address} placeholder='Enter Street Address Or P.O Box'
+                                            rows={5}></input>
                                         <div className='error' >{errors?.address}</div>
                                     </div>
                                 </Col>
+                                <Col lg={12} md={12} sm={12} className='mt-3'>
+                                    <div className='login-input text-start'>
+                                        <label>Apt, Suite, Unit, Building (Optional)</label>
+                                        <input type='text' className='w-100'
+                                            onChange={handleChange}
+                                            name='address_optional'
+                                            value={values.address_optional} placeholder='Enter Apt, Suite, Unit, Building'
+                                            rows={5}></input>
+                                        <div className='error' >{errors?.address_optional}</div>
+                                    </div>
+                                </Col>
                             </Row>
-                            {/* <div className='d-flex align-items-start check-terms gap-3 mt-3'>
-                                <Form.Check
-                                    type="checkbox"
-                                    id='check_terms'
-                                />
-                                <label htmlFor='check_terms' className='pointer'>Make this my default address</label>
-                            </div> */}
-                            {modelMood == "edit" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("edit")} >Edit Address</button>}
-                            {modelMood == "add" && <button className='submit-btn w-100 mt-3' type='button' onClick={() => handleSubmit("add")} >Add Address</button>}
+                            {modelMood == "edit" && <button className='submit-btn w-100 mt-3 yellow-btn' type='button' onClick={() => handleSubmit("edit")} >Edit Address</button>}
+                            {modelMood == "add" && <button className='submit-btn w-100 mt-3 yellow-btn' type='button' onClick={() => handleSubmit("add")} >Add Address</button>}
                         </Form>
                     </div>
                 </Modal.Body>
