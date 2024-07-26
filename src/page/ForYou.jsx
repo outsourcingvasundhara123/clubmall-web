@@ -224,7 +224,11 @@ const ForYou = () => {
           swiperRef.current.slideTo(0, 0);
         }, 100);
       }
-    } else if (!isLoggedIn && swiper.activeIndex === 3) {
+    } 
+    if (swiper.activeIndex % 3 === 0 && swiper.activeIndex !== 0) {
+      setShowAppDownload(true);
+    }
+    else if ( swiper.activeIndex === 3) {
       handleShow()
     }
   }, [isLoggedIn, postList, page, totalPages]);

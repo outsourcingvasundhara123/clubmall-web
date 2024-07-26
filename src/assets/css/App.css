@@ -7625,7 +7625,9 @@ table tr td:first-of-type {
         word-break: break-all;
     }
 
-    .order-table .table-card-show .bg-danger, .order-table .table-card-show .bg-success, .order-table .table-card-show .bg-info {
+    .order-table .table-card-show .bg-danger,
+    .order-table .table-card-show .bg-success,
+    .order-table .table-card-show .bg-info {
         padding: 6px 15px;
         border-radius: 50px;
         font-size: 15px;
@@ -7653,3 +7655,17 @@ table tr td:first-of-type {
 }
 
 /* Table responsove css end */
+
+.delivery-bg-color {
+    background-color: #f7f7f5;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+    color: #505050;
+}
+
+.shipping-text-xl {
+    font-size: 15px;
+    font-weight: 600;
+    color: #223263;
+}
