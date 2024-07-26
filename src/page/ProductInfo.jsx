@@ -944,6 +944,11 @@ const ProductInfo = () => {
     const handleCloseFullscreen = () => {
         setFullscreenImage(null);
     };
+    const today = new Date();
+    const datePlusTwoDays = addDays(today, 2);
+    const datePlusFifteenDays = addDays(datePlusTwoDays, 12);
+    const formattedDatePlusTwoDays = format(datePlusTwoDays, 'dd-MMM');
+    const formattedDatePlusFifteenDays = format(datePlusFifteenDays, 'dd-MMM');
     return (
         <>
             <h1 className='d-none'></h1>
