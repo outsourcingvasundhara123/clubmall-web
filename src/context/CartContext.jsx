@@ -207,21 +207,26 @@ export const CartProvider = ({ children }) => {
       console.error('SKU details not found');
       return;
     }
+    const selectedPack = Product.packets?.find((packet) => packet.count === product_qtyActive);
+    const packPrice = selectedPack ? selectedPack.price : Product.productList?.individual_price;
 
     if (!productExists) {
+        // When adding the product for the first time, set qty to 1
+        const initialQty = 1;
 
-      // construct the details
-      let productDetail = {
-        product_id: data.product_id,
-        name: Product.productList.name,
-        image: `${Product.productImagePath}${data.product_id}/${skuDetail.file_name}`,
-        qty: product_qtyActive,
-        total_price: Product.productList.individual_price * product_qtyActive,
-        individual_price: Product.productList.individual_price,
-        size: sizeActive,
-        color: productColorActive,
-        skuid: data.skuid
-      }
+        // Construct the details
+        let productDetail = {
+            product_id: data.product_id,
+            name: Product.productList.name,
+            image: `${Product.productImagePath}${data.product_id}/${skuDetail.file_name}`,
+            qty: initialQty,
+            total_price: packPrice * initialQty,
+            individual_price: packPrice,
+            size: sizeActive,
+            color: productColorActive,
+            skuid: data.skuid,
+            pack: product_qtyActive
+        };
 
       currentProductDetails.items.push(productDetail);
 
@@ -229,14 +234,14 @@ export const CartProvider = ({ children }) => {
       currentProductDetails.subtotal += productDetail.total_price;
 
     } else {
+        // Update the product quantity
+        const previousTotalPrice = productExists.total_price;
 
-      // Update the product quantity
-      productExists.qty += product_qtyActive;
-      productExists.total_price = productExists.qty * productExists.individual_price;
+        productExists.qty += 1;
+        productExists.total_price = productExists.qty * packPrice; // Calculate total_price with updated qty
 
-      // Update subtotal
-      currentProductDetails.subtotal += productExists.individual_price * product_qtyActive;
-  
+        // Update subtotal
+        currentProductDetails.subtotal = currentProductDetails.subtotal - previousTotalPrice + productExists.total_price;
     }
 
     // Convert object to string and encrypt
@@ -345,43 +350,43 @@ export const CartProvider = ({ children }) => {
   const decreaseProductQuantity = async (skuId) => {
     let currentProductDetails = localStorage.getItem('productDetails');
     if (!currentProductDetails) {
-      setMyMessage("No product details stored");
-      setWarningSnackBarOpen(!warningSnackBarOpen);
-      return;
+        setMyMessage("No product details stored");
+        setWarningSnackBarOpen(true);
+        console.log("No product details stored"); // Debugging line
+        return;
     }
+
     const bytes = CryptoJS.AES.decrypt(currentProductDetails, process.env.REACT_APP_JWT_SECRET_KEY);
     currentProductDetails = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
-    // Find the product in the stored details
     const productIndex = currentProductDetails.items.findIndex(item => item.skuid === skuId);
     if (productIndex === -1) {
-      setMyMessage("Product details not found");
-      setWarningSnackBarOpen(!warningSnackBarOpen);
-      return;
+        setMyMessage("Product details not found");
+        setWarningSnackBarOpen(true);
+        console.log("Product details not found"); // Debugging line
+        return;
     }
 
-    // Decrease the product quantity, but don't go below 1
     if (currentProductDetails.items[productIndex].qty > 1) {
-      // Decrease the product quantity
-      currentProductDetails.items[productIndex].qty -= 1;
-      // Update total price for the product
-      currentProductDetails.items[productIndex].total_price = parseFloat((currentProductDetails.items[productIndex].qty * currentProductDetails.items[productIndex].individual_price).toFixed(2));
-      // Update subtotal
-      currentProductDetails.subtotal = parseFloat((currentProductDetails.items.reduce((sum, item) => sum + item.total_price, 0)).toFixed(2));
+        currentProductDetails.items[productIndex].qty -= 1;
+        currentProductDetails.items[productIndex].total_price = parseFloat((currentProductDetails.items[productIndex].qty * currentProductDetails.items[productIndex].individual_price).toFixed(2));
+        currentProductDetails.subtotal = parseFloat((currentProductDetails.items.reduce((sum, item) => sum + item.total_price, 0)).toFixed(2));
 
-      // Convert object to string and encrypt
-      const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
-
-      // Save updated product details
-      localStorage.setItem('productDetails', ciphertext);
-      getLocalCartData()
-      setMyMessage("Product quantity decreased successfully");
-      setSucessSnackBarOpen(!sucessSnackBarOpen);
+        const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(currentProductDetails), process.env.REACT_APP_JWT_SECRET_KEY).toString();
+        localStorage.setItem('productDetails', ciphertext);
+        getLocalCartData();
+        setMyMessage("Product quantity decreased successfully");
+        setSucessSnackBarOpen(true);
+        console.log("Product quantity decreased successfully"); // Debugging line
     } else {
-      setMyMessage("Product quantity cannot be less than 1");
-      setWarningSnackBarOpen(!warningSnackBarOpen);
+        setMyMessage("Product quantity cannot be less than 1");
+        setWarningSnackBarOpen(true);
+     
+        console.log("Product quantity cannot be less than 1"); // Debugging line
     }
-  }
+}
+
+
 
   const getLocalCartData = async () => {
     try {

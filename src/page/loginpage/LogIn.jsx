@@ -151,7 +151,7 @@ const LogIn = () => {
                     }
 
                     // Find the matching cart item from cartList
-                    const cartItem = cartList.list?.find(cart => cart.product_id === item.product_id);
+                    const cartItem = cartList.list?.find(cart => cart.skuid == item.skuid);
 
                     if (!cartItem || !cartItem._id) {
                       console.error("Could not find matching cart item for product: ", item.product_id);

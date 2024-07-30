@@ -37,18 +37,19 @@ const EditProduct = () => {
     subcategory: "",
     description: "",
     content: "",
-    size_chartInInch: {description: ""},
-    size_chartIncm: {description: ""},
+    size_chartInInch: { description: "" },
+    size_chartIncm: { description: "" },
     product_files: Array(4).fill({ file: undefined, preview: "", title: "" }),
     description_video: Array(4).fill({ file: undefined, preview: "" }),
     product_images: Array(10).fill({ file: undefined, preview: "", type: "image" }),
     description_images: Array(5).fill({ file: undefined, preview: "" }),
     deleted_images: [],
     pdt_img_deleted_images: [],
-    deleted_videos :[],
-    deleted_files:[],
+    deleted_videos: [],
+    deleted_files: [],
     colors: Array(10).fill({ name: "", image: { file: undefined, preview: "" } }),
     sizes: Array(10).fill(""),
+    packets: [],
   });
 
   const [category, setCategory] = useState([]);
@@ -74,9 +75,16 @@ const EditProduct = () => {
   const [IncolumnName, setInColumnName] = useState('');
   const [InnewRowName, setInNewRowName] = useState('');
   const [showColumnInputs, setShowColumnInputs] = useState({});
-  const [showInColumnInputs, setShowInColumnInputs] = useState({})
+  const [showInColumnInputs, setShowInColumnInputs] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
+  const [inRowErrorMessage, setInRowErrorMessage] = useState('');
   const addRow = () => {
     if (newRowName.trim() !== '') {
+      const rowExists = rows.some(row => row.name === newRowName.trim());
+      if (rowExists) {
+        setErrorMessage('Row already exists');
+        return;
+      }
       setValues(prevState => ({
         ...prevState,
         size_chartInInch: {
@@ -113,6 +121,12 @@ const EditProduct = () => {
         }
         return row;
       });
+      const rowExists = inrows.some(row => row.name === InnewRowName.trim());
+      if (rowExists) {
+        setInRowErrorMessage('Row already exists');
+        return;
+      }
+    
 
       setValues(prevState => ({
         ...prevState,
@@ -273,32 +287,52 @@ const EditProduct = () => {
       setColorImage(null);
     }
   };
-const handleColorImageChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (upload) => {
-      setColorImage({ file: file, preview: upload.target.result });
-    };
-    reader.readAsDataURL(file);
-  }
-};
+  const handleColorImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (upload) => {
+        setColorImage({ file: file, preview: upload.target.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
 
-const deleteSize = (indexToRemove) => {
-  setDeletedSizes(prevDeletedSizes => [...prevDeletedSizes, sizes[indexToRemove]]);
-  setSizes(sizes.filter((_, index) => index !== indexToRemove));
-};
-const deleteColor = (indexToRemove) => {
-  setDeletedColors(prevDeletedColors => [...prevDeletedColors, colors[indexToRemove].name]);
-  setColors(colors.filter((_, index) => index !== indexToRemove));
-};
+  const deleteSize = (indexToRemove) => {
+    setDeletedSizes(prevDeletedSizes => [...prevDeletedSizes, sizes[indexToRemove]]);
+    setSizes(sizes.filter((_, index) => index !== indexToRemove));
+  };
+  const deleteColor = (indexToRemove) => {
+    setDeletedColors(prevDeletedColors => [...prevDeletedColors, colors[indexToRemove].name]);
+    setColors(colors.filter((_, index) => index !== indexToRemove));
+  };
   const handleQuantityChange = (e) => {
     setInputQuantity(e.target.value);
   };
   const deleteQuantity = (indexToRemove) => {
     const newQuantity = product_qty.filter((_, index) => index !== indexToRemove);
     setProduct_Qty(newQuantity);
+  };
+  const [quantityPriceItems, setQuantityPriceItems] = useState([]);
+  const [inputPrice, setInputPrice] = useState('');
+
+
+  const handlePriceChange = (e) => {
+    setInputPrice(e.target.value);
+  };
+
+  const addQuantityPriceItem = () => {
+    if (inputQuantity && inputPrice) {
+      setQuantityPriceItems([...quantityPriceItems, { count: inputQuantity, price: inputPrice }]);
+      setInputQuantity('');
+      setInputPrice('');
+    }
+  };
+
+  const deleteQuantityPriceItem = (indexToRemove) => {
+    const newItems = quantityPriceItems.filter((_, index) => index !== indexToRemove);
+    setQuantityPriceItems(newItems);
   };
 
   const getProductDetail = async () => {
@@ -314,12 +348,14 @@ const deleteColor = (indexToRemove) => {
         setProduct_Qty(productData.product_qty || []);
         const newSizes = productData.sku_attributes.size.map(size => size.name);
         setSizes(newSizes);
+        const packets_price = productDetail.data.data.packets
+        setQuantityPriceItems(packets_price)
         const newColors = productData.sku_attributes.color.map(color => ({
           name: color.name,
-           image: {
-          file: null,
-          preview: color.imgUrl ? `${productDetail.data.data.productImagePath}${product_id}/${color.imgUrl}` : null
-        }
+          image: {
+            file: null,
+            preview: color.imgUrl ? `${productDetail.data.data.productImagePath}${product_id}/${color.imgUrl}` : null
+          }
         }));
         setColors(newColors);
         const newRows = sizeChart.row_name.map(row => ({
@@ -333,8 +369,8 @@ const deleteColor = (indexToRemove) => {
         const updatedProductImages = productData.product_images.map(file => ({
           file: file.file_name,
           preview: file.file_name.match(/\.(mp4|mov|mkv|webm|jpg|png)$/i)
-          ? `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`
-          : `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`,
+            ? `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`
+            : `${productDetail.data.data.productImagePath}${product_id}/${file.file_name}`,
           type: file.file_name.match(/\.(mp4|mov|mkv|webm)$/i) ? 'video' : 'image'
         }));
        
@@ -378,7 +414,6 @@ const deleteColor = (indexToRemove) => {
             preview: `${productDetail.data.data.productImagePath}${product_id}/${img.file_name}`,
           })),
           product_images: updatedProductImages,
-        
         }));
 
         // Set rows state
@@ -497,39 +532,39 @@ const deleteColor = (indexToRemove) => {
 
   const getImage = async (data) => {
     try {
-        const formData = new FormData();
-        values.product_images.forEach((img, index) => {
-            if (img && img.file) {
-                formData.append(`product_images[${index}]`, img.file);
-            }
-        });
-        values.description_video.forEach((img, index) => {
-          if (img && img.file) {
-            formData.append(`description_video[${index}]`, img.file);
-          }
-        });
-        values.description_images.forEach((img, index) => {
-            if (img && img.file) {
-                formData.append(`description_images[${index}]`, img.file);
-            }
-        });
-        colors.forEach((color, index) => {
-          formData.append(`colors[${index}][name]`, color.name);
-          if (color.image && color.image.file) {
-            formData.append(`colors[${index}][image]`, color.image.file);
-          }
-        });
-        sizes.forEach((size, index) => {
-          formData.append(`product_sizes[${index}]`, size);
-        });
-        if (values.deleted_videos && values.deleted_videos.length > 0) {
-          formData.append('deleted_videos', JSON.stringify(values.deleted_videos));
+      const formData = new FormData();
+      values.product_images.forEach((img, index) => {
+        if (img && img.file) {
+          formData.append(`product_images[${index}]`, img.file);
         }
-        if (values.deleted_images && values.deleted_images.length > 0) {
-            formData.append('deleted_images', JSON.stringify(values.deleted_images));
+      });
+      values.description_video.forEach((img, index) => {
+        if (img && img.file) {
+          formData.append(`description_video[${index}]`, img.file);
         }
-        if (values.pdt_img_deleted_images && values.pdt_img_deleted_images.length > 0) {
-          formData.append('pdt_img_deleted_images', JSON.stringify(values.pdt_img_deleted_images));
+      });
+      values.description_images.forEach((img, index) => {
+        if (img && img.file) {
+          formData.append(`description_images[${index}]`, img.file);
+        }
+      });
+      colors.forEach((color, index) => {
+        formData.append(`colors[${index}][name]`, color.name);
+        if (color.image && color.image.file) {
+          formData.append(`colors[${index}][image]`, color.image.file);
+        }
+      });
+      sizes.forEach((size, index) => {
+        formData.append(`product_sizes[${index}]`, size);
+      });
+      if (values.deleted_videos && values.deleted_videos.length > 0) {
+        formData.append('deleted_videos', JSON.stringify(values.deleted_videos));
+      }
+      if (values.deleted_images && values.deleted_images.length > 0) {
+        formData.append('deleted_images', JSON.stringify(values.deleted_images));
+      }
+      if (values.pdt_img_deleted_images && values.pdt_img_deleted_images.length > 0) {
+        formData.append('pdt_img_deleted_images', JSON.stringify(values.pdt_img_deleted_images));
       }
       if (deletedSizes.length > 0) {
         formData.append('deleted_sizes', JSON.stringify(deletedSizes));
@@ -538,104 +573,109 @@ const deleteColor = (indexToRemove) => {
         formData.append('deleted_colors', JSON.stringify(deletedColors));
       }
 
-        const [productResponse] = await Promise.all([
-            api.postWithToken(`${serverURL}product-media-update/${product_id}`, formData),
-        ]);
+      const [productResponse] = await Promise.all([
+        api.postWithToken(`${serverURL}product-media-update/${product_id}`, formData),
+      ]);
 
-        if (productResponse.data.success) {
-            setMyMessage(productResponse.data.message);
-            setSucessSnackBarOpen(!sucessSnackBarOpen);
-            setMainLoder(false)
-            setTimeout(() => {
-                navigate("/admin/product")
-            }, 1000);
-        } else if (productResponse.data.success === false) {
-            setMainLoder(false)
-            setMyMessage(productResponse.data.message);
-            setWarningSnackBarOpen(!warningSnackBarOpen);
-        }
+      if (productResponse.data.success) {
+        setMyMessage(productResponse.data.message);
+        setSucessSnackBarOpen(!sucessSnackBarOpen);
+        setMainLoder(false)
+        setTimeout(() => {
+          navigate("/admin/product")
+        }, 1000);
+      } else if (productResponse.data.success === false) {
+        setMainLoder(false)
+        setMyMessage(productResponse.data.message);
+        setWarningSnackBarOpen(!warningSnackBarOpen);
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-};
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const updatedProductData = {
-    product_category_keys: values.product_category_keys,
-    description: values.description,
-    total_order: values.total_order,
-    group_price: values.group_price,
-    individual_price: values.individual_price,
-    competitors_price: values.competitors_price,
-    name: values.name,
-    tax: values.tax,
-    product_id: values.product_id,
-    content: states.content,
-    size_chartInInch: values.size_chartInInch,
-    size_chartIncm: values.size_chartIncm,
-    product_qty: product_qty,
   };
 
-  const validationErrors = validate(updatedProductData);
-  setErrors(validationErrors);
 
-  if (
-    Object.keys(validationErrors).length === 0 &&
-    values.product_category_keys.product_category_one._id &&
-    values.product_category_keys.product_category_two._id
-  ) {
-    try {
-      setMainLoder(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      const formData = new FormData();
-      values.product_files.forEach((video, index) => {
-        if (video?.file) {
-          formData.append("product_files", video.file);
-          formData.append(`product_files_titles_${index}`, video.title);
+    const updatedProductData = {
+      product_category_keys: values.product_category_keys,
+      description: values.description,
+      total_order: values.total_order,
+      group_price: values.group_price,
+      individual_price: values.individual_price,
+      competitors_price: values.competitors_price,
+      name: values.name,
+      tax: values.tax,
+      product_id: values.product_id,
+      content: states.content,
+      size_chartInInch: values.size_chartInInch,
+      size_chartIncm: values.size_chartIncm,
+      product_qty: product_qty,
+      packets: quantityPriceItems,
+    };
+
+    const validationErrors = validate(updatedProductData);
+    setErrors(validationErrors);
+
+    if (
+      Object.keys(validationErrors).length === 0 &&
+      values.product_category_keys.product_category_one._id &&
+      values.product_category_keys.product_category_two._id
+    ) {
+      try {
+        setMainLoder(true);
+
+        const formData = new FormData();
+        values.product_files.forEach((video, index) => {
+          if (video?.file) {
+            formData.append("product_files", video.file);
+            formData.append(`product_files_titles_${index}`, video.title);
+          }
+        });
+        formData.append("product_category_keys", JSON.stringify(values.product_category_keys));
+        formData.append("description", values.description);
+        formData.append("total_order", values.total_order);
+        formData.append("group_price", values.group_price);
+        formData.append("individual_price", values.individual_price);
+        formData.append("competitors_price", values.competitors_price);
+        formData.append("name", values.name);
+        formData.append("product_id", values.product_id);
+        formData.append("tax", values.tax);
+        formData.append("content", states.content);
+        formData.append("size_chartInInch", JSON.stringify(values.size_chartInInch));
+        formData.append("size_chartIncm", JSON.stringify(values.size_chartIncm));
+        formData.append("product_qty", JSON.stringify(product_qty));
+
+        // Append quantity_price_item
+        formData.append("packets", JSON.stringify(quantityPriceItems));
+
+        if (values.deleted_files && values.deleted_files.length > 0) {
+          formData.append('deleted_files', JSON.stringify(values.deleted_files));
         }
-      });
 
-      formData.append("product_category_keys", JSON.stringify(values.product_category_keys));
-      formData.append("description", values.description);
-      formData.append("total_order", values.total_order);
-      formData.append("group_price", values.group_price);
-      formData.append("individual_price", values.individual_price);
-      formData.append("competitors_price", values.competitors_price);
-      formData.append("name", values.name);
-      formData.append("product_id", values.product_id);
-      formData.append("tax", values.tax);   
-      formData.append("content", states.content);
-      formData.append("size_chartInInch", JSON.stringify(values.size_chartInInch));
-      formData.append("size_chartIncm", JSON.stringify(values.size_chartIncm));
-      formData.append("product_qty", JSON.stringify(product_qty));
-   
-      if (values.deleted_files && values.deleted_files.length > 0) {
-        formData.append('deleted_files', JSON.stringify(values.deleted_files));
+        const response = await api.postWithToken(`${serverURL}product-update/${product_id}`, formData);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        if (response.data.success === true) {
+
+          await getImage(response.data);
+
+          setSnackbarMessage('Product updated successfully!');
+          setSnackbarOpen(true);
+          setTimeout(() => {
+            navigate("/admin/product");
+          }, 1000);
+        }
+
+        setMainLoder(false);
+      } catch (error) {
+        console.error(error);
+        setMainLoder(false);
       }
-      
-
-      const response = await api.postWithToken(`${serverURL}/product-update/${product_id}`, formData);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      if (response.data.success === true) {
-        await getImage(response.data);
-        setSnackbarMessage('Product updated successfully!');
-        setSnackbarOpen(true);
-        setTimeout(() => {
-          navigate("/admin/product");
-        }, 1000);
-      }
-
-      setMainLoder(false);
-    } catch (error) {
-      console.error(error);
-      setMainLoder(false);
     }
-  }
-};
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -695,6 +735,7 @@ const handleSubmit = async (e) => {
     };
   }
 
+
   const handleTitleChange = (e, index) => {
     const title = e.target.value;
     const updatedVideos = [...values.product_files];
@@ -706,6 +747,7 @@ const handleSubmit = async (e) => {
   };
 
   const handleDescriptionPhoto = (e) => {
+    setMainLoder(true);
     const index = parseInt(e.target.name.split('_')[2]);
     const file = e.target.files[0];
 
@@ -718,11 +760,13 @@ const handleSubmit = async (e) => {
           preview: upload.target.result
         };
         setValues(prevValues => ({ ...prevValues, description_images: updatedDescriptions }));
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
     }
   };
   const handlePhoto = (e) => {
+    setMainLoder(true);
     const index = parseInt(e.target.name.split('_')[2]);
     const file = e.target.files[0];
 
@@ -736,6 +780,7 @@ const handleSubmit = async (e) => {
           type: file.type.startsWith('video') ? 'video' : 'image'
         };
         setValues(prevValues => ({ ...prevValues, product_images: updatedImages }));
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
     }
@@ -751,7 +796,7 @@ const handleSubmit = async (e) => {
     }
     const updatedDeletedImages = [...values.pdt_img_deleted_images];
     updatedDeletedImages.push(index);
-    
+
     setValues((prevValues) => ({
       ...prevValues,
       product_images: updatedImages,
@@ -769,16 +814,17 @@ const handleSubmit = async (e) => {
     }
     const updatedDeletedImages = [...values.deleted_images];
     updatedDeletedImages.push(index); // Store the index or any identifier of the image to delete
-    
+
     setValues((prevValues) => ({
       ...prevValues,
       description_images: updatedImages,
       deleted_images: updatedDeletedImages,
     }));
   };
-  
+
 
   const handleVideo = (e, index) => {
+    setMainLoder(true);
     const file = e.target.files[0];
     const title = values.product_files[index]?.title || "";
 
@@ -792,15 +838,17 @@ const handleSubmit = async (e) => {
           title: title
         };
         setValues(prevValues => ({ ...prevValues, product_files: updatedVideos }));
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
     }
   };
-  
+
   const handledescriptionVideo = (e) => {
+    setMainLoder(true);
     const file = e.target.files[0];
     const index = parseInt(e.target.name.split('_')[2]);
-  
+
     if (file) {
       const reader = new FileReader();
       reader.onload = function (upload) {
@@ -813,6 +861,7 @@ const handleSubmit = async (e) => {
           ...prevValues,
           description_video: updatedVideos,
         }));
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
     }
@@ -825,32 +874,32 @@ const handleSubmit = async (e) => {
       preview: "",
       title: ""
     };
-  
+
     const updatedDeletedVideos = [...values.deleted_files];
     updatedDeletedVideos.push(index);
-  
+
     setValues(prevValues => ({
       ...prevValues,
       product_files: updatedVideos,
       deleted_files: updatedDeletedVideos
     }));
   };
-  
+
   const handleDeleteDescriptionVideo = (index) => {
     const updatedVideos = [...values.description_video];
     updatedVideos[index] = { file: undefined, preview: "" }; // Clear the video at the given index
-  
+
     // Mark the deleted video in a separate array
     const updatedDeletedVideos = [...values.deleted_videos];
     updatedDeletedVideos.push(index); // Store the index or any identifier of the video to delete
-  
+
     setValues((prevValues) => ({
       ...prevValues,
       description_video: updatedVideos,
       deleted_videos: updatedDeletedVideos,
     }));
   };
-  
+
 
   return (
     <Layout>
@@ -1071,15 +1120,15 @@ const handleSubmit = async (e) => {
                         </Button>
                       </div>
                       <div className="fees-input mt-3" >
-                          <input
-                            type='text'
-                            onChange={(e) => handleTitleChange(e, index)}
-                            name={`product_file_title_${index}`}
-                            placeholder="Enter Title"
-                            className="video-title-input"
-                            value={values.product_files[index]?.title || ""}
-                          />
-                        </div>
+                        <input
+                          type='text'
+                          onChange={(e) => handleTitleChange(e, index)}
+                          name={`product_file_title_${index}`}
+                          placeholder="Enter Title"
+                          className="video-title-input"
+                          value={values.product_files[index]?.title || ""}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1090,99 +1139,101 @@ const handleSubmit = async (e) => {
           </Row>
         </div>
         <div className="px-3 px-sm-4 pb-5 pb-sm-4 mt-3 mt-sm-4 border-green-bottom">
-        <Row className='align-items-start'>
-  <Col lg={6} md={6} sm={12}>
-    <div className="fees-input mt-3">
-      <label>Size</label>
-      <div className="d-flex align-items-center gap-3">
-        <input type="text" placeholder="Enter product size" value={inputSize} onChange={handleSizeChange} />
-        <Button className="add-items" onClick={addSize}>
-          <img src="../../admin-img/add.svg" alt="" />
-        </Button>
-      </div>
-    </div>
-    {sizes.map((size, index) => (
-      <div className="fees-input list-data mt-3" key={index}>
-        <div className="d-flex align-items-center gap-3">
-          <p>{size}</p>
-          <Button className="add-items" onClick={() => deleteSize(index)}>
-            <img src="../../admin-img/profile/delete.svg" alt="" />
-          </Button>
-        </div>
-      </div>
-    ))}
-  </Col>
-
-  <Col lg={6} md={6} sm={12}>
-    <div className="fees-input mt-3">
-      <label>Color*</label>
-      <div className="d-flex align-items-center gap-3">
-        <div className="choose-color">
-          <input type="file" id="selectColor" accept='image/*' onChange={handleColorImageChange} />
-          <label htmlFor="selectColor">
-            <img src={colorImage?.preview || "../../admin-img/upload.png"} alt="" width="17px" />
-          </label>
-        </div>
-        <input type="text" placeholder="Enter product color" value={inputColor} onChange={handleColorChange} />
-        <Button className="add-items" onClick={addColor}>
-          <img src="../../admin-img/add.svg" alt="" />
-        </Button>
-      </div>
-    </div>
-    {colors.map((color, index) => (
-      <div className="fees-input list-data mt-3" key={index}>
-        <div className="d-flex align-items-center gap-3">
-          <div className="select-img-output resize">
-            <img src={color.image.preview} alt="" className="output-file" />
-          </div>
-          <p>{color.name}</p>
-          <Button className="add-items" onClick={() => deleteColor(index)}>
-            <img src="../../admin-img/profile/delete.svg" alt="" />
-          </Button>
-        </div>
-      </div>
-    ))}
-    <div className='errorAdmin'>{colors.length === 0 && submitCount > 0 && "color is required"}</div>
-  </Col>
-</Row>
-
-          <Row className='mb-5'>
-          <Col lg={6} md={6} sm={12}>
+          <Row className='align-items-start'>
+            <Col lg={6} md={6} sm={12}>
               <div className="fees-input mt-3">
-                <label>Quantity* </label>
+                <label>Size</label>
                 <div className="d-flex align-items-center gap-3">
-                  <input type="number" placeholder="Enter product Quantity" value={inputQuantity} onChange={handleQuantityChange} />
-                  <Button className="add-items" onClick={addQuantity}>
+                  <input type="text" placeholder="Enter product size" value={inputSize} onChange={handleSizeChange} />
+                  <Button className="add-items" onClick={addSize}>
                     <img src="../../admin-img/add.svg" alt="" />
                   </Button>
                 </div>
-
               </div>
-
-              {product_qty.map((e, index) => (
+              {sizes.map((size, index) => (
                 <div className="fees-input list-data mt-3" key={index}>
                   <div className="d-flex align-items-center gap-3">
-                    <p>{e}</p>
-                    <Button className="add-items" onClick={() => deleteQuantity(index)}>
+                    <p>{size}</p>
+                    <Button className="add-items" onClick={() => deleteSize(index)}>
                       <img src="../../admin-img/profile/delete.svg" alt="" />
                     </Button>
                   </div>
                 </div>
               ))}
-              <div className='errorAdmin' >{isEmpty(product_qty) && submitCount > 0 && "Quantity is required "}</div>
             </Col>
+
+            <Col lg={6} md={6} sm={12}>
+              <div className="fees-input mt-3">
+                <label>Color*</label>
+                <div className="d-flex align-items-center gap-3">
+                  <div className="choose-color">
+                    <input type="file" id="selectColor" accept='image/*' onChange={handleColorImageChange} />
+                    <label htmlFor="selectColor">
+                      <img src={colorImage?.preview || "../../admin-img/upload.png"} alt="" width="17px" />
+                    </label>
+                  </div>
+                  <input type="text" placeholder="Enter product color" value={inputColor} onChange={handleColorChange} />
+                  <Button className="add-items" onClick={addColor}>
+                    <img src="../../admin-img/add.svg" alt="" />
+                  </Button>
+                </div>
+              </div>
+              {colors.map((color, index) => (
+                <div className="fees-input list-data mt-3" key={index}>
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="select-img-output resize">
+                      <img src={color.image.preview} alt="" className="output-file" />
+                    </div>
+                    <p>{color.name}</p>
+                    <Button className="add-items" onClick={() => deleteColor(index)}>
+                      <img src="../../admin-img/profile/delete.svg" alt="" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              <div className='errorAdmin'>{colors.length === 0 && submitCount > 0 && "color is required"}</div>
+            </Col>
+          </Row>
+
+          <Row className='mb-5'>
+           
+            <Col lg={6} md={6} sm={12}>
+              <div className="fees-input mt-3">
+                <label>Packs and Price*</label>
+                <div className="d-flex align-items-center gap-3">
+                  <input type="number" placeholder="Enter Packs" value={inputQuantity} onChange={handleQuantityChange} />
+                  <input type="number" placeholder="Enter Price" value={inputPrice} onChange={handlePriceChange} />
+                  <Button className="add-items" onClick={addQuantityPriceItem}>
+                    <img src="../../admin-img/add.svg" alt="" />
+                  </Button>
+                </div>
+              </div>
+
+              {quantityPriceItems.map((item, index) => (
+                <div className="fees-input list-data mt-3" key={index}>
+                  <div className="d-flex align-items-center gap-3">
+                    <p>{`Packs: ${item.count}, Price: ${item.price}`}</p>
+                    <Button className="add-items" onClick={() => deleteQuantityPriceItem(index)}>
+                      <img src="../../admin-img/profile/delete.svg" alt="" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+              <div className='errorAdmin'>{isEmpty(quantityPriceItems) && submitCount > 0 && "Quantity and Price are required"}</div>
+            </Col>
+
             <Col lg={12} md={12} sm={12}>
               <div className="fees-input mt-3">
-              <label className=''>Description</label>
-            <CKEditor
-              editor={ClassicEditor}
-              data={values.content}
-              onChange={handleEditorChange}
-              config={editorConfiguration}
-            />
+                <label className=''>Description</label>
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={values.content}
+                  onChange={handleEditorChange}
+                  config={editorConfiguration}
+                />
               </div>
             </Col>
-          
+
             <Col lg={12} md={12} sm={12}>
               <div className="select-img-input  mt-3">
                 <label>Description Video</label>
@@ -1270,22 +1321,22 @@ const handleSubmit = async (e) => {
 
         </div>
         <div className="px-3 px-sm-4 pb-5 border-green-bottom">
-        <Row>
-              <Col xl={5} lg={6} md={8} sm={12}>
-                <div className="fees-input mt-3">
-                  <label>Size Chart Title</label>
-                  <div className='d-flex align-items-center gap-2'>
-                    <input
-                      type="text"
-                      name="size_chartInInch.description"
-                      value={values.size_chartInInch.description}
-                      onChange={handleChange}
-                      placeholder="Enter SizeChart Title Name"
-                    />
-                  </div>
+          <Row>
+            <Col xl={5} lg={6} md={8} sm={12}>
+              <div className="fees-input mt-3">
+                <label>Size Chart Title</label>
+                <div className='d-flex align-items-center gap-2'>
+                  <input
+                    type="text"
+                    name="size_chartInInch.description"
+                    value={values.size_chartInInch.description}
+                    onChange={handleChange}
+                    placeholder="Enter SizeChart Title Name"
+                  />
                 </div>
-              </Col>
-            </Row>
+              </div>
+            </Col>
+          </Row>
 
           <div className="size-chart" style={{ position: 'relative', border: 'none !important' }}>
             <br />
@@ -1311,6 +1362,11 @@ const handleSubmit = async (e) => {
                       <img src="../../admin-img/add.svg" alt="Add Row" />
                     </Button>
                   </div>
+                  {errorMessage && (
+      <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>
+        {errorMessage}
+      </div>
+    )}
                 </div>
               </Col>
             </Row>
@@ -1399,6 +1455,11 @@ const handleSubmit = async (e) => {
                       <img src="../../admin-img/add.svg" alt="Add Row" />
                     </Button>
                   </div>
+                  {inRowErrorMessage && (
+      <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>
+        {inRowErrorMessage}
+      </div>
+    )}
                 </div>
               </Col>
             </Row>

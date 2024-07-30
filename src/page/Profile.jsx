@@ -600,6 +600,7 @@ const Profile = () => {
                                                                                 <th>Products</th>
                                                                                 <th>Quantity</th>
                                                                                 <th>Amount</th>
+                                                                                <th>Packs</th>
                                                                                 <th>Shipping To</th>
                                                                                 <th>Status</th>
                                                                                 {/* <th>Action</th> */}
@@ -625,6 +626,7 @@ const Profile = () => {
                                                                                                 </td>
                                                                                                 <td><p>{e.qty}</p></td>
                                                                                                 <td><p>${e.product_total_price}</p></td>
+                                                                                                <td><p>{e.sku_data?.packets?.count != null ? e.sku_data.packets.count : '-'}</p></td>
                                                                                                 <td>
                                                                                                     <p> {e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>
                                                                                                     <p>{e.order_id.shipping_address_object.contact_no}</p>
@@ -693,6 +695,14 @@ const Profile = () => {
                                                                                                                 <h6 className='text-nowrap'>Amount:</h6>
                                                                                                                 <p> ${e.product_total_price}</p>
                                                                                                             </div>
+                                                                                                            
+                                                                                                                <div className='d-flex align-items-start gap-1'>
+                                                                                                                <h6 className='text-nowrap'>Packs:</h6>
+                                                                                                                <p> {e.sku_data?.packets?.count != null ? e.sku_data.packets.count : '-'}</p>
+ 
+                                                                                                            </div>
+                                                                                                            
+                                                                                                       
                                                                                                             <div className='d-flex align-items-start gap-1'>
                                                                                                                 <h6 className='text-nowrap'>Address: </h6>
                                                                                                                 <p>{e.order_id.shipping_address_object.address},{e.order_id.shipping_address_object.city},{e.order_id.shipping_address_object.zipcode}</p>

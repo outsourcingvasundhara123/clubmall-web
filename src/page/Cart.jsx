@@ -1007,7 +1007,17 @@ checkbox1: event.target.checked,
                                                                     </div>
                                                                 }
 
-                                                                <div className='wrap-cos d-flex align-items-center justify-content-between'>
+
+                                                                {e.sku_data?.packets?.count &&
+                                                                    <div className='d-flex align-items-center gap-2 cart-color w-100'>
+                                                                    
+                                                                        <h6>Packs : </h6>
+                                                                        <span>{e.sku_data?.packets?.count}</span>
+                                                                    </div>
+                                                                }
+                                                                
+
+                                                                <div className='wrap-cos d-flex alig    n-items-center justify-content-between'>
                                                                     <div className='items-per d-flex align-items-center gap-2 mt-2'>
                                                                         <h5>${e.total_price}</h5>
                                                                         {/* <del>${e.product_details.group_price}</del> */}

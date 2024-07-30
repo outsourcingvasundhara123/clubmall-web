@@ -39,10 +39,10 @@ const AddProduct = () => {
     product_type: "",
     product_files: Array(4).fill({ file: undefined, preview: "", title: "" }),
     description_video: Array(4).fill({ file: undefined, preview: "" }),
-    product_qty: []
+    product_qty: [],
+    packets : []
   };
 
-  const [showPass, setShowPass] = useState();
   const [values, setValues] = useState(initialValues);
   const [category, setcategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
@@ -55,12 +55,9 @@ const AddProduct = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [Url, setUrl] = useState("");
-  const [CateData, setCateData] = useState(product_data.FeaturedData);
   const [sizes, setSizes] = useState([]);
   const [product_qty, setProduct_Qty] = useState([]);
   const [states, setStates] = useState({});
-  const [editor, setEditor] = useState(false);
-  const [attributes, setAttributes] = useState({});
   const [colors, setColors] = useState([]);
   const [inputSize, setInputSize] = useState('');
   const [inputQuantity, setInputQuantity] = useState('');
@@ -70,8 +67,6 @@ const AddProduct = () => {
   const [key, setKey] = useState("");
   const [value, setValue] = useState("");
   const [list, setList] = useState({});
-  const [videos, setVideos] = useState([]);
-  const [videoNames, setVideoNames] = useState([]);
   const [rows, setRows] = useState([]);
   const [columnName, setColumnName] = useState('');
   const [newRowName, setNewRowName] = useState('');
@@ -79,23 +74,39 @@ const AddProduct = () => {
   const [IncolumnName, setInColumnName] = useState('');
   const [InnewRowName, setInNewRowName] = useState('');
   const [showColumnInputs, setShowColumnInputs] = useState({});
-  const [showInColumnInputs, setShowInColumnInputs] = useState({})
+  const [showInColumnInputs, setShowInColumnInputs] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
+  const [inRowErrorMessage, setInRowErrorMessage] = useState('');
+
 
   const addRow = () => {
-    if (newRowName.trim() !== '') {
-      setValues(prevState => ({
-        ...prevState,
-        size_chartInInch: {
-          ...prevState.size_chartInInch,
-          row_name: [...prevState.size_chartInInch.row_name, { name: newRowName }],
-        },
-      }));
-      if (newRowName.trim() !== '') {
-        setRows([...rows, { name: newRowName, columns: [] }]);
-      }
-      setNewRowName('');
+    if (newRowName.trim() === '') {
+      setErrorMessage('Row name cannot be empty');
+      return;
     }
+  
+    const rowExists = rows.some(row => row.name === newRowName.trim());
+    if (rowExists) {
+      setErrorMessage('Row already exists');
+      return;
+    }
+  
+    setValues(prevState => ({
+      ...prevState,
+      size_chartInInch: {
+        ...prevState.size_chartInInch,
+        row_name: [
+          ...prevState.size_chartInInch.row_name,
+          { name: newRowName.trim() }
+        ],
+      },
+    }));
+  
+    setRows([...rows, { name: newRowName.trim(), columns: [] }]);
+    setErrorMessage(''); // Clear error message on successful addition
+    setNewRowName('');
   };
+  
 
 
   // Function to add a new column to the selected row
@@ -173,21 +184,31 @@ const AddProduct = () => {
       };
     });
   };
-  const addInRow = () => {
-    if (InnewRowName.trim() !== '') {
-      setValues(prevState => ({
-        ...prevState,
-        size_chartIncm: {
-          ...prevState.size_chartIncm,
-          row_name: [...prevState.size_chartIncm.row_name, { name: InnewRowName }],
-        },
-      }));
-      if (InnewRowName.trim() !== '') {
-        setInRows([...inrows, { name: InnewRowName, columns: [] }]);
-      }
-      setInNewRowName('');
-    }
-  };
+const addInRow = () => {
+  if (InnewRowName.trim() === '') {
+    setInRowErrorMessage('Row name cannot be empty');
+    return;
+  }
+
+  const rowExists = inrows.some(row => row.name === InnewRowName.trim());
+  if (rowExists) {
+    setInRowErrorMessage('Row already exists');
+    return;
+  }
+
+  setValues(prevState => ({
+    ...prevState,
+    size_chartIncm: {
+      ...prevState.size_chartIncm,
+      row_name: [...prevState.size_chartIncm.row_name, { name: InnewRowName.trim() }],
+    },
+  }));
+
+  setInRows([...inrows, { name: InnewRowName.trim(), columns: [] }]);
+  setInRowErrorMessage(''); // Clear error message on successful addition
+  setInNewRowName('');
+};
+
 
   // Function to add a new column to the selected row
   const addInColumn = (inrowName) => {
@@ -392,9 +413,11 @@ const AddProduct = () => {
 
 
   const handlePhoto = (e) => {
+    setMainLoder(true);
+  
     const index = parseInt(e.target.name.split('_')[2]); // Extracts index from name like 'product_image_0'
     const file = e.target.files[0];
-
+  
     if (file) {
       const reader = new FileReader();
       reader.onload = function (upload) {
@@ -404,21 +427,23 @@ const AddProduct = () => {
           preview: upload.target.result
         };
         setValues({ ...values, product_images: updatedImages });
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
-    }
-
+    } 
     if (submitCount > 0) {
       const validationErrors = validate({ ...values, [e.target.name]: e.target.files[0] });
       setErrors(validationErrors);
-
+  
       if (Object.keys(validationErrors).length === 0) {
         delete errors[e.target.name];
       }
     }
   };
+  
 
   const handleDescriptionPhoto = (e) => {
+    setMainLoder(true);
     const index = parseInt(e.target.name.split('_')[2]); // Adjust based on your naming convention
     const file = e.target.files[0];
 
@@ -431,12 +456,14 @@ const AddProduct = () => {
           preview: upload.target.result
         };
         setValues({ ...values, description_images: updatedDescriptions });
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
     }
 
   };
   const handledescriptionVideo = (e) => {
+    setMainLoder(true);
     const index = parseInt(e.target.name.split('_')[2]); // Adjust based on your naming convention
     const file = e.target.files[0];
 
@@ -449,6 +476,7 @@ const AddProduct = () => {
           preview: upload.target.result
         };
         setValues({ ...values, description_video: updatedDescriptions });
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
     }
@@ -486,6 +514,7 @@ const AddProduct = () => {
   // };
 
   const handleVideo = (e) => {
+    setMainLoder(true);
     const index = parseInt(e.target.name.split('_')[2], 10);
     const file = e.target.files[0];
     let title = '';
@@ -504,6 +533,7 @@ const AddProduct = () => {
           title: title // Assign the extracted title to the video object
         };
         setValues((prevValues) => ({ ...prevValues, product_files: updatedVideos }));
+        setMainLoder(false);
       };
       reader.readAsDataURL(file);
     }
@@ -685,7 +715,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updatedValues = { ...values };
+    const updatedValues = { ...values, packets: quantityPriceItems };
     const validationErrors = validate(updatedValues);
     setErrors(validationErrors);
 
@@ -747,7 +777,7 @@ const AddProduct = () => {
       formData.append("content", states.content);
       formData.append("size_chartInInch", JSON.stringify(updatedValues.size_chartInInch));
       formData.append("size_chartIncm", JSON.stringify(updatedValues.size_chartIncm));
-
+      formData.append("packets", JSON.stringify(updatedValues.packets));
       try {
         const response = await api.postWithToken(`${serverURL}product-create`, formData);
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -835,6 +865,22 @@ const AddProduct = () => {
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
     setStates({ ...states, content: data });
+  };
+  const [quantityPriceItems, setQuantityPriceItems] = useState([]);
+  const [inputPrice, setInputPrice] = useState('');
+  const addQuantityPriceItem = () => {
+    if (inputQuantity && inputPrice) {
+      setQuantityPriceItems([...quantityPriceItems, { count: inputQuantity, price: inputPrice }]);
+      setInputQuantity('');
+      setInputPrice('');
+    }
+  };
+  const deleteQuantityPriceItem = (indexToRemove) => {
+    const newItems = quantityPriceItems.filter((_, index) => index !== indexToRemove);
+    setQuantityPriceItems(newItems);
+  }
+  const handlePriceChange = (e) => {
+    setInputPrice(e.target.value);
   };
 
   const editorConfiguration = {
@@ -1231,30 +1277,32 @@ const AddProduct = () => {
 
           </Row>
           <Row>
+          
             <Col lg={6} md={6} sm={12}>
               <div className="fees-input mt-3">
-                <label>Quantity* </label>
+                <label>Packs and Price*</label>
                 <div className="d-flex align-items-center gap-3">
-                  <input type="number" placeholder="Enter product Quantity" value={inputQuantity} onChange={handleQuantityChange} />
-                  <Button className="add-items" onClick={addQuantity}>
+                  <input type="number" placeholder="Enter Packs" value={inputQuantity} onChange={handleQuantityChange} />
+                  <input type="number" placeholder="Enter Price" value={inputPrice} onChange={handlePriceChange} />
+                  <Button className="add-items" onClick={addQuantityPriceItem}>
                     <img src="../admin-img/add.svg" alt="" />
                   </Button>
                 </div>
-
               </div>
 
-              {product_qty.map((e, index) => (
+              {quantityPriceItems.map((item, index) => (
                 <div className="fees-input list-data mt-3" key={index}>
                   <div className="d-flex align-items-center gap-3">
-                    <p>{e}</p>
-                    <Button className="add-items" onClick={() => deleteQuantity(index)}>
+                    <p>{`Packs: ${item.count}, Price: ${item.price}`}</p>
+                    <Button className="add-items" onClick={() => deleteQuantityPriceItem(index)}>
                       <img src="../admin-img/profile/delete.svg" alt="" />
                     </Button>
                   </div>
                 </div>
               ))}
-              <div className='errorAdmin' >{isEmpty(product_qty) && submitCount > 0 && "Quantity is required "}</div>
+              
             </Col>
+
             <Col lg={12} md={12} sm={12}>
               <div className="fees-input mt-3">
                 <label className=''>Description</label>
@@ -1342,11 +1390,10 @@ const AddProduct = () => {
                           alt=""
                           width="15px"
                         />
-                      </Button>
+                      </Button> 
                     </div>
                   ))}
                 </div>
-                <div className='errorAdmin' >{errors?.product_images}</div>
               </div>
             </Col>
           </Row>
@@ -1371,27 +1418,32 @@ const AddProduct = () => {
             <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Inch</label>
 
             <Row>
-              <Col xl={5} lg={6} md={8} sm={12}>
-                <div className="fees-input mt-3">
-                  <label>Title</label>
-                  <div className='d-flex align-items-center gap-2'>
-                    <input
-                      type="text"
-                      name="newRowName"
-                      value={newRowName}
-                      onChange={(e) => setNewRowName(e.target.value)}
-                      placeholder="Enter Title Name"
-                    />
-                    <Button
-                      className="add-items"
-                      // style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
-                      onClick={addRow}
-                    >
-                      <img src="../admin-img/add.svg" alt="Add Row" />
-                    </Button>
-                  </div>
-                </div>
-              </Col>
+            <Col xl={5} lg={6} md={8} sm={12}>
+  <div className="fees-input mt-3">
+    <label>Title</label>
+    <div className='d-flex align-items-center gap-2'>
+      <input
+        type="text"
+        name="newRowName"
+        value={newRowName}
+        onChange={(e) => setNewRowName(e.target.value)}
+        placeholder="Enter Title Name"
+      />
+      <Button
+        className="add-items"
+        onClick={addRow}
+      >
+        <img src="../admin-img/add.svg" alt="Add Row" />
+      </Button>
+    </div>
+    {errorMessage && (
+      <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>
+        {errorMessage}
+      </div>
+    )}
+  </div>
+</Col>
+
             </Row>
 
             {rows.map((row, index) => (
@@ -1458,27 +1510,32 @@ const AddProduct = () => {
             <label style={{ fontSize: '15px', fontWeight: 600 }}>Size Chart In Cm</label>
 
             <Row>
-              <Col xl={5} lg={6} md={8} sm={12}>
-                <div className="fees-input mt-3">
-                  <label>Title</label>
-                  <div className='d-flex align-items-center gap-2'>
-                    <input
-                      type="text"
-                      name="InnewRowName"
-                      value={InnewRowName}
-                      onChange={(e) => setInNewRowName(e.target.value)}
-                      placeholder="Enter Title Name"
-                    />
-                    <Button
-                      className="add-items"
-                      // style={{ position: "relative", right: '4px', top: '-38px', left: "495px" }}
-                      onClick={addInRow}
-                    >
-                      <img src="../admin-img/add.svg" alt="Add Row" />
-                    </Button>
-                  </div>
-                </div>
-              </Col>
+            <Col xl={5} lg={6} md={8} sm={12}>
+  <div className="fees-input mt-3">
+    <label>Title</label>
+    <div className='d-flex align-items-center gap-2'>
+      <input
+        type="text"
+        name="InnewRowName"
+        value={InnewRowName}
+        onChange={(e) => setInNewRowName(e.target.value)}
+        placeholder="Enter Title Name"
+      />
+      <Button
+        className="add-items"
+        onClick={addInRow}
+      >
+        <img src="../admin-img/add.svg" alt="Add Row" />
+      </Button>
+    </div>
+    {inRowErrorMessage && (
+      <div className="error-message" style={{ color: 'red', marginTop: '10px' }}>
+        {inRowErrorMessage}
+      </div>
+    )}
+  </div>
+</Col>
+
             </Row>
 
             {inrows.map((row, index) => (

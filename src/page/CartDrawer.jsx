@@ -283,7 +283,13 @@ const CartDrawer = () => {
                                                         <span className='m-0'>{e.sku_data?.size}</span>
                                                     </div>
                                                 }
-
+                                                {e.sku_data?.packets?.count &&
+                                                                    <div className='d-flex align-items-center gap-2 cart-color w-100'>
+                                                                    
+                                                                        <h6>Packs : </h6>
+                                                                        <span>{e.sku_data?.packets?.count}</span>
+                                                                    </div>
+                                                }                         
                                                 <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                     <div className='items-per d-flex align-items-center gap-2 mt-2'>
                                                         <h5>${e.total_price}</h5>
@@ -332,6 +338,12 @@ const CartDrawer = () => {
                                                 <div className='d-flex align-items-center gap-2 cart-color w-100 mt-1'>
                                                     <h6>Size : </h6>
                                                     <span className='m-0'>{e?.size}</span>
+                                                </div>
+                                            }
+                                            {e?.pack &&
+                                                <div className='d-flex align-items-center gap-2 cart-color w-100 mt-1'>
+                                                    <h6>Pack : </h6>
+                                                    <span className='m-0'>{e?.pack}</span>
                                                 </div>
                                             }
 

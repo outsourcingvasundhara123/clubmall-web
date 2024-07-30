@@ -56,11 +56,8 @@ const AddCartModal = (props) => {
     const [product_qtyActive, setProduct_QtyActive] = useState("");
 
     const [showSizeChart, setShowSizeChart] = useState(false);
-    const [showcustemail, setShowCustEmail] = useState(false);
-
-    const handleSizeChartClick = () => {
-        setShowSizeChart(true);
-    };
+    const [warningSnackBarOpenProductDtl, setWarningSnackBarOpenProductDtl] = useState(false);
+    const [MymessageProductDtl, setMyMessageProductDtl] = useState("");
     const handleSizeChartClose = () => {
         setShowSizeChart(false);
     };
@@ -96,9 +93,6 @@ const AddCartModal = (props) => {
                 ]);
                 const productData = productDetail.data.data;
                 setModelProduct(productData);
-                setProductColorActive(productDetail.data.data.productList?.sku_attributes?.color[0]?.name && productDetail.data.data.productList?.sku_attributes?.color[0]?.name)
-                setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size)
-                setProduct_QtyActive(productData?.productList?.product_qty[0]);
                 stopAnimation()
                 setUrl(productData.productImagePath)
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
@@ -120,95 +114,152 @@ const AddCartModal = (props) => {
     useEffect(() => {
         getProductDetail();
     }, [props.show]);
-
-
+    const setProduct_QtyActives = (qty) => {
+        setProduct_QtyActive(qty);
+        let tempColor = uniqueColors(modelProduct?.productList?.sku_details)
+        setProductColorActive(tempColor[0].attrs[0]?.color);
+    };
     const findSKUId = () => {
+
+        const selectedPack = modelProduct?.packets.find((packet) => packet.count === product_qtyActive);
+    
         const sku = modelProduct?.productList.sku_details.find((sku) => {
-            // Check if color matches and either size is not required or size matches
-            return sku.attrs[0].color === productColorActive &&
-                (!sizeActive || sku.attrs[0].size === sizeActive);
+            const attrs = sku.attrs[0];
+
+            const isColorMatch = attrs.color === productColorActive;
+            const isSizeMatch = attrs.size === sizeActive;
+            const isPackCountMatch = selectedPack ? attrs.packets?.count === selectedPack.count : true; 
+    
+            return isColorMatch && isSizeMatch && isPackCountMatch;
         });
         return sku ? sku.skuid : null;
     };
+    const selectedPack = modelProduct.packets?.find((packet) => packet.count === product_qtyActive);
+    const packPrice = selectedPack ? selectedPack.price : modelProduct.productList?.individual_price;
+
 
 
     const handleCart = async (e) => {
-
         e.preventDefault();
-
         try {
-            var data
-            if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size == undefined)) {
+           
+            if (modelProduct?.packets && modelProduct.packets.length === 1) {
+                setProduct_QtyActives(modelProduct.packets[0].count);
+            }
+    
 
-                data = {
-                    action: "add-to-cart-product",
-                    seller_id: modelProduct.productList.user_id._id,
-                    product_id: modelProduct.productList._id,
-                    product_price: modelProduct.productList.individual_price,
-                    product_price_type: 1,
-                    product_tax: 0,
-                    group_id: null,
-                    skuid: findSKUId(),
-                }
-
-                if (isLoggedIn) {
-
-                    setMainLoder(true)
-                    const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
-
-                    if (res.data.success == true) {
-                        setSucessSnackBarOpen(!sucessSnackBarOpen);
+            const packetsExist = modelProduct?.packets && modelProduct.packets.length > 0;
+            if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size === undefined)) {
+                if (packetsExist && product_qtyActive) {
+                    const selectedPack = modelProduct?.packets.find((packet) => packet.count === product_qtyActive);
+                    const packPrice = selectedPack ? selectedPack.price : modelProduct?.productList?.individual_price;
+    
+                    const data = {
+                        action: "add-to-cart-product",
+                        seller_id: modelProduct?.productList?.user_id?._id,
+                        product_id: modelProduct?.productList?._id,
+                        product_price: packPrice,
+                        product_price_type: 1,
+                        product_tax: 0,
+                        group_id: null,
+                        skuid: findSKUId(), // Ensure SKU ID is included
+                    };
+    
+                    if (isLoggedIn) {
+                        setMainLoder(true);
+                        const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                        if (res.data.success === true) {
+                            setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
-
-                        var data = {
-                            action: "update-to-cart-qty",
-                            _id: res.data.data._id,
-                            qty: product_qtyActive
-                        }
-                        const updateData = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
-
-
-                        getCartData()
-                        getcartcount()
-                        setProductColorActive(" ")
-                        setSizeActive(" ")
-                        setProduct_QtyActive(" ");
-
-                        setTimeout(() => {
-                            if (location.pathname == "/cart") {
-                                window.location.reload();
-                            } else {
-                                props.handleClose()
-                                //handleDrawerShow()
+                            const updateData = {
+                                action: "update-to-cart-qty",
+                                _id: res.data.data._id,
+                                qty: 1
+                            };
+                            if (product_qtyActive > 1) {
+                                updateData.qty = res.data.data.qty;
+                                await api.postWithToken(`${serverURL + ADDTOCART}`, updateData);
                             }
-                            setMainLoder(false)
-                        }, 1000);
-
-                    } else if (res.data.success === false) {
-                        // handleDrawerShow()
-                        setMainLoder(false)
+    
+                            getCartData();
+                            getcartcount();
+    
+                            setTimeout(() => {
+                                if (location.pathname == "/cart") {
+                                    window.location.reload();
+                                } else {
+                                    props.handleClose()
+                                    //handleDrawerShow()
+                                }
+                                setMainLoder(false)
+                            }, 1000);
+                        } else {
+                            setMainLoder(false);
+                            setMyMessageProductDtl(res.data.message);
+                            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                        }
+                    } else {
+                        props.handleClose()
+                        addProductDetailsToLocal(data, modelProduct, sizeActive, productColorActive, product_qtyActive);
+                        addcartLocal(data, handleDrawerShow);
+                    }
+                } else if (!packetsExist) {
+                  
+                    const packPrice = modelProduct?.productList?.individual_price;
+                    const data = {
+                        action: "add-to-cart-product",
+                        seller_id: modelProduct?.productList?.user_id?._id,
+                        product_id: modelProduct?.productList?._id,
+                        product_price: packPrice,
+                        product_price_type: 1,
+                        product_tax: 0,
+                        group_id: null,
+                        skuid: findSKUId(), // Ensure SKU ID is included
+                    };
+    
+                    if (isLoggedIn) {
+                        setMainLoder(true);
+                        const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                        if (res.data.success === true) {
+                            setSucessSnackBarOpen(!sucessSnackBarOpen);
                         setMyMessage(res.data.message);
-                        setWarningSnackBarOpen(!warningSnackBarOpen);
+                            getCartData();
+                            getcartcount();
+    
+                            setTimeout(() => {
+                                if (location.pathname == "/cart") {
+                                    window.location.reload();
+                                } else {
+                                    props.handleClose()
+                                    //handleDrawerShow()
+                                }
+                                setMainLoder(false)
+                            }, 1000);
+                        } else {
+                            setMainLoder(false);
+                            setMyMessageProductDtl(res.data.message);
+                            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                        }
+                    } else {
+                        props.handleClose()
+                        addProductDetailsToLocal(data, modelProduct, sizeActive, productColorActive, product_qtyActive);
+                        addcartLocal(data, handleDrawerShow);
                     }
                 } else {
-                    // User is not logged in, redirect to the login page
-                    // afterLogin(setMyMessage)
-                    // setWarningSnackBarOpen(!warningSnackBarOpen);
-                    props.handleClose()
-                    addProductDetailsToLocal(data, modelProduct, sizeActive, productColorActive)
-                    addcartLocal(data, handleDrawerShow)
+                    setMyMessageProductDtl("Please select color and size for the product.");
+                    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                 }
             } else {
-                setMyMessage("select color and size  of the product");
-                setWarningSnackBarOpen(!warningSnackBarOpen);
+                setMyMessageProductDtl("Please select color and size for the product.");
+                setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
             }
         } catch (error) {
-            setMainLoder(false)
-            setProductColorActive(" ")
-            setSizeActive(" ")
+            setMainLoder(false);
+            setProductColorActive("");
+            setSizeActive("");
             addProductDetailsToLocal(data, modelProduct, sizeActive, productColorActive, product_qtyActive)
-            errorResponse(error, setMyMessage, props)
-            setWarningSnackBarOpen(!warningSnackBarOpen);
+            errorResponse(error, setMyMessageProductDtl);
+            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }
     };
 
@@ -269,76 +320,32 @@ const AddCartModal = (props) => {
                                             </div>
 
                                             <div className='per-pro d-flex align-items-end gap-2'>
-                                                <h3> ${modelProduct.productList?.individual_price}</h3>
-                                                {/* <del>${modelProduct?.productList?.group_price}</del> */}
-                                                {/* <span>{Math.round(modelProduct?.productList?.group_price * 100 / modelProduct?.productList?.individual_price)}% Off</span> */}
+                                                <h3> ${packPrice}</h3>
                                             </div>
 
-                                            {/* <div className='price Individual-per mt-3 gap-3 d-flex align-items-center mobile-row'>
-                                                <Button className={`${perActive === "Group" ? "active" : ""}`} onClick={() => {
-                                                    groupPriceShare(modelProduct.productList?._id)
-                                                    props.handleClose()
-                                                }}>Group Price: <br />
-                                                    ${modelProduct.productList?.group_price} </Button>
-                                                <Button className={`${perActive === "Individual" ? "active" : ""}`} onClick={(e) => (setPerActive('Individual'), handleCart(e))}>Individual Price <br />
-                                                    ${modelProduct.productList?.individual_price}</Button>
-
-                                            </div> */}
+                                 
 
                                             <div className='product-color mt-4'>
                                                 <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
-                                                <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
-                                                    {
-                                                        modelProduct?.productList?.sku_details && uniqueColors(modelProduct?.productList?.sku_details)?.map((e, i) => {
-                                                            return (
-                                                                <Button className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`} onClick={() => (setProductColorActive(e.attrs[0]?.color), setActiveImage(url + modelProduct.productList?._id + "/" + e.file_name))}>
+                                                <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
+                                                        {  (
+                                                            modelProduct?.productList?.sku_details && uniqueColors(modelProduct?.productList?.sku_details)?.map((e, i) => (
+                                                                <Button
+                                                                    key={i}
+                                                                    className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`}
+                                                                    onClick={() => {
+                                                                        setProductColorActive(e.attrs[0]?.color);
+                                                                        setActiveImage(url + modelProduct.productList?._id + "/" + e.file_name);
+                                                                   
+                                                                    }}
+                                                                >
                                                                     <img className='colors' src={url + modelProduct.productList?._id + "/" + e.file_name} alt='' />
                                                                 </Button>
-                                                            )
-                                                        })
-                                                    }
-                                                </div>
-
-
-
-                                                {modelProduct?.productList?.product_qty !== undefined && modelProduct?.productList?.product_qty.length > 0 ? (
-                                                    <div className='size mt-4'>
-                                                        <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
-                                                        <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
-                                                            {modelProduct?.productList?.product_qty?.map((e, i) => (
-                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActive(e)}>
-                                                                    {e}
-                                                                </Button>
-                                                            ))}
-                                                        </div>
+                                                            ))
+                                                        )}
                                                     </div>
-                                                ) : (
-                                                    <></>
-                                                )}
-
-
-                                                {/* <div className='d-flex align-items-center flex-wrap mt-2 gap-2'>
-                                                {modelProduct?.productList?.sizechart_image && (
-                                                    <Button className="size-chart-button" style={{ backgroundColor: "rgb(224, 46, 36, 1)" }} onClick={handleSizeChartClick}>
-                                                        Show Size Chart
-                                                    </Button>
-                                                )}
-                                            </div> */}
-
-
-                                            {showSizeChart && (
-                                                <ProductChartModal
-                                                    url={url}
-                                                    productId={modelProduct.productList._id}
-                                                    sizeChartFileName={modelProduct.productList.sizechart_image.file_name}
-                                                    onHide={handleSizeChartClose}
-                                                    className="size-chart-modal"
-                                                />
-                                            )}
-
-                                                <div className='size mt-4'>
+                                                    <div className='size mt-4'>
                                                     {modelProduct?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
-                                                    {/* <h5>Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5> */}
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
                                                             modelProduct.productList?.sku_attributes.size?.map((e, i) => {
@@ -351,6 +358,36 @@ const AddCartModal = (props) => {
                                                         }
                                                     </div>
                                                 </div>
+
+
+
+                                                {modelProduct?.packets ? (
+                                                    <div className='size mt-3'>
+                                                        <h5>Packs: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+                                                        <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+                                                               {modelProduct.packets.map((item, index) => (
+                                                                <Button key={index} className={`${product_qtyActive === item.count ? "active" : ""}`} onClick={() => setProduct_QtyActives(item.count)}>
+                                                                    {item.count}
+                                                                </Button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <></>
+                                                )}
+
+
+                                            {showSizeChart && (
+                                                <ProductChartModal
+                                                    url={url}
+                                                    productId={modelProduct.productList._id}
+                                                    sizeChartFileName={modelProduct.productList.sizechart_image.file_name}
+                                                    onHide={handleSizeChartClose}
+                                                    className="size-chart-modal"
+                                                />
+                                            )}
+
+                                                
 
                                             </div>
                                             <Button onClick={handleCart} style={{ width: "100%", borderRadius: "30px" }} type='button' className='add-cart-items mt-4 w-75'>Add to cart</Button>
