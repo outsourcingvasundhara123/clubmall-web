@@ -393,43 +393,40 @@ const CartDrawer = () => {
                             )} */}
 
 
-                            {(localCart.items?.length > 0 || cartList.list?.length > 0) && nextOffer?.discount ? (
+                            {/* {(localCart.items?.length > 0 || cartList.list?.length > 0) && nextOffer?.discount ? (
                                 <div className='coupon-code-text d-flex align-items-center gap-3'>
                                     <Button className='submit-btn clubmalltry' onClick={handleCopy} >CLUBMALLTRY</Button>
-                                    {/* Display the remaining amount needed for the next offer */}
+                                    Display the remaining amount needed for the next offer
 
                                     <p>
                                         <span>GET {nextOffer.discount}% OFF</span> on orders of  ${parseFloat(remainingForNextOffer).toFixed(2)} or more using coupon code <span ref={textRef}>clubmalltry</span> 
                                     </p>
 
-                                    {/* 
+                                    
                                     {remainingForNextOffer > 0 && (
                                         <p>Spend ${parseFloat(remainingForNextOffer).toFixed(2)} more for {nextOffer.discount}% OFF</p>
-                                    )} */}
+                                    )}
 
                                 </div>
                             ) : (
                                 ""
-                            )}
+                            )} */}
 
 
-                            { cartTotal >= 120  ? (
+                            {/* {cartTotal >= 120  ? (
                                 <div className='coupon-code-text d-flex align-items-center gap-3'>
                                     <Button className='submit-btn clubmalltry' onClick={handleCopy} >CLUBMALLTRY</Button>
-                                    {/* Display the remaining amount needed for the next offer */}
 
                                     <p>
                                         <span>GET 20% OFF</span> using  coupon code <span ref={textRef}>clubmalltry</span> 
                                     </p>
 
-                                    {/* 
                                     {remainingForNextOffer > 0 && (
                                         <p>Spend ${parseFloat(remainingForNextOffer).toFixed(2)} more for {nextOffer.discount}% OFF</p>
-                                    )} */}
                                 </div>
                             ) : (
                                 ""
-                            )}
+                            )} */}
 
 
                             {localCart.items?.length > 0 &&
