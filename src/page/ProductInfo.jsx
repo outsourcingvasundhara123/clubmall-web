@@ -1355,66 +1355,67 @@ const ProductInfo = () => {
 
                                             <div className='product-color mt-2'>
 
-                                            <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
-                                            {(product_qtyActive == 1 || product_qtyActive == "") && (
-                                                <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
-                                                    {(
-                                                        Product?.productList?.sku_attributes?.color && uniqueColors(Product?.productList?.sku_attributes.color)?.map((e, i) => (
-                                                            <Button
-                                                                key={i}
-                                                                className={`${productColorActive === e.name ? "active" : ""} color-btn`}
-                                                                onClick={() => {
-                                                                    if(product_qtyActive == 1 && i != 0){
-                                                                        setProductColorActive(e.name);
-                                                                        setActiveImage(url + Product.productList?._id + "/" + e.imgUrl);
-                                                                    }
-                                                                    if (sliderRef.current) {
-                                                                        sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <img className='colors' src={url + Product.productList?._id + "/" + e.imgUrl} alt={e.name} />
-                                                            </Button>
-                                                        ))
-                                                    )}
-                                                </div>
-                                            )}
+                                            <h5>Color: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
+{(product_qtyActive == 1 || product_qtyActive == "") && (
+    <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
+        {Product?.productList?.sku_attributes?.color && 
+            uniqueColors(Product?.productList?.sku_attributes.color)
+                ?.filter((_, index) => index !== 0)  // Filter out the first color
+                .map((e, i) => (
+                    <Button
+                        key={i}
+                        className={`${productColorActive === e.name ? "active" : ""} color-btn`}
+                        onClick={() => {
+                            if (product_qtyActive == 1) {
+                                setProductColorActive(e.name);
+                                setActiveImage(url + Product.productList?._id + "/" + e.imgUrl);
+                            }
+                            if (sliderRef.current) {
+                                sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }}
+                    >
+                        <img className='colors' src={url + Product.productList?._id + "/" + e.imgUrl} alt={e.name} />
+                    </Button>
+                ))
+        }
+    </div>
+)}
 
+<div className='size-chart-container mt-3'>
+    <div className='d-flex align-items-center justify-content-between'>
+        {Product?.productList?.sku_attributes.size !== undefined && (
+            <div className='size w-100'>
+                <div className='d-flex align-items-center justify-content-between'>
+                    <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                    <p className='size-guide' onClick={handleSizeChartResClick}>Size guide</p>
+                </div>
+                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
+                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
+                            {e.name}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+        )}
+    </div>
+</div>
 
-                                                <div className='size-chart-container mt-3'>
-                                                    <div className='d-flex align-items-center justify-content-between'>
-                                                        {Product?.productList?.sku_attributes.size !== undefined && (
-                                                            <div className='size w-100'>
-                                                                <div className='d-flex align-items-center justify-content-between'>
-                                                                    <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
-                                                                    <p className=' size-guide' onClick={handleSizeChartResClick}>Size guide </p>
-                                                                </div>
-                                                                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-                                                                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
-                                                                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
-                                                                            {e.name}
-                                                                        </Button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                {Product?.packets ? (
-                                                    <div className='size mt-3'>
-                                                        <h5>Packs: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
-                                                        <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-                                                            {Product.packets.map((item, index) => (
-                                                                <Button key={index} className={`${product_qtyActive === item.count ? "active" : ""}`} onClick={() => setProduct_QtyActives(item.count)}>
-                                                                    {item.count}
-                                                                </Button>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <></>
-                                                )}
+{Product?.packets ? (
+    <div className='size mt-3'>
+        <h5>Packs: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+        <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+            {Product.packets.map((item, index) => (
+                <Button key={index} className={`${product_qtyActive === item.count ? "active" : ""}`} onClick={() => setProduct_QtyActives(item.count)}>
+                    {item.count}
+                </Button>
+            ))}
+        </div>
+    </div>
+) : (
+    <></>
+)}
 
                                             </div>
 
