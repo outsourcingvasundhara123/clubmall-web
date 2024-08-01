@@ -257,7 +257,7 @@ const AddCartModal = (props) => {
             setMainLoder(false);
             setProductColorActive("");
             setSizeActive("");
-            addProductDetailsToLocal(data, modelProduct, sizeActive, productColorActive, product_qtyActive)
+            addProductDetailsToLocal(modelProduct, sizeActive, productColorActive, product_qtyActive)
             errorResponse(error, setMyMessageProductDtl);
             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }

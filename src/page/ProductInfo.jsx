@@ -422,9 +422,9 @@ const ProductInfo = () => {
                 setColorProduct(mergedImages);
     
                 // Set initial color
-                if (uniqueColorDetails.length > 0) {
-                    setProductColorActive(uniqueColorDetails[0].name);
-                }
+                // if (uniqueColorDetails.length > 0) {
+                //     setProductColorActive(uniqueColorDetails[0].name);
+                // }
     
             } else {
                 navigate("/");
@@ -440,7 +440,11 @@ const ProductInfo = () => {
     const setProduct_QtyActives = (qty) => {
         setProduct_QtyActive(qty);
         const tempColor = uniqueColors(Product?.productList?.sku_attributes.color);
-        setProductColorActive(tempColor[0]?.name);
+        if(qty !== 1){
+            setProductColorActive(tempColor[0]?.name);
+        }else{
+            setProductColorActive(tempColor[1]?.name);
+        }
     };
     
 
@@ -1255,7 +1259,7 @@ const ProductInfo = () => {
                                             </div>
                                             <div className='badge bg-redlight mt-4 mt-md-3'>
                                                 <div className='d-flex align-items-center gap-2'>
-                                                    <span className='price'>$100.0</span> <span>|</span> <span>Free returns on some sizes and color</span>
+                                                    <span className='price'>${packPrice}</span> <span>|</span> <span>Free returns on some sizes and color</span>
                                                 </div>
                                                 <FontAwesomeIcon icon={faShare} style={{ height: '18px' }} />
                                             </div>
@@ -1352,7 +1356,7 @@ const ProductInfo = () => {
                                             <div className='product-color mt-2'>
 
                                             <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
-
+                                            {(product_qtyActive == 1 || product_qtyActive == "") && (
                                                 <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
                                                     {(
                                                         Product?.productList?.sku_attributes?.color && uniqueColors(Product?.productList?.sku_attributes.color)?.map((e, i) => (
@@ -1360,8 +1364,10 @@ const ProductInfo = () => {
                                                                 key={i}
                                                                 className={`${productColorActive === e.name ? "active" : ""} color-btn`}
                                                                 onClick={() => {
-                                                                    setProductColorActive(e.name);
-                                                                    setActiveImage(url + Product.productList?._id + "/" + e.imgUrl);
+                                                                    if(product_qtyActive == 1 && i != 0){
+                                                                        setProductColorActive(e.name);
+                                                                        setActiveImage(url + Product.productList?._id + "/" + e.imgUrl);
+                                                                    }
                                                                     if (sliderRef.current) {
                                                                         sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
                                                                     }
@@ -1372,7 +1378,7 @@ const ProductInfo = () => {
                                                         ))
                                                     )}
                                                 </div>
-
+                                            )}
 
 
                                                 <div className='size-chart-container mt-3'>
