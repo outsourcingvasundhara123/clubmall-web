@@ -491,7 +491,7 @@ const ForYou = () => {
                       url={e.post_video_link}
                       width="100%"
                       height="100%"
-                      controls={true}
+                     
                       // onPlay={handleOnUnmute}
                       playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
                       // onVolumeChange={handleVolumeChange}

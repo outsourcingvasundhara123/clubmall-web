@@ -1199,9 +1199,9 @@ const EditProduct = () => {
            
             <Col lg={6} md={6} sm={12}>
               <div className="fees-input mt-3">
-                <label>Packs and Price*</label>
+                <label>Quantity and Price*</label>
                 <div className="d-flex align-items-center gap-3">
-                  <input type="number" placeholder="Enter Packs" value={inputQuantity} onChange={handleQuantityChange} />
+                  <input type="number" placeholder="Enter Quantity" value={inputQuantity} onChange={handleQuantityChange} />
                   <input type="number" placeholder="Enter Price" value={inputPrice} onChange={handlePriceChange} />
                   <Button className="add-items" onClick={addQuantityPriceItem}>
                     <img src="../../admin-img/add.svg" alt="" />
