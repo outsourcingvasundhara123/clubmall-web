@@ -629,7 +629,7 @@ const ProductInfo = () => {
                         addcartLocal(data, handleDrawerShow);
                     }
                 } else {
-                    setMyMessageProductDtl("Please select pack for the product.");
+                    setMyMessageProductDtl("Please select quantity for the product.");
                     setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                 }
             } else {
