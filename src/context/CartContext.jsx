@@ -208,7 +208,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     const selectedPack = Product.packets?.find((packet) => packet.count === product_qtyActive);
-    const packPrice = selectedPack ? selectedPack.price : Product.productList?.individual_price;
+    const packPrice = selectedPack ? parseFloat(selectedPack.price).toFixed(2) : parseFloat(Product.productList?.individual_price).toFixed(2);
 
     if (!productExists) {
         // When adding the product for the first time, set qty to 1

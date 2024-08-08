@@ -544,7 +544,7 @@ const ProductInfo = () => {
 
 
     const selectedPack = Product.packets?.find((packet) => packet.count === product_qtyActive);
-    const packPrice = selectedPack ? selectedPack.price : Product.productList?.individual_price;
+    const packPrice = selectedPack ? parseFloat(selectedPack.price).toFixed(2) : parseFloat(Product.productList?.individual_price).toFixed(2);
 
     const handleCart = async (e) => {
         try {
@@ -558,7 +558,7 @@ const ProductInfo = () => {
             if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size === undefined)) {
                 if (packetsExist && product_qtyActive) {
                     const selectedPack = Product?.packets.find((packet) => packet.count === product_qtyActive);
-                    const packPrice = selectedPack ? selectedPack.price : Product?.productList?.individual_price;
+                    const packPrice = selectedPack ? parseFloat(selectedPack.price).toFixed(2) : parseFloat(Product.productList?.individual_price).toFixed(2);
 
                     const data = {
                         action: "add-to-cart-product",
@@ -602,7 +602,7 @@ const ProductInfo = () => {
                     }
                 } else if (!packetsExist) {
 
-                    const packPrice = Product?.productList?.individual_price;
+                    const packPrice = parseFloat(Product.productList?.individual_price).toFixed(2);
                     const data = {
                         action: "add-to-cart-product",
                         seller_id: Product?.productList?.user_id?._id,
@@ -1424,7 +1424,8 @@ const ProductInfo = () => {
     </div>
 </div>
 
-{Product?.packets && Product.packets.length < 0 ? (
+{Product?.packets && Product?.packets?.length > 0 ? (
+   
     <div className='size mt-3'>
     <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
     <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
