@@ -194,12 +194,12 @@ const CartDrawer = () => {
 
                         {isLoggedIn ?
                             <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                                <img src='../img/product_def/right-black.png' alt='' width="18px" />
+                                <img src='../img/product_def/cart-orange.png' alt='' width="18px" />
                                 <h5>Added ({cartList.list ? cartList.list?.length : 0}) items to cart</h5>
                             </div> :
 
                             <div className='cart-header d-flex align-items-center gap-2 pt-2'>
-                                <img src='../img/product_def/right-black.png' alt='' width="18px" />
+                                <img src='../img/product_def/cart-orange.png' alt='' width="18px" />
                                 <h5>Added ({localCart.items ? localCart.items?.length : 0}) items to cart</h5>
                             </div>
                         }
@@ -283,7 +283,13 @@ const CartDrawer = () => {
                                                         <span className='m-0'>{e.sku_data?.size}</span>
                                                     </div>
                                                 }
-
+                                                {e.sku_data?.packets?.count &&
+                                                                    <div className='d-flex align-items-center gap-2 cart-color w-100'>
+                                                                    
+                                                                        <h6>Packs : </h6>
+                                                                        <span>{e.sku_data?.packets?.count}</span>
+                                                                    </div>
+                                                }                         
                                                 <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                     <div className='items-per d-flex align-items-center gap-2 mt-2'>
                                                         <h5>${e.total_price}</h5>
@@ -334,6 +340,12 @@ const CartDrawer = () => {
                                                     <span className='m-0'>{e?.size}</span>
                                                 </div>
                                             }
+                                            {e?.pack &&
+                                                <div className='d-flex align-items-center gap-2 cart-color w-100 mt-1'>
+                                                    <h6>Pack : </h6>
+                                                    <span className='m-0'>{e?.pack}</span>
+                                                </div>
+                                            }
 
                                             <div className='wrap-cos d-flex align-items-center justify-content-between'>
                                                 <div className='items-per d-flex align-items-center gap-2 mt-2'>
@@ -346,12 +358,12 @@ const CartDrawer = () => {
                                                     <div className='qty d-flex align-items-center gap-3'>
                                                         <h5>Qty:</h5>
                                                         <div className='count-product'>
-                                                            <Button onClick={(d) => decreaseProductQuantity(e.product_id)} > <MdRemove /></Button>
+                                                            <Button onClick={(d) => decreaseProductQuantity(e.skuid)} > <MdRemove /></Button>
                                                             <span>{e.qty}</span>
-                                                            <Button onClick={(d) => increaseProductQuantity(e.product_id)}><MdAdd /></Button>
+                                                            <Button onClick={(d) => increaseProductQuantity(e.skuid)}><MdAdd /></Button>
                                                         </div>
                                                     </div>
-                                                    <Button onClick={() => (deleteProductDetailsFromLocal(e.product_id), deleteProductFromLocalCart(e.product_id))} className='submit-btn delete-comment delete-product'>
+                                                    <Button onClick={() => (deleteProductDetailsFromLocal(e.skuid), deleteProductFromLocalCart(e.skuid))} className='submit-btn delete-comment delete-product'>
                                                         <MdDelete />
                                                     </Button>
                                                 </div>
@@ -381,43 +393,40 @@ const CartDrawer = () => {
                             )} */}
 
 
-                            {(localCart.items?.length > 0 || cartList.list?.length > 0) && nextOffer?.discount ? (
+                            {/* {(localCart.items?.length > 0 || cartList.list?.length > 0) && nextOffer?.discount ? (
                                 <div className='coupon-code-text d-flex align-items-center gap-3'>
                                     <Button className='submit-btn clubmalltry' onClick={handleCopy} >CLUBMALLTRY</Button>
-                                    {/* Display the remaining amount needed for the next offer */}
+                                    Display the remaining amount needed for the next offer
 
                                     <p>
                                         <span>GET {nextOffer.discount}% OFF</span> on orders of  ${parseFloat(remainingForNextOffer).toFixed(2)} or more using coupon code <span ref={textRef}>clubmalltry</span> 
                                     </p>
 
-                                    {/* 
+                                    
                                     {remainingForNextOffer > 0 && (
                                         <p>Spend ${parseFloat(remainingForNextOffer).toFixed(2)} more for {nextOffer.discount}% OFF</p>
-                                    )} */}
+                                    )}
 
                                 </div>
                             ) : (
                                 ""
-                            )}
+                            )} */}
 
 
-                            { cartTotal >= 120  ? (
+                            {/* {cartTotal >= 120  ? (
                                 <div className='coupon-code-text d-flex align-items-center gap-3'>
                                     <Button className='submit-btn clubmalltry' onClick={handleCopy} >CLUBMALLTRY</Button>
-                                    {/* Display the remaining amount needed for the next offer */}
 
                                     <p>
                                         <span>GET 20% OFF</span> using  coupon code <span ref={textRef}>clubmalltry</span> 
                                     </p>
 
-                                    {/* 
                                     {remainingForNextOffer > 0 && (
                                         <p>Spend ${parseFloat(remainingForNextOffer).toFixed(2)} more for {nextOffer.discount}% OFF</p>
-                                    )} */}
                                 </div>
                             ) : (
                                 ""
-                            )}
+                            )} */}
 
 
                             {localCart.items?.length > 0 &&
@@ -426,7 +435,7 @@ const CartDrawer = () => {
                                         <h5 className=''>Subtotal:</h5>
                                         <span>${subtotal}</span>
                                     </div>
-                                    <Button className='go-cart mt-2' onClick={() => (navigate("/login"), handleDrawerClose(), localStorage.setItem('lastVisitedPath', "/cart"))}  >Go to cart</Button>
+                                    <Button className='go-cart mt-2' onClick={() => (navigate("/login"), handleDrawerClose(), localStorage.setItem('lastVisitedPath', "/cart"))}  >Proceed to checkout</Button>
                                 </>
                             }
 
@@ -436,7 +445,7 @@ const CartDrawer = () => {
                                         <h5 className=''>Subtotal:</h5>
                                         <span>${cartList.cartAmountDetails.total_amount}</span>
                                     </div>
-                                    <Button className='go-cart mt-2' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Go to cart</Button>
+                                    <Button className='go-cart mt-2' onClick={() => (navigate("/cart"), handleDrawerClose())}  >Proceed to checkout</Button>
                                 </>
                             }
 

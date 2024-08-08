@@ -17,13 +17,14 @@ import ErrorSnackBar from "../components/SnackBar";
 import { logout } from '../helper/auth'
 import { useNavigate } from 'react-router-dom';
 import { BiSearch } from 'react-icons/bi'
+import { BsFillCartCheckFill } from 'react-icons/bs';
 
 
 
 const Header = (props) => {
 
     const navigate = useNavigate();
-    const { getcartcount, getwishlistcount, setMainLoder, itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart } = useContext(CartContext);
+    const { getcartcount, getwishlistcount, setMainLoder, itemShow, setItemShow, getCartData, searchKeyWord, setSearchKeyWord, getSearchedProduct, handelSearch, profileOption, setProfileOption, wishlistCount, cart, setCart, cartList, localCart, handleDrawerShow } = useContext(CartContext);
     const isLoggedIn = Is_Login();
 
     const [show, setShow] = useState(false);
@@ -394,7 +395,20 @@ const Header = (props) => {
                                     </Link>
 
                                 </>
-                                : <Link to="/login" className='login-btn'>Login</Link>
+                                :
+                                <>
+                                    <Link to="/login" className='login-btn'>Login</Link>
+                                    <div className="back-button">
+                                        <Button onClick={handleDrawerShow} className="btn-scroll-top cart-scroll position-relative">
+                                            <BsFillCartCheckFill />
+                                            <img src='../img/header/cart.png' />
+                                            {isLoggedIn ?
+                                            <div className="number">{cartList.list ? cartList.list?.length : 0}</div> :
+                                            <div className="number">{localCart.items ? localCart.items?.length : 0}</div> 
+                                            }
+                                        </Button>
+                                    </div>
+                                </>
                         }
                         <Button className='toggle px-0 order-4' onClick={handleShow}>
                             <HiOutlineMenuAlt1 />

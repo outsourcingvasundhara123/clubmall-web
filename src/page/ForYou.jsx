@@ -224,7 +224,11 @@ const ForYou = () => {
           swiperRef.current.slideTo(0, 0);
         }, 100);
       }
-    } else if (!isLoggedIn && swiper.activeIndex === 3) {
+    } 
+    if (swiper.activeIndex % 3 === 0 && swiper.activeIndex !== 0) {
+      setShowAppDownload(true);
+    }
+    else if ( swiper.activeIndex === 3) {
       handleShow()
     }
   }, [isLoggedIn, postList, page, totalPages]);
@@ -439,7 +443,17 @@ const ForYou = () => {
       playerRef.current.getInternalPlayer().muted = newMutedStatus; // Directly set muted property on the player
     }
   };
+  const [playingVideos, setPlayingVideos] = useState({});
 
+  const togglePlayPause = (id) => {
+    
+    setPlayingVideos((prevState) => ({
+      ...prevState,
+      [id]: typeof prevState[id]==="boolean"?!prevState[id]:false,
+      
+
+    }));
+  };
 
   return (
 
@@ -484,27 +498,24 @@ const ForYou = () => {
                 {e.post_video_link && isVideo(e.post_video_link) ? (
 
                     <ReactPlayer
-                      url={e.post_video_link}
-                      width="100%"
-                      height="100%"
-                      controls={true}
-                      // onPlay={handleOnUnmute}
-                      playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
-                      // onVolumeChange={handleVolumeChange}
-                      muted={muted}
-                      volume={0.5} // Set a fixed volume level, as you cannot entirely remove the volume control for all browsers
-                      loop={true}
-                      config={{
-                        file: {
-                          attributes: {
-                            controlsList: 'nodownload',
-                            preload: 'auto',
-                            'webkit-playsinline': true,
-                            playsInline: 'true', // This is the correct attribute for modern browsers
-
-                          },
+                    url={e.post_video_link}
+                    width="100%"
+                    height="100%"
+                    playing={playingVideos[e._id] !== undefined ? playingVideos[e._id] : true} // Default to autoplay
+                    onClick={() => togglePlayPause(e._id)}
+                    muted={true}
+                    volume={0.5}
+                    loop={true}
+                    config={{
+                      file: {
+                        attributes: {
+                          controlsList: 'nodownload',
+                          preload: 'auto',
+                          'webkit-playsinline': true,
+                          playsInline: 'true',
                         },
-                      }}
+                      },
+                    }}
                     />
                    
                 ) : (
@@ -734,8 +745,9 @@ const ForYou = () => {
           <div className='text-center p-3 p-sm-4'>
             <img src='./img/modal-logo.png' alt='' />
             <h5 className='my-3'>Get the full experience on <br /> the app</h5>
-            <p>Follow you favoritevendor accounts,
-              explore new product and message the <br /> vendor</p>
+            <p>Follow your favorite accounts.<br />
+            Explore the latest products.<br />
+            Message vendors directly.</p>
             <div className='d-flex align-items-center justify-content-center gap-2 mt-4 app-download'>
               <NavLink href='https://play.google.com/store/apps/details?id=com.clubmall' target='_blank'>
                 <img src='./img/playstore.png' alt='' />

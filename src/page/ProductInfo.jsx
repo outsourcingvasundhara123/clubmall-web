@@ -38,6 +38,7 @@ import arrow_icon from '../assets/img/arrowhead-down-svgrepo-com.svg';
 import arrow_up from '../assets/img/up-arrow.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShare, faCircleChevronUp, faCircleChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { format, addDays } from 'date-fns';
 
 
 const ProductChartModal = ({ sizeChartTitle, onHide, sizeChartDescription, rows, columns, setInInch, isInInch }) => {
@@ -114,25 +115,25 @@ const ProductChartModalRes = ({ sizeChartTitle, onHide, sizeChartDescription, ro
         <div ref={sizechartRef} className="size-chart-modal-wrapper">
             {sizeChartDescription ? (
                 <>
-                <div className='d-md-flex justify-content-between align-items-center gap-3 pb-4'>
-                    <p className='d-md-flex justify-content-end align-items-center'>{sizeChartDescription}</p>
-                    <div className='d-md-flex justify-content-end align-items-center' style={{ display: 'flex' }}>
-                        <div className="btn-group cm-in-buttons">
-                            <Button
-                                onClick={() => setInInch(true)}
-                                className={`size-chart-button ${isInInch ? 'active' : ''}`}
-                            >
-                                in
-                            </Button>
-                            <Button
-                                onClick={() => setInInch(false)}
-                                className={`size-chart-button ${isInInch ? '' : 'active'}`}
-                            >
-                                cm
-                            </Button>
+                    <div className='d-md-flex justify-content-between align-items-center gap-3 pb-4'>
+                        <p className='d-md-flex justify-content-end align-items-center'>{sizeChartDescription}</p>
+                        <div className='d-md-flex justify-content-end align-items-center' style={{ display: 'flex' }}>
+                            <div className="btn-group cm-in-buttons">
+                                <Button
+                                    onClick={() => setInInch(true)}
+                                    className={`size-chart-button ${isInInch ? 'active' : ''}`}
+                                >
+                                    in
+                                </Button>
+                                <Button
+                                    onClick={() => setInInch(false)}
+                                    className={`size-chart-button ${isInInch ? '' : 'active'}`}
+                                >
+                                    cm
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
                     <div className='overflow-auto w-100 scrollbar-custom'>
                         <Table striped bordered hover className='size-chart-modal'>
                             <tbody className='size-chart-tbody' style={{ overflowY: 'auto' }}>
@@ -248,9 +249,9 @@ const ProductInfo = () => {
     const [reviweList, setReviweList] = useState([]);
     const [favoriteProductList, setFavoriteProductList] = useState([]);
     const [trendingProductList, setTrendingProductList] = useState([]);
-    const [sizeActive, setSizeActive] = useState("")
-    const [product_qtyActive, setProduct_QtyActive] = useState(1);
-    const [productColorActive, setProductColorActive] = useState()
+    const [productColorActive, setProductColorActive] = useState('');
+    const [sizeActive, setSizeActive] = useState('');
+    const [product_qtyActive, setProduct_QtyActive] = useState('');
     const [colorProduct, setColorProduct] = useState()
     // const product_id = localStorage.getItem("selectedProductId") && localStorage.getItem("selectedProductId")  
     const [reviewShow, setreviewShow] = useState(false);
@@ -391,12 +392,13 @@ const ProductInfo = () => {
     const uniqueColors = (colors) => {
         const unique = [];
         colors.forEach(color => {
-            if (!unique.find(c => c.attrs[0].color === color.attrs[0].color)) {
+            if (!unique.find(c => c._id === color._id)) {
                 unique.push(color);
             }
         });
         return unique;
-    }
+    };
+    
 
     const getProductDetail = async () => {
         startAnimation();
@@ -404,37 +406,47 @@ const ProductInfo = () => {
             const apiTyp = isLoggedIn ? api.getWithToken : api.get;
             if (product_id && product_id !== undefined) {
                 const productDetail = await apiTyp(`${serverURL + PRODUCTDETAIL + `?product_id=${product_id}`}`);
-
+                
                 const productData = productDetail.data.data;
                 setProduct(productData);
-                setProductColorActive(productData?.productList?.sku_details[0]?.attrs[0]?.color)
-                setSizeActive(productData?.productList?.sku_details[0]?.attrs[0]?.size);
-                setProduct_QtyActive(productData?.productList?.product_qty[0]);
                 stopAnimation();
                 setUrl(productData.productImagePath);
-                const uniqueColorDetails = uniqueColors(productData.productList.sku_details);
-                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath + productData.productList._id + "/" + e.file_name}`);
+    
+                // Get unique colors from sku_attributes
+                const uniqueColorDetails = uniqueColors(productData.productList.sku_attributes.color);
+                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath + productData.productList._id + "/" + e.imgUrl}`);
                 const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
                 }));
                 setColorProduct(mergedImages);
-
+    
+                // Set initial color
+                // if (uniqueColorDetails.length > 0) {
+                //     setProductColorActive(uniqueColorDetails[0].name);
+                // }
+    
             } else {
                 navigate("/");
             }
-
+    
         } catch (error) {
             console.log(error, "error");
             navigate("/");
         }
     };
+    
 
     const setProduct_QtyActives = (qty) => {
         setProduct_QtyActive(qty);
-        let tempColor = uniqueColors(Product?.productList?.sku_details)
-        setProductColorActive(tempColor[0].attrs[0]?.color);
+        const tempColor = uniqueColors(Product?.productList?.sku_attributes.color);
+        if(qty !== 1){
+            setProductColorActive(tempColor[0]?.name);
+        }else{
+            setProductColorActive();
+        }
     };
+    
 
     const getProductReview = async () => {
         startAnimation()
@@ -464,7 +476,7 @@ const ProductInfo = () => {
 
     useEffect(() => {
         getProductDetail();
-        getProductReview()
+        getProductReview();
     }, [product_id, isLoggedIn, isWishlist, add_wished_Called, filters, page]);
 
 
@@ -509,78 +521,132 @@ const ProductInfo = () => {
     // };
 
     const findSKUId = () => {
+
+        const selectedPack = Product?.packets.find((packet) => packet.count === product_qtyActive);
+
         const sku = Product?.productList.sku_details.find((sku) => {
-            // Check if color matches and either size is not required or size matches
-            return sku.attrs[0].color === productColorActive &&
-                (!sizeActive || sku.attrs[0].size === sizeActive);
+            const attrs = sku.attrs[0];
+
+            const isColorMatch = attrs.color === productColorActive;
+            const isSizeMatch = attrs.size === sizeActive;
+            const isPackCountMatch = selectedPack ? attrs.packets?.count === selectedPack.count : true;
+
+            return isColorMatch && isSizeMatch && isPackCountMatch;
         });
         return sku ? sku.skuid : null;
     };
 
+
+
+    const selectedPack = Product.packets?.find((packet) => packet.count === product_qtyActive);
+    const packPrice = selectedPack ? selectedPack.price : Product.productList?.individual_price;
+
     const handleCart = async (e) => {
-
         try {
-            var data
-            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size == undefined)) {
 
-                data = {
-                    action: "add-to-cart-product",
-                    seller_id: Product?.productList?.user_id?._id,
-                    product_id: Product?.productList?._id,
-                    product_price: Product?.productList.individual_price,
-                    product_price_type: 1,
-                    product_tax: 0,
-                    group_id: null,
-                    skuid: findSKUId(),
-                }
+            if (Product?.packets && Product.packets.length === 1) {
+                setProduct_QtyActives(Product.packets[0].count);
+            }
 
-                if (isLoggedIn) {
 
-                    setMainLoder(true)
-                    const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data)
-                    if (res.data.success == true) {
+            const packetsExist = Product?.packets && Product.packets.length > 0;
+            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size === undefined)) {
+                if (packetsExist && product_qtyActive) {
+                    const selectedPack = Product?.packets.find((packet) => packet.count === product_qtyActive);
+                    const packPrice = selectedPack ? selectedPack.price : Product?.productList?.individual_price;
 
-                        var data = {
-                            action: "update-to-cart-qty",
-                            _id: res.data.data._id,
-                            qty: product_qtyActive
+                    const data = {
+                        action: "add-to-cart-product",
+                        seller_id: Product?.productList?.user_id?._id,
+                        product_id: Product?.productList?._id,
+                        product_price: packPrice,
+                        product_price_type: 1,
+                        product_tax: 0,
+                        group_id: null,
+                        skuid: findSKUId(), // Ensure SKU ID is included
+                    };
+
+                    if (isLoggedIn) {
+                        setMainLoder(true);
+                        const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                        if (res.data.success === true) {
+                            const updateData = {
+                                action: "update-to-cart-qty",
+                                _id: res.data.data._id,
+                                qty: 1
+                            };
+                            if (product_qtyActive > 1) {
+                                updateData.qty = res.data.data.qty;
+                                await api.postWithToken(`${serverURL + ADDTOCART}`, updateData);
+                            }
+
+                            getCartData();
+                            getcartcount();
+
+                            setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
+                            setMyMessageProductDtl(res.data.message);
+                            setMainLoder(false);
+                        } else {
+                            setMainLoder(false);
+                            setMyMessageProductDtl(res.data.message);
+                            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                         }
+                    } else {
+                        addProductDetailsToLocal(data, Product, sizeActive, productColorActive, product_qtyActive);
+                        addcartLocal(data, handleDrawerShow);
+                    }
+                } else if (!packetsExist) {
 
-                        const updateData = await api.postWithToken(`${serverURL + ADDTOCART}`, data)
+                    const packPrice = Product?.productList?.individual_price;
+                    const data = {
+                        action: "add-to-cart-product",
+                        seller_id: Product?.productList?.user_id?._id,
+                        product_id: Product?.productList?._id,
+                        product_price: packPrice,
+                        product_price_type: 1,
+                        product_tax: 0,
+                        group_id: null,
+                        skuid: findSKUId(), // Ensure SKU ID is included
+                    };
 
-                        getCartData()
-                        getcartcount()
+                    if (isLoggedIn) {
+                        setMainLoder(true);
+                        const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                        if (res.data.success === true) {
+                            getCartData();
+                            getcartcount();
 
-                        setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
-                        setMyMessageProductDtl(res.data.message);
-                        setProductColorActive(" ")
-                        setSizeActive(" ")
-                        setMainLoder(false)
-                        handleDrawerShow()
-                    } else if (res.data.success === false) {
-                        handleDrawerShow()
-                        setMainLoder(false)
-                        setMyMessageProductDtl(res.data.message);
-                        setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                            setSucessSnackBarOpenProductDtl(!sucessSnackBarOpenProductDtl);
+                            setMyMessageProductDtl(res.data.message);
+                            setMainLoder(false);
+                        } else {
+                            setMainLoder(false);
+                            setMyMessageProductDtl(res.data.message);
+                            setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                        }
+                    } else {
+                        addProductDetailsToLocal(data, Product, sizeActive, productColorActive, product_qtyActive);
+                        addcartLocal(data, handleDrawerShow);
                     }
                 } else {
-                    // User is not logged in, redirect to the login page
-                    //    afterLogin(setMyMessageProductDtl)
-                    //    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
-                    // handleDrawerShow()
-                    addProductDetailsToLocal(data, Product, sizeActive, productColorActive, product_qtyActive)
-                    addcartLocal(data, handleDrawerShow)
+                    setMyMessageProductDtl("Please select quantity for the product.");
+                    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                 }
             } else {
-
-                setMyMessageProductDtl("select color and size  of the product");
+                // Handle validation errors for color and size
+                if (!productColorActive) {
+                    setMyMessageProductDtl("Please select color for the product.");
+                } else if (!sizeActive) 
+                {
+                    setMyMessageProductDtl("Please select size for the product.");
+                }
                 setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
             }
         } catch (error) {
-            setMainLoder(false)
-            setProductColorActive(" ")
-            setSizeActive(" ")
-            errorResponse(error, setMyMessageProductDtl)
+            setMainLoder(false);
+            setProductColorActive("");
+            setSizeActive("");
+            errorResponse(error, setMyMessageProductDtl);
             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }
     };
@@ -826,17 +892,24 @@ const ProductInfo = () => {
 
     useEffect(() => {
         const handleFullscreenChange = () => {
-            if (!document.fullscreenElement) {
-                const videos = document.querySelectorAll('video.small-video');
-                videos.forEach(video => {
+            const isFullscreen =
+                document.fullscreenElement ||
+                document.webkitFullscreenElement ||
+                document.mozFullScreenElement ||
+                document.msFullscreenElement ||
+                document.requestFullscreen ||
+                document.webkitRequestFullscreen ||
+                document.msRequestFullscreen;
+
+            if (!isFullscreen) {
+                const smallVideos = document.querySelectorAll('video.small-video');
+                smallVideos.forEach(video => {
                     video.muted = true;
                     video.controls = false;
                 });
-            }
-            
-            if (!document.fullscreenElement) {
-                const videos = document.querySelectorAll('video.review-video');
-                videos.forEach(video => {
+
+                const reviewVideos = document.querySelectorAll('video.review-video');
+                reviewVideos.forEach(video => {
                     video.muted = true;
                     video.controls = false;
                     video.pause();
@@ -844,32 +917,61 @@ const ProductInfo = () => {
             }
         };
 
+        // Add event listeners for all vendor-prefixed versions
         document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
 
+        // Cleanup event listeners on component unmount
         return () => {
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
         };
     }, []);
 
-    const handlePlaySmall = (event) => {
+    const handlePlaySmall = async (event) => {
         const videoElement = event.currentTarget;
-
-        // Request full screen
-        if (videoElement.requestFullscreen) {
-            videoElement.requestFullscreen();
-        } else if (videoElement.mozRequestFullScreen) { // Firefox
-            videoElement.mozRequestFullScreen();
-        } else if (videoElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
-            videoElement.webkitRequestFullscreen();
-        } else if (videoElement.msRequestFullscreen) { // IE/Edge
-            videoElement.msRequestFullscreen();
-        }
-
         // Set volume and unmute
         videoElement.volume = 0.5;
         videoElement.muted = false;
         videoElement.controls = true;
-        videoElement.play();
+
+        try {
+            // Start playback first
+            await videoElement.play();
+            console.log("Video playback started.");
+
+            // Wait for a short moment before requesting fullscreen
+            setTimeout(async () => {
+                try {
+                    if (videoElement.requestFullscreen) {
+                        await videoElement.requestFullscreen();
+                    } else if (videoElement.mozRequestFullScreen) { // Firefox
+                        await videoElement.mozRequestFullScreen();
+                    } else if (videoElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                        await videoElement.webkitRequestFullscreen();
+                    } else if (videoElement.msRequestFullscreen) { // IE/Edge
+                        await videoElement.msRequestFullscreen();
+                    } else if (videoElement.webkitEnterFullscreen) { // Older iOS
+                        videoElement.webkitEnterFullscreen();
+                    } else {
+                        console.log("Fullscreen API not supported.");
+                    }
+
+                    // Ensure video continues playing after entering fullscreen
+                    await videoElement.play();
+                    console.log("Video playback continued in fullscreen.");
+                } catch (err) {
+                    console.error("Error requesting fullscreen or continuing playback:", err);
+                }
+            }, 100); // Short delay to allow video playback to start
+
+        } catch (error) {
+            console.error("Error starting video playback:", error);
+        }
     };
 
 
@@ -884,8 +986,19 @@ const ProductInfo = () => {
         } else if (video.msRequestFullscreen) { // IE/Edge
             video.msRequestFullscreen();
         }
-        
+
     };
+
+    const videoRefs = useRef([]);
+    const handleSlideChange = (swiper) => {
+        videoRefs.current.forEach(video => {
+            if (video) {
+                video.pause();
+            }
+        });
+    };
+
+
     const sliderRef = useRef(null);
     const sizechartRef = useRef(null);
 
@@ -898,6 +1011,11 @@ const ProductInfo = () => {
     const handleCloseFullscreen = () => {
         setFullscreenImage(null);
     };
+    const today = new Date();
+    const datePlusTwoDays = addDays(today, 2);
+    const datePlusFifteenDays = addDays(datePlusTwoDays, 12);
+    const formattedDatePlusTwoDays = format(datePlusTwoDays, 'dd-MMM');
+    const formattedDatePlusFifteenDays = format(datePlusFifteenDays, 'dd-MMM');
     return (
         <>
             <h1 className='d-none'></h1>
@@ -940,7 +1058,7 @@ const ProductInfo = () => {
                                     <div className='shipping-def d-flex align-items-center justify-content-end mobile-together' onClick={scrollToReview} style={{ cursor: 'pointer' }}>
                                         <div className='d-flex justify-content-end align-items-center flex-wrap gap-2 gap-md-4'>
                                             <div className='rate d-flex align-items-center gap-2'>
-                                                <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                <span className='cos-title'>{Product?.productList?.rating ? Product.productList.rating.toFixed(2) : '0'}</span>
                                                 <div className='d-flex align-items-center gap-2'>
                                                     {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
                                                         <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
@@ -975,7 +1093,7 @@ const ProductInfo = () => {
                                                 <div className='d-flex align-items-center flex-wrap gap-2 gap-md-4'>
                                                     <h5 className='info-title border-right-cos cos-title'> {Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
-                                                        <span className='cos-title'>{Product?.productList?.rating}</span>
+                                                        <span className='cos-title'>{Product?.productList?.rating ? Product.productList.rating.toFixed(2) : '0'}</span>
                                                         <div className='d-flex align-items-center gap-1'>
                                                             {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
                                                                 <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
@@ -1126,7 +1244,7 @@ const ProductInfo = () => {
                                                 <div className='d-flex align-items-center flex-wrap gap-2 gap-xl-3'>
                                                     <h5 className='info-title border-right-cos cos-title' >{Product?.productList?.rating_count} shop reviews</h5>
                                                     <div className='rate d-flex align-items-center gap-2'>
-                                                        <span className='cos-title' >{Product?.productList?.rating}</span>
+                                                        <span className='cos-title' >{Product?.productList?.rating ? Product.productList.rating.toFixed(2) : '0'}</span>
                                                         <div className='d-flex align-items-center gap-1'>
                                                             {Product?.productList?.rating !== undefined && Product?.productList?.rating !== null && (
                                                                 <Rating name="read-only" value={Product.productList.rating} precision={0.5} readOnly />
@@ -1147,13 +1265,15 @@ const ProductInfo = () => {
                                             </div>
                                             <div className='badge bg-redlight mt-4 mt-md-3'>
                                                 <div className='d-flex align-items-center gap-2'>
-                                                    <span className='price'>$100.0</span> <span>|</span> <span>Free returns on some sizes and color</span>
+                                                    <span className='price'>${packPrice}</span> <span>|</span> <span>Free returns on some sizes and color</span>
                                                 </div>
                                                 <FontAwesomeIcon icon={faShare} style={{ height: '18px' }} />
                                             </div>
                                             <div className='per-pro-container d-flex align-items-center justify-content-start gap-2 mt-2 mt-lg-0'>
                                                 <div className='per-pro d-flex align-items-center gap-1 gap-md-2'>
-                                                    <h3>Our Price : ${individualPrice}</h3> |
+
+                                                    <h3>Our Price : ${packPrice}</h3> |
+
                                                 </div>
 
 
@@ -1194,6 +1314,9 @@ const ProductInfo = () => {
                                                                     onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
+                                                                    <source src={url + video.file_name} type="video/webm" />
+                                                                    <source src={url + video.file_name} type="video/mov" />
+                                                                    <source src={url + video.file_name} type="video/mkv" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                             </div>
@@ -1238,65 +1361,72 @@ const ProductInfo = () => {
 
                                             <div className='product-color mt-2'>
 
-                                                <h5>Color:   <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
-                                                {Product?.productList?.product_qty && Product?.productList?.product_qty.length > 0 && (
-                                                    <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
-                                                        {product_qtyActive === Product?.productList?.product_qty[0] && (
-                                                            Product?.productList?.sku_details && uniqueColors(Product?.productList?.sku_details)?.map((e, i) => (
-                                                                <Button
-                                                                    key={i}
-                                                                    className={`${productColorActive === e.attrs[0]?.color ? "active" : ""} color-btn`}
-                                                                    onClick={() => {
-                                                                        setProductColorActive(e.attrs[0]?.color);
-                                                                        setActiveImage(url + Product.productList?._id + "/" + e.file_name);
-                                                                        if (sliderRef.current) {
-                                                                            sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <img className='colors' src={url + Product.productList?._id + "/" + e.file_name} alt='' />
-                                                                </Button>
-                                                            ))
-                                                        )}
-                                                    </div>
-                                                )}
+                                            <h5>Color: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{productColorActive}</span></h5>
+{(product_qtyActive == 1 || product_qtyActive == "") && (
+    <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
+    {Product?.productList?.sku_attributes?.color && 
+        uniqueColors(Product?.productList?.sku_attributes.color)
+            ?.filter((_, index) => index !== 0)  // Filter out the first color
+            .map((e, i) => (
+                <Button
+                    key={i}
+                    className={`${productColorActive === e.name ? "active" : ""} color-btn`}
+                    onClick={() => {
+                        setProductColorActive(e.name);
+                        setActiveImage(url + Product.productList?._id + "/" + e.imgUrl);
+                        if (sliderRef.current) {
+                            sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }}
+                >
+                    <img className='colors' src={url + Product.productList?._id + "/" + e.imgUrl} alt={e.name} />
+                </Button>
+            ))
+    }
+</div>
 
-                                                <div className='size-chart-container mt-3'>
-                                                    <div className='d-flex align-items-center justify-content-between'>
-                                                        {Product?.productList?.sku_attributes.size !== undefined && (
-                                                            <div className='size w-100'>
-                                                                <div className='d-flex align-items-center justify-content-between'>
-                                                                    <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
-                                                                    <p className=' size-guide' onClick={handleSizeChartResClick}>Size guide </p>
-                                                                </div>
-                                                                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-                                                                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
-                                                                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
-                                                                            {e.name}
-                                                                        </Button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
+)}
 
-                                                {Product?.productList?.product_qty !== undefined && Product?.productList?.product_qty.length > 1 ? (
-                                                    <div className='size mt-3'>
-                                                        <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
-                                                        <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
-                                                            {Product?.productList?.product_qty?.map((e, i) => (
-                                                                <Button key={i} className={`${product_qtyActive === e ? "active" : ""}`} onClick={() => setProduct_QtyActives(e)}>
-                                                                    {e}
-                                                                </Button>
-                                                            ))}
+<div className='size-chart-container mt-3'>
+    <div className='d-flex align-items-center justify-content-between'>
+        {Product?.productList?.sku_attributes.size !== undefined && (
+            <div className='size w-100'>
+                <div className='d-flex align-items-center justify-content-between'>
+                    <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
+                    <p className='size-guide' onClick={handleSizeChartResClick}>Size guide</p>
+                </div>
+                <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+                    {Product?.productList?.sku_attributes.size?.map((e, i) => (
+                        <Button key={i} className={`${sizeActive === e.name ? "active" : ""}`} onClick={() => setSizeActive(e.name)}>
+                            {e.name}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+        )}
+    </div>
+</div>
 
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <></>
-                                                )}
+{Product?.packets ? (
+    <div className='size mt-3'>
+    <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+    <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
+        {Product.packets.map((item, index) => (
+            <Button key={index} className={`${product_qtyActive === item.count ? "active" : ""}`} onClick={() => setProduct_QtyActives(item.count)}>
+                {item.count}
+            </Button>
+        ))}
+    </div>
+</div>
 
+) : (
+    <></>
+)}
+
+                                            </div>
+
+                                            <div className='cart-button-sm'>
+                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
                                             </div>
 
                                             <div className='mt-3'>
@@ -1326,6 +1456,24 @@ const ProductInfo = () => {
                                                         </div>
                                                     )}
                                             </div>
+                                            <div className='mt-3'>
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <svg fill="#223263" width="25px" height="25px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M 0 6 L 0 8 L 19 8 L 19 23 L 12.84375 23 C 12.398438 21.28125 10.851563 20 9 20 C 7.148438 20 5.601563 21.28125 5.15625 23 L 4 23 L 4 18 L 2 18 L 2 25 L 5.15625 25 C 5.601563 26.71875 7.148438 28 9 28 C 10.851563 28 12.398438 26.71875 12.84375 25 L 21.15625 25 C 21.601563 26.71875 23.148438 28 25 28 C 26.851563 28 28.398438 26.71875 28.84375 25 L 32 25 L 32 16.84375 L 31.9375 16.6875 L 29.9375 10.6875 L 29.71875 10 L 21 10 L 21 6 Z M 1 10 L 1 12 L 10 12 L 10 10 Z M 21 12 L 28.28125 12 L 30 17.125 L 30 23 L 28.84375 23 C 28.398438 21.28125 26.851563 20 25 20 C 23.148438 20 21.601563 21.28125 21.15625 23 L 21 23 Z M 2 14 L 2 16 L 8 16 L 8 14 Z M 9 22 C 10.117188 22 11 22.882813 11 24 C 11 25.117188 10.117188 26 9 26 C 7.882813 26 7 25.117188 7 24 C 7 22.882813 7.882813 22 9 22 Z M 25 22 C 26.117188 22 27 22.882813 27 24 C 27 25.117188 26.117188 26 25 26 C 23.882813 26 23 25.117188 23 24 C 23 22.882813 23.882813 22 25 22 Z"></path></g></svg>
+                                                    <p className='shipping-text-xl'>Shipping </p>
+                                                </div>
+                                                <div className='delivery-bg-color'>
+                                                    <p>Delivery: {`${formattedDatePlusTwoDays} - ${formattedDatePlusFifteenDays}`}</p>
+                                                </div>
+
+                                            </div>
+                                            <div className="product-info shipping-box mt-3">
+                          
+                                                    <div className="order-time d-flex align-items-center gap-2 flex-row">
+                                                    <svg fill="#223263" width="25px" height="25px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M 0 6 L 0 8 L 19 8 L 19 23 L 12.84375 23 C 12.398438 21.28125 10.851563 20 9 20 C 7.148438 20 5.601563 21.28125 5.15625 23 L 4 23 L 4 18 L 2 18 L 2 25 L 5.15625 25 C 5.601563 26.71875 7.148438 28 9 28 C 10.851563 28 12.398438 26.71875 12.84375 25 L 21.15625 25 C 21.601563 26.71875 23.148438 28 25 28 C 26.851563 28 28.398438 26.71875 28.84375 25 L 32 25 L 32 16.84375 L 31.9375 16.6875 L 29.9375 10.6875 L 29.71875 10 L 21 10 L 21 6 Z M 1 10 L 1 12 L 10 12 L 10 10 Z M 21 12 L 28.28125 12 L 30 17.125 L 30 23 L 28.84375 23 C 28.398438 21.28125 26.851563 20 25 20 C 23.148438 20 21.601563 21.28125 21.15625 23 L 21 23 Z M 2 14 L 2 16 L 8 16 L 8 14 Z M 9 22 C 10.117188 22 11 22.882813 11 24 C 11 25.117188 10.117188 26 9 26 C 7.882813 26 7 25.117188 7 24 C 7 22.882813 7.882813 22 9 22 Z M 25 22 C 26.117188 22 27 22.882813 27 24 C 27 25.117188 26.117188 26 25 26 C 23.882813 26 23 25.117188 23 24 C 23 22.882813 23.882813 22 25 22 Z"></path></g></svg>
+                                                    <p className='shipping-text'>Enjoy free shipping on all orders over $100!</p>
+                                                    </div>
+                                            
+                                            </div>
 
                                             <div className='shipping-def mt-3'>
                                                 <h5 className='info-title mb-2' >Shop with confidence</h5>
@@ -1351,9 +1499,7 @@ const ProductInfo = () => {
                                                     ))}
                                                 </div>
                                             </div>
-                                            <div className='cart-button-sm'>
-                                                <Button onClick={handleCart} className='add-cart-items mt-4' style={{ width: "100%", borderRadius: "30px" }} >Add to cart</Button>
-                                            </div>
+
 
                                             <div className='mt-4 d-none d-md-block'>
 
@@ -1371,6 +1517,9 @@ const ProductInfo = () => {
                                                                     onClick={(event) => handlePlaySmall(event)}
                                                                 >
                                                                     <source src={url + video.file_name} type="video/mp4" />
+                                                                    <source src={url + video.file_name} type="video/webm" />
+                                                                    <source src={url + video.file_name} type="video/mov" />
+                                                                    <source src={url + video.file_name} type="video/mkv" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                             </div>
@@ -1418,6 +1567,7 @@ const ProductInfo = () => {
 
                                             <div>
                                                 <Swiper
+                                                    onSlideChange={handleSlideChange}
                                                     slidesPerView={4}
                                                     spaceBetween={10}
                                                     hashNavigation={{ watchState: true }}
@@ -1452,7 +1602,8 @@ const ProductInfo = () => {
                                                         <SwiperSlide key={index}>
                                                             <div className='d-flex gap-2 pb-0 align-items-center'>
                                                                 <video
-                                                                    className='product-video bottom-product-video video-design' ref={videoRef}
+                                                                    className='product-video bottom-product-video video-design'
+                                                                    ref={(el) => (videoRefs.current[index] = el)}
                                                                     controls
                                                                     loop
                                                                     playsInline
@@ -1462,7 +1613,10 @@ const ProductInfo = () => {
                                                                     poster={url + video.thumbnail}
 
                                                                 >
-                                                                    <source src={url + video.file_name} type="video/mp4" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/mp4" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/webm" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/mov" />
+                                                                    <source src={url + product_id + "/" + video.file_name} type="video/mkv" />
                                                                     Your browser does not support the video.
                                                                 </video>
                                                             </div>
@@ -1606,27 +1760,34 @@ const ProductInfo = () => {
                                                                     <div className='d-flex align-items-center gap-1'>
                                                                         <Rating name="simple-controlled" value={e?.rating} readOnly />
                                                                     </div>
-                                                                    <div>
-                                                                        <span className='date_pro_info my-0 a-text-bold text-black'>{e.heading}</span>
-                                                                    </div>
+
+                                                                </div>
+                                                                <div>
+                                                                    <span className='date_pro_info my-0 a-text-bold text-black'>{e.heading}</span>
                                                                 </div>
                                                                 <span className='date_pro_info my-0'>{`Reviewed  on  ${e.created_at.slice(0, 10)}`}</span>
                                                                 <span className='date_pro_info mt-0 d-block'>{e.content}</span>
                                                                 <div className='d-flex gap-2 pb-2 align-items-center'>
                                                                     {e?.review_files?.map((r, i) => (
                                                                         <React.Fragment key={i}>
-                                                                            {r.file_name && !r.file_name.includes("mp4") ? (
+                                                                            {r.file_name && r.media_type === "image" ? (
                                                                                 <img style={{ width: "100px" }} src={r.file_name} onClick={() => handleImageClick(r.file_name)} alt='' />
                                                                             ) : (
-                                                                                <video ref={videoRef}
+                                                                                <video
+                                                                                    ref={videoRef}
                                                                                     className='product-video review-video'
+                                                                                    loop
                                                                                     playsInline
-                                                                                    volume={0.5}
+                                                                                    muted
                                                                                     poster={url + r.thumbnail}
                                                                                     onClick={(event) => handlePlaySmall(event)}
                                                                                 >
-                                                                                    <source src={r.file_name} type="video/mp4" />
-                                                                                    {/* Add more <source> elements for different video formats if necessary */}
+                                                                                    <source src={`${r.file_name}`} type='video/mp4' />
+                                                                                    <source src={`${r.file_name}`} type='video/webm' />
+                                                                                    <source src={`${r.file_name}`} type='video/mov' />
+                                                                                    <source src={`${r.file_name}`} type='video/mkv' />
+
+                                                                                    {/* Add more <source> elements for additional formats if necessary */}
                                                                                     Your browser does not support the video.
                                                                                 </video>
 
@@ -1634,7 +1795,8 @@ const ProductInfo = () => {
                                                                         </React.Fragment>
                                                                     ))}
                                                                 </div>
-                                                              
+
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1647,9 +1809,9 @@ const ProductInfo = () => {
                                                     <img src={fullscreenImage} alt="fullscreen" className="fullscreen-image" />
                                                     <button className="close-button bg-transparent border-0 position-absolute top-0 end-0" onClick={handleCloseFullscreen}>
                                                         <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                                        <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
+                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                                            <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10.9393 12L6.9696 15.9697L8.03026 17.0304L12 13.0607L15.9697 17.0304L17.0304 15.9697L13.0607 12L17.0303 8.03039L15.9696 6.96973L12 10.9393L8.03038 6.96973L6.96972 8.03039L10.9393 12Z" fill="#ffffff"></path> </g></svg>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1826,6 +1988,7 @@ const ProductInfo = () => {
                                             </div>
                                             <div className='mt-3 review-file'>
                                                 <input type='file' name='review_files' accept='image/*,video/*' onChange={handlePhoto} multiple />
+
                                             </div>
                                             <Button className='submit-btn mt-3 w-100' type='button' onClick={submitReviews} > {submitLoderRv ? "Loding..." : "Publish Review"} </Button>
                                         </Form>
