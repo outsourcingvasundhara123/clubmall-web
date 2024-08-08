@@ -497,25 +497,28 @@ const ForYou = () => {
               <div className='reels-box position-relative pointer'>
                 {e.post_video_link && isVideo(e.post_video_link) ? (
 
-                    <ReactPlayer
-                    url={e.post_video_link}
-                    width="100%"
-                    height="100%"
-                    playing={playingVideos[e._id] !== undefined ? playingVideos[e._id] : true} // Default to autoplay
-                    onClick={() => togglePlayPause(e._id)}
-                    muted={true}
-                    volume={0.5}
-                    loop={true}
-                    config={{
-                      file: {
-                        attributes: {
-                          controlsList: 'nodownload',
-                          preload: 'auto',
-                          'webkit-playsinline': true,
-                          playsInline: 'true',
+                  <ReactPlayer
+                      url={e.post_video_link}
+                      width="100%"
+                      height="100%"
+                      controls={true}
+                      // onPlay={handleOnUnmute}
+                      playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
+                      // onVolumeChange={handleVolumeChange}
+                      muted={muted}
+                      volume={0.5} // Set a fixed volume level, as you cannot entirely remove the volume control for all browsers
+                      loop={true}
+                      config={{
+                        file: {
+                          attributes: {
+                            controlsList: 'nodownload',
+                            preload: 'auto',
+                            'webkit-playsinline': true,
+                            playsInline: 'true', // This is the correct attribute for modern browsers
+
+                          },
                         },
-                      },
-                    }}
+                      }}
                     />
                    
                 ) : (
