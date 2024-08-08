@@ -57,7 +57,7 @@ const ProductSlider = ({ productImagePath, productList, id, colorProduct, active
         Your browser does not support the video tag.
       </video>
     ) : (
-      <img src={thumUrl} className='image-gallery-image' alt="" />
+      <img src={item.original} className='image-gallery-image' alt="" />
     );
   };
 

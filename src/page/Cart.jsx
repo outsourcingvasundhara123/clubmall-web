@@ -24,7 +24,7 @@ import placeOrder from './gtagFunctions'
 import Select from 'react-select';
 
 // Your public Stripe key
-const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
+const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LIVE);
 
 
 const WrappedCart = () => {

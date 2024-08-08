@@ -392,7 +392,7 @@ const ProductInfo = () => {
     const uniqueColors = (colors) => {
         const unique = [];
         colors.forEach(color => {
-            if (!unique.find(c => c._id === color._id)) {
+            if (!unique.find(c => c.name === color.name)) {
                 unique.push(color);
             }
         });
@@ -414,7 +414,12 @@ const ProductInfo = () => {
     
                 // Get unique colors from sku_attributes
                 const uniqueColorDetails = uniqueColors(productData.productList.sku_attributes.color);
-                const imageUrls = uniqueColorDetails.map(e => `${productData.productImagePath + productData.productList._id + "/" + e.imgUrl}`);
+                const imageUrls = uniqueColorDetails.map(e =>
+                    e.imgUrl && e.imgUrl.slice(0, 6) === "https:"
+                        ? e.imgUrl
+                        : `${productData.productImagePath}${productData.productList._id}/${e.imgUrl}`
+                );
+                
                 const mergedImages = imageUrls.map(url => ({
                     thumbnail: url,
                     original: url,
@@ -1365,21 +1370,28 @@ const ProductInfo = () => {
 {(product_qtyActive == 1 || product_qtyActive == "") && (
     <div className='d-flex align-items-center flex-wrap gap-2 mt-3'>
     {Product?.productList?.sku_attributes?.color && 
-        uniqueColors(Product?.productList?.sku_attributes.color)
-            ?.filter((_, index) => index !== 0)  // Filter out the first color
-            .map((e, i) => (
+        uniqueColors(Product?.productList?.sku_attributes.color).map((e, i) => (
                 <Button
                     key={i}
                     className={`${productColorActive === e.name ? "active" : ""} color-btn`}
                     onClick={() => {
                         setProductColorActive(e.name);
-                        setActiveImage(url + Product.productList?._id + "/" + e.imgUrl);
+                        if(e.imgUrl && e.imgUrl.slice(0, 6) === "https:"){
+                            setActiveImage(e.imgUrl);
+                        }else{
+                            setActiveImage(url + Product.productList?._id + "/" + e.imgUrl);
+                        }
+
                         if (sliderRef.current) {
                             sliderRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
                         }
                     }}
                 >
-                    <img className='colors' src={url + Product.productList?._id + "/" + e.imgUrl} alt={e.name} />
+                    {e.imgUrl && e.imgUrl.slice(0, 6) === "https:" ?
+                        <img className='colors' src={e.imgUrl} alt={e.name} />
+                    :
+                        <img className='colors' src={url + Product.productList?._id + "/" + e.imgUrl} alt={e.name} />
+                    }
                 </Button>
             ))
     }
@@ -1393,7 +1405,12 @@ const ProductInfo = () => {
             <div className='size w-100'>
                 <div className='d-flex align-items-center justify-content-between'>
                     <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>
-                    <p className='size-guide' onClick={handleSizeChartResClick}>Size guide</p>
+                    {
+                        Product?.productList?.size_chartInInch.columns.length > 0 ? 
+                            <p className='size-guide' onClick={handleSizeChartResClick}>Size guide</p>
+                        :
+                            <></>
+                    }
                 </div>
                 <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                     {Product?.productList?.sku_attributes.size?.map((e, i) => (
@@ -1407,7 +1424,7 @@ const ProductInfo = () => {
     </div>
 </div>
 
-{Product?.packets ? (
+{Product?.packets && Product.packets.length < 0 ? (
     <div className='size mt-3'>
     <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
     <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>

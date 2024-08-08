@@ -361,9 +361,9 @@ const AddCartModal = (props) => {
 
 
 
-                                                {modelProduct?.packets ? (
+                                                {modelProduct?.packets && modelProduct?.packets.length < 0 ? (
                                                     <div className='size mt-3'>
-                                                        <h5>Packs: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+                                                        <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
                                                         <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                                {modelProduct.packets.map((item, index) => (
                                                                 <Button key={index} className={`${product_qtyActive === item.count ? "active" : ""}`} onClick={() => setProduct_QtyActives(item.count)}>
