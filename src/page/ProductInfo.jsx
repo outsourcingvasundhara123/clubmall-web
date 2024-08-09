@@ -555,7 +555,8 @@ const ProductInfo = () => {
 
 
             const packetsExist = Product?.packets && Product.packets.length > 0;
-            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size === undefined)) {
+            const sizeDefined = Product?.productList?.sku_attributes?.size.length > 0;
+            if (productColorActive && (sizeActive || Product?.productList?.sku_attributes?.size === undefined || !sizeDefined)) {
                 if (packetsExist && product_qtyActive) {
                     const selectedPack = Product?.packets.find((packet) => packet.count === product_qtyActive);
                     const packPrice = selectedPack ? parseFloat(selectedPack.price).toFixed(2) : parseFloat(Product.productList?.individual_price).toFixed(2);
@@ -641,7 +642,7 @@ const ProductInfo = () => {
                 // Handle validation errors for color and size
                 if (!productColorActive) {
                     setMyMessageProductDtl("Please select color for the product.");
-                } else if (!sizeActive) 
+                } else if (!sizeActive && sizeDefined) 
                 {
                     setMyMessageProductDtl("Please select size for the product.");
                 }
@@ -1401,7 +1402,7 @@ const ProductInfo = () => {
 
 <div className='size-chart-container mt-3'>
     <div className='d-flex align-items-center justify-content-between'>
-        {Product?.productList?.sku_attributes.size !== undefined && (
+        {Product?.productList?.sku_attributes.size !== undefined && Product?.productList?.sku_attributes?.size?.length > 0 && (
             <div className='size w-100'>
                 <div className='d-flex align-items-center justify-content-between'>
                     <h5>Size: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>

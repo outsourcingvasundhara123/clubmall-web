@@ -149,7 +149,8 @@ const AddCartModal = (props) => {
     
 
             const packetsExist = modelProduct?.packets && modelProduct.packets.length > 0;
-            if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size === undefined)) {
+            const sizeDefined = modelProduct?.productList?.sku_attributes?.size.length > 0;
+            if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size === undefined || !sizeDefined)) {
                 if (packetsExist && product_qtyActive) {
                     const selectedPack = modelProduct?.packets.find((packet) => packet.count === product_qtyActive);
                     const packPrice = selectedPack ? parseFloat(selectedPack.price).toFixed(2) : parseFloat(modelProduct.productList?.individual_price).toFixed(2);
@@ -253,7 +254,7 @@ const AddCartModal = (props) => {
                 // Handle validation errors for color and size
                 if (!productColorActive) {
                     setMyMessage("Please select color for the product.");
-                } else if (!sizeActive) 
+                } else if (!sizeActive && sizeDefined) 
                 {
                     setMyMessage("Please select size for the product.");
                 }
@@ -352,7 +353,7 @@ const AddCartModal = (props) => {
                                                         )}
                                                     </div>
                                                     <div className='size mt-4'>
-                                                    {modelProduct?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
+                                                    {modelProduct?.productList?.sku_attributes.size !== undefined && modelProduct?.productList?.sku_attributes?.size?.length > 0 && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
                                                             modelProduct.productList?.sku_attributes.size?.map((e, i) => {
