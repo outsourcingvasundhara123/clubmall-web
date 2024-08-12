@@ -61,7 +61,7 @@ const ForYou = () => {
   const [report, setReport] = useState({});
   const [muted, setMuted] = useState(true);
   const [playerRefs, setPlayerRefs] = useState({});
-  const [currentVideoId, setCurrentVideoId] = useState();
+  const [currentVideoId, setCurrentVideoId] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showButton, setShowButton] = useState(true);
   const playerRef = useRef();
@@ -189,6 +189,11 @@ const ForYou = () => {
     getPosts();
     // }
   }, [page, isLoggedIn, currentVideoId]);
+  useEffect(() => {
+    if (postList.length > 0) {
+      setCurrentVideoId(postList[currentVideoIndex]?._id || null);
+    }
+  }, [postList, currentVideoIndex]);
 
   function isVideo(url) {
     return url && /\.(mp4|webm|ogg)$/i.test(url);
@@ -196,7 +201,7 @@ const ForYou = () => {
 
   const handleSlideChange = useCallback((swiper) => {
     setCurrentVideoIndex(swiper.activeIndex);
-    setCurrentVideoId(postList[swiper.activeIndex]._id)
+    setCurrentVideoId(postList[swiper.activeIndex]?._id || null);
     if (swiper.activeIndex === postList.length - 3) {
       // if (isLoggedIn && swiper.activeIndex === postList.length - 3) {
       if (swiper.activeIndex === postList.length - 3) {
@@ -498,15 +503,15 @@ const ForYou = () => {
                 {e.post_video_link && isVideo(e.post_video_link) ? (
 
                   <ReactPlayer
+                      key={e._id}
                       url={e.post_video_link}
                       width="100%"
                       height="100%"
-                      controls={true}
-                      // onPlay={handleOnUnmute}
-                      playing={e._id === currentVideoId || (!currentVideoId && i === 0)}
-                      // onVolumeChange={handleVolumeChange}
+                 
+                      playing={ currentVideoId === e._id ? (playingVideos[e._id] !== undefined ? playingVideos[e._id] : true) : false}
+                      onClick={() => togglePlayPause(e._id)}
                       muted={muted}
-                      volume={0.5} // Set a fixed volume level, as you cannot entirely remove the volume control for all browsers
+                      volume={0.5}
                       loop={true}
                       config={{
                         file: {
