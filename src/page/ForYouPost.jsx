@@ -358,7 +358,11 @@ const ForYouPost = () => {
       playerRef.current.getInternalPlayer().muted = newMutedStatus; // Directly set muted property on the player
     }
   };
+  const [playing, setPlaying] = useState(true);
 
+  const togglePlayPause = () => {
+    setPlaying(prevPlaying => !prevPlaying);
+  };
   // console.log(postList, "postList");
 
   return (
@@ -402,12 +406,14 @@ const ForYouPost = () => {
             <div className='reels-box position-relative pointer'>
               {postList.post_video_link && isVideo(postList.post_video_link) ? (
                 <ReactPlayer
+                 key={postList._id}
                   url={postList.post_video_link}
                   width="100%"
                   height="100%"
-                  controls={true}
-                  playing
+                 
+                  playing={playing}
                   muted={muted}
+                  onClick={togglePlayPause}
                   volume={0.5}
                   loop={true}
                   config={{
