@@ -545,24 +545,12 @@ function Register() {
           const provider = new firebase.auth.OAuthProvider('apple.com');
           provider.addScope('email');
           provider.addScope('name');
-    
-          // Detect if the user is on a mobile device
-          const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-          let result;
-          if (isMobile) {
-              await firebase.auth().signInWithRedirect(provider);
-            } else {
-              result = await firebase.auth().signInWithPopup(provider);
-          }
-    
-          // Handle the redirect result on mobile
-          if (isMobile) {
-            result = await firebase.auth().getRedirectResult();
-          }
-    
+
+         
+          let result = await firebase.auth().getRedirectResult();
+          
           // Apple credential info
-          if (result && result.credential) {
+          if (result) {
             
             const credential = result.credential;
             const sub = credential.accessToken;

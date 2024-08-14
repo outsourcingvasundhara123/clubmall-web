@@ -8,7 +8,7 @@ import { getServerURL } from '../../helper/envConfig';
 import api from '../../helper/api';
 import { useNavigate } from 'react-router-dom'
 import { validate } from './LoginSchema';
-import {  useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { MdOutlineClose } from "react-icons/md"
 import { Link } from 'react-router-dom';
@@ -35,7 +35,7 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps.length) {
-firebase.initializeApp(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
 }
 
 const LogIn = () => {
@@ -372,25 +372,11 @@ const LogIn = () => {
       const provider = new firebase.auth.OAuthProvider('apple.com');
       provider.addScope('email');
       provider.addScope('name');
-
-      // Detect if the user is on a mobile device
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      let result;
-      if (isMobile) {
-          await firebase.auth().signInWithRedirect(provider);
-        } else {
-          result = await firebase.auth().signInWithPopup(provider);
-      }
-
-      // Handle the redirect result on mobile
-      if (isMobile) {
-        result = await firebase.auth().getRedirectResult();
-      }
-
+      
+      let result = await firebase.auth().signInWithPopup(provider)
+      
       // Apple credential info
-      if (result && result.credential) {
-        
+      if (result) {
         const credential = result.credential;
         const sub = credential.accessToken;
         const userEmail = result?.user?.email || "";
@@ -752,16 +738,16 @@ const LogIn = () => {
                   }}
                 ><img src='./img/login/facebook.svg' alt='' /></FacebookLogin> */}
                 <button
-                      onClick={handleAppleSignIn}
-                      style={{
-                        backgroundColor: "white",
-                        border: "none",
-                        fontSize: "35px",
-                        padding: "0px",
-                        display: "flex",
-                      }}
-                    >
-                      <BsApple />
+                  onClick={handleAppleSignIn}
+                  style={{
+                    backgroundColor: "white",
+                    border: "none",
+                    fontSize: "35px",
+                    padding: "0px",
+                    display: "flex",
+                  }}
+                >
+                  <BsApple />
                 </button>
 
               </div>
