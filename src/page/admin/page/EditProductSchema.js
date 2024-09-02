@@ -5,12 +5,12 @@ export const validate = (values) => {
     if (!values.name) {
         errors.name = "Name is required";
     }
-    if (!values.description) {
-        errors.description = "Description is required";
-    }
-    if (!values.total_order) {
-        errors.total_order = "Sales Quantity  is required";
-    }
+    // if (!values.description) {
+    //     errors.description = "Description is required";
+    // }
+    // if (!values.total_order) {
+    //     errors.total_order = "Sales Quantity  is required";
+    // }
     // if (!values.product_qty) {
     //     errors.product_qty = " Quantity  is required";
     // }
@@ -36,9 +36,9 @@ export const validate = (values) => {
     if (!values.individual_price) {
         errors.individual_price = "individual price details is required";
     }
-    if (!values.competitors_price) {
-        errors.competitors_price = "competitors price details is required";
-    }
+    // if (!values.competitors_price) {
+    //     errors.competitors_price = "competitors price details is required";
+    // }
     
 
     // Validate group_price field

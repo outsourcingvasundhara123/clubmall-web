@@ -28,7 +28,7 @@ import { useStripe, useElements } from '@stripe/react-stripe-js';
 
 
 // Your public Stripe key
-const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LOCAL);
+const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY_LIVE);
 
 const WrappedCart = () => {
 

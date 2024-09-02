@@ -86,6 +86,10 @@ export default [
     element: <ForYouPost />,
   },
   {
+    path: "post-details/:id",
+    element: <ForYouPost />,
+  },
+  {
     path: "/fashion",
     element: <Fashion />,
   },

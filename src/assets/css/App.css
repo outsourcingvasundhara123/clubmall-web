@@ -7288,7 +7288,7 @@ figure {
     }
 
     .swiper-initialized.swiper-horizontal.mySwiper {
-        width: 440px;
+        /* width: 440px; */
         margin-left: 0px;
     }
 }

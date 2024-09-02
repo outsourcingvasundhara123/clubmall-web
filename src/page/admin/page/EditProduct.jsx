@@ -330,10 +330,11 @@ const EditProduct = () => {
     }
   };
 
-  const deleteQuantityPriceItem = (indexToRemove) => {
-    const newItems = quantityPriceItems.filter((_, index) => index !== indexToRemove);
+  const deleteQuantityPriceItem = (idToRemove) => {
+    const newItems = quantityPriceItems.filter(item => item._id !== idToRemove);
     setQuantityPriceItems(newItems);
   };
+  
 
   const getProductDetail = async () => {
     startAnimation();
@@ -900,7 +901,7 @@ const EditProduct = () => {
     }));
   };
 
-
+  const filteredQuantityPriceItems = quantityPriceItems.filter(item => item.count !== 1);
   return (
     <Layout>
       <div className="border-green">
@@ -973,7 +974,7 @@ const EditProduct = () => {
                   placeholder="Enter Sales Quantity"
                 />
               </div>
-              <div className='errorAdmin'>{errors?.total_order}</div>
+             
             </Col>
             <Col lg={4} md={6} sm={12}>
               <div className="fees-input mt-3">
@@ -1023,7 +1024,7 @@ const EditProduct = () => {
                   onChange={handleChange}
                   placeholder="Enter Product Details"
                 />
-                <div className='errorAdmin'>{errors?.description}</div>
+                
               </div>
             </Col>
           </Row>
@@ -1199,7 +1200,7 @@ const EditProduct = () => {
            
             <Col lg={6} md={6} sm={12}>
               <div className="fees-input mt-3">
-                <label>Quantity and Price*</label>
+                <label>Quantity and Price</label>
                 <div className="d-flex align-items-center gap-3">
                   <input type="number" placeholder="Enter Quantity" value={inputQuantity} onChange={handleQuantityChange} />
                   <input type="number" placeholder="Enter Price" value={inputPrice} onChange={handlePriceChange} />
@@ -1209,17 +1210,16 @@ const EditProduct = () => {
                 </div>
               </div>
 
-              {quantityPriceItems.map((item, index) => (
+              {filteredQuantityPriceItems.map((item, index) => (
                 <div className="fees-input list-data mt-3" key={index}>
                   <div className="d-flex align-items-center gap-3">
                     <p>{`Packs: ${item.count}, Price: ${item.price}`}</p>
-                    <Button className="add-items" onClick={() => deleteQuantityPriceItem(index)}>
+                    <Button className="add-items" onClick={() => deleteQuantityPriceItem(item._id)}>
                       <img src="../../admin-img/profile/delete.svg" alt="" />
                     </Button>
                   </div>
                 </div>
               ))}
-              <div className='errorAdmin'>{isEmpty(quantityPriceItems) && submitCount > 0 && "Quantity and Price are required"}</div>
             </Col>
 
             <Col lg={12} md={12} sm={12}>

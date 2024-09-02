@@ -21,6 +21,23 @@ import { login } from '../../helper/auth';
 import { ADDTOCART } from '../../helper/endpoints';
 import { CartContext } from '../../context/CartContext'
 
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDpVXFxJNgroKuqrxL-AJOsZEfbcu9yMoE",
+  authDomain: "clubmall.firebaseapp.com",
+  projectId: "clubmall",
+  storageBucket: "clubmall.appspot.com",
+  messagingSenderId: "402818709804",
+  appId: "1:402818709804:web:ead869f51cd13ff2219489",
+};
+
+if (!firebase.apps.length) {
+firebase.initializeApp(firebaseConfig);
+}
+
 
 function Register() {
 
@@ -522,6 +539,140 @@ function Register() {
         },
     });
 
+    const handleAppleSignIn = async () => {
+
+        try{
+          const provider = new firebase.auth.OAuthProvider('apple.com');
+          provider.addScope('email');
+          provider.addScope('name');
+
+         
+          let result = await firebase.auth().getRedirectResult();
+          
+          // Apple credential info
+          if (result) {
+            
+            const credential = result.credential;
+            const sub = credential.accessToken;
+            const userEmail = result?.user?.email || "";
+            const userName = result?.user?.displayName || "";
+    
+            var updatedValues = userEmail
+            api.post(`${serverURL + SOCIALLOGIN}`, {
+              email: userEmail,
+              social_login_type: 3,
+              social_login_id: sub,
+              login_type: 4,
+              name: "",
+              username: userName
+            })
+              .then(async (res) => {
+                if (res.data.success === true) {
+                  if (res.data.data.user) {
+                    login(res.data.data.user);
+                    setMainLoder(true)
+                    // Checking local storage for products
+                    if (localCartPostData && localCartPostData.length > 0 && localCart.items && localCart.items.length > 0) {
+                      // Adding each product in the cart
+                      var cartList
+                      for (let item of localCartPostData) {
+                        try {
+                          const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, item);
+    
+                        } catch (error) {
+                          // catch specific '400 BAD REQUEST' error and handle it
+                          if (error.response && error.response.status === 400) {
+                            if (error.response.data.flag === "ALREADY_IN_CART") {
+                              console.log("Product is already in cart, skipping...");
+                              continue; // skips the rest of the loop for this item and moves to the next item
+                            } else {
+                              console.error("Unhandled 400 error", error.response.data);
+                            }
+                          } else {
+                            // re-throw the error if it's not the one we are expecting
+                            throw error;
+                          }
+                        }
+                      }
+                      // Sleep for 2 seconds to wait for the cart data to update
+                      await new Promise(resolve => setTimeout(resolve, 2000));
+    
+                      cartList = await getCartData(); // Fetch and store the data
+                      var data = { "action": "update-to-cart-qty" };
+                      for (let item of localCart.items) {
+                        if (!item.product_id || !item.qty) {
+                          console.error("Invalid item data: ", item);
+                          continue;
+                        }
+    
+                        // Find the matching cart item from cartList
+                        const cartItem = cartList.list?.find(cart => cart.product_id === item.product_id);
+    
+                        if (!cartItem || !cartItem._id) {
+                          console.error("Could not find matching cart item for product: ", item.product_id);
+                          continue;
+                        }
+    
+                        data.qty = item.qty;
+                        data._id = cartItem._id; // Use cart_id instead of product_id
+    
+                        try {
+                          const res = await api.postWithToken(`${serverURL}${ADDTOCART}`, data);
+                        } catch (error) {
+                          // Handle '400 BAD REQUEST' error
+                          if (error.response && error.response.status === 400) {
+                            if (error.response.data.flag === "ALREADY_IN_CART") {
+                              console.log("Product is already in cart, skipping...");
+                              continue;
+                            } else {
+                              console.error("Unhandled 400 error", error.response.data);
+                            }
+                          } else {
+                            throw error;
+                          }
+                        }
+                      }
+    
+                      // window.location.href = "/cart";
+                      localStorage.removeItem('cartPostData');
+                      localStorage.removeItem('productDetails');
+                    }
+                    setTimeout(() => {
+                      setValues(initialValues);
+                      setMainLoder(false)
+                      if ((!localStorage.getItem("lastVisitedPath")) || localStorage.getItem("lastVisitedPath") === "https://clubmall.com/login" || localStorage.getItem("lastVisitedPath") === "http://localhost:3000/login") {
+                        window.location.href = "/"
+                      } else {
+                        window.location.href = localStorage.getItem("lastVisitedPath") || document.referrer
+                      }
+                      // navigate("");
+                    }, 1000);
+    
+                    setMyMessage(res.data.message);
+                    setSucessSnackBarOpen(!sucessSnackBarOpen);
+    
+                  } else {
+                    SetOtpShow(true)
+                    SetEmail(updatedValues);
+                    setMyMessage(res.data.message);
+                    setSucessSnackBarOpen(!sucessSnackBarOpen);
+                  }
+                } else if (res.data.success === false) {
+                  setMyMessage(res.data.message);
+                  setWarningSnackBarOpen(!warningSnackBarOpen);
+                }
+                setMainLoder(false)
+              });
+          }
+          else{
+            setWarningSnackBarOpen(!sucessSnackBarOpen);
+            setMyMessage("Something went wrong");
+          }
+    
+        }catch (err) {
+          console.log(err);
+        }
+      };
 
     return (
 
@@ -727,28 +878,19 @@ function Register() {
                                 }}
                             ><img src='./img/login/facebook.svg' alt='' /></FacebookLogin> */}
 
-                            <AppleLogin
-                                clientId="YOUR_CLIENT_ID"
-                                redirectURI="YOUR_REDIRECT_URL"
-                                usePopup={true} // Catch the response
-                                scope="email name"
-                                responseMode="query"
-                                render={renderProps => (
-                                    <button
-                                        onClick={renderProps.onClick}
-                                        style={{
-                                            backgroundColor: "white",
-                                            border: "none",
-                                            fontSize: "35px",
-                                            padding: "0px",
-                                            display: "flex",
-                                            marginTop: "-3px"
-                                        }}
-                                    >
-                                        <BsApple />
-                                    </button>
-                                )}
-                            />
+                            <button
+                                onClick={handleAppleSignIn}
+                                style={{
+                                    backgroundColor: "white",
+                                    border: "none",
+                                    fontSize: "35px",
+                                    padding: "0px",
+                                    display: "flex",
+                                }}
+                                >
+                                <BsApple />
+                            </button>
+                            
                         </div>
                     </div>
                 </div>

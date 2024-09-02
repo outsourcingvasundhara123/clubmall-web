@@ -149,10 +149,11 @@ const AddCartModal = (props) => {
     
 
             const packetsExist = modelProduct?.packets && modelProduct.packets.length > 0;
-            if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size === undefined)) {
+            const sizeDefined = modelProduct?.productList?.sku_attributes?.size.length > 0;
+            if (productColorActive && (sizeActive || modelProduct?.productList?.sku_attributes?.size === undefined || !sizeDefined)) {
                 if (packetsExist && product_qtyActive) {
                     const selectedPack = modelProduct?.packets.find((packet) => packet.count === product_qtyActive);
-                    const packPrice = selectedPack ? selectedPack.price : modelProduct?.productList?.individual_price;
+                    const packPrice = selectedPack ? parseFloat(selectedPack.price).toFixed(2) : parseFloat(modelProduct.productList?.individual_price).toFixed(2);
     
                     const data = {
                         action: "add-to-cart-product",
@@ -195,7 +196,7 @@ const AddCartModal = (props) => {
                             }, 1000);
                         } else {
                             setMainLoder(false);
-                            setMyMessageProductDtl(res.data.message);
+                            setMyMessage(res.data.message);
                             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                         }
                     } else {
@@ -237,7 +238,7 @@ const AddCartModal = (props) => {
                             }, 1000);
                         } else {
                             setMainLoder(false);
-                            setMyMessageProductDtl(res.data.message);
+                            setMyMessage(res.data.message);
                             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
                         }
                     } else {
@@ -246,22 +247,29 @@ const AddCartModal = (props) => {
                         addcartLocal(data, handleDrawerShow);
                     }
                 } else {
-                    setMyMessageProductDtl("Please select color and size for the product.");
-                    setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                    setMyMessage("Please select quantity for the product.");
+                    setWarningSnackBarOpen(!warningSnackBarOpenProductDtl);
                 }
             } else {
-                setMyMessageProductDtl("Please select color and size for the product.");
-                setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
+                // Handle validation errors for color and size
+                if (!productColorActive) {
+                    setMyMessage("Please select color for the product.");
+                } else if (!sizeActive && sizeDefined) 
+                {
+                    setMyMessage("Please select size for the product.");
+                }
+                setWarningSnackBarOpen(!warningSnackBarOpenProductDtl);
             }
         } catch (error) {
             setMainLoder(false);
             setProductColorActive("");
             setSizeActive("");
             addProductDetailsToLocal(modelProduct, sizeActive, productColorActive, product_qtyActive)
-            errorResponse(error, setMyMessageProductDtl);
+            errorResponse(error, setMyMessage);
             setWarningSnackBarOpenProductDtl(!warningSnackBarOpenProductDtl);
         }
     };
+   
 
     const groupPriceShare = (id) => {
         if (isMobile) {
@@ -345,7 +353,7 @@ const AddCartModal = (props) => {
                                                         )}
                                                     </div>
                                                     <div className='size mt-4'>
-                                                    {modelProduct?.productList?.sku_attributes.size !== undefined && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
+                                                    {modelProduct?.productList?.sku_attributes.size !== undefined && modelProduct?.productList?.sku_attributes?.size?.length > 0 && <h5>   Size:  <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + sizeActive}</span></h5>}
                                                     <div className='d-flex align-items-center gap-2 mt-2 flex-wrap'>
                                                         {
                                                             modelProduct.productList?.sku_attributes.size?.map((e, i) => {
@@ -361,9 +369,9 @@ const AddCartModal = (props) => {
 
 
 
-                                                {modelProduct?.packets ? (
+                                                {modelProduct?.packets && modelProduct?.packets.length > 0 ? (
                                                     <div className='size mt-3'>
-                                                        <h5>Packs: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
+                                                        <h5>Quantity: <span style={{ color: "rgb(224, 46, 36, 1)" }}>{" " + product_qtyActive}</span></h5>
                                                         <div className='d-flex align-items-center gap-2 mt-3 flex-wrap'>
                                                                {modelProduct.packets.map((item, index) => (
                                                                 <Button key={index} className={`${product_qtyActive === item.count ? "active" : ""}`} onClick={() => setProduct_QtyActives(item.count)}>
