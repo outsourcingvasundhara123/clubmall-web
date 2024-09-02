@@ -524,22 +524,22 @@ const ProductInfo = () => {
     //     });
     //     return sku ? sku.skuid : null;
     // };
-
     const findSKUId = () => {
+    const selectedPack = Product?.packets.find((packet) => packet.count === product_qtyActive);
 
-        const selectedPack = Product?.packets.find((packet) => packet.count === product_qtyActive);
+    const sku = Product?.productList.sku_details.find((sku) => {
+        const attrs = sku.attrs[0];
 
-        const sku = Product?.productList.sku_details.find((sku) => {
-            const attrs = sku.attrs[0];
+        const isColorMatch = attrs.color === productColorActive;
+        const isSizeMatch = sizeActive ? attrs.size === sizeActive : true;
+        const isPackCountMatch = selectedPack ? attrs.packets?.count === selectedPack.count : true;
 
-            const isColorMatch = attrs.color === productColorActive;
-            const isSizeMatch = sizeActive ? attrs.size === sizeActive : true;
-            const isPackCountMatch = selectedPack ? attrs.packets?.count === selectedPack.count : true;
+        return isColorMatch && isSizeMatch && isPackCountMatch;
+    });
 
-            return isColorMatch && isSizeMatch && isPackCountMatch;
-        });
-        return sku ? sku.skuid : null;
-    };
+    return sku ? sku.skuid : null;
+};
+
 
 
 
