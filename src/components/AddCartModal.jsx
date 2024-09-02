@@ -127,7 +127,7 @@ const AddCartModal = (props) => {
             const attrs = sku.attrs[0];
 
             const isColorMatch = attrs.color === productColorActive;
-            const isSizeMatch = attrs.size === sizeActive;
+            const isSizeMatch = sizeActive ? attrs.size === sizeActive : true;
             const isPackCountMatch = selectedPack ? attrs.packets?.count === selectedPack.count : true; 
     
             return isColorMatch && isSizeMatch && isPackCountMatch;
